@@ -320,7 +320,7 @@ h1, h2, h3, h4, p {
 }
 
 #gift-img-disney.revealed {
-    --reveal-image: url("images/disney.gif");
+    --reveal-image: url("images/Disney.gif");
 }
 
 #gift-img-story.revealed {
@@ -384,7 +384,7 @@ h1, h2, h3, h4, p {
 }
 
 #gift-img-lie.revealed {
-    --reveal-image: url("images/Pinokio.gif");
+    --reveal-image: url("images/pinokio.gif");
 }
 
 #gift-img-like.revealed {
