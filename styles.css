@@ -8,11 +8,24 @@
 
 body {
     text-align: center;
-    font-family: 'Happy Monkey', cursive;
+    font-family: 'Nunito', 'Happy Monkey', cursive;
     background: linear-gradient(135deg, var(--cypress), var(--purple), var(--blue), var(--red));
     color: #ffffff;
     margin: 0;
     overflow: hidden;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Marck Script', 'Pacifico', cursive;
+    letter-spacing: 0.2px;
+}
+
+h1 {
+    line-height: 1.15;
+}
+
+h2, h3, h4 {
+    line-height: 1.2;
 }
 
 #swipe-container {
@@ -35,13 +48,71 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 24px 24px 120px;
+    padding: 24px;
     box-sizing: border-box;
     overflow-y: hidden;
 }
 
+.slide.is-scrollable {
+    padding: 24px 24px 120px;
+    overflow-y: auto;
+}
+
 h1, h2, h3, h4, p {
     text-shadow: 0 0 1px black;
+}
+
+.typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 100%;
+    width: 0;
+    border-right: 2px solid rgba(255, 255, 255, 0.7);
+    --tw-delay: 0s;
+    animation: typewriter 1.2s steps(24, end) forwards, caret 700ms steps(1, end) infinite;
+    animation-delay: var(--tw-delay), var(--tw-delay);
+}
+
+@keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes caret {
+    50% { border-color: transparent; }
+}
+
+.search-scene {
+    width: min(100%, 900px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+}
+
+.search-scene .gift-img {
+    flex: 0 0 min(45vw, 360px);
+    height: 360px;
+    margin: 0;
+}
+
+.search-lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.search-lines .gift-title {
+    margin: 0;
+    text-align: left;
+}
+
+.search-lines .gift-title:nth-child(even) {
+    align-self: flex-end;
+    text-align: right;
 }
 
 #main-img {
@@ -98,11 +169,55 @@ h1, h2, h3, h4, p {
     background-position: center;
 }
 
-#gift-img-disney:hover {
-    background-image: url("images/disney.gif");
+.gift-img.tap-reveal {
+    cursor: pointer;
 }
 
-#gift-img-hot:hover {
+.gift-img.revealed {
+    background-image: var(--reveal-image);
+}
+
+#gift-img-disney.revealed {
+    --reveal-image: url("images/disney.gif");
+}
+
+#gift-img-story.revealed {
+    --reveal-image: url("images/story.gif");
+}
+
+#gift-img-book.revealed {
+    --reveal-image: url("images/book.gif");
+}
+
+#gift-img-start.revealed {
+    --reveal-image: url("images/meridia.gif");
+}
+
+#gift-img-met.revealed {
+    --reveal-image: url("images/aladdin.gif");
+}
+
+#gift-img-handsome.revealed {
+    --reveal-image: url("images/gaston.gif");
+}
+
+#gift-img-search.revealed {
+    --reveal-image: url("images/inspector gadget.gif");
+}
+
+#gift-img-happy.revealed {
+    --reveal-image: url("images/Happy Anna frozen.gif");
+}
+
+#gift-img-question-mark.revealed {
+    --reveal-image: url("images/question mark.gif");
+}
+
+#gift-img-angry.revealed {
+    --reveal-image: url("images/angry.gif");
+}
+
+/* #gift-img-hot:hover {
     background-image: url("images/hot.gif");
 }
 
@@ -132,7 +247,7 @@ h1, h2, h3, h4, p {
 
 #gift-img-tongue:hover {
     background-image: url("images/tongue.gif");
-}
+} */
 
 #footer {
     font-style: italic;

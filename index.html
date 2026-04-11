@@ -3,27 +3,78 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Happy+Monkey&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
         <div id="swipe-container">
             <section class="slide" id="header">
-                <h1>Ποιος έχει δύο αντίχειρες και έχει σήμερα γενέθλια ;;; 🎉</h1>
+                <h1>Ποια έχει δύο αντίχειρες και έχει σήμερα γενέθλια ;;; 🎉</h1>
                 <img id="main-img" src="images/ariel main.gif">
                 <img id="support-img" src="images/hades.gif">
-                <h2 id="bday-age">25 χρονών</h2>
-                <h4 id="bday-date">03.05.2001</h4>
             </section>
             
             <section class="slide gift-section">
                 <h2 class="gift-title">Σήμερα είναι η μέρα σου και αξίζεις τα καλύτερα! 🥳</h2>
-                <h3 class="gift-hint">(Scroll down και άνοιξε τα δώρα)</h3>
+                <h3 class="gift-hint">(Click me)</h3>
                 <div class="gift-img" id="gift-img-disney"></div>
             </section>
 
             <section class="slide gift-section">
-                <h2 class="gift-title">Γι' αυτό σου έγραψα μια ιστορία</h2>
+                <h2 class="gift-title">Γι' αυτό σου έγραψα μια ιστορία!</h2>
                 <div class="gift-img" id="gift-img-story"></div>
+                <h2 class="gift-title">Ελπίζω να σου αρέσει...</h2>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">Έτοιμη...;</h2>
+                <div class="gift-img" id="gift-img-book"></div>
+            </section>
+            
+            <section class="slide gift-section">
+                <h2 class="gift-title">Μια φορά και έναν καιρό λοιπόν, ήσουν εσύ...</h2>
+                <div class="gift-img" id="gift-img-start"></div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">και εγώ...</h2>
+                <div class="gift-img" id="gift-img-met"></div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">Θαμπώθηκες τόσο από την απαράμιλη ομορφιά μου...</h2>
+                <div class="gift-img" id="gift-img-handsome"></div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">Έτσι, έψαξες να με βρεις...</h2>
+                <div class="search-scene">
+                    <div class="gift-img revealed" id="gift-img-search"></div>
+                    <div class="search-lines">
+                        <h2 class="gift-title typewriter" style="--tw-delay: 0.1s">και έψαχνες...</h2>
+                        <h2 class="gift-title typewriter" style="--tw-delay: 1.0s">και έψαχνες...</h2>
+                        <h2 class="gift-title typewriter" style="--tw-delay: 1.9s">και έψαχνες...</h2>
+                        <h2 class="gift-title typewriter" style="--tw-delay: 2.8s">και έψαχνες...</h2>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">Και με βρήκες!!</h2>
+                <div class="gift-img" id="gift-img-happy"></div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">Όμως εγώ, σου έστειλα για πρώτο μήνυμα ένα "?"</h2>
+                <div class="gift-img" id="gift-img-question-mark"></div>
+                <h2 class="gift-title">Τς..τς..τς.. Καλύτερα ας μην σου έστελνα!!</h2>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">Και εσύ δικαίως έγινες έξαλλη... 😂</h2>
+                <div class="gift-img" id="gift-img-angry"></div>
             </section>
 
             <!-- <section class="slide gift-section">
@@ -90,6 +141,39 @@
             const nextBtn = document.getElementById('next-page')
             const pageIndicator = document.getElementById('page-indicator')
 
+            const tapRevealGifts = Array.from(document.querySelectorAll('.gift-img'))
+
+            function toggleGiftReveal(gift) {
+                gift.classList.toggle('revealed')
+                updateScrollableSlides()
+            }
+
+            tapRevealGifts.forEach((gift) => {
+                gift.classList.add('tap-reveal')
+
+                gift.addEventListener('click', (e) => {
+                    e.stopPropagation()
+                    toggleGiftReveal(gift)
+                })
+
+                gift.addEventListener('touchstart', (e) => {
+                    e.stopPropagation()
+                    toggleGiftReveal(gift)
+                }, { passive: true })
+            })
+
+            function updateScrollableSlides() {
+                slides.forEach((slide) => {
+                    slide.classList.remove('is-scrollable')
+                })
+
+                slides.forEach((slide) => {
+                    if (slide.scrollHeight > slide.clientHeight) {
+                        slide.classList.add('is-scrollable')
+                    }
+                })
+            }
+
             function getCurrentIndex() {
                 if (!swipeContainer) return 0
                 const pageWidth = swipeContainer.clientWidth || window.innerWidth
@@ -116,9 +200,34 @@
             if (swipeContainer) swipeContainer.addEventListener('scroll', updateNav, { passive: true })
 
             window.addEventListener('resize', () => {
+                updateScrollableSlides()
                 updateNav()
             })
 
+            if (swipeContainer) {
+                swipeContainer.addEventListener('wheel', (e) => {
+                    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return
+
+                    const index = getCurrentIndex()
+                    const currentSlide = slides[index]
+                    if (!currentSlide) return
+
+                    const canScrollVertically = currentSlide.scrollHeight > currentSlide.clientHeight
+                    if (canScrollVertically) {
+                        const atTop = currentSlide.scrollTop <= 0
+                        const atBottom = currentSlide.scrollTop + currentSlide.clientHeight >= currentSlide.scrollHeight - 1
+
+                        if ((e.deltaY < 0 && !atTop) || (e.deltaY > 0 && !atBottom)) {
+                            return
+                        }
+                    }
+
+                    e.preventDefault()
+                    swipeContainer.scrollBy({ left: e.deltaY, behavior: 'smooth' })
+                }, { passive: false })
+            }
+
+            updateScrollableSlides()
             updateNav()
         </script>
         
