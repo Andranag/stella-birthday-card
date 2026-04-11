@@ -1,16 +1,16 @@
 :root {
-    --cypress: #0f4c3a;
-    --red: #d62828;
-    --blue: #1d4ed8;
-    --purple: #7c3aed;
-    --card: rgba(255, 255, 255, 0.16);
-    --frame: rgba(255, 255, 255, 0.28);
+    --cypress: #0b3d2e;
+    --red: #b24a5a;
+    --blue: #1f3557;
+    --purple: #5a2d5c;
+    --card: rgba(255, 255, 255, 0.14);
+    --frame: rgba(255, 255, 255, 0.30);
 }
 
 body {
     text-align: center;
     font-family: 'Nunito', 'Happy Monkey', cursive;
-    background: linear-gradient(135deg, var(--cypress), var(--purple), var(--blue), var(--red));
+    background: linear-gradient(135deg, var(--cypress), var(--blue), var(--purple), var(--red));
     color: #ffffff;
     margin: 0;
     overflow: hidden;
@@ -629,10 +629,18 @@ h1, h2, h3, h4, p {
     border-radius: 16px;
     background: rgba(0, 0, 0, 0.22);
     border: 1px solid rgba(255, 255, 255, 0.18);
+    text-align: left;
+}
+
+.footer-card #footer {
+    text-align: center;
 }
 
 .footer-card p {
     margin: 10px 0 0;
+    font-family: 'Marck Script', 'Pacifico', cursive;
+    font-weight: 400;
+    font-size: clamp(18px, 2vw, 20px);
 }
 
 a {
