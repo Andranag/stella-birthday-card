@@ -347,6 +347,8 @@ h1, h2, h3, h4, p {
 
 #gift-img-end {
     margin: 0;
+    --gift-bg-size: contain;
+    border: none;
 }
 
 @supports selector(:has(*)) {
@@ -634,8 +636,21 @@ h1, h2, h3, h4, p {
 
 #footer {
     font-style: italic;
-    width: 400px;
+    margin: 0 0 10px;
+}
+
+.footer-card {
+    width: min(92vw, 700px);
     margin: 40px auto 20px;
+    line-height: 1.55;
+    padding: 18px 18px;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.footer-card p {
+    margin: 10px 0 0;
 }
 
 a {
