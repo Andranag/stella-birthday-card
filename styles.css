@@ -51,6 +51,8 @@ h2, h3, h4 {
     padding: 24px;
     box-sizing: border-box;
     overflow-y: hidden;
+    content-visibility: auto;
+    contain-intrinsic-size: 100vh 100vw;
 }
 
 .slide.is-scrollable {
@@ -216,12 +218,12 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/inspector gadget.gif");
 }
 
-#gift-img-happy.revealed {
-    --reveal-image: url("images/Happy Anna frozen.gif");
+#gift-img-pokemon.revealed {
+    --reveal-image: url("images/pokemon.png");
 }
 
 #gift-img-found.revealed {
-    --reveal-image: url("images/smoldering face.gif");
+    --reveal-image: url("images/finding Andreas.png");
 }
 
 #gift-img-question-mark.revealed {
@@ -265,7 +267,7 @@ h1, h2, h3, h4, p {
 }
 
 #gift-img-first-date.revealed {
-    --reveal-image: url("images/λαιδη αλητης.gif");
+    --reveal-image: url("images/lady and the tramp.gif");
 }
 
 #gift-img-first-reaction.revealed {
@@ -280,9 +282,42 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/Donald Duck Disney.gif");
 }
 
-#gift-img-blush.revealed {
-    --reveal-image: url("images/princess anna laughing.gif");
+#gift-img-happy.revealed {
+    --reveal-image: url("images/Happy Anna frozen.gif");
 }
+
+#gift-img-second-date.revealed {
+    --reveal-image: url("images/bunnies.gif");
+}
+
+#gift-img-invite.revealed {
+    --reveal-image: url("images/invite.gif");
+}
+
+#gift-img-blush.revealed {
+    --reveal-image: url("images/blush.gif");
+}
+
+#gift-img-cuddle.revealed {
+    --reveal-image: url("images/aladdin cuddle.gif");
+}
+
+#gift-img-cuddle2.revealed {
+    --reveal-image: url("images/lion king cuddle.gif");
+}
+
+#gift-img-lips.revealed {
+    --reveal-image: url("images/roger rabbit.gif");
+}
+
+#gift-img-kiss.revealed {
+    --reveal-image: url("images/hercules kiss.gif");
+}
+
+#gift-img-third-date.revealed {
+    --reveal-image: url("images/donald duck disney love GIF.gif");
+}
+
 
 #footer {
     font-style: italic;
@@ -326,4 +361,42 @@ a {
 
 #page-indicator {
     min-width: 64px;
+}
+
+#third-date-slide {
+    display: grid;
+    grid-template-columns: minmax(220px, 380px) minmax(0, 520px);
+    align-items: center;
+    justify-content: center;
+    column-gap: 22px;
+}
+
+#third-date-slide .gift-img {
+    margin: 0;
+    width: 100%;
+}
+
+#third-date-slide .float-text {
+    text-align: left;
+}
+
+#third-date-slide .float-text .gift-title {
+    margin: 0 0 10px 0;
+}
+
+@media (max-width: 720px) {
+    #third-date-slide {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #third-date-slide .gift-img {
+        margin: 20px auto;
+        width: min(90vw, 400px);
+    }
+
+    #third-date-slide .float-text {
+        text-align: center;
+    }
 }
