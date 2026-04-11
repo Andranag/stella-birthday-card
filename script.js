@@ -6,6 +6,29 @@ const pageIndicator = document.getElementById('page-indicator')
 
 const tapRevealGifts = Array.from(document.querySelectorAll('.gift-img'))
 
+const giftSections = Array.from(document.querySelectorAll('.gift-section'))
+
+function wrapGiftSectionText() {
+    giftSections.forEach((section) => {
+        const directGiftImages = Array.from(section.children).filter((el) => el.classList && el.classList.contains('gift-img'))
+        if (directGiftImages.length !== 1) return
+
+        if (section.querySelector(':scope > .gift-text')) return
+
+        const wrapper = document.createElement('div')
+        wrapper.className = 'gift-text'
+
+        Array.from(section.children).forEach((child) => {
+            if (child === directGiftImages[0]) return
+            wrapper.appendChild(child)
+        })
+
+        section.appendChild(wrapper)
+    })
+}
+
+wrapGiftSectionText()
+
 function toggleGiftReveal(gift) {
     gift.classList.toggle('revealed')
     gift.dataset.wasRevealed = gift.classList.contains('revealed') ? 'true' : 'false'
