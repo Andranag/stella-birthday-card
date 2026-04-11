@@ -4,6 +4,7 @@
     --blue: #1d4ed8;
     --purple: #7c3aed;
     --card: rgba(255, 255, 255, 0.16);
+    --frame: rgba(255, 255, 255, 0.28);
 }
 
 body {
@@ -201,6 +202,7 @@ h1, h2, h3, h4, p {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: center;
     gap: 18px;
+    padding-inline: clamp(8px, 3vw, 28px);
 }
 
 .dance-media {
@@ -239,12 +241,13 @@ h1, h2, h3, h4, p {
     .gift-section:has(> .gift-img):not(:has(> .gift-img ~ .gift-img)) {
         width: min(100%, 980px);
         display: grid;
-        grid-template-columns: minmax(160px, 360px) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
         align-items: center;
         align-content: center;
         justify-content: center;
-        column-gap: 22px;
+        column-gap: clamp(18px, 4vw, 44px);
         row-gap: 10px;
+        padding-inline: clamp(8px, 3vw, 28px);
     }
 
     .gift-section:has(> .gift-img):not(:has(> .gift-img ~ .gift-img)) > .gift-img {
@@ -253,7 +256,8 @@ h1, h2, h3, h4, p {
         align-self: center;
         margin: 0;
         width: 100%;
-        height: min(62vh, 380px);
+        max-width: var(--gift-w, min(90vw, 420px));
+        height: var(--gift-h, clamp(260px, 52vh, 400px));
     }
 
     .gift-section:has(> .gift-img):not(:has(> .gift-img ~ .gift-img)) > .gift-text {
@@ -262,6 +266,10 @@ h1, h2, h3, h4, p {
         text-align: left;
         max-width: 100%;
         overflow-wrap: anywhere;
+        padding-left: 6px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 }
 
@@ -295,15 +303,18 @@ h1, h2, h3, h4, p {
 
 .gift-img {
     margin: 20px auto;
-    width: min(90vw, 400px);
-    height: 400px;
-    border: 6px solid var(--card);
+    width: var(--gift-w, min(90vw, 420px));
+    height: var(--gift-h, clamp(260px, 52vh, 400px));
+    border: 6px solid var(--frame);
     border-radius: 10px;
     box-sizing: border-box;
     background-image: url("images/gift-cover.jpg");
     background-size: var(--gift-bg-size, cover);
     background-position: center;
     background-repeat: no-repeat;
+    transform: translateZ(0);
+    transition: transform 220ms ease, filter 220ms ease, box-shadow 220ms ease;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
 }
 
 #gift-img-end {
@@ -317,6 +328,19 @@ h1, h2, h3, h4, p {
 
 .gift-img.revealed {
     background-image: var(--reveal-image);
+    animation: gift-reveal 280ms ease-out;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
+}
+
+@keyframes gift-reveal {
+    from {
+        transform: scale(0.985);
+        filter: saturate(0.9) brightness(0.95);
+    }
+    to {
+        transform: scale(1);
+        filter: saturate(1) brightness(1);
+    }
 }
 
 #gift-img-disney.revealed {
@@ -377,6 +401,11 @@ h1, h2, h3, h4, p {
 
 #gift-img-angry.revealed {
     --reveal-image: url("images/angry.gif");
+}
+
+#gift-img-TBC {
+    --gift-h: clamp(200px, 40vh, 320px);
+    --gift-bg-size: contain;
 }
 
 #gift-img-TBC.revealed {
@@ -651,6 +680,19 @@ a {
         align-items: center;
     }
 
+    @supports selector(:has(*)) {
+        .gift-section:has(> .gift-img):not(:has(> .gift-img ~ .gift-img)) {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-inline: 0;
+        }
+
+        .gift-section:has(> .gift-img):not(:has(> .gift-img ~ .gift-img)) > .gift-text {
+            padding-left: 0;
+        }
+    }
+
     .dance-collage {
         grid-template-columns: 1fr;
     }
@@ -659,20 +701,9 @@ a {
         text-align: center;
     }
 
-    #dance-skills-slide .montage-row {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-
-    #dance-skills-slide .montage-row .gift-title {
-        text-align: center;
-    }
-
     .gift-section > .gift-img {
         margin: 20px auto;
-        width: min(90vw, 400px);
+        width: var(--gift-w, min(90vw, 420px));
     }
     .gift-section > :not(.gift-img) {
         text-align: center;
