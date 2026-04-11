@@ -182,20 +182,6 @@ h1, h2, h3, h4, p {
     margin-bottom: 10px;
 }
 
-#bday-age {
-    background: var(--card);
-    padding: 5px 10px;
-    border-radius: 5px;
-    margin: 5px 0 10px 0;
-}
-
-#bday-date {
-    margin: 0;
-    background: var(--card);
-    padding: 5px 10px;
-    border-radius: 5px;
-}
-
 #header {
     display: flex;
     flex-direction: column;
@@ -247,31 +233,6 @@ h1, h2, h3, h4, p {
     width: 100%;
     height: min(28vh, 220px);
     margin: 0;
-}
-
-#dance-skills-slide {
-    width: min(100%, 980px);
-    align-items: stretch;
-    gap: 14px;
-}
-
-#dance-skills-slide .montage-row {
-    width: 100%;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(180px, 320px);
-    align-items: center;
-    column-gap: 18px;
-}
-
-#dance-skills-slide .montage-row .gift-title {
-    margin: 0;
-    text-align: left;
-}
-
-#dance-skills-slide .montage-row .gift-img {
-    margin: 0;
-    width: 100%;
-    height: min(26vh, 200px);
 }
 
 @supports selector(:has(*)) {
@@ -349,14 +310,6 @@ h1, h2, h3, h4, p {
     margin: 0;
     --gift-bg-size: contain;
     border: none;
-}
-
-@supports selector(:has(*)) {
-    .gift-section:has(> .gift-img):not(:has(> .gift-img ~ .gift-img)) > .gift-img {
-        width: 100%;
-        margin: 0;
-        height: min(62vh, 380px);
-    }
 }
 .gift-img.tap-reveal {
     cursor: pointer;
