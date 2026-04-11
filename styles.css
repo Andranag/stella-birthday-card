@@ -74,7 +74,7 @@ body.is-locked #quiz-gate {
 
 .quiz-input:focus {
     border-color: rgba(255, 255, 255, 0.45);
-    box-shadow: 0 0 0 4px rgba(178, 74, 90, 0.22);
+    box-shadow: 0 0 0 4px rgba(178, 74, 90, 0.32);
 }
 
 .quiz-button {
@@ -82,8 +82,8 @@ body.is-locked #quiz-gate {
     width: 100%;
     padding: 12px 14px;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(178, 74, 90, 0.55);
+    background: rgba(178, 74, 90, 0.28);
     color: white;
     font-family: inherit;
     font-weight: 700;
@@ -91,7 +91,7 @@ body.is-locked #quiz-gate {
 }
 
 .quiz-button:hover {
-    background: rgba(255, 255, 255, 0.18);
+    background: rgba(178, 74, 90, 0.36);
 }
 
 .quiz-feedback {

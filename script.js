@@ -7,12 +7,37 @@ const pageIndicator = document.getElementById('page-indicator')
 const quizForm = document.getElementById('quiz-form')
 const quizAnswer = document.getElementById('quiz-answer')
 const quizFeedback = document.getElementById('quiz-feedback')
+const quizQuestion = document.getElementById('quiz-question')
 
-const QUIZ_STORAGE_KEY = 'stella_bday_unlocked'
-const QUIZ_ACCEPTED_ANSWERS = ['vanilla']
+const QUIZ_STEPS = [
+    {
+        question: 'What’s my favorite ice cream flavor?',
+        answers: ['vanilla'],
+    },
+    {
+        question: 'What’s my favorite color?',
+        answers: ['cypress'],
+    },
+    {
+        question: 'What’s my favorite food?',
+        answers: ['mousakas'],
+    },
+]
+
+let quizStepIndex = 0
 
 function normalizeQuizAnswer(value) {
     return (value || '').trim().toLowerCase()
+}
+
+function renderQuizStep() {
+    const step = QUIZ_STEPS[quizStepIndex]
+    if (quizQuestion && step) quizQuestion.textContent = step.question
+    if (quizFeedback) quizFeedback.textContent = `Question ${quizStepIndex + 1} of ${QUIZ_STEPS.length}`
+    if (quizAnswer) {
+        quizAnswer.value = ''
+        quizAnswer.focus()
+    }
 }
 
 function setLockedState(isLocked) {
@@ -23,22 +48,9 @@ function setLockedState(isLocked) {
 }
 
 function unlockQuizGate() {
-    try {
-        window.localStorage.setItem(QUIZ_STORAGE_KEY, 'true')
-    } catch {
-        // ignore
-    }
     setLockedState(false)
     updateScrollableSlides(true)
     updateNav()
-}
-
-function isUnlocked() {
-    try {
-        return window.localStorage.getItem(QUIZ_STORAGE_KEY) === 'true'
-    } catch {
-        return false
-    }
 }
 
 const tapRevealGifts = Array.from(document.querySelectorAll('.gift-img'))
@@ -84,23 +96,28 @@ function wrapGiftSectionText() {
 wrapGiftSectionText()
 applyHintVisibility()
 
-if (!isUnlocked()) {
-    setLockedState(true)
-} else {
-    setLockedState(false)
-}
+setLockedState(true)
+renderQuizStep()
 
 if (quizForm) {
     quizForm.addEventListener('submit', (e) => {
         e.preventDefault()
         const answer = normalizeQuizAnswer(quizAnswer ? quizAnswer.value : '')
-        const ok = QUIZ_ACCEPTED_ANSWERS.includes(answer)
+        const step = QUIZ_STEPS[quizStepIndex]
+        const ok = step ? step.answers.includes(answer) : false
         if (ok) {
-            if (quizFeedback) quizFeedback.textContent = 'Unlocked. Happy birthday :)'
-            unlockQuizGate()
+            quizStepIndex += 1
+            if (quizStepIndex >= QUIZ_STEPS.length) {
+                if (quizFeedback) quizFeedback.textContent = 'Unlocked. Happy birthday :)'
+                unlockQuizGate()
+            } else {
+                renderQuizStep()
+            }
         } else {
+            quizStepIndex = 0
             if (quizFeedback) quizFeedback.textContent = 'Nope — try again.'
             if (quizAnswer) quizAnswer.select()
+            renderQuizStep()
         }
     })
 }

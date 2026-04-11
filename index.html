@@ -12,9 +12,9 @@
         <div id="quiz-gate" role="dialog" aria-modal="true" aria-labelledby="quiz-title">
             <div class="quiz-card">
                 <h2 id="quiz-title" class="gift-title">One quick question first...</h2>
-                <p class="quiz-subtitle">Answer correctly to unlock your birthday story.</p>
+                <p class="quiz-subtitle">Answer correctly to unlock your birthday present.</p>
                 <form id="quiz-form">
-                    <label class="quiz-label" for="quiz-answer">Question: What’s my favorite ice cream flavor?</label>
+                    <label class="quiz-label" for="quiz-answer">Question: <span id="quiz-question"></span></label>
                     <input id="quiz-answer" class="quiz-input" type="text" autocomplete="off" inputmode="text" />
                     <button id="quiz-submit" class="quiz-button" type="submit">Unlock</button>
                     <p id="quiz-feedback" class="quiz-feedback" aria-live="polite"></p>
