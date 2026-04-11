@@ -115,6 +115,13 @@ h1, h2, h3, h4, p {
     text-align: right;
 }
 
+/* No blinking caret on the Inspector Gadget slide */
+.search-lines .typewriter {
+    border-right: none;
+    animation: typewriter 1.2s steps(24, end) forwards;
+    animation-delay: var(--tw-delay);
+}
+
 #main-img {
     width: 300px;
     border-radius: 50%;
@@ -201,12 +208,20 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/gaston.gif");
 }
 
+#gift-img-handsome2.revealed {
+    --reveal-image: url("images/gaston chest.gif");
+}
+
 #gift-img-search.revealed {
     --reveal-image: url("images/inspector gadget.gif");
 }
 
 #gift-img-happy.revealed {
     --reveal-image: url("images/Happy Anna frozen.gif");
+}
+
+#gift-img-found.revealed {
+    --reveal-image: url("images/smoldering face.gif");
 }
 
 #gift-img-question-mark.revealed {
@@ -217,37 +232,57 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/angry.gif");
 }
 
-/* #gift-img-hot:hover {
-    background-image: url("images/hot.gif");
+#gift-img-TBC.revealed {
+    --reveal-image: url("images/to-be-continued-one-piece.gif");
 }
 
-#gift-img-genius:hover {
-    background-image: url("images/genius.gif");
+#gift-img-lie.revealed {
+    --reveal-image: url("images/Pinokio.gif");
 }
 
-#gift-img-badass:hover {
-    background-image: url("images/badass.gif");
+#gift-img-like.revealed {
+    --reveal-image: url("images/goofy.gif");
 }
 
-#gift-img-cheers:hover {
-    background-image: url("images/cheers.gif");
+#gift-img-unready.revealed {
+    --reveal-image: url("images/quasimodo.gif");
 }
 
-#gift-img-smile:hover {
-    background-image: url("images/happy.gif");
+#gift-img-upside-down.revealed {
+    --reveal-image: url("images/stitch.gif");
 }
 
-#gift-img-moments:hover {
-    background-image: url("images/cheers.gif");
+#gift-img-sad-beauty.revealed {
+    --reveal-image: url("images/sad beauty and beast.gif");
 }
 
-#gift-img-justagirl:hover {
-    background-image: url("images/justagirl.gif");
+#gift-img-sad-tiger.revealed {
+    --reveal-image: url("images/sad tiger.gif");
+}
+    
+#gift-img-then.revealed {
+    --reveal-image: url("images/Spongebob Squarepants Transition.gif");
 }
 
-#gift-img-tongue:hover {
-    background-image: url("images/tongue.gif");
-} */
+#gift-img-first-date.revealed {
+    --reveal-image: url("images/λαιδη αλητης.gif");
+}
+
+#gift-img-first-reaction.revealed {
+    --reveal-image: url("images/jaw drop.gif");
+}
+
+#gift-img-cool.revealed {
+    --reveal-image: url("images/milo atlantis.gif");
+}
+
+#gift-img-talk-to-the-hand.revealed {
+    --reveal-image: url("images/Donald Duck Disney.gif");
+}
+
+#gift-img-blush.revealed {
+    --reveal-image: url("images/princess anna laughing.gif");
+}
 
 #footer {
     font-style: italic;
@@ -292,15 +327,3 @@ a {
 #page-indicator {
     min-width: 64px;
 }
-
-/* 
-Add the footer paragraph according to the design. 
-Configure the anchor tag to open the link in a new tab.
-Forgotten how to do it? Google it! 
-
-Link: 
-https://scrimba.com/learn/htmlandcss
-
-Text:
-Want to create your own Birthday GIFt site? Take this HTML & CSS course.
-*/
