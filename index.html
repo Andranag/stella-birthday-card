@@ -21,6 +21,11 @@
                 <div class="gift-img" id="gift-img-disney"></div>
             </section>
 
+            <section class="slide gift-section">
+                <h2 class="gift-title">Γι' αυτό σου έγραψα μια ιστορία</h2>
+                <div class="gift-img" id="gift-img-story"></div>
+            </section>
+
             <!-- <section class="slide gift-section">
                 <h2 class="gift-title"> POV: Όταν μπαίνεις στο δωμάτιο: "Ω, να σου..."</h2>
                 <div class="gift-img" id="gift-img-hot"></div>
@@ -110,28 +115,9 @@
             if (nextBtn) nextBtn.addEventListener('click', () => goToIndex(getCurrentIndex() + 1))
             if (swipeContainer) swipeContainer.addEventListener('scroll', updateNav, { passive: true })
 
-            if (swipeContainer) {
-                swipeContainer.addEventListener('wheel', (e) => {
-                    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return
-
-                    const index = getCurrentIndex()
-                    const currentSlide = slides[index]
-                    if (!currentSlide) return
-
-                    const canScrollVertically = currentSlide.scrollHeight > currentSlide.clientHeight
-                    if (canScrollVertically) {
-                        const atTop = currentSlide.scrollTop <= 0
-                        const atBottom = currentSlide.scrollTop + currentSlide.clientHeight >= currentSlide.scrollHeight - 1
-
-                        if ((e.deltaY < 0 && !atTop) || (e.deltaY > 0 && !atBottom)) {
-                            return
-                        }
-                    }
-
-                    e.preventDefault()
-                    swipeContainer.scrollBy({ left: e.deltaY, behavior: 'smooth' })
-                }, { passive: false })
-            }
+            window.addEventListener('resize', () => {
+                updateNav()
+            })
 
             updateNav()
         </script>
