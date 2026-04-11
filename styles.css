@@ -183,6 +183,46 @@ h1, h2, h3, h4, p {
     align-items: center;
 }
 
+.dance-collage {
+    width: min(100%, 980px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 18px;
+}
+
+.dance-media {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dance-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.dance-text {
+    text-align: left;
+}
+
+.dance-text .gift-title {
+    margin: 0;
+}
+
+.dance-media #gift-img-dance-skills {
+    width: 100%;
+    height: min(42vh, 320px);
+    margin: 0;
+}
+
+.dance-media .dance-row .gift-img {
+    width: 100%;
+    height: min(28vh, 220px);
+    margin: 0;
+}
+
 #dance-skills-slide {
     width: min(100%, 980px);
     align-items: stretch;
@@ -238,6 +278,15 @@ h1, h2, h3, h4, p {
     }
 }
 
+@supports selector(:has(*)) {
+    .gift-section:has(> #gift-img-end) {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
 .gift-title {
     margin-bottom: 10px;
 }
@@ -270,6 +319,10 @@ h1, h2, h3, h4, p {
     background-repeat: no-repeat;
 }
 
+#gift-img-end {
+    margin: 0;
+}
+
 @supports selector(:has(*)) {
     .gift-section:has(> .gift-img):not(:has(> .gift-img ~ .gift-img)) > .gift-img {
         width: 100%;
@@ -277,7 +330,6 @@ h1, h2, h3, h4, p {
         height: min(62vh, 380px);
     }
 }
-
 .gift-img.tap-reveal {
     cursor: pointer;
 }
@@ -315,7 +367,7 @@ h1, h2, h3, h4, p {
 }
 
 #gift-img-dance-skills.revealed {
-    --reveal-image: url("images/Mickey Mouse Happy Dance.gif");
+    --reveal-image: url("images/Mickey dancing tap.gif");
 }
 
 #gift-img-dance-skills2.revealed {
@@ -514,6 +566,18 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/Nick Wilde.gif");
 }
 
+#gift-img-spank.revealed {
+    --reveal-image: url("images/spank.gif");
+}
+
+#gift-img-slept.revealed {
+    --reveal-image: url("images/101 Dalmatians.gif");
+}
+
+#gift-img-end.revealed {
+    --reveal-image: url("images/The End vintage.gif");
+}
+
 #footer {
     font-style: italic;
     width: 400px;
@@ -563,6 +627,14 @@ a {
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
+
+    .dance-collage {
+        grid-template-columns: 1fr;
+    }
+
+    .dance-text {
+        text-align: center;
     }
 
     #dance-skills-slide .montage-row {
