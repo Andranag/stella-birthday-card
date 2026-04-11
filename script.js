@@ -4,6 +4,43 @@ const prevBtn = document.getElementById('prev-page')
 const nextBtn = document.getElementById('next-page')
 const pageIndicator = document.getElementById('page-indicator')
 
+const quizForm = document.getElementById('quiz-form')
+const quizAnswer = document.getElementById('quiz-answer')
+const quizFeedback = document.getElementById('quiz-feedback')
+
+const QUIZ_STORAGE_KEY = 'stella_bday_unlocked'
+const QUIZ_ACCEPTED_ANSWERS = ['vanilla']
+
+function normalizeQuizAnswer(value) {
+    return (value || '').trim().toLowerCase()
+}
+
+function setLockedState(isLocked) {
+    document.body.classList.toggle('is-locked', isLocked)
+    if (isLocked) {
+        if (quizAnswer) quizAnswer.focus()
+    }
+}
+
+function unlockQuizGate() {
+    try {
+        window.localStorage.setItem(QUIZ_STORAGE_KEY, 'true')
+    } catch {
+        // ignore
+    }
+    setLockedState(false)
+    updateScrollableSlides(true)
+    updateNav()
+}
+
+function isUnlocked() {
+    try {
+        return window.localStorage.getItem(QUIZ_STORAGE_KEY) === 'true'
+    } catch {
+        return false
+    }
+}
+
 const tapRevealGifts = Array.from(document.querySelectorAll('.gift-img'))
 
 const giftSections = Array.from(document.querySelectorAll('.gift-section'))
@@ -46,6 +83,27 @@ function wrapGiftSectionText() {
 
 wrapGiftSectionText()
 applyHintVisibility()
+
+if (!isUnlocked()) {
+    setLockedState(true)
+} else {
+    setLockedState(false)
+}
+
+if (quizForm) {
+    quizForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        const answer = normalizeQuizAnswer(quizAnswer ? quizAnswer.value : '')
+        const ok = QUIZ_ACCEPTED_ANSWERS.includes(answer)
+        if (ok) {
+            if (quizFeedback) quizFeedback.textContent = 'Unlocked. Happy birthday :)'
+            unlockQuizGate()
+        } else {
+            if (quizFeedback) quizFeedback.textContent = 'Nope — try again.'
+            if (quizAnswer) quizAnswer.select()
+        }
+    })
+}
 
 function toggleGiftReveal(gift) {
     const nextState = !gift.classList.contains('revealed')
