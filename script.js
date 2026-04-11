@@ -57,12 +57,8 @@ function suspendSlideGifs(index) {
     if (!slide) return
     const gifts = Array.from(slide.querySelectorAll('.gift-img'))
     gifts.forEach((gift) => {
-        if (gift.classList.contains('revealed')) {
-            gift.dataset.wasRevealed = 'true'
-            gift.classList.remove('revealed')
-        } else {
-            gift.dataset.wasRevealed = 'false'
-        }
+        gift.classList.remove('revealed')
+        gift.dataset.wasRevealed = 'false'
     })
 }
 
@@ -71,9 +67,7 @@ function resumeSlideGifs(index) {
     if (!slide) return
     const gifts = Array.from(slide.querySelectorAll('.gift-img'))
     gifts.forEach((gift) => {
-        if (gift.dataset.wasRevealed === 'true') {
-            gift.classList.add('revealed')
-        }
+        gift.dataset.wasRevealed = gift.classList.contains('revealed') ? 'true' : 'false'
     })
 }
 
