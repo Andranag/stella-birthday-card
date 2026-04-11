@@ -8,6 +8,10 @@ const tapRevealGifts = Array.from(document.querySelectorAll('.gift-img'))
 
 const giftSections = Array.from(document.querySelectorAll('.gift-section'))
 
+function applyHintVisibility() {
+    document.querySelectorAll('.gift-hint').forEach((hint) => hint.classList.remove('is-hidden'))
+}
+
 function wrapGiftSectionText() {
     giftSections.forEach((section) => {
         const directGiftImages = Array.from(section.children).filter((el) => el.classList && el.classList.contains('gift-img'))
@@ -28,6 +32,7 @@ function wrapGiftSectionText() {
 }
 
 wrapGiftSectionText()
+applyHintVisibility()
 
 function toggleGiftReveal(gift) {
     gift.classList.toggle('revealed')
@@ -93,10 +98,14 @@ function setActiveSlide(index) {
     if (index === activeSlideIndex) return
 
     if (activeSlideIndex >= 0) {
+        const prevSlide = slides[activeSlideIndex]
+        if (prevSlide) prevSlide.classList.remove('is-active')
         suspendSlideGifs(activeSlideIndex)
     }
 
     activeSlideIndex = index
+    const nextSlide = slides[activeSlideIndex]
+    if (nextSlide) nextSlide.classList.add('is-active')
     resumeSlideGifs(activeSlideIndex)
     updateScrollableSlides()
 }

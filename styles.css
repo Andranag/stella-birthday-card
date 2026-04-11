@@ -53,6 +53,14 @@ h2, h3, h4 {
     overflow-y: hidden;
     content-visibility: auto;
     contain-intrinsic-size: 100vh 100vw;
+    opacity: 0.001;
+    transform: translateY(10px);
+    transition: opacity 240ms ease, transform 240ms ease;
+}
+
+.slide.is-active {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .slide.is-scrollable {
@@ -113,6 +121,22 @@ h1, h2, h3, h4, p {
     text-align: left;
 }
 
+.search-lines > :nth-child(1) {
+    font-size: 24px;
+}
+
+.search-lines > :nth-child(2) {
+    font-size: 20px;
+}
+
+.search-lines > :nth-child(3) {
+    font-size: 17px;
+}
+
+.search-lines > :nth-child(4) {
+    font-size: 14px;
+}
+
 .search-lines .gift-title:nth-child(even) {
     align-self: flex-end;
     text-align: right;
@@ -159,6 +183,31 @@ h1, h2, h3, h4, p {
     align-items: center;
 }
 
+#dance-skills-slide {
+    width: min(100%, 980px);
+    align-items: stretch;
+    gap: 14px;
+}
+
+#dance-skills-slide .montage-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 320px);
+    align-items: center;
+    column-gap: 18px;
+}
+
+#dance-skills-slide .montage-row .gift-title {
+    margin: 0;
+    text-align: left;
+}
+
+#dance-skills-slide .montage-row .gift-img {
+    margin: 0;
+    width: 100%;
+    height: min(26vh, 200px);
+}
+
 @supports selector(:has(*)) {
     .gift-section:has(> .gift-img):not(:has(> .gift-img ~ .gift-img)) {
         width: min(100%, 980px);
@@ -197,6 +246,17 @@ h1, h2, h3, h4, p {
     margin-top: 0;
 }
 
+.gift-hint,
+.gift-section p {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.gift-hint.is-hidden {
+    display: none;
+}
+
 .gift-img {
     margin: 20px auto;
     width: min(90vw, 400px);
@@ -205,8 +265,9 @@ h1, h2, h3, h4, p {
     border-radius: 10px;
     box-sizing: border-box;
     background-image: url("images/gift-cover.jpg");
-    background-size: cover;
+    background-size: var(--gift-bg-size, cover);
     background-position: center;
+    background-repeat: no-repeat;
 }
 
 @supports selector(:has(*)) {
@@ -251,6 +312,18 @@ h1, h2, h3, h4, p {
 
 #gift-img-handsome2.revealed {
     --reveal-image: url("images/gaston chest.gif");
+}
+
+#gift-img-dance-skills.revealed {
+    --reveal-image: url("images/Mickey Mouse Happy Dance.gif");
+}
+
+#gift-img-dance-skills2.revealed {
+    --reveal-image: url("images/the jungle book dancing.gif");
+}
+
+#gift-img-dance-skills3.revealed {
+    --reveal-image: url("images/timon.gif");
 }
 
 #gift-img-search.revealed {
@@ -345,6 +418,26 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/lion king cuddle.gif");
 }
 
+#gift-img-cuddle3.revealed {
+    --reveal-image: url("images/two foxes.gif");
+}
+
+#gift-img-cuddle4.revealed {
+    --reveal-image: url("images/mickey & miney cuddle.gif");
+}
+
+#gift-img-fear.revealed {
+    --reveal-image: url("images/shark.gif");
+}
+
+#gift-img-slow.revealed {
+    --reveal-image: url("images/sloth.gif");
+}
+
+#gift-img-special.revealed {
+    --reveal-image: url("images/Leonardo Di Caprio.gif");
+}
+
 #gift-img-lips.revealed {
     --reveal-image: url("images/roger rabbit.gif");
 }
@@ -353,8 +446,72 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/hercules kiss.gif");
 }
 
+#gift-img-kiss2.revealed {
+    --reveal-image: url("images/Avatar kiss.gif");
+}
+
+#gift-img-kiss3.revealed {
+    --reveal-image: url("images/ariel kiss.gif");
+}
+
+#gift-img-kiss4.revealed {
+    --reveal-image: url("images/aladdin kiss.gif");
+}
+
+#gift-img-stressed.revealed {
+    --reveal-image: url("images/Stressed Mickey Mouse.gif");
+}
+
+#gift-img-kiss5.revealed {
+    --reveal-image: url("images/Mickey Mouse Kiss.gif");
+}
+
+#gift-img-kiss6.revealed {
+    --reveal-image: url("images/bunnies kiss.gif");
+}
+
+#gift-img-kiss7.revealed {
+    --reveal-image: url("images/Valentines Day Kiss GIF.gif");
+}
+
 #gift-img-third-date.revealed {
     --reveal-image: url("images/donald duck disney love GIF.gif");
+}
+
+#gift-img-dance.revealed {
+    --reveal-image: url("images/Prince Charming Dancing.gif");
+}
+
+#gift-img-dance2.revealed {
+    --reveal-image: url("images/beauty and the beast dancing.gif");
+}
+
+#gift-img-dance3.revealed {
+    --reveal-image: url("images/the aristocats dancing.gif");
+}
+
+#gift-img-confident.revealed {
+    --reveal-image: url("images/confident.gif");
+}
+
+#gift-img-shrug.revealed {
+    --reveal-image: url("images/Alice In Wonderland Shrug.gif");
+}
+
+#gift-img-daisy.revealed {
+    --reveal-image: url("images/daisy.gif");
+}
+
+#gift-img-smoldering.revealed {
+    --reveal-image: url("images/smoldering face.gif");
+}
+
+#gift-img-money.revealed {
+    --reveal-image: url("images/Donald Duck no money.gif");
+}
+
+#gift-img-naked.revealed {
+    --reveal-image: url("images/Nick Wilde.gif");
 }
 
 #footer {
@@ -408,11 +565,21 @@ a {
         align-items: center;
     }
 
+    #dance-skills-slide .montage-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #dance-skills-slide .montage-row .gift-title {
+        text-align: center;
+    }
+
     .gift-section > .gift-img {
         margin: 20px auto;
         width: min(90vw, 400px);
     }
-
     .gift-section > :not(.gift-img) {
         text-align: center;
     }
