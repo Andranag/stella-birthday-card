@@ -326,10 +326,29 @@ h1, h2, h3, h4, p {
     cursor: pointer;
 }
 
+.gift-img.tap-reveal:not(.revealed) {
+    animation: gift-breathe 2.8s ease-in-out infinite;
+}
+
+.gift-img.tap-reveal:active {
+    transform: scale(0.985);
+}
+
 .gift-img.revealed {
     background-image: var(--reveal-image);
     animation: gift-reveal 280ms ease-out;
     box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
+}
+
+@keyframes gift-breathe {
+    0%, 100% {
+        transform: scale(1);
+        filter: saturate(1) brightness(1);
+    }
+    50% {
+        transform: scale(1.01);
+        filter: saturate(1.03) brightness(1.03);
+    }
 }
 
 @keyframes gift-reveal {
@@ -393,6 +412,10 @@ h1, h2, h3, h4, p {
 
 #gift-img-found.revealed {
     --reveal-image: url("images/finding Andreas.png");
+}
+
+#gift-img-found {
+    background-position: center 18%;
 }
 
 #gift-img-question-mark.revealed {
@@ -641,6 +664,21 @@ h1, h2, h3, h4, p {
     font-family: 'Marck Script', 'Pacifico', cursive;
     font-weight: 400;
     font-size: clamp(18px, 2vw, 20px);
+    line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gift-img {
+        transition: none;
+    }
+
+    .gift-img.tap-reveal:not(.revealed) {
+        animation: none;
+    }
+
+    .gift-img.revealed {
+        animation: none;
+    }
 }
 
 a {
