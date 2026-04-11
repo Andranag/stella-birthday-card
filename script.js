@@ -8,6 +8,19 @@ const tapRevealGifts = Array.from(document.querySelectorAll('.gift-img'))
 
 const giftSections = Array.from(document.querySelectorAll('.gift-section'))
 
+function clearInlineRevealImage(gift) {
+    gift.style.removeProperty('--reveal-image')
+}
+
+function setCacheBustedRevealImage(gift) {
+    const raw = window.getComputedStyle(gift).getPropertyValue('--reveal-image').trim()
+    if (!raw) return
+    const match = /url\((['"]?)(.*?)\1\)/.exec(raw)
+    if (!match) return
+    const baseUrl = match[2].split('?')[0]
+    gift.style.setProperty('--reveal-image', `url("${baseUrl}?v=${Date.now()}")`)
+}
+
 function applyHintVisibility() {
     document.querySelectorAll('.gift-hint').forEach((hint) => hint.classList.remove('is-hidden'))
 }
@@ -35,7 +48,15 @@ wrapGiftSectionText()
 applyHintVisibility()
 
 function toggleGiftReveal(gift) {
-    gift.classList.toggle('revealed')
+    const nextState = !gift.classList.contains('revealed')
+    if (nextState) {
+        clearInlineRevealImage(gift)
+        gift.classList.add('revealed')
+        setCacheBustedRevealImage(gift)
+    } else {
+        gift.classList.remove('revealed')
+        clearInlineRevealImage(gift)
+    }
     gift.dataset.wasRevealed = gift.classList.contains('revealed') ? 'true' : 'false'
     updateScrollableSlides()
 }
@@ -58,6 +79,7 @@ function suspendSlideGifs(index) {
     const gifts = Array.from(slide.querySelectorAll('.gift-img'))
     gifts.forEach((gift) => {
         gift.classList.remove('revealed')
+        clearInlineRevealImage(gift)
         gift.dataset.wasRevealed = 'false'
     })
 }
