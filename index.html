@@ -6,40 +6,135 @@
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <div id="header">
-            <h1>Today is Nick's birthday 🎉</h1>
-            <img id="bff-img" src="images/nick.jpg">
-            <h2 id="bday-age">24 years old</h2>
-            <h4 id="bday-date">01.11.2022</h4>
+        <div id="swipe-container">
+            <section class="slide" id="header">
+                <h1>Ποιος έχει δύο αντίχειρες και έχει σήμερα γενέθλια ;;; 🎉</h1>
+                <img id="main-img" src="images/ariel main.gif">
+                <img id="support-img" src="images/hades.gif">
+                <h2 id="bday-age">25 χρονών</h2>
+                <h4 id="bday-date">03.05.2001</h4>
+            </section>
+            
+            <section class="slide gift-section">
+                <h2 class="gift-title">Σήμερα είναι η μέρα σου και αξίζεις τα καλύτερα! 🥳</h2>
+                <h3 class="gift-hint">(Scroll down και άνοιξε τα δώρα)</h3>
+                <div class="gift-img" id="gift-img-disney"></div>
+            </section>
+
+            <!-- <section class="slide gift-section">
+                <h2 class="gift-title"> POV: Όταν μπαίνεις στο δωμάτιο: "Ω, να σου..."</h2>
+                <div class="gift-img" id="gift-img-hot"></div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">Αν έπρεπε να σε περιγράψω με ΜΙΑ λέξη 👇</h2>
+                <div class="gift-img" id="gift-img-genius"></div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">POV: Η thug life πλευρά σου 😎</h2>
+                <div class="gift-img" id="gift-img-badass"></div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">Το χαμόγελό σου μου φτιάχνει την ημέρα 😊</h2>
+                <div class="gift-img" id="gift-img-smile"></div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">Και όταν λες "άντε καλά"… ξέρω ότι κατά βάθος σου αρέσει. (Μη το αρνηθείς 😌)</h2>
+                <div class="gift-img" id="gift-img-moments"></div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">POV: Λες "I’m just a girl" και εγώ χάνω κάθε επιχείρημα 🫠</h2>
+                <div class="gift-img" id="gift-img-justagirl"></div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">Τι μου αρέσει περισσότερο επάνω σου 💋</h2>
+                <div class="gift-img" id="gift-img-tongue"></div>
+            </section>
+
+            <section class="slide gift-section">
+                <h2 class="gift-title">Αυτό είναι για σένα babe μου 🥂</h2>
+                <div class="gift-img" id="gift-img-cheers"></div>
+            </section> -->
+
+            <section class="slide">
+                <p id="footer">Χρόνια πολλά babe μου.
+                    Υπάρχουν τόσα που δεν ξέρω ακόμα για εσένα και αυτό είναι το ωραίο. Μου αρέσει που σε ανακαλύπτω κάθε μέρα.
+                    Λατρεύω τα μπλε σου μάτια. Έχουν νάζι, πονηριά και έναν ερωτισμό που με κάνει να λιώνω.
+                    Λατρεύω και το χαμόγελό σου — γιατί όταν χαμογελάς, χαμογελάνε και τα μάτια σου μαζί.
+                    Μα πάνω απ’ όλα, μ’ αρέσει ο τρόπος που μιλάς: καθαρά, αληθινά, χωρίς φόβο.
+                    Μου βγάζεις ηρεμία, ενθουσιασμό, ασφάλεια… και πεταλούδες. Όλα τα παραπάνω.
+                    Θέλω να είμαι δίπλα σου, να σε κάνω να νιώθεις όμορφα, και να δημιουργήσουμε κάτι μοναδικό.</p>
+            </section>
         </div>
-        
-        <div class="gift-section">
-            <h2 class="gift-title">Here's how happy I am for you today 🥳</h2>
-            <h3 class="gift-hint">(Hover over the gift)</h3>
-            <div class="gift-img" id="gift-img-happy"></div>
-        </div>
-        
-        <div class="gift-section">
-            <h2 class="gift-title">How people react when you enter the room 😍</h2>
-            <div class="gift-img" id="gift-img-hot"></div>
-        </div>
-        
-        <div class="gift-section">
-            <h2 class="gift-title">If I had to describe you with ONE word 👇</h2>
-            <div class="gift-img" id="gift-img-genius"></div>
-        </div>
-        
-        <div class="gift-section">
-            <h2 class="gift-title">The only person as badass as you 💪</h2>
-            <div class="gift-img" id="gift-img-badass"></div>
-        </div>
-        
-         <div class="gift-section">
-            <h2 class="gift-title">This one's for you, my friend 🥂</h2>
-            <div class="gift-img" id="gift-img-cheers"></div>
-        </div>
-        
-        <p id="footer">Want to create your own Birthday GIFt site? Take <a href="https://scrimba.com/learn/htmlandcss" target="_blank">this HTML & CSS course.</a></p>
+
+        <nav id="page-nav" aria-label="Book navigation">
+            <button id="prev-page" type="button">Προηγούμενη</button>
+            <span id="page-indicator">1 / 1</span>
+            <button id="next-page" type="button">Επόμενη</button>
+        </nav>
+
+        <script>
+            const swipeContainer = document.getElementById('swipe-container')
+            const slides = swipeContainer ? Array.from(swipeContainer.querySelectorAll('.slide')) : []
+            const prevBtn = document.getElementById('prev-page')
+            const nextBtn = document.getElementById('next-page')
+            const pageIndicator = document.getElementById('page-indicator')
+
+            function getCurrentIndex() {
+                if (!swipeContainer) return 0
+                const pageWidth = swipeContainer.clientWidth || window.innerWidth
+                return Math.round(swipeContainer.scrollLeft / pageWidth)
+            }
+
+            function updateNav() {
+                const index = getCurrentIndex()
+                const total = slides.length || 1
+                if (pageIndicator) pageIndicator.textContent = `${index + 1} / ${total}`
+                if (prevBtn) prevBtn.disabled = index <= 0
+                if (nextBtn) nextBtn.disabled = index >= total - 1
+            }
+
+            function goToIndex(index) {
+                if (!swipeContainer) return
+                const clamped = Math.max(0, Math.min(index, slides.length - 1))
+                const pageWidth = swipeContainer.clientWidth || window.innerWidth
+                swipeContainer.scrollTo({ left: clamped * pageWidth, behavior: 'smooth' })
+            }
+
+            if (prevBtn) prevBtn.addEventListener('click', () => goToIndex(getCurrentIndex() - 1))
+            if (nextBtn) nextBtn.addEventListener('click', () => goToIndex(getCurrentIndex() + 1))
+            if (swipeContainer) swipeContainer.addEventListener('scroll', updateNav, { passive: true })
+
+            if (swipeContainer) {
+                swipeContainer.addEventListener('wheel', (e) => {
+                    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return
+
+                    const index = getCurrentIndex()
+                    const currentSlide = slides[index]
+                    if (!currentSlide) return
+
+                    const canScrollVertically = currentSlide.scrollHeight > currentSlide.clientHeight
+                    if (canScrollVertically) {
+                        const atTop = currentSlide.scrollTop <= 0
+                        const atBottom = currentSlide.scrollTop + currentSlide.clientHeight >= currentSlide.scrollHeight - 1
+
+                        if ((e.deltaY < 0 && !atTop) || (e.deltaY > 0 && !atBottom)) {
+                            return
+                        }
+                    }
+
+                    e.preventDefault()
+                    swipeContainer.scrollBy({ left: e.deltaY, behavior: 'smooth' })
+                }, { passive: false })
+            }
+
+            updateNav()
+        </script>
         
     </body>
 </html>

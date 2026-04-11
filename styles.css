@@ -1,23 +1,58 @@
+:root {
+    --cypress: #0f4c3a;
+    --red: #d62828;
+    --blue: #1d4ed8;
+    --purple: #7c3aed;
+    --card: rgba(255, 255, 255, 0.16);
+}
+
 body {
     text-align: center;
     font-family: 'Happy Monkey', cursive;
-    background: linear-gradient(#a2d2ff, #EFB0C9);
+    background: linear-gradient(135deg, var(--cypress), var(--purple), var(--blue), var(--red));
     color: #ffffff;
+    margin: 0;
+    overflow: hidden;
+}
+
+#swipe-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.slide {
+    min-width: 100vw;
+    height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 24px 120px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 h1, h2, h3, h4, p {
     text-shadow: 0 0 1px black;
 }
 
-#bff-img {
-    width: 150px;
+#main-img {
+    width: 300px;
     border-radius: 50%;
-    border: 6px solid #EFB0C9;
+    border: 6px solid var(--card);
     margin-bottom: 10px;
 }
 
 #bday-age {
-    background: #EFB0C9;
+    background: var(--card);
     padding: 5px 10px;
     border-radius: 5px;
     margin: 5px 0 10px 0;
@@ -25,7 +60,7 @@ h1, h2, h3, h4, p {
 
 #bday-date {
     margin: 0;
-    background: #EFB0C9;
+    background: var(--card);
     padding: 5px 10px;
     border-radius: 5px;
 }
@@ -37,7 +72,7 @@ h1, h2, h3, h4, p {
 }
 
 .gift-section {
-    margin-top: 50px;
+    margin-top: 0;
 }
 
 .gift-title {
@@ -54,16 +89,17 @@ h1, h2, h3, h4, p {
 
 .gift-img {
     margin: 20px auto;
-    max-width: 400px;
+    width: min(90vw, 400px);
     height: 400px;
-    border: 6px solid white;
+    border: 6px solid var(--card);
     border-radius: 10px;
     background-image: url("images/gift-cover.jpg");
     background-size: cover;
+    background-position: center;
 }
 
-#gift-img-happy:hover {
-    background-image: url("images/happy.gif");
+#gift-img-disney:hover {
+    background-image: url("images/disney.gif");
 }
 
 #gift-img-hot:hover {
@@ -82,6 +118,22 @@ h1, h2, h3, h4, p {
     background-image: url("images/cheers.gif");
 }
 
+#gift-img-smile:hover {
+    background-image: url("images/happy.gif");
+}
+
+#gift-img-moments:hover {
+    background-image: url("images/cheers.gif");
+}
+
+#gift-img-justagirl:hover {
+    background-image: url("images/justagirl.gif");
+}
+
+#gift-img-tongue:hover {
+    background-image: url("images/tongue.gif");
+}
+
 #footer {
     font-style: italic;
     width: 400px;
@@ -90,6 +142,40 @@ h1, h2, h3, h4, p {
 
 a {
     color: white;
+}
+
+#page-nav {
+    position: fixed;
+    left: 50%;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+#page-nav button {
+    font-family: inherit;
+    color: white;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    padding: 10px 14px;
+    cursor: pointer;
+}
+
+#page-nav button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#page-indicator {
+    min-width: 64px;
 }
 
 /* 
