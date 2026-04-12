@@ -317,19 +317,30 @@ function clearInlineGiftSize(gift) {
     gift.style.removeProperty('width')
     gift.style.removeProperty('height')
     gift.style.removeProperty('aspect-ratio')
+    gift.style.removeProperty('--gift-ar')
 }
 
 function fitGiftToRevealImage(gift) {
     if (!gift || !gift.classList.contains('revealed')) return
+    const slide = gift.closest && gift.closest('.slide')
+    const isDance = slide && isDanceSkillsSlide(slide)
     const url = getRevealImageUrl(gift)
     if (!url) return
 
     const img = new Image()
     img.onload = () => {
         if (!gift.classList.contains('revealed')) return
+        const s = gift.closest && gift.closest('.slide')
+        const dance = s && isDanceSkillsSlide(s)
         const w0 = img.naturalWidth || img.width
         const h0 = img.naturalHeight || img.height
         if (!w0 || !h0) return
+
+        if (dance) {
+            gift.style.setProperty('--gift-ar', `${w0} / ${h0}`)
+            updateScrollableSlides()
+            return
+        }
 
         const ratio = w0 / h0
         const maxW = Math.min(window.innerWidth * 0.9, 520)
