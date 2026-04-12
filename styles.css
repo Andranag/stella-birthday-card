@@ -1130,11 +1130,19 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/daisy.gif");
 }
 
+#gift-img-error.revealed {
+    --reveal-image: url("images/buzz error 404.gif");
+}
+
 #gift-img-charm.revealed {
-    --reveal-image: url("images/smoldering face.gif");
+    --reveal-image: url("images/woody charming af.gif");
 }
 
 #gift-img-smoldering-face.revealed {
+    --reveal-image: url("images/smoldering face.gif");
+}
+
+#gift-img-smoldering-olaf.revealed {
     --reveal-image: url("images/Olaf smoldering face.gif");
 }
 
@@ -1172,6 +1180,10 @@ h1, h2, h3, h4, p {
 
 #gift-img-slept.revealed {
     --reveal-image: url("images/101 Dalmatians.gif");
+}
+
+#gift-img-alive.revealed {
+    --reveal-image: url("images/pinokio back to life.gif");
 }
 
 #gift-img-breakfast.revealed {

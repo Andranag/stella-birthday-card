@@ -404,7 +404,11 @@ function typeTextIntoElement(el, fullText, state, onDone) {
                 if (slide && slide.id === 'kiss-again-slide') {
                     const triggerEl = slide.querySelector('h2.gift-title')
                     if (triggerEl && el === triggerEl) {
-                        startAgainFill(slide)
+                        const g1 = slide.querySelector('#gift-img-kiss6')
+                        const g2 = slide.querySelector('#gift-img-kiss7')
+                        if (isGiftRevealed(g1) && isGiftRevealed(g2)) {
+                            startAgainFill(slide)
+                        }
                     }
                 }
                 if (slide && shouldStartSearchSpawnAfterElement(slide, el)) {
@@ -676,6 +680,14 @@ function toggleGiftReveal(gift) {
 
     if (nextState) {
         const slide = gift.closest('.slide')
+        if (slide && slide.id === 'kiss-again-slide') {
+            const triggerEl = slide.querySelector('h2.gift-title')
+            const g1 = slide.querySelector('#gift-img-kiss6')
+            const g2 = slide.querySelector('#gift-img-kiss7')
+            if (isTypingElementDone(triggerEl) && isGiftRevealed(g1) && isGiftRevealed(g2)) {
+                startAgainFill(slide)
+            }
+        }
         if (slide && isDanceSkillsSlide(slide)) {
             maybeTypeNextDanceLine(slide)
             return
