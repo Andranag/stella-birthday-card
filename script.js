@@ -26,6 +26,166 @@ const QUIZ_STEPS = [
 
 let quizStepIndex = 0
 
+const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+const slideTypingState = new Map()
+
+const STORY_TYPING_SPEED = {
+    charMs: 32,
+    spaceMs: 14,
+    lineGapMs: 420,
+    slideStartDelayMs: 120,
+}
+
+let searchSpawnIntervalId = null
+
+function startSearchSpawn(slide) {
+    const target = document.getElementById('search-spawn')
+    if (!slide || !target) return
+
+    const lines = ['and you were looking...', 'and looking...', 'still looking...', '...and looking...']
+    let i = 0
+
+    target.textContent = ''
+    target.classList.remove('search-spawn')
+
+    const tick = () => {
+        target.textContent = lines[i % lines.length]
+        target.classList.remove('search-spawn')
+        void target.offsetWidth
+        target.classList.add('search-spawn')
+        i += 1
+    }
+
+    tick()
+    searchSpawnIntervalId = window.setInterval(tick, 1100)
+}
+
+function stopSearchSpawn() {
+    if (searchSpawnIntervalId != null) {
+        window.clearInterval(searchSpawnIntervalId)
+        searchSpawnIntervalId = null
+    }
+}
+
+function getStoryTypingElements(slide) {
+    if (!slide) return []
+    return Array.from(slide.querySelectorAll('h1, h2, h3, h4, p'))
+        .filter((el) => !el.classList.contains('typewriter'))
+}
+
+function getOrCreateTypingState(slide) {
+    if (!slideTypingState.has(slide)) {
+        slideTypingState.set(slide, { timeouts: [], isTyping: false })
+    }
+    return slideTypingState.get(slide)
+}
+
+function clearSlideTyping(slide) {
+    if (!slide) return
+    const state = slideTypingState.get(slide)
+    if (!state) return
+    state.timeouts.forEach((id) => window.clearTimeout(id))
+    state.timeouts = []
+    state.isTyping = false
+}
+
+function prepareStoryElements() {
+    slides.forEach((slide) => {
+        getStoryTypingElements(slide).forEach((el) => {
+            if (el.dataset.twFullText != null) return
+            el.dataset.twFullText = el.textContent || ''
+            if (!prefersReducedMotion) {
+                el.textContent = ''
+            }
+        })
+    })
+}
+
+function resetStoryElements(slide) {
+    if (!slide) return
+    getStoryTypingElements(slide).forEach((el) => {
+        if (el.dataset.twFullText == null) return
+        if (!prefersReducedMotion) {
+            el.textContent = ''
+        } else {
+            el.textContent = el.dataset.twFullText
+        }
+    })
+}
+
+function typeTextIntoElement(el, fullText, state, onDone) {
+    if (prefersReducedMotion) {
+        el.textContent = fullText
+        onDone()
+        return
+    }
+    el.textContent = ''
+    let i = 0
+    const step = () => {
+        if (!state.isTyping) return
+        i += 1
+        el.textContent = fullText.slice(0, i)
+        if (i >= fullText.length) {
+            const doneId = window.setTimeout(onDone, 380)
+            state.timeouts.push(doneId)
+            return
+        }
+        const delay = fullText[i - 1] === ' ' ? STORY_TYPING_SPEED.spaceMs : STORY_TYPING_SPEED.charMs
+        const id = window.setTimeout(step, delay)
+        state.timeouts.push(id)
+    }
+    step()
+}
+
+function startStoryTypingForSlide(slide) {
+    if (!slide) return
+    clearSlideTyping(slide)
+    const state = getOrCreateTypingState(slide)
+    state.isTyping = true
+
+    const elements = getStoryTypingElements(slide)
+        .filter((el) => (el.dataset.twFullText != null ? el.dataset.twFullText.trim().length > 0 : (el.textContent || '').trim().length > 0))
+
+    if (prefersReducedMotion) {
+        elements.forEach((el) => {
+            const text = el.dataset.twFullText != null ? el.dataset.twFullText : (el.textContent || '')
+            el.textContent = text
+        })
+        return
+    }
+
+    let idx = 0
+    const next = () => {
+        if (!state.isTyping) return
+        const el = elements[idx]
+        if (!el) return
+        const fullText = el.dataset.twFullText != null ? el.dataset.twFullText : (el.textContent || '')
+        typeTextIntoElement(el, fullText, state, () => {
+            idx += 1
+            if (idx < elements.length) {
+                const id = window.setTimeout(next, STORY_TYPING_SPEED.lineGapMs)
+                state.timeouts.push(id)
+            }
+        })
+    }
+    next()
+}
+
+function armTypingForSlide(slide) {
+    if (!slide) return
+    slide.dataset.twArmed = 'true'
+}
+
+function disarmTypingForSlide(slide) {
+    if (!slide) return
+    slide.dataset.twArmed = 'false'
+}
+
+function isTypingArmedForSlide(slide) {
+    return !!slide && slide.dataset.twArmed === 'true'
+}
+
 function normalizeQuizAnswer(value) {
     return (value || '').trim().toLowerCase()
 }
@@ -96,6 +256,9 @@ function wrapGiftSectionText() {
 wrapGiftSectionText()
 applyHintVisibility()
 
+prepareStoryElements()
+slides.forEach((slide) => resetStoryElements(slide))
+
 setLockedState(true)
 renderQuizStep()
 
@@ -134,6 +297,14 @@ function toggleGiftReveal(gift) {
     }
     gift.dataset.wasRevealed = gift.classList.contains('revealed') ? 'true' : 'false'
     updateScrollableSlides()
+
+    if (nextState) {
+        const slide = gift.closest('.slide')
+        if (slide && isTypingArmedForSlide(slide)) {
+            disarmTypingForSlide(slide)
+            window.setTimeout(() => startStoryTypingForSlide(slide), STORY_TYPING_SPEED.slideStartDelayMs)
+        }
+    }
 }
 
 tapRevealGifts.forEach((gift) => {
@@ -192,6 +363,12 @@ function setActiveSlide(index) {
         const prevSlide = slides[activeSlideIndex]
         if (prevSlide) prevSlide.classList.remove('is-active')
         suspendSlideGifs(activeSlideIndex)
+        if (prevSlide) {
+            clearSlideTyping(prevSlide)
+            resetStoryElements(prevSlide)
+            disarmTypingForSlide(prevSlide)
+        }
+        stopSearchSpawn()
     }
 
     activeSlideIndex = index
@@ -199,6 +376,19 @@ function setActiveSlide(index) {
     if (nextSlide) nextSlide.classList.add('is-active')
     resumeSlideGifs(activeSlideIndex)
     updateScrollableSlides()
+    if (nextSlide) {
+        resetStoryElements(nextSlide)
+        armTypingForSlide(nextSlide)
+        const hasGifts = !!nextSlide.querySelector('.gift-img')
+        if (!hasGifts) {
+            disarmTypingForSlide(nextSlide)
+            window.setTimeout(() => startStoryTypingForSlide(nextSlide), STORY_TYPING_SPEED.slideStartDelayMs)
+        }
+
+        if (nextSlide.querySelector('#search-spawn')) {
+            startSearchSpawn(nextSlide)
+        }
+    }
 }
 
 function updateScrollableSlides(fullRecompute = false) {
