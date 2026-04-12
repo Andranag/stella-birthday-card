@@ -102,7 +102,7 @@ body.is-locked #quiz-gate {
 
 h1, h2, h3, h4 {
     font-family: 'Marck Script', 'Pacifico', cursive;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.02em;
 }
 
 h1 {
@@ -529,6 +529,8 @@ h1, h2, h3, h4, p {
 
 .gift-title {
     margin-bottom: 10px;
+    letter-spacing: 0.035em;
+    text-shadow: 0 0 0.9px rgba(0, 0, 0, 0.35);
 }
 
 .gift-hint {
@@ -539,7 +541,8 @@ h1, h2, h3, h4, p {
 .gift-section p {
     font-size: 18px;
     font-weight: 700;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 0.9px rgba(0, 0, 0, 0.35);
 }
 
 .gift-hint.is-hidden {
@@ -754,24 +757,24 @@ h1, h2, h3, h4, p {
     -webkit-backdrop-filter: none;
 }
 
-#gift-itchy.revealed {
+#gift-img-itchy.revealed {
     --reveal-image: url("images/itchy Baloo.gif");
 }
 
-#gift-convince.revealed {
+#gift-img-convince.revealed {
     --reveal-image: url("images/genie Aladdin.gif");
 }
 
-#gift-excited.revealed {
+#gift-img-excited.revealed {
     --reveal-image: url("images/excited newspaper.gif");
 }
 
-#gift-sceptical.revealed {
+#gift-img-sceptical.revealed {
     --reveal-image: url("images/bad witch.gif");
 }
 
-#gift-pout.revealed {
-    --reveal-image: url("images/bad witch.gif");
+#gift-img-pout.revealed {
+    --reveal-image: url("images/angry tinkerbell.gif");
 }
 
 #gift-img-pirate.revealed {
@@ -930,6 +933,10 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/donald duck disney love GIF.gif");
 }
 
+#gift-img-invite-consent.revealed {
+    --reveal-image: url("images/aladdin inviting Yasmine.gif");
+}
+
 #gift-img-dance.revealed {
     --reveal-image: url("images/Prince Charming Dancing.gif");
 }
@@ -954,8 +961,12 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/daisy.gif");
 }
 
-#gift-img-smoldering.revealed {
+#gift-img-charm.revealed {
     --reveal-image: url("images/smoldering face.gif");
+}
+
+#gift-img-smoldering-face.revealed {
+    --reveal-image: url("images/Olaf smoldering face.gif");
 }
 
 #gift-img-money.revealed {
@@ -968,6 +979,14 @@ h1, h2, h3, h4, p {
 
 #gift-img-spank.revealed {
     --reveal-image: url("images/spank.gif");
+}
+
+#gift-img-fire.revealed {
+    --reveal-image: url("images/fire & water.gif");
+}
+
+#gift-img-smoke.revealed {
+    --reveal-image: url("images/minnie mouse cooking.gif");
 }
 
 #gift-img-flying.revealed {
@@ -1002,6 +1021,22 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/princess anna laughing.gif");
 }
 
+#gift-img-world.revealed {
+    --reveal-image: url("images/a whole new world.gif");
+}
+
+#gift-img-travelling.revealed {
+    --reveal-image: url("images/Princess and the frog river.gif");
+}
+
+#gift-img-united.revealed {
+    --reveal-image: url("images/pocahontas.gif");
+}
+
+#gift-img-team.revealed {
+    --reveal-image: url("images/princess anna twist in the air.gif");
+}
+
 #gift-img-end.revealed {
     --reveal-image: url("images/Looney Tunes Nothing To See Here GIF.gif");
 }
@@ -1032,6 +1067,7 @@ h1, h2, h3, h4, p {
     font-weight: 400;
     font-size: clamp(18px, 2vw, 20px);
     line-height: 1.6;
+    letter-spacing: 0;
 }
 
 .footer-card p.footer-gap {
