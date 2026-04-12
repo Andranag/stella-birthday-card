@@ -122,6 +122,9 @@ function startSearchSpawn(slide) {
     const target = document.getElementById('search-spawn')
     if (!slide || !target) return
 
+    const wrapper = target.closest('.search-lines')
+    if (wrapper) wrapper.classList.remove('is-hidden')
+
     const lines = ['and you were looking...', 'and looking...', 'still looking...', 'and looking...']
     let i = 0
 
@@ -145,6 +148,16 @@ function stopSearchSpawn() {
         window.clearInterval(searchSpawnIntervalId)
         searchSpawnIntervalId = null
     }
+}
+
+function shouldStartSearchSpawnAfterElement(slide, el) {
+    if (!slide || !el) return false
+    const target = slide.querySelector('#search-spawn')
+    if (!target) return false
+    if (searchSpawnIntervalId != null) return false
+
+    const firstH2 = slide.querySelector('h2.gift-title')
+    return el === firstH2
 }
 
 function getStoryTypingElements(slide) {
@@ -296,8 +309,12 @@ function resetStoryElements(slide) {
     getStoryTypingElements(slide).forEach((el) => {
         if (el.dataset.twFullText == null) return
         if (!prefersReducedMotion) {
-            if (el.dataset.twMinHeight != null) {
-                el.style.minHeight = `${Number(el.dataset.twMinHeight)}px`
+            const fullText = el.dataset.twFullText
+            el.textContent = fullText
+            const rect = el.getBoundingClientRect()
+            if (rect.height > 0) {
+                el.dataset.twMinHeight = String(rect.height)
+                el.style.minHeight = `${rect.height}px`
             }
             el.textContent = ''
         } else {
@@ -320,10 +337,15 @@ function typeTextIntoElement(el, fullText, state, onDone) {
         el.textContent = fullText.slice(0, i)
         if (i >= fullText.length) {
             const doneId = window.setTimeout(() => {
-                el.style.minHeight = ''
                 const slide = el.closest && el.closest('.slide')
-                if (slide && slide.id === 'kiss-again-slide' && fullText.includes('and then we kissed again')) {
-                    startAgainFill(slide)
+                if (slide && slide.id === 'kiss-again-slide') {
+                    const triggerEl = slide.querySelector('h2.gift-title')
+                    if (triggerEl && el === triggerEl) {
+                        startAgainFill(slide)
+                    }
+                }
+                if (slide && shouldStartSearchSpawnAfterElement(slide, el)) {
+                    window.setTimeout(() => startSearchSpawn(slide), 120)
                 }
                 onDone()
             }, 380)
@@ -662,6 +684,11 @@ function setActiveSlide(index) {
         resetStoryElements(nextSlide)
         resetFirstGiftSlideText(nextSlide)
         resetDanceSkillsText(nextSlide)
+
+        if (nextSlide.id === 'kiss-again-slide') {
+            armAgainFill(nextSlide)
+        }
+
         armTypingForSlide(nextSlide)
         const gifts = nextSlide.querySelectorAll('.gift-img')
         const giftCount = gifts.length
@@ -670,12 +697,12 @@ function setActiveSlide(index) {
             window.setTimeout(() => startStoryTypingForSlide(nextSlide), STORY_TYPING_SPEED.slideStartDelayMs)
         }
 
-        if (nextSlide.querySelector('#search-spawn')) {
-            startSearchSpawn(nextSlide)
-        }
-
-        if (nextSlide.id === 'kiss-again-slide') {
-            armAgainFill(nextSlide)
+        const searchTarget = nextSlide.querySelector('#search-spawn')
+        if (searchTarget) {
+            stopSearchSpawn()
+            searchTarget.textContent = ''
+            const wrapper = searchTarget.closest('.search-lines')
+            if (wrapper) wrapper.classList.add('is-hidden')
         }
     }
 }
