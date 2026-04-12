@@ -275,6 +275,43 @@ h1, h2, h3, h4, p {
     animation-delay: var(--tw-delay);
 }
 
+#kiss-again-slide {
+    position: relative;
+}
+
+#kiss-again-slide .again-stamps {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 5;
+}
+
+#kiss-again-slide > * {
+    position: relative;
+    z-index: 1;
+}
+
+.again-stamp {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    transform: translate(-50%, -50%) rotate(var(--r));
+    font-family: 'Marck Script', 'Pacifico', cursive;
+    font-weight: 700;
+    font-size: clamp(18px, 2.4vw, 34px);
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.20);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
+    opacity: 0.92;
+    white-space: nowrap;
+    animation: search-spawn 420ms ease-out;
+}
+
 #main-img {
     width: 300px;
     border-radius: 50%;

@@ -40,6 +40,83 @@ const STORY_TYPING_SPEED = {
 }
 
 let searchSpawnIntervalId = null
+let againFillIntervalId = null
+
+function clearAgainStamps() {
+    const slide = document.getElementById('kiss-again-slide')
+    if (!slide) return
+    const container = slide.querySelector('.again-stamps')
+    if (container) container.remove()
+}
+
+function stopAgainFill() {
+    const slide = document.getElementById('kiss-again-slide')
+    if (againFillIntervalId != null) {
+        window.clearInterval(againFillIntervalId)
+        againFillIntervalId = null
+    }
+    if (slide) {
+        slide.dataset.againArmed = 'false'
+        slide.dataset.againFilled = 'false'
+    }
+    clearAgainStamps()
+}
+
+function armAgainFill(slide) {
+    if (!slide) return
+    clearAgainStamps()
+    slide.dataset.againArmed = 'true'
+    slide.dataset.againFilled = 'false'
+}
+
+function startAgainFill(slide) {
+    if (!slide) return
+    if (slide.dataset.againArmed !== 'true') return
+    if (slide.dataset.againFilled === 'true') return
+
+    slide.dataset.againFilled = 'true'
+
+    const container = document.createElement('div')
+    container.className = 'again-stamps'
+    slide.prepend(container)
+
+    const count = 26
+    let i = 0
+
+    const tick = () => {
+        if (!slide.isConnected) {
+            clearAgainStamps()
+            return
+        }
+        if (i >= count) {
+            if (againFillIntervalId != null) {
+                window.clearInterval(againFillIntervalId)
+                againFillIntervalId = null
+            }
+            return
+        }
+
+        const stamp = document.createElement('div')
+        stamp.className = 'again-stamp'
+        stamp.textContent = 'and again...!!!'
+
+        const x = 8 + Math.random() * 84
+        const y = 8 + Math.random() * 84
+        const r = -22 + Math.random() * 44
+        stamp.style.setProperty('--x', `${x}%`)
+        stamp.style.setProperty('--y', `${y}%`)
+        stamp.style.setProperty('--r', `${r}deg`)
+
+        const opacity = 0.65 + Math.random() * 0.3
+        stamp.style.opacity = String(opacity)
+
+        container.appendChild(stamp)
+        i += 1
+    }
+
+    tick()
+    againFillIntervalId = window.setInterval(tick, 600)
+}
 
 function startSearchSpawn(slide) {
     const target = document.getElementById('search-spawn')
@@ -144,7 +221,13 @@ function typeTextIntoElement(el, fullText, state, onDone) {
         i += 1
         el.textContent = fullText.slice(0, i)
         if (i >= fullText.length) {
-            const doneId = window.setTimeout(onDone, 380)
+            const doneId = window.setTimeout(() => {
+                const slide = el.closest && el.closest('.slide')
+                if (slide && slide.id === 'kiss-again-slide' && fullText.includes('and then we kissed again')) {
+                    startAgainFill(slide)
+                }
+                onDone()
+            }, 380)
             state.timeouts.push(doneId)
             return
         }
@@ -403,6 +486,7 @@ function setActiveSlide(index) {
             disarmTypingForSlide(prevSlide)
         }
         stopSearchSpawn()
+        stopAgainFill()
     }
 
     activeSlideIndex = index
@@ -422,6 +506,10 @@ function setActiveSlide(index) {
 
         if (nextSlide.querySelector('#search-spawn')) {
             startSearchSpawn(nextSlide)
+        }
+
+        if (nextSlide.id === 'kiss-again-slide') {
+            armAgainFill(nextSlide)
         }
     }
 }
