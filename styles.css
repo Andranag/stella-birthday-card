@@ -243,18 +243,15 @@ h1, h2, h3, h4, p {
 }
 
 .search-stamps {
-    position: absolute;
-    inset: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     pointer-events: none;
-    overflow: hidden;
-    z-index: 6;
 }
 
 .search-stamp {
-    position: absolute;
-    left: var(--x);
-    top: var(--y);
-    transform: translate(-50%, -50%) rotate(var(--r));
+    transform: rotate(var(--r));
     font-family: 'Marck Script', 'Pacifico', cursive;
     font-weight: 700;
     font-size: clamp(16px, 2.1vw, 26px);

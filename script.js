@@ -130,22 +130,22 @@ function startSearchSpawn(slide) {
     if (!slide || !target) return
 
     const wrapper = target.closest('.search-lines')
-    if (wrapper) wrapper.classList.add('is-hidden')
+    if (!wrapper) return
 
+    wrapper.classList.remove('is-hidden')
     target.style.minHeight = ''
-
-    const scene = slide.querySelector('.search-scene')
-    if (!scene) return
 
     const container = document.createElement('div')
     container.className = 'search-stamps'
-    scene.appendChild(container)
+    wrapper.appendChild(container)
 
     const lines = ['and you were looking...', 'and looking...', 'still looking...', 'and looking...']
     let i = 0
+    const maxStamps = 6
 
     target.textContent = ''
     target.classList.remove('search-spawn')
+    target.style.display = 'none'
 
     const tick = () => {
         if (!slide.isConnected) {
@@ -153,17 +153,30 @@ function startSearchSpawn(slide) {
             return
         }
 
+        if (i >= maxStamps) {
+            if (searchSpawnIntervalId != null) {
+                window.clearInterval(searchSpawnIntervalId)
+                searchSpawnIntervalId = null
+            }
+            return
+        }
+
         const stamp = document.createElement('div')
         stamp.className = 'search-stamp'
         stamp.textContent = lines[i % lines.length]
-        stamp.style.setProperty('--x', `${8 + Math.random() * 84}%`)
-        stamp.style.setProperty('--y', `${10 + Math.random() * 78}%`)
         stamp.style.setProperty('--r', `${-10 + Math.random() * 20}deg`)
+
+        const alignRight = Math.random() > 0.5
+        stamp.style.alignSelf = alignRight ? 'flex-end' : 'flex-start'
+        const offset = Math.round(Math.random() * 56)
+        if (alignRight) {
+            stamp.style.marginRight = `${offset}px`
+        } else {
+            stamp.style.marginLeft = `${offset}px`
+        }
         container.appendChild(stamp)
 
-        while (container.children.length > 18) {
-            container.removeChild(container.firstChild)
-        }
+        while (container.children.length > 10) container.removeChild(container.firstChild)
 
         i += 1
     }
@@ -178,6 +191,9 @@ function stopSearchSpawn() {
         searchSpawnIntervalId = null
     }
     clearSearchStamps()
+
+    const target = document.getElementById('search-spawn')
+    if (target) target.style.display = ''
 }
 
 function shouldStartSearchSpawnAfterElement(slide, el) {
