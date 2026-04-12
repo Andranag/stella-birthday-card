@@ -528,6 +528,13 @@ h1, h2, h3, h4, p {
 
 .gift-img.tap-reveal:not(.revealed) {
     background-image: url("images/gift-cover.jpg");
+    background-size: contain;
+    background-position: center;
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .gift-img.tap-reveal:not(.revealed) {
@@ -618,7 +625,7 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/finding Andreas.png");
 }
 
-#gift-img-found {
+#gift-img-found.revealed {
     background-position: center 18%;
 }
 
