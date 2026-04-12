@@ -279,7 +279,9 @@ function maybeTypeNextDanceLine(slide) {
     if (state.isTyping) return
 
     const lines = Array.from(slide.querySelectorAll('.dance-text .gift-title'))
-    if (state.dancePending <= 0) return
+    const revealed = getRevealedGiftCount(slide)
+    const pending = Math.max(0, revealed - state.danceIndex)
+    if (pending <= 0) return
     if (state.danceIndex >= lines.length) return
 
     const el = lines[state.danceIndex]
@@ -287,7 +289,6 @@ function maybeTypeNextDanceLine(slide) {
     const fullText = el.dataset.twFullText != null ? el.dataset.twFullText : (el.textContent || '')
 
     state.isTyping = true
-    state.dancePending -= 1
     updateScrollableSlides()
 
     typeTextIntoElement(el, fullText, state, () => {
@@ -676,8 +677,6 @@ function toggleGiftReveal(gift) {
     if (nextState) {
         const slide = gift.closest('.slide')
         if (slide && isDanceSkillsSlide(slide)) {
-            const state = getOrCreateTypingState(slide)
-            state.dancePending += 1
             maybeTypeNextDanceLine(slide)
             return
         }
@@ -703,6 +702,21 @@ tapRevealGifts.forEach((gift) => {
         if (isTryingToReveal) {
             const slide = gift.closest('.slide')
             if (slide) {
+                if (isDanceSkillsSlide(slide)) {
+                    const ordered = ['#gift-img-dance-skills', '#gift-img-dance-skills2', '#gift-img-dance-skills3']
+                        .map((sel) => slide.querySelector(sel))
+                        .filter(Boolean)
+                    if (ordered.length > 1) {
+                        const idx = ordered.indexOf(gift)
+                        if (idx > 0) {
+                            const prevGift = ordered[idx - 1]
+                            if (prevGift && !prevGift.classList.contains('revealed')) {
+                                return
+                            }
+                        }
+                    }
+                }
+
                 const directGiftSiblings = Array.from(slide.children)
                     .filter((el) => el.classList && el.classList.contains('gift-img') && el.classList.contains('tap-reveal'))
                 if (directGiftSiblings.length > 1) {
