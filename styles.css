@@ -957,6 +957,10 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/angry tinkerbell.gif");
 }
 
+#gift-img-leap-of-faith.revealed {
+    --reveal-image: url("images/buzz leap of faith.gif");
+}
+
 #gift-img-pose.revealed {
     --reveal-image: url("images/buzz striking a pose.gif");
 }
