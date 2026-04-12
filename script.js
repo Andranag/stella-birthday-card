@@ -87,7 +87,7 @@ function startAgainFill(slide) {
     container.className = 'again-stamps'
     slide.prepend(container)
 
-    const count = 26
+    const count = 52
     let i = 0
 
     const tick = () => {
@@ -122,7 +122,7 @@ function startAgainFill(slide) {
     }
 
     tick()
-    againFillIntervalId = window.setInterval(tick, 300)
+    againFillIntervalId = window.setInterval(tick, 150)
 }
 
 function startSearchSpawn(slide) {
