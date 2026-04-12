@@ -376,6 +376,14 @@ function buildSlideTypingPlan(slide) {
     const nodes = Array.from(slide.querySelectorAll('h1, h2, h3, h4, p, .gift-img'))
     const plan = []
 
+    const findNextGift = (startIdx) => {
+        for (let i = startIdx + 1; i < nodes.length; i += 1) {
+            const n = nodes[i]
+            if (n && n.classList && n.classList.contains('gift-img')) return n
+        }
+        return null
+    }
+
     nodes.forEach((node, idx) => {
         if (node.classList && node.classList.contains('gift-img')) return
 
@@ -394,11 +402,7 @@ function buildSlideTypingPlan(slide) {
             return
         }
 
-        const prev = nodes[idx - 1]
-        const next = nodes[idx + 1]
-        const requiredGift = next && next.classList && next.classList.contains('gift-img')
-            ? next
-            : (prev && prev.classList && prev.classList.contains('gift-img') ? prev : null)
+        const requiredGift = findNextGift(idx)
 
         plan.push({ el: node, requiredGift })
     })
@@ -636,6 +640,38 @@ function applyHintVisibility() {
     document.querySelectorAll('.gift-hint').forEach((hint) => hint.classList.remove('is-hidden'))
 }
 
+function autoGateStoryTextToNextGift() {
+    slides.forEach((slide) => {
+        if (!slide) return
+        if (isDanceSkillsSlide(slide)) return
+
+        const nodes = Array.from(slide.querySelectorAll('h1, h2, h3, h4, p, .gift-img'))
+
+        const findNextGift = (startIdx) => {
+            for (let i = startIdx + 1; i < nodes.length; i += 1) {
+                const n = nodes[i]
+                if (n && n.classList && n.classList.contains('gift-img')) return n
+            }
+            return null
+        }
+
+        nodes.forEach((node, idx) => {
+            if (!node || !node.classList) return
+            if (node.classList.contains('gift-img')) return
+            if (node.classList.contains('typewriter')) return
+            if (isFirstGiftSlide(slide) && node.classList.contains('gift-hint')) return
+            if (slide.querySelector('#gift-img-story') && node.classList.contains('gift-hint')) return
+
+            if (node.getAttribute && node.getAttribute('data-tw-required-gift')) return
+
+            const requiredGift = findNextGift(idx)
+            if (!requiredGift || !requiredGift.id) return
+
+            node.setAttribute('data-tw-required-gift', `#${requiredGift.id}`)
+        })
+    })
+}
+
 function wrapGiftSectionText() {
     giftSections.forEach((section) => {
         const directGiftImages = Array.from(section.children).filter((el) => el.classList && el.classList.contains('gift-img'))
@@ -682,6 +718,7 @@ function wrapGiftSectionText() {
     })
 }
 
+autoGateStoryTextToNextGift()
 wrapGiftSectionText()
 applyHintVisibility()
 

@@ -1033,6 +1033,10 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/frozen.gif");
 }
 
+#gift-img-cool-hades.revealed {
+    --reveal-image: url("images/cool hades.gif");
+}
+
 #gift-img-happy.revealed {
     --reveal-image: url("images/Happy Anna frozen.gif");
 }
