@@ -122,7 +122,7 @@ function startSearchSpawn(slide) {
     const target = document.getElementById('search-spawn')
     if (!slide || !target) return
 
-    const lines = ['and you were looking...', 'and looking...', 'still looking...', '...and looking...']
+    const lines = ['and you were looking...', 'and looking...', 'still looking...', 'and looking...']
     let i = 0
 
     target.textContent = ''
@@ -559,9 +559,12 @@ function toggleGiftReveal(gift) {
         clearInlineRevealImage(gift)
         gift.classList.add('revealed')
         setCacheBustedRevealImage(gift)
+        const rot = -2.5 + Math.random() * 5
+        gift.style.setProperty('--gift-rot', `${rot.toFixed(2)}deg`)
     } else {
         gift.classList.remove('revealed')
         clearInlineRevealImage(gift)
+        gift.style.setProperty('--gift-rot', '0deg')
     }
     gift.dataset.wasRevealed = gift.classList.contains('revealed') ? 'true' : 'false'
     updateScrollableSlides()

@@ -220,7 +220,7 @@ h1, h2, h3, h4, p {
     flex: 0 0 min(45vw, 360px);
     height: 360px;
     margin: 0;
-    transform: rotate(-2deg);
+    --gift-rot-base: -2deg;
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
 }
 
@@ -490,17 +490,20 @@ h1, h2, h3, h4, p {
 }
 
 .gift-img {
-    margin: 20px auto;
     width: var(--gift-w, min(90vw, 420px));
-    height: var(--gift-h, clamp(260px, 52vh, 400px));
-    border: 6px solid var(--frame);
-    border-radius: 10px;
-    box-sizing: border-box;
-    background-image: url("images/gift-cover.jpg");
+    height: var(--gift-h, min(52vh, 420px));
+    margin: 20px auto;
+    border-radius: 18px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     background-size: var(--gift-bg-size, cover);
     background-position: center;
     background-repeat: no-repeat;
-    transform: translateZ(0);
+    --gift-rot-base: 0deg;
+    --gift-rot: 0deg;
+    transform: translateZ(0) rotate(calc(var(--gift-rot-base) + var(--gift-rot)));
     transition: transform 220ms ease, filter 220ms ease, box-shadow 220ms ease;
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
 }
@@ -510,8 +513,13 @@ h1, h2, h3, h4, p {
     --gift-bg-size: contain;
     border: none;
 }
+
 .gift-img.tap-reveal {
     cursor: pointer;
+}
+
+.gift-img.tap-reveal:not(.revealed) {
+    background-image: url("images/gift-cover.jpg");
 }
 
 .gift-img.tap-reveal:not(.revealed) {
@@ -519,7 +527,7 @@ h1, h2, h3, h4, p {
 }
 
 .gift-img.tap-reveal:active {
-    transform: scale(0.985);
+    transform: translateZ(0) rotate(calc(var(--gift-rot-base) + var(--gift-rot))) scale(0.985);
 }
 
 .gift-img.revealed {
@@ -530,22 +538,22 @@ h1, h2, h3, h4, p {
 
 @keyframes gift-breathe {
     0%, 100% {
-        transform: scale(1);
+        transform: translateZ(0) rotate(calc(var(--gift-rot-base) + var(--gift-rot))) scale(1);
         filter: saturate(1) brightness(1);
     }
     50% {
-        transform: scale(1.01);
-        filter: saturate(1.03) brightness(1.03);
+        transform: translateZ(0) rotate(calc(var(--gift-rot-base) + var(--gift-rot))) scale(1.02);
+        filter: saturate(1.05) brightness(1.03);
     }
 }
 
 @keyframes gift-reveal {
     from {
-        transform: scale(0.985);
+        transform: translateZ(0) rotate(calc(var(--gift-rot-base) + var(--gift-rot))) scale(0.985);
         filter: saturate(0.9) brightness(0.95);
     }
     to {
-        transform: scale(1);
+        transform: translateZ(0) rotate(calc(var(--gift-rot-base) + var(--gift-rot))) scale(1);
         filter: saturate(1) brightness(1);
     }
 }
