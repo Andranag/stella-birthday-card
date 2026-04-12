@@ -143,6 +143,14 @@ h2, h3, h4 {
     transition: opacity 240ms ease, transform 240ms ease;
 }
 
+.slide#header {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    content-visibility: visible;
+    contain-intrinsic-size: auto;
+}
+
 .slide.is-active {
     opacity: 1;
     transform: translateY(0);

@@ -170,7 +170,7 @@ function resetFirstGiftSlideText(slide) {
 
 function getOrCreateTypingState(slide) {
     if (!slideTypingState.has(slide)) {
-        slideTypingState.set(slide, { timeouts: [], isTyping: false })
+        slideTypingState.set(slide, { timeouts: [], isTyping: false, plan: null, index: 0 })
     }
     return slideTypingState.get(slide)
 }
@@ -182,6 +182,44 @@ function clearSlideTyping(slide) {
     state.timeouts.forEach((id) => window.clearTimeout(id))
     state.timeouts = []
     state.isTyping = false
+    state.plan = null
+    state.index = 0
+}
+
+function getRevealedGiftCount(slide) {
+    if (!slide) return 0
+    return slide.querySelectorAll('.gift-img.revealed').length
+}
+
+function buildSlideTypingPlan(slide) {
+    if (!slide) return []
+
+    const nodes = Array.from(slide.querySelectorAll('h1, h2, h3, h4, p, .gift-img'))
+    const totalGifts = slide.querySelectorAll('.gift-img').length
+    let giftsSeen = 0
+    const plan = []
+
+    nodes.forEach((node) => {
+        if (node.classList && node.classList.contains('gift-img')) {
+            giftsSeen += 1
+            return
+        }
+
+        const giftsRemaining = totalGifts - giftsSeen
+
+        if (node.classList && node.classList.contains('typewriter')) return
+        if (isFirstGiftSlide(slide) && node.classList && node.classList.contains('gift-hint')) return
+        if (slide.querySelector('#gift-img-story') && node.classList && node.classList.contains('gift-hint')) return
+
+        if (node.dataset && node.dataset.twFullText == null) {
+            node.dataset.twFullText = node.textContent || ''
+        }
+
+        const requiredRevealedGifts = giftsRemaining > 0 ? giftsSeen + 1 : giftsSeen
+        plan.push({ el: node, giftsBefore: requiredRevealedGifts })
+    })
+
+    return plan
 }
 
 function prepareStoryElements() {
@@ -190,6 +228,11 @@ function prepareStoryElements() {
             if (el.dataset.twFullText != null) return
             el.dataset.twFullText = el.textContent || ''
             if (!prefersReducedMotion) {
+                const rect = el.getBoundingClientRect()
+                if (rect.height > 0) {
+                    el.dataset.twMinHeight = String(rect.height)
+                    el.style.minHeight = `${rect.height}px`
+                }
                 el.textContent = ''
             }
         })
@@ -201,6 +244,9 @@ function resetStoryElements(slide) {
     getStoryTypingElements(slide).forEach((el) => {
         if (el.dataset.twFullText == null) return
         if (!prefersReducedMotion) {
+            if (el.dataset.twMinHeight != null) {
+                el.style.minHeight = `${Number(el.dataset.twMinHeight)}px`
+            }
             el.textContent = ''
         } else {
             el.textContent = el.dataset.twFullText
@@ -222,6 +268,7 @@ function typeTextIntoElement(el, fullText, state, onDone) {
         el.textContent = fullText.slice(0, i)
         if (i >= fullText.length) {
             const doneId = window.setTimeout(() => {
+                el.style.minHeight = ''
                 const slide = el.closest && el.closest('.slide')
                 if (slide && slide.id === 'kiss-again-slide' && fullText.includes('and then we kissed again')) {
                     startAgainFill(slide)
@@ -244,32 +291,84 @@ function startStoryTypingForSlide(slide) {
     const state = getOrCreateTypingState(slide)
     state.isTyping = true
 
-    const elements = getStoryTypingElements(slide)
-        .filter((el) => (el.dataset.twFullText != null ? el.dataset.twFullText.trim().length > 0 : (el.textContent || '').trim().length > 0))
+    state.plan = buildSlideTypingPlan(slide)
+        .filter((item) => (item.el.dataset.twFullText != null ? item.el.dataset.twFullText.trim().length > 0 : (item.el.textContent || '').trim().length > 0))
+    state.index = 0
+
+    const elements = state.plan
 
     if (prefersReducedMotion) {
-        elements.forEach((el) => {
+        elements.forEach((item) => {
+            const el = item.el
             const text = el.dataset.twFullText != null ? el.dataset.twFullText : (el.textContent || '')
             el.textContent = text
         })
         return
     }
 
-    let idx = 0
-    const next = () => {
+    const advance = () => {
         if (!state.isTyping) return
-        const el = elements[idx]
-        if (!el) return
+
+        const revealed = getRevealedGiftCount(slide)
+
+        const item = elements[state.index]
+        if (!item) {
+            state.isTyping = false
+            return
+        }
+
+        if (revealed < item.giftsBefore) {
+            state.isTyping = false
+            return
+        }
+
+        const el = item.el
         const fullText = el.dataset.twFullText != null ? el.dataset.twFullText : (el.textContent || '')
         typeTextIntoElement(el, fullText, state, () => {
-            idx += 1
-            if (idx < elements.length) {
-                const id = window.setTimeout(next, STORY_TYPING_SPEED.lineGapMs)
-                state.timeouts.push(id)
-            }
+            state.index += 1
+            const id = window.setTimeout(advance, STORY_TYPING_SPEED.lineGapMs)
+            state.timeouts.push(id)
         })
     }
-    next()
+
+    advance()
+}
+
+function continueStoryTypingForSlide(slide) {
+    if (!slide) return
+    const state = getOrCreateTypingState(slide)
+    if (!state.plan || state.plan.length === 0) return
+    if (prefersReducedMotion) return
+    if (state.isTyping) return
+
+    state.isTyping = true
+    const elements = state.plan
+
+    const advance = () => {
+        if (!state.isTyping) return
+
+        const revealed = getRevealedGiftCount(slide)
+        const item = elements[state.index]
+        if (!item) {
+            state.isTyping = false
+            return
+        }
+
+        if (revealed < item.giftsBefore) {
+            state.isTyping = false
+            return
+        }
+
+        const el = item.el
+        const fullText = el.dataset.twFullText != null ? el.dataset.twFullText : (el.textContent || '')
+        typeTextIntoElement(el, fullText, state, () => {
+            state.index += 1
+            const id = window.setTimeout(advance, STORY_TYPING_SPEED.lineGapMs)
+            state.timeouts.push(id)
+        })
+    }
+
+    advance()
 }
 
 function armTypingForSlide(slide) {
@@ -421,6 +520,10 @@ function toggleGiftReveal(gift) {
             disarmTypingForSlide(slide)
             window.setTimeout(() => startStoryTypingForSlide(slide), STORY_TYPING_SPEED.slideStartDelayMs)
         }
+
+        if (slide) {
+            window.setTimeout(() => continueStoryTypingForSlide(slide), STORY_TYPING_SPEED.slideStartDelayMs)
+        }
     }
 }
 
@@ -498,8 +601,9 @@ function setActiveSlide(index) {
         resetStoryElements(nextSlide)
         resetFirstGiftSlideText(nextSlide)
         armTypingForSlide(nextSlide)
-        const hasGifts = !!nextSlide.querySelector('.gift-img')
-        if (!hasGifts) {
+        const gifts = nextSlide.querySelectorAll('.gift-img')
+        const giftCount = gifts.length
+        if (giftCount === 0) {
             disarmTypingForSlide(nextSlide)
             window.setTimeout(() => startStoryTypingForSlide(nextSlide), STORY_TYPING_SPEED.slideStartDelayMs)
         }
