@@ -893,7 +893,7 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/goofy.gif");
 }
 
-#gift-img-unready.revealed {
+#gift-img-hunchman.revealed {
     --reveal-image: url("images/quasimodo.gif");
 }
 
