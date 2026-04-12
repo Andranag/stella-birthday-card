@@ -305,6 +305,51 @@ function getRevealedGiftCount(slide) {
     return slide.querySelectorAll('.gift-img.revealed').length
 }
 
+function getRevealImageUrl(gift) {
+    if (!gift) return ''
+    const raw = window.getComputedStyle(gift).getPropertyValue('--reveal-image') || ''
+    const m = raw.match(/url\((['"]?)(.*?)\1\)/)
+    return m && m[2] ? m[2] : ''
+}
+
+function clearInlineGiftSize(gift) {
+    if (!gift) return
+    gift.style.removeProperty('width')
+    gift.style.removeProperty('height')
+    gift.style.removeProperty('aspect-ratio')
+}
+
+function fitGiftToRevealImage(gift) {
+    if (!gift || !gift.classList.contains('revealed')) return
+    const url = getRevealImageUrl(gift)
+    if (!url) return
+
+    const img = new Image()
+    img.onload = () => {
+        if (!gift.classList.contains('revealed')) return
+        const w0 = img.naturalWidth || img.width
+        const h0 = img.naturalHeight || img.height
+        if (!w0 || !h0) return
+
+        const ratio = w0 / h0
+        const maxW = Math.min(window.innerWidth * 0.9, 520)
+        const maxH = Math.min(window.innerHeight * 0.52, 520)
+
+        let w = maxW
+        let h = w / ratio
+        if (h > maxH) {
+            h = maxH
+            w = h * ratio
+        }
+
+        gift.style.width = `${Math.round(w)}px`
+        gift.style.height = 'auto'
+        gift.style.aspectRatio = `${w0} / ${h0}`
+        updateScrollableSlides()
+    }
+    img.src = url
+}
+
 function isGiftRevealed(giftEl) {
     return !!giftEl && giftEl.classList && giftEl.classList.contains('gift-img') && giftEl.classList.contains('revealed')
 }
@@ -629,6 +674,8 @@ function wrapGiftSectionText() {
 wrapGiftSectionText()
 applyHintVisibility()
 
+Array.from(document.querySelectorAll('.gift-img.revealed')).forEach((gift) => fitGiftToRevealImage(gift))
+
 prepareStoryElements()
 slides.forEach((slide) => resetStoryElements(slide))
 
@@ -668,11 +715,13 @@ function toggleGiftReveal(gift) {
         clearInlineRevealImage(gift)
         gift.classList.add('revealed')
         setCacheBustedRevealImage(gift)
+        fitGiftToRevealImage(gift)
         const rot = -2.5 + Math.random() * 5
         gift.style.setProperty('--gift-rot', `${rot.toFixed(2)}deg`)
     } else {
         gift.classList.remove('revealed')
         clearInlineRevealImage(gift)
+        clearInlineGiftSize(gift)
         gift.style.setProperty('--gift-rot', '0deg')
     }
     gift.dataset.wasRevealed = gift.classList.contains('revealed') ? 'true' : 'false'

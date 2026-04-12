@@ -619,7 +619,7 @@ h1, h2, h3, h4, p {
     border: 1px solid rgba(255, 255, 255, 0.18);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    background-size: var(--gift-bg-size, cover);
+    background-size: var(--gift-bg-size, contain);
     background-position: center;
     background-repeat: no-repeat;
     --gift-rot-base: 0deg;
