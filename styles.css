@@ -943,6 +943,10 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/angry tinkerbell.gif");
 }
 
+#gift-img-pose.revealed {
+    --reveal-image: url("images/buzz striking a pose.gif");
+}
+
 #gift-img-pirate.revealed {
     --reveal-image: url("images/captain Hook.gif");
 }
@@ -1049,6 +1053,10 @@ h1, h2, h3, h4, p {
 
 #gift-img-cuddle4.revealed {
     --reveal-image: url("images/mickey & miney cuddle.gif");
+}
+
+#gift-img-cuddle5.revealed {
+    --reveal-image: url("images/wall-e.gif");
 }
 
 #gift-img-fear.revealed {
@@ -1171,6 +1179,18 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/cars.gif");
 }
 
+#gift-img-rolling.revealed {
+    --reveal-image: url("images/simba rolling.gif");
+}
+
+#gift-img-interested.revealed {
+    --reveal-image: url("images/woody interesting.gif");
+}
+
+#gift-img-eat.revealed {
+    --reveal-image: url("images/honey.gif");
+}
+
 #gift-img-hot.revealed {
     --reveal-image: url("images/boiling hot.gif");
 }
@@ -1216,7 +1236,15 @@ h1, h2, h3, h4, p {
 }
 
 #gift-img-team.revealed {
-    --reveal-image: url("images/.gif");
+    --reveal-image: url("images/woody & buzz.gif");
+}
+
+#gift-img-hercules.revealed {
+    --reveal-image: url("images/hercules.gif");
+}
+
+#gift-img-up.revealed {
+    --reveal-image: url("images/love Up.gif");
 }
 
 #gift-img-end.revealed {
