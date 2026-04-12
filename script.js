@@ -9,6 +9,8 @@ const quizAnswer = document.getElementById('quiz-answer')
 const quizFeedback = document.getElementById('quiz-feedback')
 const quizQuestion = document.getElementById('quiz-question')
 
+const QUIZ_STORAGE_KEY = 'stella_bday_unlocked'
+
 const QUIZ_STEPS = [
     {
         question: 'What’s my favorite ice cream flavor?',
@@ -70,8 +72,23 @@ function stopSearchSpawn() {
 
 function getStoryTypingElements(slide) {
     if (!slide) return []
+    const isStorySlide = !!slide.querySelector('#gift-img-story')
     return Array.from(slide.querySelectorAll('h1, h2, h3, h4, p'))
         .filter((el) => !el.classList.contains('typewriter'))
+        .filter((el) => !(isFirstGiftSlide(slide) && el.classList.contains('gift-hint')))
+        .filter((el) => !(isStorySlide && el.classList.contains('gift-hint')))
+}
+
+function isFirstGiftSlide(slide) {
+    return !!slide && slide.id === 'first-gift-slide'
+}
+
+function resetFirstGiftSlideText(slide) {
+    if (!isFirstGiftSlide(slide)) return
+    const title = slide.querySelector('.first-gift-text .gift-title')
+    if (title && title.dataset.twFullText != null) {
+        title.textContent = prefersReducedMotion ? title.dataset.twFullText : ''
+    }
 }
 
 function getOrCreateTypingState(slide) {
@@ -208,9 +225,22 @@ function setLockedState(isLocked) {
 }
 
 function unlockQuizGate() {
+    try {
+        window.localStorage.setItem(QUIZ_STORAGE_KEY, 'true')
+    } catch {
+        // ignore
+    }
     setLockedState(false)
     updateScrollableSlides(true)
     updateNav()
+}
+
+function isUnlocked() {
+    try {
+        return window.localStorage.getItem(QUIZ_STORAGE_KEY) === 'true'
+    } catch {
+        return false
+    }
 }
 
 const tapRevealGifts = Array.from(document.querySelectorAll('.gift-img'))
@@ -259,8 +289,12 @@ applyHintVisibility()
 prepareStoryElements()
 slides.forEach((slide) => resetStoryElements(slide))
 
-setLockedState(true)
-renderQuizStep()
+if (isUnlocked()) {
+    setLockedState(false)
+} else {
+    setLockedState(true)
+    renderQuizStep()
+}
 
 if (quizForm) {
     quizForm.addEventListener('submit', (e) => {
@@ -378,6 +412,7 @@ function setActiveSlide(index) {
     updateScrollableSlides()
     if (nextSlide) {
         resetStoryElements(nextSlide)
+        resetFirstGiftSlideText(nextSlide)
         armTypingForSlide(nextSlide)
         const hasGifts = !!nextSlide.querySelector('.gift-img')
         if (!hasGifts) {

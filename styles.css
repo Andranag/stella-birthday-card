@@ -295,6 +295,46 @@ h1, h2, h3, h4, p {
     align-items: center;
 }
 
+#first-gift-slide {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto auto 1fr;
+    justify-items: center;
+    align-content: stretch;
+    row-gap: 8px;
+}
+
+#first-gift-slide .first-gift-text {
+    width: min(100%, 980px);
+    padding-inline: clamp(8px, 3vw, 28px);
+    grid-row: 2;
+    align-self: end;
+}
+
+#first-gift-slide .first-gift-text > .gift-title {
+    margin: 0;
+}
+
+#first-gift-slide .first-gift-center {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    grid-row: 3;
+    align-self: start;
+}
+
+#first-gift-slide .first-gift-center > #gift-img-disney {
+    margin: 0 auto;
+}
+
+#first-gift-slide .first-gift-center > .gift-hint {
+    margin: 0;
+}
+
 .dance-collage {
     width: min(100%, 980px);
     display: grid;
@@ -369,6 +409,10 @@ h1, h2, h3, h4, p {
         display: flex;
         flex-direction: column;
         justify-content: center;
+    }
+
+    .gift-section:has(#gift-img-start) .gift-title {
+        white-space: pre-line;
     }
 }
 
