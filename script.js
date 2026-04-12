@@ -125,6 +125,8 @@ function startSearchSpawn(slide) {
     const wrapper = target.closest('.search-lines')
     if (wrapper) wrapper.classList.remove('is-hidden')
 
+    target.style.minHeight = ''
+
     const lines = ['and you were looking...', 'and looking...', 'still looking...', 'and looking...']
     let i = 0
 
@@ -256,21 +258,23 @@ function getRevealedGiftCount(slide) {
     return slide.querySelectorAll('.gift-img.revealed').length
 }
 
+function isGiftRevealed(giftEl) {
+    return !!giftEl && giftEl.classList && giftEl.classList.contains('gift-img') && giftEl.classList.contains('revealed')
+}
+
+function isTypingElementDone(el) {
+    if (!el) return true
+    return (el.textContent || '').trim().length > 0
+}
+
 function buildSlideTypingPlan(slide) {
     if (!slide) return []
 
     const nodes = Array.from(slide.querySelectorAll('h1, h2, h3, h4, p, .gift-img'))
-    const totalGifts = slide.querySelectorAll('.gift-img').length
-    let giftsSeen = 0
     const plan = []
 
-    nodes.forEach((node) => {
-        if (node.classList && node.classList.contains('gift-img')) {
-            giftsSeen += 1
-            return
-        }
-
-        const giftsRemaining = totalGifts - giftsSeen
+    nodes.forEach((node, idx) => {
+        if (node.classList && node.classList.contains('gift-img')) return
 
         if (node.classList && node.classList.contains('typewriter')) return
         if (isFirstGiftSlide(slide) && node.classList && node.classList.contains('gift-hint')) return
@@ -280,8 +284,13 @@ function buildSlideTypingPlan(slide) {
             node.dataset.twFullText = node.textContent || ''
         }
 
-        const requiredRevealedGifts = giftsRemaining > 0 ? giftsSeen + 1 : giftsSeen
-        plan.push({ el: node, giftsBefore: requiredRevealedGifts })
+        const prev = nodes[idx - 1]
+        const next = nodes[idx + 1]
+        const requiredGift = next && next.classList && next.classList.contains('gift-img')
+            ? next
+            : (prev && prev.classList && prev.classList.contains('gift-img') ? prev : null)
+
+        plan.push({ el: node, requiredGift })
     })
 
     return plan
@@ -383,18 +392,14 @@ function startStoryTypingForSlide(slide) {
     const advance = () => {
         if (!state.isTyping) return
 
-        const revealed = getRevealedGiftCount(slide)
+        const nextIndex = elements.findIndex((it) => !isTypingElementDone(it.el) && (!it.requiredGift || isGiftRevealed(it.requiredGift)))
+        if (nextIndex === -1) {
+            state.isTyping = false
+            return
+        }
 
+        state.index = nextIndex
         const item = elements[state.index]
-        if (!item) {
-            state.isTyping = false
-            return
-        }
-
-        if (revealed < item.giftsBefore) {
-            state.isTyping = false
-            return
-        }
 
         const el = item.el
         const fullText = el.dataset.twFullText != null ? el.dataset.twFullText : (el.textContent || '')
@@ -421,17 +426,14 @@ function continueStoryTypingForSlide(slide) {
     const advance = () => {
         if (!state.isTyping) return
 
-        const revealed = getRevealedGiftCount(slide)
-        const item = elements[state.index]
-        if (!item) {
+        const nextIndex = elements.findIndex((it) => !isTypingElementDone(it.el) && (!it.requiredGift || isGiftRevealed(it.requiredGift)))
+        if (nextIndex === -1) {
             state.isTyping = false
             return
         }
 
-        if (revealed < item.giftsBefore) {
-            state.isTyping = false
-            return
-        }
+        state.index = nextIndex
+        const item = elements[state.index]
 
         const el = item.el
         const fullText = el.dataset.twFullText != null ? el.dataset.twFullText : (el.textContent || '')
