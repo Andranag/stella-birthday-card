@@ -170,7 +170,7 @@ function resetFirstGiftSlideText(slide) {
 
 function getOrCreateTypingState(slide) {
     if (!slideTypingState.has(slide)) {
-        slideTypingState.set(slide, { timeouts: [], isTyping: false, plan: null, index: 0 })
+        slideTypingState.set(slide, { timeouts: [], isTyping: false, plan: null, index: 0, danceIndex: 0, dancePending: 0 })
     }
     return slideTypingState.get(slide)
 }
@@ -184,6 +184,58 @@ function clearSlideTyping(slide) {
     state.isTyping = false
     state.plan = null
     state.index = 0
+    state.danceIndex = 0
+    state.dancePending = 0
+}
+
+function isDanceSkillsSlide(slide) {
+    return !!slide && !!slide.querySelector('#gift-img-dance-skills')
+}
+
+function resetDanceSkillsText(slide) {
+    if (!isDanceSkillsSlide(slide)) return
+    const state = getOrCreateTypingState(slide)
+    state.danceIndex = 0
+    state.dancePending = 0
+    const lines = Array.from(slide.querySelectorAll('.dance-text .gift-title'))
+    lines.forEach((el) => {
+        if (el.dataset.twFullText == null) el.dataset.twFullText = el.textContent || ''
+        if (!prefersReducedMotion) {
+            const full = el.dataset.twFullText
+            el.textContent = full
+            const rect = el.getBoundingClientRect()
+            if (rect.height > 0) {
+                el.dataset.twMinHeight = String(rect.height)
+                el.style.minHeight = `${rect.height}px`
+            }
+            el.textContent = ''
+        }
+    })
+}
+
+function maybeTypeNextDanceLine(slide) {
+    if (!isDanceSkillsSlide(slide)) return
+    const state = getOrCreateTypingState(slide)
+    if (prefersReducedMotion) return
+    if (state.isTyping) return
+
+    const lines = Array.from(slide.querySelectorAll('.dance-text .gift-title'))
+    if (state.dancePending <= 0) return
+    if (state.danceIndex >= lines.length) return
+
+    const el = lines[state.danceIndex]
+    if (!el) return
+    const fullText = el.dataset.twFullText != null ? el.dataset.twFullText : (el.textContent || '')
+
+    state.isTyping = true
+    state.dancePending -= 1
+
+    typeTextIntoElement(el, fullText, state, () => {
+        state.danceIndex += 1
+        state.isTyping = false
+        const id = window.setTimeout(() => maybeTypeNextDanceLine(slide), STORY_TYPING_SPEED.lineGapMs)
+        state.timeouts.push(id)
+    })
 }
 
 function getRevealedGiftCount(slide) {
@@ -516,6 +568,12 @@ function toggleGiftReveal(gift) {
 
     if (nextState) {
         const slide = gift.closest('.slide')
+        if (slide && isDanceSkillsSlide(slide)) {
+            const state = getOrCreateTypingState(slide)
+            state.dancePending += 1
+            maybeTypeNextDanceLine(slide)
+            return
+        }
         if (slide && isTypingArmedForSlide(slide)) {
             disarmTypingForSlide(slide)
             window.setTimeout(() => startStoryTypingForSlide(slide), STORY_TYPING_SPEED.slideStartDelayMs)
@@ -600,6 +658,7 @@ function setActiveSlide(index) {
     if (nextSlide) {
         resetStoryElements(nextSlide)
         resetFirstGiftSlideText(nextSlide)
+        resetDanceSkillsText(nextSlide)
         armTypingForSlide(nextSlide)
         const gifts = nextSlide.querySelectorAll('.gift-img')
         const giftCount = gifts.length
