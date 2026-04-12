@@ -578,19 +578,46 @@ function applyHintVisibility() {
 function wrapGiftSectionText() {
     giftSections.forEach((section) => {
         const directGiftImages = Array.from(section.children).filter((el) => el.classList && el.classList.contains('gift-img'))
-        if (directGiftImages.length !== 1) return
-
         if (section.querySelector(':scope > .gift-text')) return
 
-        const wrapper = document.createElement('div')
-        wrapper.className = 'gift-text'
+        if (directGiftImages.length === 1) {
+            const wrapper = document.createElement('div')
+            wrapper.className = 'gift-text'
 
-        Array.from(section.children).forEach((child) => {
-            if (child === directGiftImages[0]) return
-            wrapper.appendChild(child)
-        })
+            Array.from(section.children).forEach((child) => {
+                if (child === directGiftImages[0]) return
+                wrapper.appendChild(child)
+            })
 
-        section.appendChild(wrapper)
+            section.appendChild(wrapper)
+            return
+        }
+
+        if (directGiftImages.length === 2) {
+            if (section.id === 'first-date-lift-slide') return
+            if (section.querySelector(':scope > .dance-collage')) return
+            if (section.querySelector(':scope > .search-scene')) return
+            if (section.querySelector(':scope > .float-text')) return
+
+            const wrapper = document.createElement('div')
+            wrapper.className = 'gift-text'
+
+            const firstGift = directGiftImages[0]
+            const secondGift = directGiftImages[1]
+
+            const toWrap = []
+            Array.from(section.children).forEach((child) => {
+                if (child === firstGift) return
+                if (child === secondGift) return
+                toWrap.push(child)
+            })
+
+            toWrap.forEach((node) => wrapper.appendChild(node))
+
+            section.insertBefore(wrapper, secondGift)
+
+            section.classList.add('two-gift-horizontal')
+        }
     })
 }
 

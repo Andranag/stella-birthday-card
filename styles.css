@@ -634,6 +634,76 @@ h1, h2, h3, h4, p {
     #first-date-lift-slide .lift-text .gift-title {
         margin-bottom: 10px;
     }
+
+    .two-gift-horizontal {
+        display: grid;
+        grid-template-columns: minmax(220px, 1fr) minmax(260px, 380px) minmax(220px, 1fr);
+        align-items: center;
+        column-gap: 22px;
+    }
+
+    .two-gift-horizontal > .gift-img {
+        margin: 0;
+        justify-self: center;
+    }
+
+    .two-gift-horizontal > .gift-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin: 0;
+    }
+
+    .two-gift-horizontal > .gift-text .gift-title {
+        margin-bottom: 10px;
+    }
+}
+
+@supports selector(:has(*)) {
+    @media (min-width: 880px) {
+        section.slide.gift-section:has(> .gift-img):has(> .gift-text):has(> .gift-img ~ .gift-img):not(:has(> .gift-img ~ .gift-img ~ .gift-img))
+        :not(#first-date-lift-slide)
+        :not(:has(> .dance-collage))
+        :not(:has(> .search-scene))
+        :not(:has(> .float-text)) {
+            display: grid;
+            grid-template-columns: minmax(220px, 1fr) minmax(260px, 380px) minmax(220px, 1fr);
+            align-items: center;
+            column-gap: 22px;
+        }
+
+        section.slide.gift-section:has(> .gift-img):has(> .gift-text):has(> .gift-img ~ .gift-img):not(:has(> .gift-img ~ .gift-img ~ .gift-img))
+        :not(#first-date-lift-slide)
+        :not(:has(> .dance-collage))
+        :not(:has(> .search-scene))
+        :not(:has(> .float-text)) > .gift-img {
+            margin: 0;
+            justify-self: center;
+        }
+
+        section.slide.gift-section:has(> .gift-img):has(> .gift-text):has(> .gift-img ~ .gift-img):not(:has(> .gift-img ~ .gift-img ~ .gift-img))
+        :not(#first-date-lift-slide)
+        :not(:has(> .dance-collage))
+        :not(:has(> .search-scene))
+        :not(:has(> .float-text)) > .gift-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin: 0;
+        }
+
+        section.slide.gift-section:has(> .gift-img):has(> .gift-text):has(> .gift-img ~ .gift-img):not(:has(> .gift-img ~ .gift-img ~ .gift-img))
+        :not(#first-date-lift-slide)
+        :not(:has(> .dance-collage))
+        :not(:has(> .search-scene))
+        :not(:has(> .float-text)) > .gift-text .gift-title {
+            margin-bottom: 10px;
+        }
+    }
 }
 
 @keyframes gift-breathe {
