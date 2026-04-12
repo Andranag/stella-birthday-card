@@ -609,6 +609,33 @@ h1, h2, h3, h4, p {
     box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
 }
 
+@media (min-width: 880px) {
+    #first-date-lift-slide {
+        display: grid;
+        grid-template-columns: minmax(220px, 1fr) minmax(260px, 380px) minmax(220px, 1fr);
+        align-items: center;
+        column-gap: 22px;
+    }
+
+    #first-date-lift-slide > .gift-img {
+        margin: 0;
+        justify-self: center;
+    }
+
+    #first-date-lift-slide .lift-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin: 0;
+    }
+
+    #first-date-lift-slide .lift-text .gift-title {
+        margin-bottom: 10px;
+    }
+}
+
 @keyframes gift-breathe {
     0%, 100% {
         transform: translateZ(0) rotate(calc(var(--gift-rot-base) + var(--gift-rot))) scale(1);
