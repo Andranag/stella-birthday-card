@@ -627,12 +627,20 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/Disney.gif");
 }
 
+#gift-books.revealed {
+    --reveal-image: url("images/books.gif");
+}
+
 #gift-img-story.revealed {
     --reveal-image: url("images/story.gif");
 }
 
 #gift-img-book.revealed {
     --reveal-image: url("images/book.gif");
+}
+
+#gift-img-comfortable.revealed {
+    --reveal-image: url("images/reading Matilda.gif");
 }
 
 #gift-img-start.revealed {
@@ -724,6 +732,22 @@ h1, h2, h3, h4, p {
 #gift-img-sad-tiger.revealed {
     --reveal-image: url("images/sad tiger.gif");
 }
+
+#gift-img-sad-sad-ariel.revealed {
+    --reveal-image: url("images/sad Ariel.gif");
+}
+
+#gift-img-sad-sad-stitch.revealed {
+    --reveal-image: url("images/sad stitch.gif");
+}
+
+#gift-img-sad-sad-sadness.revealed {
+    --reveal-image: url("images/sadness.gif");
+}
+
+#gift-img-sad-sad-sad-goofy.revealed {
+    --reveal-image: url("images/sad Goofy.gif");
+}
     
 #gift-img-then {
     --gift-bg-size: contain;
@@ -740,12 +764,72 @@ h1, h2, h3, h4, p {
     -webkit-backdrop-filter: none;
 }
 
+#gift-itchy {
+    --reveal-image: url("images/itchy Baloo.gif");
+}
+
+#gift-convince {
+    --reveal-image: url("images/genie Aladdin.gif");
+}
+
+#gift-excited {
+    --reveal-image: url("images/excited newspaper.gif");
+}
+
+#gift-sceptical {
+    --reveal-image: url("images/bad witch.gif");
+}
+
+#gift-img-pirate {
+    --reveal-image: url("images/captain Hook.gif");
+}
+
+#gift-img-shower.revealed {
+    --reveal-image: url("images/crocodile Peter Pan.gif");
+}
+
+#gift-img-argue.revealed {
+    --reveal-image: url("images/excuse Me Genie.gif");
+}
+
+#gift-img-pull-together.revealed {
+    --reveal-image: url("images/inside out group hug.gif");
+}
+
+#gift-img-nowhere.revealed {
+    --reveal-image: url("images/getting nowhere.gif");
+}
+
+#gift-img-dude.revealed {
+    --reveal-image: url("images/dude.gif");
+}
+
+#gift-img-whistle.revealed {
+    --reveal-image: url("images/whistle Mickey.gif");
+}
+
+#gift-img-dancing.revealed {
+    --reveal-image: url("images/Mickey Mouse Happy Dance.gif");
+}
+
+#gift-img-you.revealed {
+    --reveal-image: url("images/cinderella after dressing up.gif");
+}
+
+#gift-img-brave.revealed {
+    --reveal-image: url("images/brave.gif");
+}
+
 #gift-img-first-date.revealed {
-    --reveal-image: url("images/lady and the tramp.gif");
+    --reveal-image: url("images/princess jasmine.gif");
 }
 
 #gift-img-first-reaction.revealed {
     --reveal-image: url("images/jaw drop.gif");
+}
+
+#gift-img-sitting.revealed {
+    --reveal-image: url("images/aladdin yasmine.gif");
 }
 
 #gift-img-cool.revealed {
@@ -756,8 +840,20 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/Donald Duck Disney.gif");
 }
 
+#gift-img-frozen.revealed {
+    --reveal-image: url("images/frozen.gif");
+}
+
 #gift-img-happy.revealed {
     --reveal-image: url("images/Happy Anna frozen.gif");
+}
+
+#gift-img-heels.revealed {
+    --reveal-image: url("images/heels.gif");
+}
+
+#gift-img-flow.revealed {
+    --reveal-image: url("images/flow.gif");
 }
 
 #gift-img-second-date.revealed {

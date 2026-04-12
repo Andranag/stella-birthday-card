@@ -182,7 +182,7 @@ function startSearchSpawn(slide) {
     }
 
     tick()
-    searchSpawnIntervalId = window.setInterval(tick, 1100)
+    searchSpawnIntervalId = window.setInterval(tick, 2400)
 }
 
 function stopSearchSpawn() {
@@ -671,6 +671,25 @@ tapRevealGifts.forEach((gift) => {
     gift.addEventListener('pointerup', (e) => {
         e.preventDefault()
         e.stopPropagation()
+
+        const isTryingToReveal = !gift.classList.contains('revealed')
+        if (isTryingToReveal) {
+            const slide = gift.closest('.slide')
+            if (slide) {
+                const directGiftSiblings = Array.from(slide.children)
+                    .filter((el) => el.classList && el.classList.contains('gift-img') && el.classList.contains('tap-reveal'))
+                if (directGiftSiblings.length > 1) {
+                    const idx = directGiftSiblings.indexOf(gift)
+                    if (idx > 0) {
+                        const prevGift = directGiftSiblings[idx - 1]
+                        if (prevGift && !prevGift.classList.contains('revealed')) {
+                            return
+                        }
+                    }
+                }
+            }
+        }
+
         toggleGiftReveal(gift)
     })
 })
