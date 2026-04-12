@@ -42,6 +42,13 @@ const STORY_TYPING_SPEED = {
 let searchSpawnIntervalId = null
 let againFillIntervalId = null
 
+function clearSearchStamps() {
+    const scene = document.querySelector('.search-scene')
+    if (!scene) return
+    const container = scene.querySelector('.search-stamps')
+    if (container) container.remove()
+}
+
 function clearAgainStamps() {
     const slide = document.getElementById('kiss-again-slide')
     if (!slide) return
@@ -98,7 +105,7 @@ function startAgainFill(slide) {
 
         const stamp = document.createElement('div')
         stamp.className = 'again-stamp'
-        stamp.textContent = 'and again...!!!'
+        stamp.textContent = '💋'
 
         const x = 8 + Math.random() * 84
         const y = 8 + Math.random() * 84
@@ -115,7 +122,7 @@ function startAgainFill(slide) {
     }
 
     tick()
-    againFillIntervalId = window.setInterval(tick, 600)
+    againFillIntervalId = window.setInterval(tick, 300)
 }
 
 function startSearchSpawn(slide) {
@@ -123,9 +130,16 @@ function startSearchSpawn(slide) {
     if (!slide || !target) return
 
     const wrapper = target.closest('.search-lines')
-    if (wrapper) wrapper.classList.remove('is-hidden')
+    if (wrapper) wrapper.classList.add('is-hidden')
 
     target.style.minHeight = ''
+
+    const scene = slide.querySelector('.search-scene')
+    if (!scene) return
+
+    const container = document.createElement('div')
+    container.className = 'search-stamps'
+    scene.appendChild(container)
 
     const lines = ['and you were looking...', 'and looking...', 'still looking...', 'and looking...']
     let i = 0
@@ -134,10 +148,23 @@ function startSearchSpawn(slide) {
     target.classList.remove('search-spawn')
 
     const tick = () => {
-        target.textContent = lines[i % lines.length]
-        target.classList.remove('search-spawn')
-        void target.offsetWidth
-        target.classList.add('search-spawn')
+        if (!slide.isConnected) {
+            clearSearchStamps()
+            return
+        }
+
+        const stamp = document.createElement('div')
+        stamp.className = 'search-stamp'
+        stamp.textContent = lines[i % lines.length]
+        stamp.style.setProperty('--x', `${8 + Math.random() * 84}%`)
+        stamp.style.setProperty('--y', `${10 + Math.random() * 78}%`)
+        stamp.style.setProperty('--r', `${-10 + Math.random() * 20}deg`)
+        container.appendChild(stamp)
+
+        while (container.children.length > 18) {
+            container.removeChild(container.firstChild)
+        }
+
         i += 1
     }
 
@@ -150,6 +177,7 @@ function stopSearchSpawn() {
         window.clearInterval(searchSpawnIntervalId)
         searchSpawnIntervalId = null
     }
+    clearSearchStamps()
 }
 
 function shouldStartSearchSpawnAfterElement(slide, el) {
@@ -244,10 +272,12 @@ function maybeTypeNextDanceLine(slide) {
 
     state.isTyping = true
     state.dancePending -= 1
+    updateScrollableSlides()
 
     typeTextIntoElement(el, fullText, state, () => {
         state.danceIndex += 1
         state.isTyping = false
+        updateScrollableSlides()
         const id = window.setTimeout(() => maybeTypeNextDanceLine(slide), STORY_TYPING_SPEED.lineGapMs)
         state.timeouts.push(id)
     })
@@ -282,6 +312,13 @@ function buildSlideTypingPlan(slide) {
 
         if (node.dataset && node.dataset.twFullText == null) {
             node.dataset.twFullText = node.textContent || ''
+        }
+
+        const overrideSelector = node.getAttribute && node.getAttribute('data-tw-required-gift')
+        if (overrideSelector) {
+            const overrideGift = slide.querySelector(overrideSelector)
+            plan.push({ el: node, requiredGift: overrideGift || null })
+            return
         }
 
         const prev = nodes[idx - 1]
@@ -713,6 +750,7 @@ function updateScrollableSlides(fullRecompute = false) {
     if (fullRecompute) {
         slides.forEach((slide) => {
             slide.classList.remove('is-scrollable')
+            slide.style.removeProperty('--nav-safe-pad')
         })
 
         slides.forEach((slide) => {
@@ -726,9 +764,17 @@ function updateScrollableSlides(fullRecompute = false) {
     const slide = slides[activeSlideIndex]
     if (!slide) return
 
-    slide.classList.remove('is-scrollable')
-    if (slide.scrollHeight > slide.clientHeight) {
-        slide.classList.add('is-scrollable')
+    const shouldBeScrollable = slide.scrollHeight > slide.clientHeight
+    const wasScrollable = slide.classList.contains('is-scrollable')
+
+    slide.style.removeProperty('--nav-safe-pad')
+
+    if (shouldBeScrollable !== wasScrollable) {
+        const prevScrollTop = slide.scrollTop
+        slide.classList.toggle('is-scrollable', shouldBeScrollable)
+        window.requestAnimationFrame(() => {
+            slide.scrollTop = prevScrollTop
+        })
     }
 }
 
