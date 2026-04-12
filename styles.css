@@ -635,6 +635,10 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/Disney.gif");
 }
 
+#gift-img-wish.revealed {
+    --reveal-image: url("images/princess And The Frog.gif");
+}
+
 #gift-books.revealed {
     --reveal-image: url("images/books.gif");
 }
@@ -824,6 +828,10 @@ h1, h2, h3, h4, p {
 
 #gift-img-first-date.revealed {
     --reveal-image: url("images/princess jasmine.gif");
+}
+
+#gift-img-lift.revealed {
+    --reveal-image: url("images/princess anna twist in the air.gif");
 }
 
 #gift-img-first-reaction.revealed {
@@ -1039,7 +1047,7 @@ h1, h2, h3, h4, p {
 }
 
 #gift-img-team.revealed {
-    --reveal-image: url("images/princess anna twist in the air.gif");
+    --reveal-image: url("images/.gif");
 }
 
 #gift-img-end.revealed {
