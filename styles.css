@@ -683,10 +683,6 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/finding Andreas.png");
 }
 
-#gift-img-found.revealed {
-    background-position: center 18%;
-}
-
 #gift-img-question-mark.revealed {
     --reveal-image: url("images/question mark.gif");
 }
@@ -695,18 +691,15 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/angry.gif");
 }
 
-#gift-img-TBC {
-    width: min(92vw, 520px);
-    height: auto;
-    aspect-ratio: 16 / 9;
-    --gift-bg-size: contain;
-}
-
 #gift-img-TBC.revealed {
     --reveal-image: url("images/to-be-continued-one-piece.gif");
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
+    width: min(92vw, 520px);
+    height: auto;
+    aspect-ratio: 16 / 9;
+    --gift-bg-size: contain;
 }
 
 #gift-img-lie.revealed {
@@ -733,28 +726,25 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/sad tiger.gif");
 }
 
-#gift-img-sad-sad-ariel.revealed {
+#gift-img-sad-ariel.revealed {
     --reveal-image: url("images/sad Ariel.gif");
 }
 
-#gift-img-sad-sad-stitch.revealed {
+#gift-img-sad-stitch.revealed {
     --reveal-image: url("images/sad stitch.gif");
 }
 
-#gift-img-sad-sad-sadness.revealed {
+#gift-img-sad-sadness.revealed {
     --reveal-image: url("images/sadness.gif");
 }
 
-#gift-img-sad-sad-sad-goofy.revealed {
+#gift-img-sad-goofy.revealed {
     --reveal-image: url("images/sad Goofy.gif");
 }
     
-#gift-img-then {
-    --gift-bg-size: contain;
-}
-
 #gift-img-then.revealed {
     --reveal-image: url("images/Spongebob Squarepants Transition.gif");
+    --gift-bg-size: contain;
     background-size: cover;
     background-position: center;
     background-color: transparent;
@@ -764,23 +754,27 @@ h1, h2, h3, h4, p {
     -webkit-backdrop-filter: none;
 }
 
-#gift-itchy {
+#gift-itchy.revealed {
     --reveal-image: url("images/itchy Baloo.gif");
 }
 
-#gift-convince {
+#gift-convince.revealed {
     --reveal-image: url("images/genie Aladdin.gif");
 }
 
-#gift-excited {
+#gift-excited.revealed {
     --reveal-image: url("images/excited newspaper.gif");
 }
 
-#gift-sceptical {
+#gift-sceptical.revealed {
     --reveal-image: url("images/bad witch.gif");
 }
 
-#gift-img-pirate {
+#gift-pout.revealed {
+    --reveal-image: url("images/bad witch.gif");
+}
+
+#gift-img-pirate.revealed {
     --reveal-image: url("images/captain Hook.gif");
 }
 
