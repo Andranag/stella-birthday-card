@@ -4,12 +4,12 @@
   --blue: #2b4b66;
   --purple: #6c4a68;
   --card: rgba(255, 255, 255, 0.14);
-  --frame: rgba(255, 255, 255, 0.3);
 }
 
+/* ─── Animated gradient background ─── */
 body {
   text-align: center;
-  font-family: "Nunito", "Happy Monkey", cursive;
+  font-family: "Nunito", cursive;
   background: linear-gradient(
     135deg,
     var(--cypress),
@@ -17,9 +17,23 @@ body {
     var(--purple),
     var(--red)
   );
+  background-size: 300% 300%;
+  animation: gradient-shift 60s ease infinite;
   color: #ffffff;
   margin: 0;
   overflow: hidden;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 body.is-locked #swipe-container,
@@ -27,6 +41,7 @@ body.is-locked #page-nav {
   visibility: hidden;
 }
 
+/* ─── Quiz gate ─── */
 #quiz-gate {
   position: fixed;
   inset: 0;
@@ -94,10 +109,10 @@ body.is-locked #quiz-gate {
   font-family: inherit;
   font-weight: 700;
   cursor: pointer;
+  transition: background 180ms ease;
 }
-
 .quiz-button:hover {
-  background: rgba(178, 74, 90, 0.36);
+  background: rgba(178, 74, 90, 0.46);
 }
 
 .quiz-feedback {
@@ -106,6 +121,7 @@ body.is-locked #quiz-gate {
   font-weight: 700;
 }
 
+/* ─── Typography ─── */
 h1,
 h2,
 h3,
@@ -113,7 +129,6 @@ h4 {
   font-family: "Marck Script", "Pacifico", cursive;
   letter-spacing: 0.02em;
 }
-
 h1 {
   line-height: 1.15;
 }
@@ -122,7 +137,6 @@ h3,
 h4 {
   line-height: 1.2;
 }
-
 h1,
 h2,
 h3,
@@ -131,6 +145,7 @@ p {
   text-shadow: 0 0 1px black;
 }
 
+/* ─── Swipe container ─── */
 #swipe-container {
   height: 100vh;
   width: 100vw;
@@ -143,6 +158,7 @@ p {
   -webkit-overflow-scrolling: touch;
 }
 
+/* ─── Slides ─── */
 .slide {
   min-width: 100vw;
   height: 100vh;
@@ -183,8 +199,20 @@ p {
   justify-content: flex-start;
 }
 
-/* ─── Typewriter ─── */
+/* ─── Progress bar ─── */
+#story-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 10000;
+  transition: width 300ms ease;
+  pointer-events: none;
+}
 
+/* ─── Typewriter ─── */
 .typewriter {
   overflow: hidden;
   white-space: nowrap;
@@ -207,13 +235,11 @@ p {
     width: 100%;
   }
 }
-
 @keyframes caret {
   50% {
     border-color: transparent;
   }
 }
-
 @keyframes typewriter-clip {
   from {
     clip-path: inset(0 100% 0 0);
@@ -223,7 +249,6 @@ p {
   }
 }
 
-/* No blinking caret on the search slide */
 .search-lines .typewriter {
   border-right: none;
   width: fit-content;
@@ -235,7 +260,6 @@ p {
 }
 
 /* ─── Search scene ─── */
-
 @keyframes search-spawn {
   from {
     opacity: 0;
@@ -245,16 +269,6 @@ p {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-}
-
-@keyframes gradient-shift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-body {
-  background-size: 300% 300%;
-  animation: gradient-shift 60s ease infinite;
 }
 
 .search-scene {
@@ -351,7 +365,6 @@ body {
 }
 
 /* ─── Kiss again overlay ─── */
-
 #kiss-again-slide {
   position: relative;
 }
@@ -382,7 +395,12 @@ body {
   animation: search-spawn 420ms ease-out;
 }
 
-/* ─── Header ─── */
+/* ─── Header slide ─── */
+#header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 #main-img {
   width: 300px;
@@ -391,14 +409,15 @@ body {
   margin-bottom: 10px;
 }
 
-#header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+#support-img {
+  width: 160px;
+  border-radius: 50%;
+  border: 4px solid var(--card);
+  margin-top: 6px;
+  opacity: 0.85;
 }
 
 /* ─── Gift sections ─── */
-
 .gift-section {
   margin-top: 0;
   display: flex;
@@ -446,7 +465,6 @@ body {
 }
 
 /* ─── Dance collage ─── */
-
 .dance-collage {
   width: min(100%, 980px);
   display: grid;
@@ -461,7 +479,6 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
-
 .dance-text {
   text-align: left;
 }
@@ -482,12 +499,8 @@ body {
     gap: 12px;
   }
 
-  .dance-media {
-    display: contents;
-  }
-  .dance-row {
-    display: contents;
-  }
+  .dance-media,
+  .dance-row,
   .dance-text {
     display: contents;
   }
@@ -498,11 +511,9 @@ body {
     margin: 0;
     justify-self: stretch;
   }
-
   .dance-collage .gift-img.revealed {
     --gift-bg-size: cover;
   }
-
   .dance-collage #gift-img-dance-skills {
     grid-column: 1;
     grid-row: 1;
@@ -515,7 +526,6 @@ body {
     grid-column: 3;
     grid-row: 1;
   }
-
   .dance-collage .dance-text .gift-title:nth-child(1) {
     grid-column: 1;
     grid-row: 2;
@@ -537,7 +547,6 @@ body {
 }
 
 /* ─── Single-gift layout (desktop) ─── */
-
 @supports selector(:has(*)) {
   .gift-section:has(> .gift-img):not(:has(> .gift-img ~ .gift-img)) {
     width: min(100%, 980px);
@@ -575,9 +584,6 @@ body {
     justify-content: center;
   }
 
-  .gift-section:has(#gift-img-start) .gift-title {
-    white-space: pre-line;
-  }
   .gift-section:has(> #gift-img-end) {
     width: 100%;
     display: flex;
@@ -587,7 +593,6 @@ body {
 }
 
 /* ─── Two-gift horizontal layout (desktop) ─── */
-
 @media (min-width: 880px) {
   #first-date-lift-slide,
   .two-gift-horizontal {
@@ -622,8 +627,7 @@ body {
   }
 }
 
-/* ─── Gift image base ─── */
-
+/* ─── Gift text styles ─── */
 .gift-title {
   margin-bottom: 10px;
   letter-spacing: 0.035em;
@@ -647,6 +651,7 @@ body {
   display: none;
 }
 
+/* ─── Gift image base ─── */
 .gift-img {
   width: var(--gift-w, min(90vw, 420px));
   height: var(--gift-h, min(52vh, 420px));
@@ -731,7 +736,10 @@ body {
   }
 }
 
-/* ─── Revealed gift images ─── */
+/* ─── Revealed gift images — paste your full list from styles.css here unchanged ─── */
+/* PASTE YOUR COMPLETE REVEALED GIFT IMAGES BLOCK HERE FROM styles.css — unchanged */
+/* (All the #gift-img-*.revealed { --reveal-image: url(...) } rules) */
+
 #gift-img-disney.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjBxZ2F5Y2w0dHNwYnRlYnZ1eG12bGh2a21kZGUyMWFmZnlzaWQ3eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/4ZeHO6xwFpOq9tNlTO/giphy.gif");
 }
@@ -1127,7 +1135,6 @@ body {
 }
 
 /* ─── Footer ─── */
-
 #footer {
   font-style: italic;
   margin: 0 0 10px;
@@ -1158,7 +1165,6 @@ body {
 }
 
 /* ─── Nav ─── */
-
 #page-nav {
   position: fixed;
   inset: 0;
@@ -1172,17 +1178,22 @@ body {
 
 #page-nav button {
   font-family: inherit;
+  font-size: 18px;
   color: white;
   background: rgba(255, 255, 255, 0.14);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
-  padding: 10px 14px;
+  padding: 10px 16px;
   cursor: pointer;
   pointer-events: auto;
+  transition: background 180ms ease;
 }
 
+#page-nav button:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
 #page-nav button:disabled {
-  opacity: 0.5;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
@@ -1201,7 +1212,6 @@ body {
 }
 
 /* ─── Mobile overrides ─── */
-
 @media (max-width: 720px) {
   .gift-section {
     display: flex;
@@ -1235,11 +1245,17 @@ body {
   .gift-section > :not(.gift-img) {
     text-align: center;
   }
+
+  #support-img {
+    width: 110px;
+  }
 }
 
 /* ─── Reduced motion ─── */
-
 @media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
   .gift-img {
     transition: none;
   }

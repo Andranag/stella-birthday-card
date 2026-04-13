@@ -33,7 +33,19 @@ const TYPING = {
 let searchSpawnIntervalId = null
 let againFillIntervalId = null
 
-// ─── Search spawn ────────────────────────────────────────────────────────────
+// ─── Progress bar ─────────────────────────────────────────────────────────────
+
+const progressBar = document.createElement('div')
+progressBar.id = 'story-progress'
+document.body.appendChild(progressBar)
+
+function updateProgressBar(index) {
+    const total = slides.length
+    if (total <= 1) { progressBar.style.width = '100%'; return }
+    progressBar.style.width = `${((index) / (total - 1)) * 100}%`
+}
+
+// ─── Search spawn ─────────────────────────────────────────────────────────────
 
 function clearSearchStamps() {
     document.querySelector('.search-scene .search-stamps')?.remove()
@@ -154,21 +166,10 @@ function clearSlideTyping(slide) {
     state.danceIndex = 0
 }
 
-function isDanceSkillsSlide(slide) {
-    return !!slide?.querySelector('#gift-img-dance-skills')
-}
-
-function isFirstGiftSlide(slide) {
-    return slide?.id === 'first-gift-slide'
-}
-
-function isGiftRevealed(giftEl) {
-    return !!giftEl?.classList?.contains('revealed')
-}
-
-function isTypingElementDone(el) {
-    return (el?.textContent || '').trim().length > 0
-}
+function isDanceSkillsSlide(slide) { return !!slide?.querySelector('#gift-img-dance-skills') }
+function isFirstGiftSlide(slide) { return slide?.id === 'first-gift-slide' }
+function isGiftRevealed(giftEl) { return !!giftEl?.classList?.contains('revealed') }
+function isTypingElementDone(el) { return (el?.textContent || '').trim().length > 0 }
 
 function armTypingForSlide(slide) { if (slide) slide.dataset.twArmed = 'true' }
 function disarmTypingForSlide(slide) { if (slide) slide.dataset.twArmed = 'false' }
@@ -285,7 +286,7 @@ function buildSlideTypingPlan(slide) {
         .filter(node => !node.classList.contains('gift-img') && !node.classList.contains('typewriter'))
         .filter(node => !(isFirstGiftSlide(slide) && node.classList.contains('gift-hint')))
         .filter(node => !(slide.querySelector('#gift-img-story') && node.classList.contains('gift-hint')))
-        .map((node, _, arr) => {
+        .map((node) => {
             if (node.dataset.twFullText == null) node.dataset.twFullText = node.textContent || ''
             const overrideSel = node.getAttribute('data-tw-required-gift')
             if (overrideSel) return { el: node, requiredGift: slide.querySelector(overrideSel) || null }
@@ -389,15 +390,15 @@ if (quizForm) {
         if (step?.answers.includes(answer)) {
             quizStepIndex++
             if (quizStepIndex >= QUIZ_STEPS.length) {
-                if (quizFeedback) quizFeedback.textContent = 'Unlocked. Happy birthday :)'
+                if (quizFeedback) quizFeedback.textContent = 'Unlocked. Happy birthday 🎂'
                 unlockQuizGate()
             } else {
                 renderQuizStep()
             }
         } else {
+            // Wrong answer: stay on the same question, don't reset to step 0
             if (quizFeedback) quizFeedback.textContent = 'Nope — try again.'
             quizAnswer?.select()
-            renderQuizStep()
         }
     })
 }
@@ -599,6 +600,7 @@ function updateNav() {
     if (pageIndicator) pageIndicator.textContent = `${index + 1} / ${total}`
     if (prevBtn) prevBtn.disabled = index <= 0
     if (nextBtn) nextBtn.disabled = index >= total - 1
+    updateProgressBar(index)
     setActiveSlide(index)
 }
 
@@ -610,6 +612,12 @@ function goToIndex(index) {
 
 prevBtn?.addEventListener('click', () => goToIndex(getCurrentIndex() - 1))
 nextBtn?.addEventListener('click', () => goToIndex(getCurrentIndex() + 1))
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goToIndex(getCurrentIndex() + 1)
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goToIndex(getCurrentIndex() - 1)
+})
 
 let navRafPending = false
 swipeContainer?.addEventListener('scroll', () => {
@@ -685,11 +693,6 @@ function wrapGiftSectionText() {
         }
     })
 }
-
-document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') goToIndex(getCurrentIndex() + 1)
-    if (e.key === 'ArrowLeft')  goToIndex(getCurrentIndex() - 1)
-})
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
