@@ -674,31 +674,8 @@ p {
   background-color: transparent;
 }
 
-.gift-img.tap-reveal {
-  cursor: pointer;
-}
-
-.gift-img.tap-reveal:not(.revealed) {
-  background-image: url("images/gift-cover.jpg");
-  background-size: contain;
-  background-position: center;
-  background-color: transparent;
-  border-color: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  animation: gift-breathe 2.8s ease-in-out infinite;
-}
-
-.gift-img.tap-reveal:active {
-  transform: translateZ(0) rotate(calc(var(--gift-rot-base) + var(--gift-rot)))
-    scale(0.985);
-}
-
 .gift-img.revealed {
   background-image: var(--reveal-image);
-  animation: gift-reveal 280ms ease-out;
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
 }
 
 @keyframes gift-breathe {
@@ -817,6 +794,7 @@ p {
 }
 #gift-img-eternity.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXFwZ2ZsaHJib2draHltMWJjOTh2c2RrazY5NWs0NmxocGNlOTRwaSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/IxLeSDtUaZRmSiyCTf/giphy.gif");
+  --gift-bg-size: cover;
 }
 #gift-img-itchy.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExenBidjIwNjJ5NTBrN2V2bWxndWF0ZjI2OTk0YXk0aTBscTFoOWw5aSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Ja9AewepaPsli/giphy.gif");
@@ -1233,22 +1211,4 @@ p {
   .gift-section > :not(.gift-img) {
     text-align: center;
   }
-}
-
-/* ─── Reduced motion ─── */
-@media (prefers-reduced-motion: reduce) {
-  body {
-    animation: none;
-  }
-  .gift-img {
-    transition: none;
-  }
-  .gift-img.tap-reveal:not(.revealed),
-  .gift-img.revealed {
-    animation: none;
-  }
-}
-
-a {
-  color: white;
 }

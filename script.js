@@ -587,13 +587,6 @@ function waitForFirstRevealImage(slide, timeoutMs = 800) {
   });
 }
 
-function clearInlineGiftSize(gift) {
-  gift.style.removeProperty("width");
-  gift.style.removeProperty("height");
-  gift.style.removeProperty("aspect-ratio");
-  gift.style.removeProperty("--gift-ar");
-}
-
 function fitGiftToRevealImage(gift) {
   if (!gift?.classList.contains("revealed")) return;
   const url = getRevealImageUrl(gift);
@@ -645,57 +638,12 @@ function fitGiftToRevealImage(gift) {
   img.src = url;
 }
 
-function toggleGiftReveal(gift) {
-  const revealing = !gift.classList.contains("revealed");
-  if (revealing) {
-    gift.style.removeProperty("--reveal-image");
-    gift.classList.add("revealed");
-    fitGiftToRevealImage(gift);
-    gift.style.setProperty(
-      "--gift-rot",
-      `${(-2.5 + Math.random() * 5).toFixed(2)}deg`,
-    );
-  } else {
-    gift.classList.remove("revealed");
-    gift.style.removeProperty("--reveal-image");
-    clearInlineGiftSize(gift);
-    gift.style.setProperty("--gift-rot", "0deg");
-  }
-  gift.dataset.wasRevealed = revealing ? "true" : "false";
-  updateScrollableSlides();
-
-  if (revealing) {
-    const slide = gift.closest(".slide");
-    if (slide?.id === "kiss-again-slide") {
-      const triggerEl = slide.querySelector("h2.gift-title");
-      if (
-        isTypingElementDone(triggerEl) &&
-        isGiftRevealed(slide.querySelector("#gift-img-kiss6")) &&
-        isGiftRevealed(slide.querySelector("#gift-img-kiss7"))
-      ) {
-        startAgainFill(slide);
-      }
-    }
-    if (slide && isDanceSkillsSlide(slide)) {
-      maybeTypeNextDanceLine(slide);
-      return;
-    }
-    if (slide && isTypingArmedForSlide(slide)) {
-      disarmTypingForSlide(slide);
-      setTimeout(() => startStoryTypingForSlide(slide), TYPING.startDelayMs);
-    } else if (slide) {
-      setTimeout(() => continueStoryTypingForSlide(slide), TYPING.startDelayMs);
-    }
-  }
-}
-
 // ─── Slide management ─────────────────────────────────────────────────────────
 
 function suspendSlideGifs(index) {
   slides[index]?.querySelectorAll(".gift-img").forEach((gift) => {
     gift.classList.remove("revealed");
     gift.style.removeProperty("--reveal-image");
-    gift.dataset.wasRevealed = "false";
   });
 }
 
@@ -847,7 +795,6 @@ function revealAllGiftsForSlide(slide) {
   gifts.forEach((gift) => {
     if (gift.classList.contains("revealed")) return;
     gift.classList.add("revealed");
-    gift.dataset.wasRevealed = "true";
     fitGiftToRevealImage(gift);
   });
   updateScrollableSlides();
