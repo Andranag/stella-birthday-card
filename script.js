@@ -60,7 +60,7 @@ function startSearchSpawn(slide) {
     container.className = 'search-stamps'
     wrapper.appendChild(container)
 
-    const lines = ['and you were looking...', 'and looking...', 'still looking...', 'and looking...']
+    const lines = ['so you were looking...', 'and looking...', 'still looking...']
     let i = 0
 
     const tick = () => {
