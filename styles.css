@@ -721,17 +721,14 @@ p {
 }
 
 /* ─── Revealed gift images ─── */
-#gift-img-hades {
-  --reveal-image: url("images/hades.gif");
-}
 #gift-img-disney.revealed {
-  --reveal-image: url("images/Disney.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjE0MjNqMzd0dnlxMW81ZnVnZ2w1aXIxbnF6ZzVuMG1pZXM0ZWVrZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/TbyAOtYa4ywrSpvjtm/giphy.gif");
 }
 #gift-img-wish.revealed {
-  --reveal-image: url("images/princess And The Frog.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3dlNG9rZGpyam9nbWxvank3OTBlODE3bHpxNTVmczBqaHZ4N2p0cyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/nv0j45xOF1Iyc/giphy.gif");
 }
 #gift-img-books.revealed {
-  --reveal-image: url("images/books.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExenBidjIwNjJ5NTBrN2V2bWxndWF0ZjI2OTk0YXk0aTBscTFoOWw5aSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xr88sYakJn4sg/giphy.gif");
 }
 #gift-img-story.revealed {
   --reveal-image: url("images/story.gif");
@@ -745,14 +742,14 @@ p {
 #gift-img-start.revealed {
   --reveal-image: url("images/meridia.gif");
 }
-#gift-img-met.revealed {
-  --reveal-image: url("images/aladdin.gif");
+#gift-img-me.revealed {
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QavMUNzmD2HPq/giphy.gif");
 }
 #gift-img-handsome.revealed {
-  --reveal-image: url("images/gaston.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHV6cWplamQycTgwdGVuaXMzd2s0anNnazk5eWxweDBnb2JvZzM4MyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/pF8sfgvZvDKPm/giphy.gif");
 }
 #gift-img-handsome2.revealed {
-  --reveal-image: url("images/gaston chest.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHV6cWplamQycTgwdGVuaXMzd2s0anNnazk5eWxweDBnb2JvZzM4MyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/v0usU9mgq1ZyU/giphy.gif");
 }
 #gift-img-dance-skills.revealed {
   --reveal-image: url("images/Mickey dancing tap.gif");
@@ -761,7 +758,7 @@ p {
   --reveal-image: url("images/the jungle book dancing.gif");
 }
 #gift-img-dance-skills3.revealed {
-  --reveal-image: url("images/timon.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExenBidjIwNjJ5NTBrN2V2bWxndWF0ZjI2OTk0YXk0aTBscTFoOWw5aSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/UeDJSa4Ox5j0c/giphy.gif");
 }
 #gift-img-search.revealed {
   --reveal-image: url("images/inspector gadget.gif");
@@ -791,7 +788,7 @@ p {
   --reveal-image: url("images/sad tiger.gif");
 }
 #gift-img-sad-ariel.revealed {
-  --reveal-image: url("images/sad Ariel.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NWoyaTI4dWUwOWl0MWN3OXptNnF0cGx6amwxeWF5cGg1dmN1aW5jaSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/jOcZHGMLaTk6Q/giphy.gif");
 }
 #gift-img-sad-stitch.revealed {
   --reveal-image: url("images/sad stitch.gif");
@@ -814,13 +811,13 @@ p {
   -webkit-backdrop-filter: none;
 }
 #gift-img-itchy.revealed {
-  --reveal-image: url("images/itchy Baloo.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExenBidjIwNjJ5NTBrN2V2bWxndWF0ZjI2OTk0YXk0aTBscTFoOWw5aSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Ja9AewepaPsli/giphy.gif");
 }
 #gift-img-convince.revealed {
-  --reveal-image: url("images/genie Aladdin.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/d8YBM0IgPszle/giphy.gif");
 }
 #gift-img-excited.revealed {
-  --reveal-image: url("images/excited newspaper.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3dlNG9rZGpyam9nbWxvank3OTBlODE3bHpxNTVmczBqaHZ4N2p0cyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/q5xtaGzXQjIu4/giphy.gif");
 }
 #gift-img-sceptical.revealed {
   --reveal-image: url("images/bad witch.gif");
@@ -841,7 +838,7 @@ p {
   --reveal-image: url("images/crocodile Peter Pan.gif");
 }
 #gift-img-argue.revealed {
-  --reveal-image: url("images/excuse Me Genie.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/6bWrYX0bTztp6/giphy.gif");
 }
 #gift-img-pull-together.revealed {
   --reveal-image: url("images/inside out group hug.gif");
@@ -877,7 +874,7 @@ p {
   --reveal-image: url("images/princess anna twist in the air.gif");
 }
 #gift-img-first-reaction.revealed {
-  --reveal-image: url("images/jaw drop.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/nC1toglzIfNFC/giphy.gif");
 }
 #gift-img-sitting.revealed {
   --reveal-image: url("images/aladdin yasmine.gif");
@@ -934,7 +931,7 @@ p {
   --reveal-image: url("images/blush.gif");
 }
 #gift-img-cuddle.revealed {
-  --reveal-image: url("images/aladdin cuddle.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/SyR7VvbciZqrm/giphy.gif");
 }
 #gift-img-cuddle2.revealed {
   --reveal-image: url("images/the lion king love.gif");
@@ -943,7 +940,7 @@ p {
   --reveal-image: url("images/two foxes.gif");
 }
 #gift-img-cuddle4.revealed {
-  --reveal-image: url("images/mickey & miney cuddle.gif");
+  --reveal-image: url("https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcGRraDdjaWVzNG9qZHEwZ2xkenNlYWR1NWt3ZzBxNXNxaHJrd2l6ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LeAvvCD0YncNG/giphy.gif");
 }
 #gift-img-cuddle5.revealed {
   --reveal-image: url("images/wall-e.gif");
@@ -964,10 +961,10 @@ p {
   --reveal-image: url("images/hercules kiss.gif");
 }
 #gift-img-kiss2.revealed {
-  --reveal-image: url("images/Avatar kiss.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dW1zNnY5aTR3NXN5bTVhM3M2aWo4ZGRyc2g3OXMxdG9hcXlrdnpzNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/aXNjCb6cXtL8c/giphy.gif");
 }
 #gift-img-kiss3.revealed {
-  --reveal-image: url("images/ariel kiss.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3OGQxdjU2bjVhdDQyaGk1dWRncG94aGdpcnA4Mm91NWg2Nm01YTA3NyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/uSvglu4xXkCuQ/giphy.gif");
 }
 #gift-img-kiss4.revealed {
   --reveal-image: url("images/aladdin kiss.gif");
@@ -988,7 +985,7 @@ p {
   --reveal-image: url("images/donald duck disney love GIF.gif");
 }
 #gift-img-invite-consent.revealed {
-  --reveal-image: url("images/aladdin inviting Yasmine.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/11WNvAQykrDllu/giphy.gif");
 }
 #gift-img-dance.revealed {
   --reveal-image: url("images/Prince Charming Dancing.gif");
@@ -1069,10 +1066,10 @@ p {
   --reveal-image: url("images/princess anna laughing.gif");
 }
 #gift-img-world.revealed {
-  --reveal-image: url("images/a whole new world.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/bN9UR31HrAQ12/giphy.gif");
 }
 #gift-img-travelling.revealed {
-  --reveal-image: url("images/Princess and the frog river.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3dlNG9rZGpyam9nbWxvank3OTBlODE3bHpxNTVmczBqaHZ4N2p0cyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/eBrsV8a8N8TjW/giphy.gif");
 }
 #gift-img-united.revealed {
   --reveal-image: url("images/pocahontas.gif");
@@ -1093,7 +1090,7 @@ p {
   --reveal-image: url("images/robin Hood worry-free.gif");
 }
 #gift-img-hug.revealed {
-  --reveal-image: url("images/hug.gif");
+  --reveal-image: url("https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2tqOWZ5c3dhdGxtMm04NmFmbXBmeWxvdzBwZDJvM3BkdGplOGtxOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/EvYHHSntaIl5m/giphy.gif");
 }
 #gift-img-maui.revealed {
   --reveal-image: url("images/maui.gif");
@@ -1102,7 +1099,7 @@ p {
   --reveal-image: url("images/lady and the tramp kiss.gif");
 }
 #gift-img-affection.revealed {
-  --reveal-image: url("images/minnie Kiss Mickey.gif");
+  --reveal-image: url("https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExdm52MWN1bGc3MnRiYWdvZjhlYW40c3U2NnI5ZzBvdng2cjN1eWt4ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/udiIFmPkJQzkI/giphy.gif");
 }
 #gift-img-choose.revealed {
   --reveal-image: url("images/ash ketchum.gif");
