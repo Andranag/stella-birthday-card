@@ -612,7 +612,7 @@ h1, h2, h3, h4, p {
 
 .gift-hint,
 .gift-section p {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
     line-height: 2;
     letter-spacing: 0.03em;
@@ -871,7 +871,7 @@ h1, h2, h3, h4, p {
 }
 
 #gift-img-angry.revealed {
-    --reveal-image: url("images/angry.gif");
+    --reveal-image: url("images/angry tinkerbell.gif");
 }
 
 #gift-img-TBC.revealed {
@@ -917,8 +917,8 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/sad stitch.gif");
 }
 
-#gift-img-sad-sadness.revealed {
-    --reveal-image: url("images/sadness.gif");
+#gift-img-sad-alice.revealed {
+    --reveal-image: url("images/alice in wonderland crying.gif");
 }
 
 #gift-img-sad-goofy.revealed {
@@ -953,8 +953,8 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/bad witch.gif");
 }
 
-#gift-img-pout.revealed {
-    --reveal-image: url("images/angry tinkerbell.gif");
+#gift-img-curiosity.revealed {
+    --reveal-image: url("images/alice in wonderland curiosity.gif");
 }
 
 #gift-img-leap-of-faith.revealed {
@@ -997,8 +997,12 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/Mickey Mouse Happy Dance.gif");
 }
 
-#gift-img-you.revealed {
+#gift-img-cinderella.revealed {
     --reveal-image: url("images/cinderella after dressing up.gif");
+}
+
+#gift-img-catwoman.revealed {
+    --reveal-image: url("images/catwoman halloween.gif");
 }
 
 #gift-img-brave.revealed {
@@ -1037,12 +1041,28 @@ h1, h2, h3, h4, p {
     --reveal-image: url("images/cool hades.gif");
 }
 
+#gift-img-control.revealed {
+    --reveal-image: url("images/robin Hood.gif");
+}
+
+#gift-img-sexy.revealed {
+    --reveal-image: url("images/sexy homer simpson.gif");
+}
+
 #gift-img-happy.revealed {
     --reveal-image: url("images/Happy Anna frozen.gif");
 }
 
 #gift-img-heels.revealed {
     --reveal-image: url("images/heels.gif");
+}
+
+#gift-img-sing.revealed {
+    --reveal-image: url("images/jigglypuff singing.gif");
+}
+
+#gift-img-drawing.revealed {
+    --reveal-image: url("images/raffiki drawing.gif");
 }
 
 #gift-img-flow.revealed {
@@ -1066,7 +1086,7 @@ h1, h2, h3, h4, p {
 }
 
 #gift-img-cuddle2.revealed {
-    --reveal-image: url("images/lion king cuddle.gif");
+    --reveal-image: url("images/the lion king love.gif");
 }
 
 #gift-img-cuddle3.revealed {
