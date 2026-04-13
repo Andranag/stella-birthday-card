@@ -627,7 +627,7 @@ p {
 .gift-section p {
   font-size: 20px;
   font-weight: 700;
-  line-height: 2;
+  line-height: 1.35;
   letter-spacing: 0.03em;
   text-shadow: 0 0 0.9px rgba(0, 0, 0, 0.35);
 }
@@ -846,6 +846,9 @@ p {
 #gift-img-pull-together.revealed {
   --reveal-image: url("images/inside out group hug.gif");
 }
+#gift-img-underwear.revealed {
+  --reveal-image: url("images/stitch underwear.gif");
+}
 #gift-img-nowhere.revealed {
   --reveal-image: url("images/getting nowhere.gif");
 }
@@ -906,6 +909,15 @@ p {
 #gift-img-sing.revealed {
   --reveal-image: url("images/jigglypuff singing.gif");
 }
+#gift-img-ballet.revealed {
+  --reveal-image: url("images/tinkerbell.gif");
+}
+#gift-img-kung-fu.revealed {
+  --reveal-image: url("images/kung fu panda.gif");
+}
+#gift-img-lean.revealed {
+  --reveal-image: url("images/lady and the tramp.gif");
+}
 #gift-img-drawing.revealed {
   --reveal-image: url("images/raffiki drawing.gif");
 }
@@ -939,7 +951,7 @@ p {
 #gift-img-fear.revealed {
   --reveal-image: url("images/shark.gif");
 }
-#gift-img-slow.revealed {
+#gift-img-sloth.revealed {
   --reveal-image: url("images/sloth.gif");
 }
 #gift-img-special.revealed {
@@ -1073,6 +1085,30 @@ p {
 }
 #gift-img-up.revealed {
   --reveal-image: url("images/love Up.gif");
+}
+#gift-img-slow.revealed {
+  --reveal-image: url("images/alice in wonderland sneak peek.gif");
+}
+#gift-img-worry.revealed {
+  --reveal-image: url("images/robin Hood worry-free.gif");
+}
+#gift-img-hug.revealed {
+  --reveal-image: url("images/hug.gif");
+}
+#gift-img-maui.revealed {
+  --reveal-image: url("images/maui.gif");
+}
+#gift-img-food.revealed {
+  --reveal-image: url("images/lady and the tramp kiss.gif");
+}
+#gift-img-affection.revealed {
+  --reveal-image: url("images/minnie Kiss Mickey.gif");
+}
+#gift-img-choose.revealed {
+  --reveal-image: url("images/ash ketchum.gif");
+}
+#gift-img-fun.revealed {
+  --reveal-image: url("images/pikatchu and togepi dancing.gif");
 }
 #gift-img-end.revealed {
   --reveal-image: url("images/Looney Tunes Nothing To See Here GIF.gif");
