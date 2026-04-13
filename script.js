@@ -669,7 +669,6 @@ function setActiveSlide(index) {
 
   scheduleIdle(() => prefetchRevealImagesForSlide(next));
   scheduleIdle(() => prefetchRevealImagesForSlide(slides[index + 1]));
-  scheduleIdle(() => prefetchRevealImagesForSlide(slides[index + 2]));
 
   updateScrollableSlides();
 
@@ -800,44 +799,10 @@ function revealAllGiftsForSlide(slide) {
   updateScrollableSlides();
 }
 
-function autoGateStoryTextToNextGift() {
-  slides.forEach((slide) => {
-    if (!slide || isDanceSkillsSlide(slide)) return;
-    const nodes = Array.from(
-      slide.querySelectorAll("h1, h2, h3, h4, p, .gift-img"),
-    );
-    const findNextGift = (startIdx) => {
-      for (let i = startIdx + 1; i < nodes.length; i++) {
-        if (nodes[i]?.classList?.contains("gift-img")) return nodes[i];
-      }
-      return null;
-    };
-    nodes.forEach((node, idx) => {
-      if (!node?.classList) return;
-      if (
-        node.classList.contains("gift-img") ||
-        node.classList.contains("typewriter")
-      )
-        return;
-      if (isFirstGiftSlide(slide) && node.classList.contains("gift-hint"))
-        return;
-      if (
-        slide.querySelector("#gift-img-story") &&
-        node.classList.contains("gift-hint")
-      )
-        return;
-      if (node.getAttribute("data-tw-required-gift")) return;
-      const gift = findNextGift(idx);
-      if (gift?.id) node.setAttribute("data-tw-required-gift", `#${gift.id}`);
-    });
-  });
-}
-
 function wrapGiftArticleText() {
   document.querySelectorAll(".gift-article").forEach((article) => {
     const directGifts = Array.from(article.children).filter((el) =>
-      el.classList?.contains("gift-img"),
-    );
+      el.classList?.contains("gift-img"));
     if (article.querySelector(":scope > .gift-text")) return;
 
     if (directGifts.length === 1) {
@@ -847,6 +812,7 @@ function wrapGiftArticleText() {
         if (child !== directGifts[0]) wrapper.appendChild(child);
       });
       article.appendChild(wrapper);
+      article.classList.add("has-gift-text");
     } else if (directGifts.length === 2) {
       if (article.id === "first-date-lift-slide") return;
       if (
@@ -863,14 +829,13 @@ function wrapGiftArticleText() {
           wrapper.appendChild(child);
       });
       article.insertBefore(wrapper, directGifts[1]);
-      article.classList.add("two-gift-horizontal");
+      article.classList.add("has-gift-text", "two-gift-horizontal");
     }
   });
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
-autoGateStoryTextToNextGift();
 wrapGiftArticleText();
 document
   .querySelectorAll(".gift-hint")

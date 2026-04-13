@@ -326,6 +326,13 @@ p {
   display: none;
 }
 
+.gift-article p {
+  margin: 0 0 10px 0;
+}
+.gift-article p:last-child {
+  margin-bottom: 0;
+}
+
 .gift-article :is(h1, h2, h3, h4, p) {
   font-family: "Marck Script", "Pacifico", cursive;
   letter-spacing: 0.02em;
@@ -504,61 +511,43 @@ p {
   }
 }
 
-/* ─── Single-gift layout (desktop) ─── */
-@supports selector(:has(*)) {
-  .gift-article:has(> .gift-img):not(:has(> .gift-img ~ .gift-img)) {
+@media (min-width: 880px) {
+  .gift-article.has-gift-text:not(.two-gift-horizontal) {
     width: min(100%, 980px);
     display: grid;
     grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
     align-items: center;
     align-content: center;
-    justify-content: center;
     column-gap: clamp(18px, 4vw, 44px);
     row-gap: 10px;
     padding-inline: clamp(8px, 3vw, 28px);
   }
 
-  .gift-article:has(> .gift-img):not(:has(> .gift-img ~ .gift-img))
-    > .gift-img {
+  .gift-article.has-gift-text:not(.two-gift-horizontal) > .gift-img {
     grid-column: 1;
     justify-self: center;
-    align-self: center;
     margin: 0;
     width: 100%;
     max-width: var(--gift-w, min(90vw, 420px));
     height: var(--gift-h, clamp(260px, 52vh, 400px));
   }
 
-  .gift-article:has(> .gift-img):not(:has(> .gift-img ~ .gift-img))
-    > .gift-text {
+  .gift-article.has-gift-text:not(.two-gift-horizontal) > .gift-text {
     grid-column: 2;
-    justify-self: stretch;
     text-align: left;
-    max-width: 100%;
     overflow-wrap: anywhere;
     padding-left: 6px;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-
-  .gift-article:has(> #gift-img-end) {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 }
 
-/* ─── Two-gift horizontal layout (desktop) ─── */
 @media (min-width: 880px) {
   #first-date-lift-slide,
   .two-gift-horizontal {
     display: grid;
-    grid-template-columns: minmax(220px, 1fr) minmax(260px, 380px) minmax(
-        220px,
-        1fr
-      );
+    grid-template-columns: minmax(220px, 1fr) minmax(260px, 380px) minmax(220px, 1fr);
     align-items: center;
     column-gap: 22px;
   }
@@ -577,11 +566,6 @@ p {
     align-items: center;
     text-align: center;
     margin: 0;
-  }
-
-  #first-date-lift-slide .lift-text .gift-title,
-  .two-gift-horizontal > .gift-text .gift-title {
-    margin-bottom: 10px;
   }
 }
 
