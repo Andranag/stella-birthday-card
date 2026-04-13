@@ -155,6 +155,7 @@ p {
   box-sizing: border-box;
   overflow-y: hidden;
   content-visibility: auto;
+  will-change: opacity;
   contain-intrinsic-size: 100vh 100vw;
   opacity: 0.001;
   transform: translateY(10px);
@@ -244,6 +245,16 @@ p {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+body {
+  background-size: 300% 300%;
+  animation: gradient-shift 60s ease infinite;
 }
 
 .search-scene {

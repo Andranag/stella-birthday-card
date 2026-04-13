@@ -395,7 +395,6 @@ if (quizForm) {
                 renderQuizStep()
             }
         } else {
-            quizStepIndex = 0
             if (quizFeedback) quizFeedback.textContent = 'Nope — try again.'
             quizAnswer?.select()
             renderQuizStep()
@@ -686,6 +685,11 @@ function wrapGiftSectionText() {
         }
     })
 }
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') goToIndex(getCurrentIndex() + 1)
+    if (e.key === 'ArrowLeft')  goToIndex(getCurrentIndex() - 1)
+})
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
