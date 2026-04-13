@@ -541,6 +541,24 @@ function getRevealImageUrl(gift) {
   return m?.[2] || "";
 }
 
+function prefetchRevealImagesForSlide(slide) {
+  if (!slide) return;
+
+  const gifts = Array.from(slide.querySelectorAll(".gift-img"));
+  gifts.forEach((gift) => {
+    const url = getRevealImageUrl(gift);
+    if (!url) return;
+
+    if (gift.dataset.revealPrefetched === "true") return;
+    gift.dataset.revealPrefetched = "true";
+
+    const img = new Image();
+    img.decoding = "async";
+    img.loading = "eager";
+    img.src = url;
+  });
+}
+
 function clearInlineGiftSize(gift) {
   gift.style.removeProperty("width");
   gift.style.removeProperty("height");
@@ -718,6 +736,8 @@ function setActiveSlide(index) {
   activeSlideIndex = index;
   const next = slides[activeSlideIndex];
   next?.classList.add("is-active");
+  prefetchRevealImagesForSlide(next);
+  prefetchRevealImagesForSlide(slides[index + 1]);
   updateScrollableSlides();
 
   if (next) {
