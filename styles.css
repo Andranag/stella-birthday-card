@@ -676,6 +676,8 @@ p {
 
 .gift-img.revealed {
   background-image: var(--reveal-image);
+  animation: gift-reveal 280ms ease-out;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
 }
 
 @keyframes gift-breathe {
@@ -794,7 +796,7 @@ p {
 }
 #gift-img-eternity.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXFwZ2ZsaHJib2draHltMWJjOTh2c2RrazY5NWs0NmxocGNlOTRwaSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/IxLeSDtUaZRmSiyCTf/giphy.gif");
-  --gift-bg-size: cover;
+  background-size: 120%;
 }
 #gift-img-itchy.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExenBidjIwNjJ5NTBrN2V2bWxndWF0ZjI2OTk0YXk0aTBscTFoOWw5aSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Ja9AewepaPsli/giphy.gif");
