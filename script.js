@@ -397,27 +397,16 @@ function buildSlideTypingPlan(slide) {
         ),
     )
     .map((node) => {
-      if (node.dataset.twFullText == null)
-        node.dataset.twFullText = node.textContent || "";
-      const overrideSel = node.getAttribute("data-tw-required-gift");
-      if (overrideSel)
-        return {
-          el: node,
-          requiredGift: slide.querySelector(overrideSel) || null,
-        };
-      const originalIdx = nodes.indexOf(node);
-      return { el: node, requiredGift: findNextGift(originalIdx) };
-    });
+    if (node.dataset.twFullText == null)
+      node.dataset.twFullText = node.textContent || "";
+    return { el: node };
+  });
 }
 
 function runTypingAdvance(slide, elements, state) {
   const advance = () => {
     if (!state.isTyping) return;
-    const next = elements.find(
-      (it) =>
-        !isTypingElementDone(it.el) &&
-        (!it.requiredGift || isGiftRevealed(it.requiredGift)),
-    );
+    const next = elements.find((it) => !isTypingElementDone(it.el));
     if (!next) {
       state.isTyping = false;
       return;
@@ -436,8 +425,9 @@ function startStoryTypingForSlide(slide) {
   clearSlideTyping(slide);
   const state = getOrCreateTypingState(slide);
   state.isTyping = true;
-  state.plan = buildSlideTypingPlan(slide).filter(
-    (item) =>
+  state.plan = buildSlideTypingPlan(slide)
+  .filter(Boolean)
+  .filter((item) =>
       (item.el.dataset.twFullText ?? item.el.textContent ?? "").trim().length >
       0,
   );
@@ -571,6 +561,32 @@ function prefetchRevealImagesForSlide(slide) {
   });
 }
 
+function waitForFirstRevealImage(slide, timeoutMs = 800) {
+  if (!slide) return Promise.resolve();
+
+  const firstGift = slide.querySelector(".gift-img");
+  if (!firstGift) return Promise.resolve();
+
+  const url = getRevealImageUrl(firstGift);
+  if (!url) return Promise.resolve();
+
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      resolve();
+    };
+
+    const img = new Image();
+    img.onload = finish;
+    img.onerror = finish;
+    img.src = url;
+
+    setTimeout(finish, timeoutMs);
+  });
+}
+
 function clearInlineGiftSize(gift) {
   gift.style.removeProperty("width");
   gift.style.removeProperty("height");
@@ -673,50 +689,6 @@ function toggleGiftReveal(gift) {
   }
 }
 
-// ─── Gift tap setup ───────────────────────────────────────────────────────────
-
-const tapRevealGifts = Array.from(document.querySelectorAll(".gift-img"));
-
-tapRevealGifts.forEach((gift) => {
-  gift.classList.add("tap-reveal");
-  gift.addEventListener("pointerup", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!gift.classList.contains("revealed")) {
-      const slide = gift.closest(".slide");
-      if (slide) {
-        if (isDanceSkillsSlide(slide)) {
-          const ordered = [
-            "#gift-img-dance-skills",
-            "#gift-img-dance-skills2",
-            "#gift-img-dance-skills3",
-          ]
-            .map((sel) => slide.querySelector(sel))
-            .filter(Boolean);
-          if (ordered.length > 1) {
-            const idx = ordered.indexOf(gift);
-            if (idx > 0 && !ordered[idx - 1]?.classList.contains("revealed"))
-              return;
-          }
-        }
-
-        const siblings = Array.from(slide.children).filter(
-          (el) =>
-            el.classList?.contains("gift-img") &&
-            el.classList.contains("tap-reveal"),
-        );
-        if (siblings.length > 1) {
-          const idx = siblings.indexOf(gift);
-          if (idx > 0 && !siblings[idx - 1]?.classList.contains("revealed"))
-            return;
-        }
-      }
-    }
-    toggleGiftReveal(gift);
-  });
-});
-
 // ─── Slide management ─────────────────────────────────────────────────────────
 
 function suspendSlideGifs(index) {
@@ -754,19 +726,20 @@ function setActiveSlide(index) {
   updateScrollableSlides();
 
   if (next) {
-    prepareStoryElementsForSlide(next);
-    resetStoryElements(next);
-    resetFirstGiftSlideText(next);
-    resetDanceSkillsText(next);
+    const shouldType = next?.id !== "header";
+    if (shouldType) {
+      prepareStoryElementsForSlide(next);
+      resetStoryElements(next);
+
+      revealAllGiftsForSlide(next);
+
+      waitForFirstRevealImage(next).then(() => {
+        armTypingForSlide(next);
+        startStoryTypingForSlide(next);
+      });
+    }
 
     if (next.id === "kiss-again-slide") armAgainFill(next);
-
-    armTypingForSlide(next);
-
-    if (!next.querySelectorAll(".gift-img").length) {
-      disarmTypingForSlide(next);
-      setTimeout(() => startStoryTypingForSlide(next), TYPING.startDelayMs);
-    }
 
     const searchTarget = next.querySelector("#search-spawn");
     if (searchTarget) {
@@ -867,6 +840,18 @@ if (swipeContainer) {
 }
 
 // ─── DOM prep ─────────────────────────────────────────────────────────────────
+
+function revealAllGiftsForSlide(slide) {
+  if (!slide) return;
+  const gifts = Array.from(slide.querySelectorAll(".gift-img"));
+  gifts.forEach((gift) => {
+    if (gift.classList.contains("revealed")) return;
+    gift.classList.add("revealed");
+    gift.dataset.wasRevealed = "true";
+    fitGiftToRevealImage(gift);
+  });
+  updateScrollableSlides();
+}
 
 function autoGateStoryTextToNextGift() {
   slides.forEach((slide) => {
