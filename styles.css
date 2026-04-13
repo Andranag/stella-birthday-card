@@ -728,10 +728,6 @@ p {
   }
 }
 
-/* ─── Revealed gift images — paste your full list from styles.css here unchanged ─── */
-/* PASTE YOUR COMPLETE REVEALED GIFT IMAGES BLOCK HERE FROM styles.css — unchanged */
-/* (All the #gift-img-*.revealed { --reveal-image: url(...) } rules) */
-
 #gift-img-disney.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjBxZ2F5Y2w0dHNwYnRlYnZ1eG12bGh2a21kZGUyMWFmZnlzaWQ3eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/4ZeHO6xwFpOq9tNlTO/giphy.gif");
 }
@@ -739,7 +735,7 @@ p {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3dlNG9rZGpyam9nbWxvank3OTBlODE3bHpxNTVmczBqaHZ4N2p0cyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/nv0j45xOF1Iyc/giphy.gif");
 }
 #gift-img-books.revealed {
-  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3ZWFobGswY3pyaWpubmNkcjlybG1pYWhwbjltODBzN3lnbGQ4MDRkOCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/59nl8Fm60ohdm/giphy.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3MzF3bG55ODgzbmFxMm5iNGg3cmI2and0ZnplcnB5enU0cWM2M2hpNSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/xr88sYakJn4sg/giphy.gif");
 }
 #gift-img-story.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3ZWFobGswY3pyaWpubmNkcjlybG1pYWhwbjltODBzN3lnbGQ4MDRkOCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/g2lH60ZcvUGL6/giphy.gif");

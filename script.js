@@ -10,7 +10,10 @@ const quizForm = document.getElementById("quiz-form");
 const quizAnswer = document.getElementById("quiz-answer");
 const quizFeedback = document.getElementById("quiz-feedback");
 const quizQuestion = document.getElementById("quiz-question");
-
+const scheduleIdle = (fn) => {
+  if ("requestIdleCallback" in window) return requestIdleCallback(fn);
+  return setTimeout(fn, 0);
+};
 const QUIZ_STORAGE_KEY = "stella_bday_unlocked";
 
 const QUIZ_STEPS = [
@@ -20,6 +23,7 @@ const QUIZ_STEPS = [
 ];
 
 let quizStepIndex = 0;
+let activeSlideIndex = -1;
 
 const prefersReducedMotion =
   window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
@@ -707,8 +711,6 @@ tapRevealGifts.forEach((gift) => {
 
 // ─── Slide management ─────────────────────────────────────────────────────────
 
-let activeSlideIndex = -1;
-
 function suspendSlideGifs(index) {
   slides[index]?.querySelectorAll(".gift-img").forEach((gift) => {
     gift.classList.remove("revealed");
@@ -736,8 +738,11 @@ function setActiveSlide(index) {
   activeSlideIndex = index;
   const next = slides[activeSlideIndex];
   next?.classList.add("is-active");
-  prefetchRevealImagesForSlide(next);
-  prefetchRevealImagesForSlide(slides[index + 1]);
+
+  scheduleIdle(() => prefetchRevealImagesForSlide(next));
+  scheduleIdle(() => prefetchRevealImagesForSlide(slides[index + 1]));
+  scheduleIdle(() => prefetchRevealImagesForSlide(slides[index + 2]));
+
   updateScrollableSlides();
 
   if (next) {
