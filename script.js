@@ -247,35 +247,43 @@ function getStoryTypingElements(slide) {
     .filter((el) => !(isStorySlide && el.classList.contains("gift-hint")));
 }
 
-function prepareStoryElements() {
-  slides.forEach((slide) => {
-    getStoryTypingElements(slide).forEach((el) => {
-      if (el.dataset.twFullText != null) return;
-      el.dataset.twFullText = el.textContent || "";
-      if (!prefersReducedMotion) {
-        const rect = el.getBoundingClientRect();
-        if (rect.height > 0) {
-          el.dataset.twMinHeight = String(rect.height);
-          el.style.minHeight = `${rect.height}px`;
-        }
-        el.textContent = "";
-      }
-    });
-  });
-}
-
-function resetStoryElements(slide) {
+function prepareStoryElementsForSlide(slide) {
   if (!slide) return;
+  if (slide.dataset.twPrepared === "true") return;
+  slide.dataset.twPrepared = "true";
+
   getStoryTypingElements(slide).forEach((el) => {
-    if (el.dataset.twFullText == null) return;
+    if (el.dataset.twFullText != null) return;
+
+    el.dataset.twFullText = el.textContent || "";
+
     if (!prefersReducedMotion) {
-      const full = el.dataset.twFullText;
-      el.textContent = full;
       const rect = el.getBoundingClientRect();
       if (rect.height > 0) {
         el.dataset.twMinHeight = String(rect.height);
         el.style.minHeight = `${rect.height}px`;
       }
+      el.textContent = "";
+    }
+  });
+}
+
+function resetStoryElements(slide) {
+  if (!slide) return;
+
+  getStoryTypingElements(slide).forEach((el) => {
+    if (el.dataset.twFullText == null) return;
+
+    if (!prefersReducedMotion) {
+      const full = el.dataset.twFullText;
+      el.textContent = full;
+
+      const rect = el.getBoundingClientRect();
+      if (rect.height > 0) {
+        el.dataset.twMinHeight = String(rect.height);
+        el.style.minHeight = `${rect.height}px`;
+      }
+
       el.textContent = "";
     } else {
       el.textContent = el.dataset.twFullText;
@@ -746,6 +754,7 @@ function setActiveSlide(index) {
   updateScrollableSlides();
 
   if (next) {
+    prepareStoryElementsForSlide(next);
     resetStoryElements(next);
     resetFirstGiftSlideText(next);
     resetDanceSkillsText(next);
@@ -937,8 +946,6 @@ document
 document
   .querySelectorAll(".gift-img.revealed")
   .forEach((gift) => fitGiftToRevealImage(gift));
-prepareStoryElements();
-slides.forEach((slide) => resetStoryElements(slide));
 
 if (isUnlocked()) {
   setLockedState(false);
