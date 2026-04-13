@@ -833,24 +833,24 @@ function autoGateStoryTextToNextGift() {
   });
 }
 
-function wrapGiftSectionText() {
-  document.querySelectorAll(".gift-section").forEach((section) => {
-    const directGifts = Array.from(section.children).filter((el) =>
+function wrapGiftArticleText() {
+  document.querySelectorAll(".gift-article").forEach((article) => {
+    const directGifts = Array.from(article.children).filter((el) =>
       el.classList?.contains("gift-img"),
     );
-    if (section.querySelector(":scope > .gift-text")) return;
+    if (article.querySelector(":scope > .gift-text")) return;
 
     if (directGifts.length === 1) {
       const wrapper = document.createElement("div");
       wrapper.className = "gift-text";
-      Array.from(section.children).forEach((child) => {
+      Array.from(article.children).forEach((child) => {
         if (child !== directGifts[0]) wrapper.appendChild(child);
       });
-      section.appendChild(wrapper);
+      article.appendChild(wrapper);
     } else if (directGifts.length === 2) {
-      if (section.id === "first-date-lift-slide") return;
+      if (article.id === "first-date-lift-slide") return;
       if (
-        section.querySelector(
+        article.querySelector(
           ":scope > .dance-collage, :scope > .search-scene, :scope > .float-text",
         )
       )
@@ -858,12 +858,12 @@ function wrapGiftSectionText() {
 
       const wrapper = document.createElement("div");
       wrapper.className = "gift-text";
-      Array.from(section.children).forEach((child) => {
+      Array.from(article.children).forEach((child) => {
         if (child !== directGifts[0] && child !== directGifts[1])
           wrapper.appendChild(child);
       });
-      section.insertBefore(wrapper, directGifts[1]);
-      section.classList.add("two-gift-horizontal");
+      article.insertBefore(wrapper, directGifts[1]);
+      article.classList.add("two-gift-horizontal");
     }
   });
 }
@@ -871,7 +871,7 @@ function wrapGiftSectionText() {
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
 autoGateStoryTextToNextGift();
-wrapGiftSectionText();
+wrapGiftArticleText();
 document
   .querySelectorAll(".gift-hint")
   .forEach((h) => h.classList.remove("is-hidden"));
