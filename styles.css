@@ -722,46 +722,46 @@ p {
 
 /* ─── Revealed gift images ─── */
 #gift-img-disney.revealed {
-  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjE0MjNqMzd0dnlxMW81ZnVnZ2w1aXIxbnF6ZzVuMG1pZXM0ZWVrZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/TbyAOtYa4ywrSpvjtm/giphy.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjBxZ2F5Y2w0dHNwYnRlYnZ1eG12bGh2a21kZGUyMWFmZnlzaWQ3eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/4ZeHO6xwFpOq9tNlTO/giphy.gif");
 }
 #gift-img-wish.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3dlNG9rZGpyam9nbWxvank3OTBlODE3bHpxNTVmczBqaHZ4N2p0cyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/nv0j45xOF1Iyc/giphy.gif");
 }
 #gift-img-books.revealed {
-  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExenBidjIwNjJ5NTBrN2V2bWxndWF0ZjI2OTk0YXk0aTBscTFoOWw5aSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xr88sYakJn4sg/giphy.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3ZWFobGswY3pyaWpubmNkcjlybG1pYWhwbjltODBzN3lnbGQ4MDRkOCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/59nl8Fm60ohdm/giphy.gif");
 }
 #gift-img-story.revealed {
-  --reveal-image: url("images/story.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3ZWFobGswY3pyaWpubmNkcjlybG1pYWhwbjltODBzN3lnbGQ4MDRkOCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/g2lH60ZcvUGL6/giphy.gif");
 }
 #gift-img-book.revealed {
-  --reveal-image: url("images/book.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTh5cGwzZjE5ZHpwOGcwbml2dGppOG5nOWxjdXcwZXJib3RqMTkweCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/6UeqI0d0Lelos1gwJU/giphy.gif");
 }
 #gift-img-comfortable.revealed {
-  --reveal-image: url("images/reading Matilda.gif");
+  --reveal-image: url("https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnMxa2MwNGN3aHIzeDd4cm42cnp6MzZneW1yZXJpYjl0b3NyOGl2YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/11BDDJSlJZ2uha/giphy.gif");
 }
-#gift-img-start.revealed {
-  --reveal-image: url("images/meridia.gif");
+#gift-img-merida.revealed {
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGc3Y2VseGx4ZXRpcWNlZzlmamdpMThidTFydGxieTNuaTNlejB4YSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qKCFeFGiojrAQ/giphy.gif");
 }
-#gift-img-me.revealed {
+#gift-img-aladdin.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QavMUNzmD2HPq/giphy.gif");
 }
-#gift-img-handsome.revealed {
+#gift-img-gaston.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHV6cWplamQycTgwdGVuaXMzd2s0anNnazk5eWxweDBnb2JvZzM4MyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/pF8sfgvZvDKPm/giphy.gif");
 }
-#gift-img-handsome2.revealed {
+#gift-img-gaston2.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHV6cWplamQycTgwdGVuaXMzd2s0anNnazk5eWxweDBnb2JvZzM4MyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/v0usU9mgq1ZyU/giphy.gif");
 }
 #gift-img-dance-skills.revealed {
-  --reveal-image: url("images/Mickey dancing tap.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2YzcDU1ZmUzZmE3ZWpobWpycW10czVrbmpzd2NkYjZvYm45cDVqeiZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/5IDUqVz47cSdO/giphy.gif");
 }
 #gift-img-dance-skills2.revealed {
-  --reveal-image: url("images/the jungle book dancing.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd2c3ejhsaDVudDVjdWcyNnV2YmM5b2prajljOXZyd3FzamZxcGlubSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/nuJaAg1hdI89y/giphy.gif");
 }
 #gift-img-dance-skills3.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExenBidjIwNjJ5NTBrN2V2bWxndWF0ZjI2OTk0YXk0aTBscTFoOWw5aSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/UeDJSa4Ox5j0c/giphy.gif");
 }
 #gift-img-search.revealed {
-  --reveal-image: url("images/inspector gadget.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdm5pcjI4aWdlaXp3c3Fqd2pyMGduaGl0YTJxbTdheWN1a3VyODRpcyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ghXliYqQb2BMI/giphy.gif");
 }
 #gift-img-pokemon.revealed {
   --reveal-image: url("images/pokemon.png");
@@ -770,45 +770,46 @@ p {
   --reveal-image: url("images/finding Andreas.png");
 }
 #gift-img-question-mark.revealed {
-  --reveal-image: url("images/question mark.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjZwaDM0YjI2MmtjOTF1eGI5aGx6M2ttenh1djl6bWt1Zm5iYTFvZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Z1Exz24FbX3Ko/giphy.gif");
 }
 #gift-img-angry.revealed {
-  --reveal-image: url("images/angry tinkerbell.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGcyM2g3Mmd4NG0wd3ZrNzd4M3ExbTkxaGZrYWNkNHdldG8ydGQ0MiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Q0Rt4HVGW0Y80/giphy.gif");
+}
+#gift-img-to-be-continued.revealed {
+  --reveal-image: url("images/to-be-continued-one-piece.gif");
+}
+#gift-img-lie.revealed {
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZjc1dWlpN3dtYnFjMjFpZG4weDVqZWI5M2x0OHNkZTE1MHFkaWYyeSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/wclnbFQhZ7H9K/giphy.gif");
+}
+#gift-img-liked.revealed {
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnV1cGhic2sydzkwemJhM2N0Ynd2ODd0cG9pdmE0bTJqZDV5azF2YSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/2wKbtCMHTVoOY/giphy.gif");
 }
 #gift-img-hunchman.revealed {
-  --reveal-image: url("images/quasimodo.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDg3MnJpdnRjMTNhMjBoYjQ5NmQ4ejVsdThnM2FjOWVlZ2RmN3JuMiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/EqiFV8QX3DEc4bfTc5/giphy.gif");
 }
 #gift-img-upside-down.revealed {
-  --reveal-image: url("images/stitch.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzA4a2s2d24wZzZ3N25vOXd2b2IxeThkNWEwNndvYm82eTI5Z244dyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/VRyiBxgvy9H3y/giphy.gif");
 }
 #gift-img-sad-beauty.revealed {
-  --reveal-image: url("images/sad beauty and beast.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXUybnByNnd3NWdyYjZwMDFuNXNzOTU5eGx5ZmxnMzdrcmVld2xmMCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/127Q43zLdqqyJy/giphy.gif");
 }
 #gift-img-sad-tiger.revealed {
-  --reveal-image: url("images/sad tiger.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXUybnByNnd3NWdyYjZwMDFuNXNzOTU5eGx5ZmxnMzdrcmVld2xmMCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/33cmYacHVvDG0/giphy.gif");
 }
 #gift-img-sad-ariel.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NWoyaTI4dWUwOWl0MWN3OXptNnF0cGx6amwxeWF5cGg1dmN1aW5jaSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/jOcZHGMLaTk6Q/giphy.gif");
 }
 #gift-img-sad-stitch.revealed {
-  --reveal-image: url("images/sad stitch.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzA4a2s2d24wZzZ3N25vOXd2b2IxeThkNWEwNndvYm82eTI5Z244dyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/P53TSsopKicrm/giphy.gif");
 }
 #gift-img-sad-alice.revealed {
-  --reveal-image: url("images/alice in wonderland crying.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3J3ZnpkNGhlZHlsaGQ2M240MWVwcWZkcDZvYmw2MDY3ZWJoZzJvYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/112DkdWt71IIpO/giphy.gif");
 }
 #gift-img-sad-goofy.revealed {
-  --reveal-image: url("images/sad Goofy.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXUybnByNnd3NWdyYjZwMDFuNXNzOTU5eGx5ZmxnMzdrcmVld2xmMCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/XUYS8qIqOt2KOBl3N5/giphy.gif");
 }
-#gift-img-then.revealed {
-  --reveal-image: url("images/Spongebob Squarepants Transition.gif");
-  --gift-bg-size: contain;
-  background-size: cover;
-  background-position: center;
-  background-color: transparent;
-  border-color: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+#gift-img-eternity.revealed {
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXFwZ2ZsaHJib2draHltMWJjOTh2c2RrazY5NWs0NmxocGNlOTRwaSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/IxLeSDtUaZRmSiyCTf/giphy.gif");
 }
 #gift-img-itchy.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExenBidjIwNjJ5NTBrN2V2bWxndWF0ZjI2OTk0YXk0aTBscTFoOWw5aSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Ja9AewepaPsli/giphy.gif");
@@ -820,145 +821,145 @@ p {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3dlNG9rZGpyam9nbWxvank3OTBlODE3bHpxNTVmczBqaHZ4N2p0cyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/q5xtaGzXQjIu4/giphy.gif");
 }
 #gift-img-sceptical.revealed {
-  --reveal-image: url("images/bad witch.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXhwdnRpODUwdWFxeG1xcXlmdzEwMTMxaWQ5dHh4cjk2bDR6MnZoMCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/uElxuHGtIuK0o/giphy.gif");
 }
 #gift-img-curiosity.revealed {
-  --reveal-image: url("images/alice in wonderland curiosity.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3BuN3RtaXo4ZTc1NzI2MzR2czE5MTE2bTR2ajJrbW9obnltbmxtZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ik4ckLyRQe6YM/giphy.gif");
 }
 #gift-img-leap-of-faith.revealed {
-  --reveal-image: url("images/buzz leap of faith.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjQ2bjlxazhydjVmOXgzczllcmJmd3d0YWM2NzJmeHMwdGI2dXlsbiZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/N7b54P9EMvK24/giphy.gif");
 }
 #gift-img-pose.revealed {
-  --reveal-image: url("images/buzz striking a pose.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExamp0ajVhc2dtajRieXJqZ254b2JndDhtMXZubm81a242M3gzczgzdCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/DgudTD5DSky3u/giphy.gif");
 }
 #gift-img-pirate.revealed {
-  --reveal-image: url("images/captain Hook.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2RrdWd4bGVsY283MHA4b2prNjZvNnVqeDVpa2FoanJqcHpuc3EydyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/tYAolvs3tZIhG/giphy.gif");
 }
 #gift-img-shower.revealed {
-  --reveal-image: url("images/crocodile Peter Pan.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXh3bTFzZHA5eG1uamlna3o4bzZhZ3R1ODQ4eXh3bGV5NjN2bWpwayZlcD12MV9naWZzX3NlYXJjaCZjdD1n/26hitHUvISgO2ddT2/giphy.gif");
 }
 #gift-img-argue.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/6bWrYX0bTztp6/giphy.gif");
 }
 #gift-img-pull-together.revealed {
-  --reveal-image: url("images/inside out group hug.gif");
+  --reveal-image: url("https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZjExNWxybGRxcnJybTZma2YyODRsbnFiOGJ2cmJxZnBqcXhuenc2dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4sOZwdFKatZCw/giphy.gif");
 }
 #gift-img-underwear.revealed {
-  --reveal-image: url("images/stitch underwear.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzA4a2s2d24wZzZ3N25vOXd2b2IxeThkNWEwNndvYm82eTI5Z244dyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QbH09i4iU87kc/giphy.gif");
 }
 #gift-img-nowhere.revealed {
-  --reveal-image: url("images/getting nowhere.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZjhtdXV0MDc1a2traG10YXRxcGVkYzhwN3NzZW5xdnptamU4bjhjaSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/X7jjWeC03QDT2/giphy.gif");
 }
 #gift-img-dude.revealed {
-  --reveal-image: url("images/dude.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbms3bXZhNHJvZHp0MzF3eWIxYjMwbDBzbDBuMG84a3VwdzU2am54MiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Aht5p3aybi9sQ/giphy.gif");
 }
 #gift-img-whistle.revealed {
-  --reveal-image: url("images/whistle Mickey.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDI0aHpiaTdwMDhnYjVneng3ZHZuNmZ5M2t1bHl4bzIzZ3F6cjVhYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/r1jbtDXIAjq92/giphy.gif");
 }
 #gift-img-dancing.revealed {
-  --reveal-image: url("images/Mickey Mouse Happy Dance.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWFicHlhY3lzaGp2dmprc3NlZzc1aTBoYWFiMmdwdHlzYTZpeTd2YSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/cIxxFKOTCPwX9DUk7L/giphy.gif");
 }
 #gift-img-cinderella.revealed {
-  --reveal-image: url("images/cinderella after dressing up.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2duMHlkaDV5eTVwMjY5cXppbXZkMGFtcDFvOTBsZmQ2amdxcG5haiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/RLVHPJJv7jY1q/giphy.gif");
 }
 #gift-img-catwoman.revealed {
-  --reveal-image: url("images/catwoman halloween.gif");
+  --reveal-image: url("https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2Ryc29ocWY2NG4yOGV1aWRud2V4cWVwYWFjd2U0NzF1aDlsMGo2byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MqImRgCYkH0ARQqp77/giphy.gif");
 }
 #gift-img-brave.revealed {
-  --reveal-image: url("images/brave.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3BmdWJ2bXM0dW1uYTI2Zmk3OXNhanZqcjliczAyNmY1NGxnZDR0YiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/YTIzbJzeExuLK/giphy.gif");
 }
 #gift-img-first-date.revealed {
-  --reveal-image: url("images/princess jasmine.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWpmejh6ZGphcjNlNmt0NHpxZXN2eWp5cmR1dTNlZHB4OXRteTl4NiZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/Or7jwLWwOY6vC/giphy.gif");
 }
 #gift-img-lift.revealed {
-  --reveal-image: url("images/princess anna twist in the air.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3OGs5NW55Y3FuajVwOHNxeDkyN2dvOWFrc3pvbzd6bThyZzg0dTNkeSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/YL5SehCH4EuAM/giphy.gif");
 }
 #gift-img-first-reaction.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/nC1toglzIfNFC/giphy.gif");
 }
 #gift-img-sitting.revealed {
-  --reveal-image: url("images/aladdin yasmine.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXFoM2RmeW92aGhkODdlb2pzenFoanIxaWl3bTQ0OWlycWtqM2RxMSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/JYleGRP4Lk87u/giphy.gif");
 }
-#gift-img-cool.revealed {
-  --reveal-image: url("images/milo atlantis.gif");
+#gift-img-milo.revealed {
+  --reveal-image: url("images/milo-atlantis.gif");
 }
 #gift-img-talk-to-the-hand.revealed {
-  --reveal-image: url("images/Donald Duck Disney.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmtkNXNkM21teHU2MDMwc2E2bWd2NXE4Z2Yxemgza3p1MWt0eHBjNiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/eka6qC0NF0K7C/giphy.gif");
 }
 #gift-img-frozen.revealed {
-  --reveal-image: url("images/frozen.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2duMHlkaDV5eTVwMjY5cXppbXZkMGFtcDFvOTBsZmQ2amdxcG5haiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/UKWxgdvYH2iCA/giphy.gif");
 }
 #gift-img-cool-hades.revealed {
-  --reveal-image: url("images/cool hades.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3p4bGhzdTBxdmM5MDh5dHVlbDZ0MHFhZ2I4Nm91eXVoZ3g0dDc5MCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/OhKdC3HeOu0yk/giphy.gif");
 }
 #gift-img-control.revealed {
-  --reveal-image: url("images/robin Hood.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdTdvN3cwM3Y3bmVmb2xraW1mam83MnZkbzNmNnEzanR0dzUzN3FnZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/849C3YApus6Fq/giphy.gif");
 }
-#gift-img-sexy.revealed {
-  --reveal-image: url("images/sexy homer simpson.gif");
+#gift-img-faith.revealed {
+  --reveal-image: url("https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYWZ0cG53ZzJmaHM4eG85dGwyOHQ3ZXE1bWg4dzJoa3V5Mmw1ZG40YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/zCj7oCDXBCGAw/giphy.gif");
 }
 #gift-img-happy.revealed {
-  --reveal-image: url("images/Happy Anna frozen.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXBjd2NhOW12N2J1Mndqa2l2ajA4aDlnd3Ewa2V6MDNkM2QxYXFpciZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/Oi6tJtKNThC6I/giphy.gif");
 }
 #gift-img-heels.revealed {
-  --reveal-image: url("images/heels.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNG5rOWhwZm1sbWs4anViMmI4d212aXh5MHk2d2dub3VtcWlibTN4YSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/YtSvlXwlmcBPO/giphy.gif");
 }
 #gift-img-sing.revealed {
-  --reveal-image: url("images/jigglypuff singing.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGVkc3ZyYzJzeDR2NWIyNWphNmRlZGhvNG54a2d4YW5zb2dpc2pkNCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ucV80fdRMixZC/giphy.gif");
 }
 #gift-img-ballet.revealed {
-  --reveal-image: url("images/tinkerbell.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHRyNnR6d2cwMGppbHIydTF1bzd3MDJjMnBoZHJ5OGYyZDQxeG9reiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/WuZFeCtAKwjkY/giphy.gif");
 }
 #gift-img-kung-fu.revealed {
-  --reveal-image: url("images/kung fu panda.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd2h0OWkzbmhweThqcWdobGs4amFzZ2RnYTIyMmQ3NDNrdmV4bmJkZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Rr6J53cRIwdBS/giphy.gif");
 }
-#gift-img-lean.revealed {
-  --reveal-image: url("images/lady and the tramp.gif");
+#gift-img-lady-and-tramp.revealed {
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbGt2MXYxY3pxZXp3ZWMxd2RyZWNvMThoNTg2N29keW9ja3U3M2tkdiZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/nPUKkFPBXjNPG/giphy.gif");
 }
 #gift-img-drawing.revealed {
-  --reveal-image: url("images/raffiki drawing.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNTVmcm80cWo1dWNlc3ExcmV3c3Bub3VpM2xnNWg4YTFuZjJoYXZoOCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/CWaKpKNmHinsY/giphy.gif");
 }
 #gift-img-flow.revealed {
-  --reveal-image: url("images/flow.gif");
+  --reveal-image: url("https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnNnODhmZ2J6N2R6NHhyZTlvMGNyMzR4c2d0MHFsZDF3aXF5Nnp4byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PQid6TEa9iIgM/giphy.gif");
 }
 #gift-img-second-date.revealed {
-  --reveal-image: url("images/bunnies.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYWJ4cWk5MmpoNnk5am1rNGxwdGdnejJ3Mzkzbmlobmt3N2docWJ0OSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/qi9MwDajfmXde/giphy.gif");
 }
 #gift-img-invite.revealed {
-  --reveal-image: url("images/invite.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGt0b2tqNWpjN2hwaGEzcmJqZGF2NnI2ZXF1M3BiZTRhZ3oyY21ieiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3DUsZaP5umuGc/giphy.gif");
 }
 #gift-img-blush.revealed {
-  --reveal-image: url("images/blush.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnV1cGhic2sydzkwemJhM2N0Ynd2ODd0cG9pdmE0bTJqZDV5azF2YSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QIXDNqdHT6aQw/giphy.gif");
 }
 #gift-img-cuddle.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/SyR7VvbciZqrm/giphy.gif");
 }
 #gift-img-cuddle2.revealed {
-  --reveal-image: url("images/the lion king love.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXlxcnhsM2owYWNoYTVzaWVjeW1sMGpiY2M1ZmE4NWhvZ2dzMnBuZCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/eODmhVKJHDCiQ/giphy.gif");
 }
 #gift-img-cuddle3.revealed {
-  --reveal-image: url("images/two foxes.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjBxZ2F5Y2w0dHNwYnRlYnZ1eG12bGh2a21kZGUyMWFmZnlzaWQ3eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/4jYXJCJE8Q77i/giphy.gif");
 }
 #gift-img-cuddle4.revealed {
   --reveal-image: url("https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcGRraDdjaWVzNG9qZHEwZ2xkenNlYWR1NWt3ZzBxNXNxaHJrd2l6ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LeAvvCD0YncNG/giphy.gif");
 }
 #gift-img-cuddle5.revealed {
-  --reveal-image: url("images/wall-e.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWlvd2g3Mml2ZGdhNDUxMjM1Z2xmNHBoNHF6dHMxMXFpbGFoeGJhcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Fdsxpt2wIlKtG/giphy.gif");
 }
 #gift-img-fear.revealed {
-  --reveal-image: url("images/shark.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeG8yY2JmbWhxZ3NvNjNtZWZ2NDV1YnlmN3Y2dTR3YmJtbmFiMGNzZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/107gPMgIBBleA8/giphy.gif");
 }
 #gift-img-sloth.revealed {
-  --reveal-image: url("images/sloth.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdTAxYnB4NHVvc2c3dm91MXVwMzNvcTRpYjVxY242bDRtcXRuN2N0MiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/1xkMJIvxeKiDS/giphy.gif");
 }
 #gift-img-special.revealed {
-  --reveal-image: url("images/Leonardo Di Caprio.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDQ4cjU0dndoNzVmbXVqNmFqcDd0N3VtcHNzdmVmbjVqa2VrOWxybSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/L3ERvA6jWCd0qO4NdX/giphy.gif");
 }
 #gift-img-lips.revealed {
-  --reveal-image: url("images/roger rabbit.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExanRvZTAyZ3l4dXd6Njh3N3hwY3pnb21jM2puZGowMHlrcmFtNXBvMSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/NhkNhuN0vnJ7y/giphy.gif");
 }
 #gift-img-kiss.revealed {
-  --reveal-image: url("images/hercules kiss.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGh4MzI1aW5xNDF6OHRndjg4eDJneHd2Z2F3Nmx0a2UwNTh6Mmh6bCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/cnjJxuGVQGN3O/giphy.gif");
 }
 #gift-img-kiss2.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dW1zNnY5aTR3NXN5bTVhM3M2aWo4ZGRyc2g3OXMxdG9hcXlrdnpzNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/aXNjCb6cXtL8c/giphy.gif");
@@ -967,103 +968,106 @@ p {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3OGQxdjU2bjVhdDQyaGk1dWRncG94aGdpcnA4Mm91NWg2Nm01YTA3NyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/uSvglu4xXkCuQ/giphy.gif");
 }
 #gift-img-kiss4.revealed {
-  --reveal-image: url("images/aladdin kiss.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZXNjMHFvMW56eDJzbDVtbDlocnpqMnh3eTR1d3ZsODkxNDF3dW83aiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/b518vJeMT5T7G/giphy.gif");
 }
 #gift-img-stressed.revealed {
-  --reveal-image: url("images/Stressed Mickey Mouse.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDI0aHpiaTdwMDhnYjVneng3ZHZuNmZ5M2t1bHl4bzIzZ3F6cjVhYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/14oABfwMhnvZfi/giphy.gif");
 }
 #gift-img-kiss5.revealed {
-  --reveal-image: url("images/Mickey Mouse Kiss.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWFnY2I4OTBjbGY0MzB0MWtyMmxrMzZic244eWNndXhpZzFiNGtwdSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Xz4F0Sk7yJiso/giphy.gif");
 }
 #gift-img-kiss6.revealed {
-  --reveal-image: url("images/bunnies kiss.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbGxyYzRmdWx5dW9ueDV6bXY2em10OTU2OHMwY2MxM2VyOW01bGoxcyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/x70o5dGVWROGQ/giphy.gif");
 }
 #gift-img-kiss7.revealed {
-  --reveal-image: url("images/Valentines Day Kiss GIF.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXltaGI0NndkNTIyOTRsZ2U3M2JtbGJ6Y2hyYjF0ajh6NDZzbzZwdyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/5GdhgaBpA3oCA/giphy.gif");
 }
 #gift-img-third-date.revealed {
-  --reveal-image: url("images/donald duck disney love GIF.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHRvbzJueHEyMmNqNm5yYjZ4am9vNjcyZzY3c2xwZnZ2YW1qMzNiNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/8Fd3ctn2faAwg/giphy.gif");
 }
 #gift-img-invite-consent.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/11WNvAQykrDllu/giphy.gif");
 }
 #gift-img-dance.revealed {
-  --reveal-image: url("images/Prince Charming Dancing.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDBzaTFiOWU1cDRrb3Y2ZnhiazJnZm01ZDhlaDJyczNoa2MyNnkzeiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3o6gbdNSN0SzhVrPAA/giphy.gif");
 }
 #gift-img-dance2.revealed {
-  --reveal-image: url("images/beauty and the beast dancing.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3Y1Mzg1MG0wcng5NTBzNDV4ejdldmN3amlxY3F0cXpieGE4am11NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xT1R9VVboMNVMZkPKw/giphy.gif");
 }
 #gift-img-dance3.revealed {
-  --reveal-image: url("images/the aristocats dancing.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDB2dGYyZHBxN2RrYnM4bW5qaWE2cTdiZTF6eHQwbnhnaDZjOG96eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/MHZdW0QzrSHMk/giphy.gif");
 }
 #gift-img-confident.revealed {
-  --reveal-image: url("images/confident.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHdramp0Zmw4N2RrMXVua3AybzRpNGdjeDNtcjRpdDlicDBmaHIzbCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/wvI1UUF9pygFO/giphy.gif");
 }
 #gift-img-shrug.revealed {
-  --reveal-image: url("images/Alice In Wonderland Shrug.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3J3ZnpkNGhlZHlsaGQ2M240MWVwcWZkcDZvYmw2MDY3ZWJoZzJvYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/6ZHUmnZdVQB9K/giphy.gif");
 }
 #gift-img-daisy.revealed {
-  --reveal-image: url("images/daisy.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHRvbzJueHEyMmNqNm5yYjZ4am9vNjcyZzY3c2xwZnZ2YW1qMzNiNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Tid3JhE6rTe4o/giphy.gif");
 }
 #gift-img-error.revealed {
-  --reveal-image: url("images/buzz error 404.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExamp0ajVhc2dtajRieXJqZ254b2JndDhtMXZubm81a242M3gzczgzdCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/GSE4nkc9I3ZmM/giphy.gif");
 }
 #gift-img-charm.revealed {
-  --reveal-image: url("images/woody charming af.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2kzdGs2eTM1dHRud3lyYjA2M2x4ajNwa2k1YW5nM3lib2p4cm9qMyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/CBF74pQeKJRZK/giphy.gif");
 }
 #gift-img-smoldering-face.revealed {
-  --reveal-image: url("images/smoldering face.gif");
+  --reveal-image: url("https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzBsM3cwMndwcXduamVkeXh3ZXJmMW01YjBzbTdxYmt0MzZ2d3F3NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5uALZbY4nMHGU/giphy.gif");
 }
 #gift-img-smoldering-olaf.revealed {
-  --reveal-image: url("images/Olaf smoldering face.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjc4MmtzNG05OG5mb2sweXVxNGZodHltM21jbzRpaGcwZDl0NzdoZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/4najfGklWXEuU2Zv79/giphy.gif");
 }
 #gift-img-money.revealed {
-  --reveal-image: url("images/Donald Duck no money.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmd3YnN4azA3b2VuOXE2NXVya3VrMjRqdXBvejdmeTNzdzd3cDg2MiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Km2YiI2mzRKgw/giphy.gif");
 }
 #gift-img-naked.revealed {
-  --reveal-image: url("images/Nick Wilde.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExejI3MGJ5a2hzZ3RoZm5rNTYyamNlaHVmdzBqNGFpaHhpODI4dXUwNCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/jUJgP8Fdvsgta/giphy.gif");
+}
+#gift-img-naked1.revealed {
+  --reveal-image: url("https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2JrZnI4eThqMmRmZzhtaWp3czloYnk1eXp4Y2JrdnJiaWhocHF2MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/UT4jW4MK8G4qQ/giphy.gif");
 }
 #gift-img-spank.revealed {
-  --reveal-image: url("images/spank.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHRyNnR6d2cwMGppbHIydTF1bzd3MDJjMnBoZHJ5OGYyZDQxeG9reiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/nfKdTuhshHG7K/giphy.gif");
 }
 #gift-img-fire.revealed {
-  --reveal-image: url("images/fire & water.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3I4anEwanJmYTZlc2h0bXJiNjNqN2twM2Z4cmpwbnJtMGxiMWF4bSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/E4PbafVrDvvL2JDuGg/giphy.gif");
 }
 #gift-img-smoke.revealed {
-  --reveal-image: url("images/minnie mouse cooking.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmw1d2Ywc2JjY3J6eG5haDhobDQ3MTZ6bDgxbm4zaHpuOHkwb3phZyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/6nkbMjyxmyVAQ/giphy.gif");
 }
 #gift-img-flying.revealed {
-  --reveal-image: url("images/cars.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2x5d2ttamkwcXN0dTVpNHl6NmRhaDd1aXBnN3N0ODZzeG1xY2k5bCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/QsTUwbPeAeTQY/giphy.gif");
 }
 #gift-img-rolling.revealed {
-  --reveal-image: url("images/simba rolling.gif");
+  --reveal-image: url("https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3pxdHVmdnN6cXF3bzg4cmh2dTMyaGUyemNrc2kwdGIzc3V3d2drYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/101HQZis8cOdna/giphy.gif");
 }
 #gift-img-interested.revealed {
-  --reveal-image: url("images/woody interesting.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3J4NWh0aGQ0OGNpM21nMGNidW5majRzYTEwYWF3Y2tqNnVob2EzNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/2QJzmJv0PhAiI/giphy.gif");
 }
 #gift-img-eat.revealed {
-  --reveal-image: url("images/honey.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2tyMjUwdDVicTlyNTVlaWhrdHhlY25hZ3FscnU0aTZneXBjc3Q5byZlcD12MV9naWZzX3NlYXJjaCZjdD1n/wxgimHAKx2xA4/giphy.gif");
 }
 #gift-img-hot.revealed {
-  --reveal-image: url("images/boiling hot.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3I4anEwanJmYTZlc2h0bXJiNjNqN2twM2Z4cmpwbnJtMGxiMWF4bSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/k3pBCNL1n8Bm4ILoVP/giphy.gif");
 }
 #gift-img-random.revealed {
-  --reveal-image: url("images/anna relationship goals.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHkxa24ybjkzaXdxcDNwdzZydDBjczMwaXNjdTFpYjZ1Ymx3MzBvNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/x3vKp85AhaqS4/giphy.gif");
 }
 #gift-img-slept.revealed {
-  --reveal-image: url("images/101 Dalmatians.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWw5NmdtYnR0aXgwazNzcmMyM3Z1ZW96NzNidzlxZDYya2d6MndnZCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/bm5ogvN102mJO/giphy.gif");
 }
 #gift-img-alive.revealed {
-  --reveal-image: url("images/pinokio back to life.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmNidXJkZ2RqOWwxd2ptOHptZDN5emNham4zY2xwcmw4bTk2NmcxMyZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/OFAHXH6R1qhS8/giphy.gif");
 }
 #gift-img-breakfast.revealed {
-  --reveal-image: url("images/Donald Duck Disney breakfast.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmtkNXNkM21teHU2MDMwc2E2bWd2NXE4Z2Yxemgza3p1MWt0eHBjNiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Lk4ESQ9fL1vy/giphy.gif");
 }
 #gift-img-laughing.revealed {
-  --reveal-image: url("images/laughing.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWNpbnc3eWF2eHJpcWE4b2F2dnZ6anZwOXQ4N2UzN2UyMDFtbWhsayZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ECtLJKdGj8jfy/giphy.gif");
 }
 #gift-img-laughing1.revealed {
-  --reveal-image: url("images/princess anna laughing.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXJyZjE0dWM0NHN6aGZsZDV6dTlrNXRqNzdnaWFneWQ5ZWZkYWs5eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/WD13tQUJ8nhYc/giphy.gif");
 }
 #gift-img-world.revealed {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTZkems1dTVzdHNwOWlweHB0MDZjNHdrd2d5a3phZ2FoNWNqbjB1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/bN9UR31HrAQ12/giphy.gif");
@@ -1072,43 +1076,43 @@ p {
   --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3dlNG9rZGpyam9nbWxvank3OTBlODE3bHpxNTVmczBqaHZ4N2p0cyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/eBrsV8a8N8TjW/giphy.gif");
 }
 #gift-img-united.revealed {
-  --reveal-image: url("images/pocahontas.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3l0ajBhajUyMjFudW0xM2F2dnVnYW1ieDVqeWFjdDcxczR1ejBpbSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/w166m9QsCzvSE/giphy.gif");
 }
 #gift-img-team.revealed {
-  --reveal-image: url("images/woody & buzz.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExamp0ajVhc2dtajRieXJqZ254b2JndDhtMXZubm81a242M3gzczgzdCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/8fgwop8fhah9K/giphy.gif");
 }
 #gift-img-hercules.revealed {
-  --reveal-image: url("images/hercules.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaTJocDUxc3F6ZnlydmVjMTM0ZjFqaG8zZGxobGRmMmZnNnYyMW55YSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QtqjZtkLNuRPi/giphy.gif");
 }
 #gift-img-up.revealed {
-  --reveal-image: url("images/love Up.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3c5Z2g1Mms2MGVuc2N5cm92dm1kN3F2MHd6cXF6cThmaGF1cTJ3NCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/12ncq33I7ZidwI/giphy.gif");
 }
 #gift-img-slow.revealed {
-  --reveal-image: url("images/alice in wonderland sneak peek.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cHo5NXRobDRuajZsdHlnbHAxb2JsY243eW1oNjdrMG11OGV3Y25tZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/LOpCwiW59tBAI/giphy.gif");
 }
 #gift-img-worry.revealed {
-  --reveal-image: url("images/robin Hood worry-free.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2ZzOW1pM3NkaTNoY2pvOHJwaTR1ODI1dnJ3NTF5N3M4YTBqOXdvbCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/fxZvE8YuYJwRi/giphy.gif");
 }
 #gift-img-hug.revealed {
   --reveal-image: url("https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2tqOWZ5c3dhdGxtMm04NmFmbXBmeWxvdzBwZDJvM3BkdGplOGtxOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/EvYHHSntaIl5m/giphy.gif");
 }
 #gift-img-maui.revealed {
-  --reveal-image: url("images/maui.gif");
-}
-#gift-img-food.revealed {
-  --reveal-image: url("images/lady and the tramp kiss.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWozZWthMzQzYmQwbGFkZWN2NGpvYTF3bnhocDc4YXQ0MzBwcXVmMSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3oz8xZf6yStcrtIncI/giphy.gif");
 }
 #gift-img-affection.revealed {
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHRvbzJueHEyMmNqNm5yYjZ4am9vNjcyZzY3c2xwZnZ2YW1qMzNiNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/AQ7GWTm9iBxaU/giphy.gif");
+}
+#gift-img-affection1.revealed {
   --reveal-image: url("https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExdm52MWN1bGc3MnRiYWdvZjhlYW40c3U2NnI5ZzBvdng2cjN1eWt4ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/udiIFmPkJQzkI/giphy.gif");
 }
 #gift-img-choose.revealed {
-  --reveal-image: url("images/ash ketchum.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExanVja2cwbXgzOHMyY2x1MXUwY3hnbG9icTZjdzRnaXhienYxaWhvZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/G9qfCvxlwGAaQ/giphy.gif");
 }
 #gift-img-fun.revealed {
-  --reveal-image: url("images/pikatchu and togepi dancing.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmpibWQyenUwMXJmZG02ZGc5dmFwNHRmOGphbGIwMjFyNmZneWlpNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/EktbegF3J8QIo/giphy.gif");
 }
 #gift-img-end.revealed {
-  --reveal-image: url("images/Looney Tunes Nothing To See Here GIF.gif");
+  --reveal-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmV5M3diMnd0aWp1Nm4xN28xN3QyYWwwajZrazBrM29zb2owOTk0NyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xUPOqo6E1XvWXwlCyQ/giphy.gif");
 }
 
 /* ─── Footer ─── */
