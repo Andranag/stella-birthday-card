@@ -86,7 +86,7 @@ function startSearchSpawn(slide) {
     "and searching...",
     "still searching...",
     "searching far...",
-    "searching wide...",
+    "and searching wide...",
   ];
   let i = 0;
 
