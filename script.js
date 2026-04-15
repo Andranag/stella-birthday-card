@@ -25,8 +25,7 @@ const QUIZ_STEPS = [
 let quizStepIndex = 0;
 let activeSlideIndex = -1;
 
-const prefersReducedMotion =
-  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+const prefersReducedMotion = false;
 
 const slideTypingState = new Map();
 
@@ -87,7 +86,7 @@ function startSearchSpawn(slide) {
     "and searching...",
     "still searching...",
     "searching far...",
-    "searching wide...",
+    "and searching wide...",
   ];
   let i = 0;
 
@@ -403,10 +402,10 @@ function buildSlideTypingPlan(slide) {
         ),
     )
     .map((node) => {
-    if (node.dataset.twFullText == null)
-      node.dataset.twFullText = node.textContent || "";
-    return { el: node };
-  });
+      if (node.dataset.twFullText == null)
+        node.dataset.twFullText = node.textContent || "";
+      return { el: node };
+    });
 }
 
 function runTypingAdvance(slide, elements, state) {
@@ -432,11 +431,12 @@ function startStoryTypingForSlide(slide) {
   const state = getOrCreateTypingState(slide);
   state.isTyping = true;
   state.plan = buildSlideTypingPlan(slide)
-  .filter(Boolean)
-  .filter((item) =>
-      (item.el.dataset.twFullText ?? item.el.textContent ?? "").trim().length >
-      0,
-  );
+    .filter(Boolean)
+    .filter(
+      (item) =>
+        (item.el.dataset.twFullText ?? item.el.textContent ?? "").trim()
+          .length > 0,
+    );
   if (prefersReducedMotion) {
     state.plan.forEach(({ el }) => {
       el.textContent = el.dataset.twFullText ?? el.textContent;
@@ -808,7 +808,8 @@ function revealAllGiftsForSlide(slide) {
 function wrapGiftArticleText() {
   document.querySelectorAll(".gift-article").forEach((article) => {
     const directGifts = Array.from(article.children).filter((el) =>
-      el.classList?.contains("gift-img"));
+      el.classList?.contains("gift-img"),
+    );
     if (article.querySelector(":scope > .gift-text")) return;
 
     if (directGifts.length === 1) {
