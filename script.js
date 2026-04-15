@@ -83,9 +83,11 @@ function startSearchSpawn(slide) {
   wrapper.appendChild(container);
 
   const lines = [
-    "so you were looking...",
-    "and looking...",
-    "still looking...",
+    "So, you were searching...",
+    "and searching...",
+    "still searching...",
+    "searching far...",
+    "searching wide...",
   ];
   let i = 0;
 
@@ -94,7 +96,7 @@ function startSearchSpawn(slide) {
       clearSearchStamps();
       return;
     }
-    if (i >= 6) {
+    if (i >= 5) {
       clearInterval(searchSpawnIntervalId);
       searchSpawnIntervalId = null;
       return;
@@ -344,9 +346,13 @@ function typeTextIntoElement(el, fullText, state, onDone) {
             startAgainFill(slide);
           }
         }
+        const searchScene = slide?.querySelector(".search-scene");
+        const triggerEl = searchScene?.previousElementSibling;
+
         if (
           slide &&
-          el === slide.querySelector("h2.gift-title") &&
+          triggerEl &&
+          el === triggerEl &&
           slide.querySelector("#search-spawn") &&
           searchSpawnIntervalId == null
         ) {
@@ -397,27 +403,16 @@ function buildSlideTypingPlan(slide) {
         ),
     )
     .map((node) => {
-      if (node.dataset.twFullText == null)
-        node.dataset.twFullText = node.textContent || "";
-      const overrideSel = node.getAttribute("data-tw-required-gift");
-      if (overrideSel)
-        return {
-          el: node,
-          requiredGift: slide.querySelector(overrideSel) || null,
-        };
-      const originalIdx = nodes.indexOf(node);
-      return { el: node, requiredGift: findNextGift(originalIdx) };
-    });
+    if (node.dataset.twFullText == null)
+      node.dataset.twFullText = node.textContent || "";
+    return { el: node };
+  });
 }
 
 function runTypingAdvance(slide, elements, state) {
   const advance = () => {
     if (!state.isTyping) return;
-    const next = elements.find(
-      (it) =>
-        !isTypingElementDone(it.el) &&
-        (!it.requiredGift || isGiftRevealed(it.requiredGift)),
-    );
+    const next = elements.find((it) => !isTypingElementDone(it.el));
     if (!next) {
       state.isTyping = false;
       return;
@@ -436,8 +431,9 @@ function startStoryTypingForSlide(slide) {
   clearSlideTyping(slide);
   const state = getOrCreateTypingState(slide);
   state.isTyping = true;
-  state.plan = buildSlideTypingPlan(slide).filter(
-    (item) =>
+  state.plan = buildSlideTypingPlan(slide)
+  .filter(Boolean)
+  .filter((item) =>
       (item.el.dataset.twFullText ?? item.el.textContent ?? "").trim().length >
       0,
   );
@@ -571,11 +567,30 @@ function prefetchRevealImagesForSlide(slide) {
   });
 }
 
-function clearInlineGiftSize(gift) {
-  gift.style.removeProperty("width");
-  gift.style.removeProperty("height");
-  gift.style.removeProperty("aspect-ratio");
-  gift.style.removeProperty("--gift-ar");
+function waitForFirstRevealImage(slide, timeoutMs = 800) {
+  if (!slide) return Promise.resolve();
+
+  const firstGift = slide.querySelector(".gift-img");
+  if (!firstGift) return Promise.resolve();
+
+  const url = getRevealImageUrl(firstGift);
+  if (!url) return Promise.resolve();
+
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      resolve();
+    };
+
+    const img = new Image();
+    img.onload = finish;
+    img.onerror = finish;
+    img.src = url;
+
+    setTimeout(finish, timeoutMs);
+  });
 }
 
 function fitGiftToRevealImage(gift) {
@@ -629,101 +644,12 @@ function fitGiftToRevealImage(gift) {
   img.src = url;
 }
 
-function toggleGiftReveal(gift) {
-  const revealing = !gift.classList.contains("revealed");
-  if (revealing) {
-    gift.style.removeProperty("--reveal-image");
-    gift.classList.add("revealed");
-    fitGiftToRevealImage(gift);
-    gift.style.setProperty(
-      "--gift-rot",
-      `${(-2.5 + Math.random() * 5).toFixed(2)}deg`,
-    );
-  } else {
-    gift.classList.remove("revealed");
-    gift.style.removeProperty("--reveal-image");
-    clearInlineGiftSize(gift);
-    gift.style.setProperty("--gift-rot", "0deg");
-  }
-  gift.dataset.wasRevealed = revealing ? "true" : "false";
-  updateScrollableSlides();
-
-  if (revealing) {
-    const slide = gift.closest(".slide");
-    if (slide?.id === "kiss-again-slide") {
-      const triggerEl = slide.querySelector("h2.gift-title");
-      if (
-        isTypingElementDone(triggerEl) &&
-        isGiftRevealed(slide.querySelector("#gift-img-kiss6")) &&
-        isGiftRevealed(slide.querySelector("#gift-img-kiss7"))
-      ) {
-        startAgainFill(slide);
-      }
-    }
-    if (slide && isDanceSkillsSlide(slide)) {
-      maybeTypeNextDanceLine(slide);
-      return;
-    }
-    if (slide && isTypingArmedForSlide(slide)) {
-      disarmTypingForSlide(slide);
-      setTimeout(() => startStoryTypingForSlide(slide), TYPING.startDelayMs);
-    } else if (slide) {
-      setTimeout(() => continueStoryTypingForSlide(slide), TYPING.startDelayMs);
-    }
-  }
-}
-
-// ─── Gift tap setup ───────────────────────────────────────────────────────────
-
-const tapRevealGifts = Array.from(document.querySelectorAll(".gift-img"));
-
-tapRevealGifts.forEach((gift) => {
-  gift.classList.add("tap-reveal");
-  gift.addEventListener("pointerup", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!gift.classList.contains("revealed")) {
-      const slide = gift.closest(".slide");
-      if (slide) {
-        if (isDanceSkillsSlide(slide)) {
-          const ordered = [
-            "#gift-img-dance-skills",
-            "#gift-img-dance-skills2",
-            "#gift-img-dance-skills3",
-          ]
-            .map((sel) => slide.querySelector(sel))
-            .filter(Boolean);
-          if (ordered.length > 1) {
-            const idx = ordered.indexOf(gift);
-            if (idx > 0 && !ordered[idx - 1]?.classList.contains("revealed"))
-              return;
-          }
-        }
-
-        const siblings = Array.from(slide.children).filter(
-          (el) =>
-            el.classList?.contains("gift-img") &&
-            el.classList.contains("tap-reveal"),
-        );
-        if (siblings.length > 1) {
-          const idx = siblings.indexOf(gift);
-          if (idx > 0 && !siblings[idx - 1]?.classList.contains("revealed"))
-            return;
-        }
-      }
-    }
-    toggleGiftReveal(gift);
-  });
-});
-
 // ─── Slide management ─────────────────────────────────────────────────────────
 
 function suspendSlideGifs(index) {
   slides[index]?.querySelectorAll(".gift-img").forEach((gift) => {
     gift.classList.remove("revealed");
     gift.style.removeProperty("--reveal-image");
-    gift.dataset.wasRevealed = "false";
   });
 }
 
@@ -749,24 +675,24 @@ function setActiveSlide(index) {
 
   scheduleIdle(() => prefetchRevealImagesForSlide(next));
   scheduleIdle(() => prefetchRevealImagesForSlide(slides[index + 1]));
-  scheduleIdle(() => prefetchRevealImagesForSlide(slides[index + 2]));
 
   updateScrollableSlides();
 
   if (next) {
-    prepareStoryElementsForSlide(next);
-    resetStoryElements(next);
-    resetFirstGiftSlideText(next);
-    resetDanceSkillsText(next);
+    const shouldType = next?.id !== "header";
+    if (shouldType) {
+      prepareStoryElementsForSlide(next);
+      resetStoryElements(next);
+
+      revealAllGiftsForSlide(next);
+
+      waitForFirstRevealImage(next).then(() => {
+        armTypingForSlide(next);
+        startStoryTypingForSlide(next);
+      });
+    }
 
     if (next.id === "kiss-again-slide") armAgainFill(next);
-
-    armTypingForSlide(next);
-
-    if (!next.querySelectorAll(".gift-img").length) {
-      disarmTypingForSlide(next);
-      setTimeout(() => startStoryTypingForSlide(next), TYPING.startDelayMs);
-    }
 
     const searchTarget = next.querySelector("#search-spawn");
     if (searchTarget) {
@@ -868,57 +794,35 @@ if (swipeContainer) {
 
 // ─── DOM prep ─────────────────────────────────────────────────────────────────
 
-function autoGateStoryTextToNextGift() {
-  slides.forEach((slide) => {
-    if (!slide || isDanceSkillsSlide(slide)) return;
-    const nodes = Array.from(
-      slide.querySelectorAll("h1, h2, h3, h4, p, .gift-img"),
-    );
-    const findNextGift = (startIdx) => {
-      for (let i = startIdx + 1; i < nodes.length; i++) {
-        if (nodes[i]?.classList?.contains("gift-img")) return nodes[i];
-      }
-      return null;
-    };
-    nodes.forEach((node, idx) => {
-      if (!node?.classList) return;
-      if (
-        node.classList.contains("gift-img") ||
-        node.classList.contains("typewriter")
-      )
-        return;
-      if (isFirstGiftSlide(slide) && node.classList.contains("gift-hint"))
-        return;
-      if (
-        slide.querySelector("#gift-img-story") &&
-        node.classList.contains("gift-hint")
-      )
-        return;
-      if (node.getAttribute("data-tw-required-gift")) return;
-      const gift = findNextGift(idx);
-      if (gift?.id) node.setAttribute("data-tw-required-gift", `#${gift.id}`);
-    });
+function revealAllGiftsForSlide(slide) {
+  if (!slide) return;
+  const gifts = Array.from(slide.querySelectorAll(".gift-img"));
+  gifts.forEach((gift) => {
+    if (gift.classList.contains("revealed")) return;
+    gift.classList.add("revealed");
+    fitGiftToRevealImage(gift);
   });
+  updateScrollableSlides();
 }
 
-function wrapGiftSectionText() {
-  document.querySelectorAll(".gift-section").forEach((section) => {
-    const directGifts = Array.from(section.children).filter((el) =>
-      el.classList?.contains("gift-img"),
-    );
-    if (section.querySelector(":scope > .gift-text")) return;
+function wrapGiftArticleText() {
+  document.querySelectorAll(".gift-article").forEach((article) => {
+    const directGifts = Array.from(article.children).filter((el) =>
+      el.classList?.contains("gift-img"));
+    if (article.querySelector(":scope > .gift-text")) return;
 
     if (directGifts.length === 1) {
       const wrapper = document.createElement("div");
       wrapper.className = "gift-text";
-      Array.from(section.children).forEach((child) => {
+      Array.from(article.children).forEach((child) => {
         if (child !== directGifts[0]) wrapper.appendChild(child);
       });
-      section.appendChild(wrapper);
+      article.appendChild(wrapper);
+      article.classList.add("has-gift-text");
     } else if (directGifts.length === 2) {
-      if (section.id === "first-date-lift-slide") return;
+      if (article.id === "first-date-lift-slide") return;
       if (
-        section.querySelector(
+        article.querySelector(
           ":scope > .dance-collage, :scope > .search-scene, :scope > .float-text",
         )
       )
@@ -926,20 +830,19 @@ function wrapGiftSectionText() {
 
       const wrapper = document.createElement("div");
       wrapper.className = "gift-text";
-      Array.from(section.children).forEach((child) => {
+      Array.from(article.children).forEach((child) => {
         if (child !== directGifts[0] && child !== directGifts[1])
           wrapper.appendChild(child);
       });
-      section.insertBefore(wrapper, directGifts[1]);
-      section.classList.add("two-gift-horizontal");
+      article.insertBefore(wrapper, directGifts[1]);
+      article.classList.add("has-gift-text", "two-gift-horizontal");
     }
   });
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
-autoGateStoryTextToNextGift();
-wrapGiftSectionText();
+wrapGiftArticleText();
 document
   .querySelectorAll(".gift-hint")
   .forEach((h) => h.classList.remove("is-hidden"));
