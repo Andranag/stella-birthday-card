@@ -17,9 +17,9 @@ const scheduleIdle = (fn) => {
 const QUIZ_STORAGE_KEY = "stella_bday_unlocked";
 
 const QUIZ_STEPS = [
-  { question: "What's my favorite ice cream flavor?", answers: ["vanilla"] },
-  { question: "What's my favorite color?", answers: ["cypress"] },
-  { question: "What's my favorite food?", answers: ["mousakas"] },
+  { question: "What's my favorite ice cream flavor?", answers: ["vanilla", "tiramisu", "bubblegum", "strawberry"] },
+  { question: "What's my favorite color?", answers: ["cypress", "green", "blue", "purple", "red", "yellow", "orange", "black"] },
+  { question: "What's my favorite food?", answers: ["mousakas", "mousaka"] },
 ];
 
 let quizStepIndex = 0;
