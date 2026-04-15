@@ -83,9 +83,11 @@ function startSearchSpawn(slide) {
   wrapper.appendChild(container);
 
   const lines = [
-    "so you were looking...",
-    "and looking...",
-    "still looking...",
+    "So, you were searching...",
+    "and searching...",
+    "still searching...",
+    "searching far...",
+    "searching wide...",
   ];
   let i = 0;
 
@@ -94,7 +96,7 @@ function startSearchSpawn(slide) {
       clearSearchStamps();
       return;
     }
-    if (i >= 6) {
+    if (i >= 5) {
       clearInterval(searchSpawnIntervalId);
       searchSpawnIntervalId = null;
       return;
@@ -344,9 +346,13 @@ function typeTextIntoElement(el, fullText, state, onDone) {
             startAgainFill(slide);
           }
         }
+        const searchScene = slide?.querySelector(".search-scene");
+        const triggerEl = searchScene?.previousElementSibling;
+
         if (
           slide &&
-          el === slide.querySelector("h2.gift-title") &&
+          triggerEl &&
+          el === triggerEl &&
           slide.querySelector("#search-spawn") &&
           searchSpawnIntervalId == null
         ) {
