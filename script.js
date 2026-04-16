@@ -78,13 +78,14 @@
         layout.appendChild(textWrap);
       } else if (videoEls.length === 1) {
         layout.classList.add("one-video");
-        leftSlot.appendChild(document.createElement("div")); /* empty placeholder */
-        rightSlot.appendChild(videoEls[0]);
+        leftSlot.appendChild(videoEls[0]);
+        rightSlot.appendChild(document.createElement("div")); /* empty placeholder */
         layout.appendChild(leftSlot);
         layout.appendChild(textWrap);
         layout.appendChild(rightSlot);
       } else {
         /* Two or more videos: first goes left, second goes right */
+        layout.classList.add("two-video");
         leftSlot.appendChild(videoEls[0]);
         rightSlot.appendChild(videoEls[1]);
         /* Any extra videos go below the layout (rare) */
@@ -93,10 +94,13 @@
         layout.appendChild(textWrap);
         layout.appendChild(rightSlot);
         if (extras.length) {
+          layout.classList.add("with-extras");
+          const extrasContainer = document.createElement("div");
+          extrasContainer.className = "extras-row";
           extras.forEach((v) => {
-            v.style.margin = "12px auto 0";
-            slide.appendChild(v);
+            extrasContainer.appendChild(v);
           });
+          layout.appendChild(extrasContainer);
         }
       }
 
@@ -214,12 +218,10 @@
     
     if (!els.length) return;
 
-    // Store original text and hide all elements initially
+    // Store original text and keep elements visible but empty (preserve space)
     els.forEach(el => {
       const originalText = el.textContent;
       el.setAttribute('data-original-text', originalText);
-      el.style.visibility = "hidden";
-      el.style.opacity = "0";
       el.textContent = "";
     });
 
@@ -242,10 +244,6 @@
 
     // Make current element visible
     currentEl.style.visibility = "visible";
-    currentEl.style.opacity = "1";
-    currentEl.style.transition = "opacity 0.2s";
-    currentEl.classList.add("typewriter-cursor");
-
     // Type the current element
     typeSingleElement(currentEl, originalText, 0, () => {
       // Remove cursor when done
