@@ -153,6 +153,19 @@
   document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight" || e.key === "ArrowDown")  goTo(current + 1);
     if (e.key === "ArrowLeft"  || e.key === "ArrowUp")    goTo(current - 1);
+    
+    /* Dev feature: Press 'G' to jump to a specific slide */
+    if (e.key === "g" || e.key === "G") {
+      const slideNum = prompt(`Jump to slide (1-${total}):`, `${current + 1}`);
+      if (slideNum !== null) {
+        const num = parseInt(slideNum, 10) - 1;
+        if (num >= 0 && num < total) {
+          goTo(num);
+        } else {
+          alert(`Please enter a number between 1 and ${total}`);
+        }
+      }
+    }
   });
 
   /* ── Wheel / Trackpad scroll ──────────────── */

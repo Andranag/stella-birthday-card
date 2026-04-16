@@ -111,42 +111,43 @@ body::after {
 /* ─────────────────────────────────────────
    HEADER SLIDE
 ───────────────────────────────────────── */
-#header {
-  gap: 24px;
-  text-align: center;
-}
 #header h1 {
   font-family: 'Pacifico', cursive;
-  font-size: clamp(1.3rem, 4.5vw, 2.4rem);
-  line-height: 1.35;
-  max-width: 640px;
-  min-height: 120px;
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  line-height: 1.65;
+  letter-spacing: 0.08em;
   background: linear-gradient(135deg, var(--gold), var(--rose), var(--sky));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: shimmer 3s ease-in-out infinite alternate;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-bottom: 10px;
 }
 @keyframes shimmer {
   0%   { filter: drop-shadow(0 2px 8px rgba(255,215,0,0.4)); }
   100% { filter: drop-shadow(0 2px 20px rgba(255,107,157,0.7)); }
 }
-#header img {
-  border-radius: 18px;
-  max-width: min(240px, 75vw);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 3px rgba(255,215,0,0.35);
-  transition: transform 0.3s ease;
+#header h2 {
+  font-size: clamp(1.2rem, 3vw, 1.85rem);
+  line-height: 1.65;
+  letter-spacing: 0.08em;
 }
-#header img:hover { transform: scale(1.04) rotate(-1deg); }
+#header p {
+  font-size: clamp(1rem, 2.3vw, 1.25rem);
+  line-height: 2.1;
+  letter-spacing: 0.08em;
+}
 
 /* ─────────────────────────────────────────
    GIFT ARTICLES
 ───────────────────────────────────────── */
 .gift-article {
   padding-bottom: 16px;
+}
+
+.gift-article h1,
+.gift-article h2 {
+  font-family: 'Pacifico', cursive;
 }
 
 /*
@@ -213,8 +214,9 @@ body::after {
 ───────────────────────────────────────── */
 .gift-title {
   font-family: 'Pacifico', cursive;
-  font-size: clamp(0.95rem, 2.5vw, 1.55rem);
-  line-height: 1.35;
+  font-size: clamp(1.2rem, 3vw, 1.85rem);
+  line-height: 1.65;
+  letter-spacing: 0.08em;
   margin-bottom: 10px;
   background: linear-gradient(120deg, var(--gold) 0%, var(--rose-light) 50%, var(--sky-light) 100%);
   -webkit-background-clip: text;
@@ -224,12 +226,19 @@ body::after {
 }
 
 .gift-article p {
-  font-size: clamp(0.82rem, 1.8vw, 1rem);
+  font-family: 'Pacifico', cursive;
+  font-size: clamp(1rem, 2.3vw, 1.25rem);
   font-weight: 600;
   color: var(--text-soft);
   text-align: center;
-  line-height: 1.7;
+  line-height: 2.1;
+  letter-spacing: 0.08em;
   margin-bottom: 0;
+}
+.gift-article h2 {
+  font-size: clamp(1.2rem, 3vw, 1.85rem);
+  line-height: 1.65;
+  letter-spacing: 0.08em;
 }
 .gift-article p strong { color: var(--gold-light); font-weight: 800; }
 
@@ -334,6 +343,7 @@ footer.slide { justify-content: center; padding: 40px 24px 60px; }
   padding: 36px 32px;
   max-width: 560px;
   width: 100%;
+  min-height: 480px;
   box-shadow: 0 0 60px rgba(255,107,157,0.2), 0 8px 32px rgba(0,0,0,0.4);
   backdrop-filter: blur(12px);
   text-align: center;
@@ -350,24 +360,23 @@ footer.slide { justify-content: center; padding: 40px 24px 60px; }
   border-radius: 30px;
   background: conic-gradient(from 0deg, var(--rose), var(--gold), var(--sky), var(--mint), var(--purple), var(--rose));
   z-index: -1;
-  animation: spinGlow 4s linear infinite;
+  animation: spinGlow 12s linear infinite;
 }
 @keyframes spinGlow { to { transform: rotate(360deg); } }
 
 #footer {
   font-family: 'Pacifico', cursive;
   font-size: clamp(1.3rem, 4vw, 2rem);
-  background: linear-gradient(120deg, var(--gold), var(--rose-light), var(--sky-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-main);
   margin-bottom: 6px;
 }
 .footer-card p {
-  font-size: clamp(0.88rem, 2.5vw, 1rem);
-  color: var(--text-soft);
+  font-family: 'Pacifico', cursive;
+  font-size: clamp(1rem, 2.3vw, 1.25rem);
+  color: var(--text-main);
   font-weight: 600;
-  line-height: 1.7;
+  line-height: 2.1;
+  letter-spacing: 0.08em;
 }
 
 /* ─────────────────────────────────────────
