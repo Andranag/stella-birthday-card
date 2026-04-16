@@ -12,37 +12,7 @@
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body class="is-locked">
-    <div
-      id="quiz-gate"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="quiz-title"
-    >
-      <div class="quiz-card">
-        <h2 id="quiz-title" class="gift-title">One quick question first...</h2>
-        <p class="quiz-subtitle">
-          Answer correctly to unlock your birthday present.
-        </p>
-        <form id="quiz-form">
-          <label class="quiz-label" for="quiz-answer"
-            >Question: <span id="quiz-question"></span
-          ></label>
-          <input
-            id="quiz-answer"
-            class="quiz-input"
-            type="text"
-            autocomplete="off"
-            inputmode="text"
-          />
-          <button id="quiz-submit" class="quiz-button" type="submit">
-            Unlock
-          </button>
-          <p id="quiz-feedback" class="quiz-feedback" aria-live="polite"></p>
-        </form>
-      </div>
-    </div>
-
+  <body>
     <main id="story">
       <div id="swipe-container">
         <article class="slide" id="header">
@@ -59,7 +29,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Of all the days...</h2>
+          <h2>Of all the days...</h2>
           <p>today is a very special one!</p>
           <p>For today is your birthday...</p>
           <p>and you deserve all the best!</p>
@@ -81,7 +51,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I might have an idea or two...</h2>
+          <h2>I might have an idea or two...</h2>
           <p>of what your wishes could be!</p>
           <div
             class="gift-img"
@@ -101,7 +71,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">But since I know how much...</h2>
+          <h2>But since I know how much...</h2>
           <p>you enjoy reading a good story...</p>
           <div
             class="gift-img"
@@ -124,7 +94,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Surprise, surprise!</h2>
+          <h2>Surprise, surprise!</h2>
           <p>I gathered up every ounce of my creativity...</p>
           <p>into writing you one, myself!</p>
           <p>Though, I'm sure you'll find this particular story...</p>
@@ -150,7 +120,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">
+          <h2>
             For this is the beginning of a love story between...
           </h2>
           <p><strong>drum roll — 🥁🥁🥁</strong></p>
@@ -174,7 +144,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I'm willing to bet anything on...</h2>
+          <h2>I'm willing to bet anything on...</h2>
           <p>that by the end of this story...</p>
           <p>you'll be as smitten with me...</p>
           <p>as I am with you!</p>
@@ -206,7 +176,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">So, make yourself comfortable and...</h2>
+          <h2>So, make yourself comfortable and...</h2>
           <p>Happy reading!</p>
           <div
             class="gift-img"
@@ -226,7 +196,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Once upon a time, there was you...</h2>
+          <h2>Once upon a time, there was you...</h2>
           <p>minding your own business!</p>
           <p>Just a girl...</p>
           <p>whose hair colour's red and is...</p>
@@ -249,15 +219,15 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">And then there was me...</h2>
+          <h2>And then there was me...</h2>
           <p>An irresistibly handsome guy who has...</p>
           <p>a kind soul, a heart of gold and a great smile...</p>
           <p>among many more qualities!</p>
           <p>And the best ( or worst ) part?</p>
           <p>I'd already swept you off your feet...</p>
-          <p><strong>without me even realizing it!</strong></p>
+          <p>without me even realizing it!</p>
           <p>and if I haven't already...</p>
-          <p>Hold that thought!</p>
+          <p><strong>Hold that thought!</strong></p>
           <div class="gift-img" aria-label="Aladdin being shy animation">
             <video
               class="gift-video"
@@ -273,7 +243,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">You were undeniably dazzled...</h2>
+          <h2>You were undeniably dazzled...</h2>
           <p>by my unmatched sex appeal!</p>
           <div
             class="gift-img"
@@ -364,20 +334,19 @@
             </div>
 
             <div class="dance-text">
-              <h2 class="gift-title">And of course,</h2>
-              <h2 class="gift-title">my mesmerizing...</h2>
-              <h2 class="gift-title">dance moves!</h2>
+              <h2>And of course,</h2>
+              <h2>my mesmerizing...</h2>
+              <h2>dance moves!</h2>
             </div>
           </div>
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">
+          <h2>
             Thus, you embarked on a journey to find me...
           </h2>
           <p>by bringing out your inner detective!</p>
-          <div class="search-scene">
-            <div
+          <div
               class="gift-img"
               aria-label="Inspector Gadget embarking on an investigation animation"
             >
@@ -394,15 +363,11 @@
                   type="video/mp4"
                 />
               </video>
-            </div>
-            <div class="search-lines">
-              <p id="search-spawn"></p>
-            </div>
           </div>
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">And after searching far and wide...</h2>
+          <h2>And after searching far and wide...</h2>
           <p>you found me!</p>
           <p>Or to be more accurate...</p>
           <p>you found my Instagram profile!</p>
@@ -436,7 +401,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I really had screwed up back then!</h2>
+          <h2>I really had screwed up back then!</h2>
           <p>For my very first message to you was :</p>
           <p id="interlude"><strong>" ? "</strong></p>
           <p>Tsk, tsk... I mean really!</p>
@@ -462,7 +427,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">For that got you...</h2>
+          <h2>For that got you...</h2>
           <p><strong>( rightfully so! )</strong></p>
           <p>mad at me!</p>
           <div class="gift-img" aria-label="Tinkerbell pouting animation">
@@ -483,7 +448,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">But on the bright side...</h2>
+          <h2>But on the bright side...</h2>
           <p>this was far from over!</p>
           <p>For fate wouldn't give up on us this easily!</p>
           <p>For it had more in store for us, waiting...</p>
@@ -508,7 +473,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Not gonna lie!</h2>
+          <h2>Not gonna lie!</h2>
           <div
             class="gift-img"
             aria-label="Pinokio's nose growing bigger from lying animation"
@@ -527,7 +492,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">
+          <h2>
             I remember feeling really charmed by...
           </h2>
           <p>the idea of a fine young lady...</p>
@@ -548,7 +513,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">But honest to Notre-Dame de Paris...</h2>
+          <h2>But honest to Notre-Dame de Paris...</h2>
           <p>I wasn't ready to welcome you into my life!</p>
           <p>Not back then, anyways!</p>
           <div class="gift-img" aria-label="Quasimodo being sad animation">
@@ -566,7 +531,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">For my world had yet...</h2>
+          <h2>For my world had yet...</h2>
           <p>to be turned upside down!</p>
           <div
             class="gift-img"
@@ -589,7 +554,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">One thing I'm certain of...</h2>
+          <h2>One thing I'm certain of...</h2>
           <p>is that neither of us had it easy!</p>
           <p>Life didn't treat us the way we deserved!</p>
           <div
@@ -625,7 +590,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">We both had to go through...</h2>
+          <h2>We both had to go through...</h2>
           <p>some pretty life-changing...</p>
           <p>and heartbreaking, but...</p>
           <p>undoubtedly valuable lessons!</p>
@@ -662,7 +627,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">We might even wished for...</h2>
+          <h2>We might even wished for...</h2>
           <p>all that pain to magically go away!</p>
           <p>But we wouldn't be who we are today...</p>
           <p>had we not been through it!</p>
@@ -696,7 +661,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">And then...</h2>
+          <h2>And then...</h2>
           <p>there was a day...</p>
           <p>not too different than your average regular ones!</p>
           <p>And as you went about it...</p>
@@ -718,7 +683,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I, on the other hand...</h2>
+          <h2>I, on the other hand...</h2>
           <p>started having this...</p>
           <p>itchy feeling behind my back!</p>
           <div
@@ -739,7 +704,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Almost as if...</h2>
+          <h2>Almost as if...</h2>
           <p>my brain was talking me into...</p>
           <p>texting you and asking you out!</p>
           <p>And so, the winning argument was...</p>
@@ -765,7 +730,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I like to think that...</h2>
+          <h2>I like to think that...</h2>
           <p>when you read my text message...</p>
           <p>your reaction looked similar to this!</p>
           <p>And as I'm sure it wasn't...</p>
@@ -792,7 +757,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Although...</h2>
+          <h2>Although...</h2>
           <p>if I had to guess...</p>
           <p>I'd say it probably resembled...</p>
           <p><strong>( again... rightfully so! )</strong></p>
@@ -815,7 +780,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Surpassing all my expectations...</h2>
+          <h2>Surpassing all my expectations...</h2>
           <p>I heard back from you positively!</p>
           <p>Which could only mean one of two things!</p>
           <p>You were curious as to why now...</p>
@@ -838,7 +803,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Either way...</h2>
+          <h2>Either way...</h2>
           <p>your direct and honest reply helped me...</p>
           <p>overcome all my up-to-this-point rejections...</p>
           <p>in an instant!</p>
@@ -863,7 +828,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I was beaming with joy!</h2>
+          <h2>I was beaming with joy!</h2>
           <p>For my leap of faith in the dating world...</p>
           <p>had at last served me well!</p>
           <div
@@ -905,7 +870,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">On the day of our date...</h2>
+          <h2>On the day of our date...</h2>
           <p>I went to a barbershop and cut my hair!</p>
           <p>For I didn't want to look like a pirate!</p>
           <p>Although the mustache here is spot-on!</p>
@@ -927,7 +892,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">
+          <h2>
             A couple of hours before meeting with you...
           </h2>
           <p>I decided to take a shower...</p>
@@ -950,7 +915,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">So, there I was...</h2>
+          <h2>So, there I was...</h2>
           <p>wearing nothing but my underwear!</p>
           <p>Still being undecisive of...</p>
           <p>my outfit for the evening!</p>
@@ -975,7 +940,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">That's when I realized that...</h2>
+          <h2>That's when I realized that...</h2>
           <p>I had to hurry up!</p>
           <p>For I didn't want to be late on our first date!</p>
           <p>For it was very important to me!</p>
@@ -997,7 +962,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Prime example of my overthinking...</h2>
+          <h2>Prime example of my overthinking...</h2>
           <p>getting the best of me...</p>
           <p>taking me nowhere!</p>
           <div
@@ -1018,7 +983,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Moments later...</h2>
+          <h2>Moments later...</h2>
           <p>after arguing with my brain...</p>
           <p>I came to a decision!</p>
           <div
@@ -1039,7 +1004,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">So, I got dressed up and...</h2>
+          <h2>So, I got dressed up and...</h2>
           <p>as I looked myself in the mirror, I thought :</p>
           <p><strong>"You got this, buddy!"</strong></p>
           <p><strong>"For there's none other than you, who's as good as you!"</strong></p>
@@ -1061,7 +1026,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Off I was on my way then...</h2>
+          <h2>Off I was on my way then...</h2>
           <p>whistling and dancing happily...</p>
           <p>as I waited for the metro to come!</p>
           <div
@@ -1103,7 +1068,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">On the other hand...</h2>
+          <h2>On the other hand...</h2>
           <p>I pictured in my head how...</p>
           <p>you'd be getting ready!</p>
           <div
@@ -1124,7 +1089,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Except instead of white...</h2>
+          <h2>Except instead of white...</h2>
           <p>you wore your dark top along...</p>
           <p>with your dark-leathered skirt...</p>
           <p>looking like a total badass!</p>
@@ -1147,7 +1112,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As the time to meet you drew near...</h2>
+          <h2>As the time to meet you drew near...</h2>
           <p>I remember thinking :</p>
           <p><strong>"How am I going to greet her when I see her?"</strong></p>
           <div
@@ -1168,7 +1133,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I thought it'd be fun to...</h2>
+          <h2>I thought it'd be fun to...</h2>
           <p>just grab you by your waist and...</p>
           <p>lift you up in the air!</p>
           <p>Which would either go tremendously well...</p>
@@ -1210,7 +1175,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As I got off the metro...</h2>
+          <h2>As I got off the metro...</h2>
           <p>I remember spotting you in the crowd...</p>
           <p>from quite the distance, too!</p>
           <p>So, naturally...</p>
@@ -1248,7 +1213,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I wasn't sure if it was you at first...</h2>
+          <h2>I wasn't sure if it was you at first...</h2>
           <p>but secretly, I hoped it was!</p>
           <p>For you had that air of confidence...</p>
           <p>which was what caught my attention in the first place!</p>
@@ -1270,7 +1235,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I still remember how I felt...</h2>
+          <h2>I still remember how I felt...</h2>
           <p>when I first laid my eyes on you!</p>
           <p><strong>Jaw-dropping experience!</strong></p>
           <div
@@ -1306,7 +1271,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Fun fact:</h2>
+          <h2>Fun fact:</h2>
           <p>I recognised you by your boots!</p>
           <p>I'd have seen them in one of your Instagram pictures...</p>
           <p><strong>( disclaimer: Not a stalker! )</strong></p>
@@ -1329,7 +1294,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">We got ourselves a table at some bar!</h2>
+          <h2>We got ourselves a table at some bar!</h2>
           <p>And there I was sitting next to you...</p>
           <p>not being able to take my eyes off of you!</p>
           <div
@@ -1350,7 +1315,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I remember thinking :</h2>
+          <h2>I remember thinking :</h2>
           <p><strong>"This shouldn't be too hard!"</strong></p>
           <p>For I believed in myself!</p>
           <div
@@ -1392,7 +1357,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Well, it wasn't exactly a walk in the park either!</h2>
+          <h2>Well, it wasn't exactly a walk in the park either!</h2>
           <p>For I had to stay relaxed and at the same time...</p>
           <p>deal with the pressure of...</p>
           <p>anything I could say...</p>
@@ -1415,7 +1380,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Any attempt that I made...</h2>
+          <h2>Any attempt that I made...</h2>
           <p>hoping to impress you...</p>
           <p>felt like I was talking to a wall!</p>
           <div
@@ -1439,7 +1404,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As annoying as that was...</h2>
+          <h2>As annoying as that was...</h2>
           <p>I couldn't let it stand in my way of...</p>
           <p>getting to knowing you better!</p>
           <p>For I had to keep my cool...</p>
@@ -1480,7 +1445,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I got rather stressed over...</h2>
+          <h2>I got rather stressed over...</h2>
           <p>saying the wrong thing resulting in...</p>
           <p>blowing my ( second ) chance with you!</p>
           <p>But I managed to pull myself together!</p>
@@ -1502,7 +1467,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">And persistent as I was...</h2>
+          <h2>And persistent as I was...</h2>
           <p>I succeeded in making you chuckle!</p>
           <p>I don't remember the exact thing I said but...</p>
           <p>I'll treasure the memory of witnessing...</p>
@@ -1529,7 +1494,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I remember you sharing with me...</h2>
+          <h2>I remember you sharing with me...</h2>
           <p>a couple things about yourself!</p>
           <p>Particularly, how you were dancing "heels"...</p>
           <p>I was fascinated!</p>
@@ -1551,7 +1516,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">And how you loved to draw...</h2>
+          <h2>And how you loved to draw...</h2>
           <p>ever since you were a kid!</p>
           <p>Or how you were singing in...</p>
           <p>a musical theatre group!</p>
@@ -1591,7 +1556,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As you were sharing stories about yourself...</h2>
+          <h2>As you were sharing stories about yourself...</h2>
           <p>unconsciously you were tucking your hair to each side..</p>
           <p>which made it ever so difficult...</p>
           <p>to pay attention to our conversation!</p>
@@ -1613,7 +1578,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I was craving to kiss you...</h2>
+          <h2>I was craving to kiss you...</h2>
           <p>But you told me it's not something...</p>
           <p>you usually do from the first date!</p>
           <p>So, I decided to respect your habit and...</p>
@@ -1636,7 +1601,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As our night was reaching its end...</h2>
+          <h2>As our night was reaching its end...</h2>
           <p>I remember thinking :</p>
           <p><strong>"What a nice flow we had, at least!"</strong></p>
           <p><strong>"Not too bad for a first date!"</strong></p>
@@ -1658,7 +1623,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As the new week began...</h2>
+          <h2>As the new week began...</h2>
           <p>we went out for the second time!</p>
           <p>As we were talking for hours...</p>
           <p>it was becoming clear to me that...</p>
@@ -1684,7 +1649,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I remember asking you to dance with me...</h2>
+          <h2>I remember asking you to dance with me...</h2>
           <div
             class="gift-img"
             aria-label="A scene from Pocahontas featuring a hand inviting her animation"
@@ -1703,7 +1668,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">But you were hesitant to say yes...</h2>
+          <h2>But you were hesitant to say yes...</h2>
           <p>even though we both knew...</p>
           <p>that deep down...</p>
           <p>you wanted to!</p>
@@ -1725,7 +1690,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">But I respected it and...</h2>
+          <h2>But I respected it and...</h2>
           <p>I reached for a hug instead!</p>
           <p>As your hands were touching the back of my neck...</p>
           <p>I remember getting goosebumps!</p>
@@ -1750,7 +1715,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">So, we just caressed each other...</h2>
+          <h2>So, we just caressed each other...</h2>
           <p>and I held you close to my chest!</p>
           <div
             class="gift-img"
@@ -1785,7 +1750,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Gosh, how time flew on that night!</h2>
+          <h2>Gosh, how time flew on that night!</h2>
           <p>We were the last ones to leave the bar!</p>
           <div
             class="gift-img"
@@ -1805,7 +1770,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">
+          <h2>
             As I drove us outside of your house I recall saying :
           </h2>
           <p><strong>"It's still too early to call it a night"</strong></p>
@@ -1832,7 +1797,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I can't get over how...</h2>
+          <h2>I can't get over how...</h2>
           <p>your eyes lit up before I...</p>
           <p>had even finished my sentence!</p>
           <div class="gift-img" aria-label="Snowhite being excited animation">
@@ -1850,7 +1815,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">During our walk you told me how...</h2>
+          <h2>During our walk you told me how...</h2>
           <p>you were galeophobic...</p>
           <p>or more commonly known as fear of sharks...</p>
           <p>and how people made fun of that!</p>
@@ -1872,7 +1837,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">You also told me about...</h2>
+          <h2>You also told me about...</h2>
           <p>your habit of speaking and...</p>
           <p>eating slowly and how it...</p>
           <p>drove your sisters crazy!</p>
@@ -1894,7 +1859,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">It was in those moments...</h2>
+          <h2>It was in those moments...</h2>
           <p>that I knew I had found someone special!</p>
           <p>For I knew I didn't care...</p>
           <p>about any of those things!</p>
@@ -1919,7 +1884,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As we walked around...</h2>
+          <h2>As we walked around...</h2>
           <p>we ended up at some park nearby...</p>
           <p>and there was a bench...</p>
           <p>almost as if it was calling out to us!</p>
@@ -1943,7 +1908,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">We started messing around and...</h2>
+          <h2>We started messing around and...</h2>
           <p>I remember how you were enjoying teasing me...</p>
           <p>a little too much, if you ask me!</p>
           <p>Denying me your lips...</p>
@@ -1965,7 +1930,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Only after I had given your neck...</h2>
+          <h2>Only after I had given your neck...</h2>
           <p>the sufficient kissing action you asked for...</p>
           <p>did you give in to the temptation and...</p>
           <p>well, you know...</p>
@@ -2006,7 +1971,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As we were kissing...</h2>
+          <h2>As we were kissing...</h2>
           <p>I remember thinking :</p>
           <p><strong>"Holy cow, I can't stop smiling!"</strong></p>
           <div
@@ -2042,7 +2007,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I remember how the thought of...</h2>
+          <h2>I remember how the thought of...</h2>
           <p>kissing you for the first time...</p>
           <p>was making me feel really nervous!</p>
           <p>For I wanted it to go well!</p>
@@ -2067,7 +2032,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">But as it turned out...</h2>
+          <h2>But as it turned out...</h2>
           <p>I had nothing to worry about!</p>
           <div
             class="gift-img"
@@ -2090,7 +2055,7 @@
         </article>
 
         <article class="slide gift-article" id="kiss-again-slide">
-          <h2 class="gift-title">For it came very naturally!</h2>
+          <h2>For it came very naturally!</h2>
           <p>On that night, we kissed each other...</p>
           <p>again and again and again and...</p>
           <p>again and again and again and...</p>
@@ -2130,7 +2095,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">It was getting late...</h2>
+          <h2>It was getting late...</h2>
           <p>and we both had to...</p>
           <p>wake up early the next day!</p>
           <p>I remember thinking :</p>
@@ -2169,7 +2134,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Later that week...</h2>
+          <h2>Later that week...</h2>
           <p>and despite us having already...</p>
           <p>scheduled everything about our third date...</p>
           <p>I was getting impatient!</p>
@@ -2192,7 +2157,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">So I asked to meet with you!</h2>
+          <h2>So I asked to meet with you!</h2>
           <p>Even if it was just for a little while...</p>
           <p>only for a walk or something!</p>
           <div
@@ -2213,7 +2178,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Hoping that your long day between...</h2>
+          <h2>Hoping that your long day between...</h2>
           <p>your studying at school and...</p>
           <p>making it through your shift...</p>
           <p>wouldn't be enough to stop you from...</p>
@@ -2251,7 +2216,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">On that day...</h2>
+          <h2>On that day...</h2>
           <p>I remember you telling me how...</p>
           <p>your parents sent you and your sisters...</p>
           <p>to do ballet from a very young age!</p>
@@ -2276,7 +2241,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">And how they'd also sent the three of you...</h2>
+          <h2>And how they'd also sent the three of you...</h2>
           <p>to martial arts classes...</p>
           <p>where you had the time of your life!</p>
           <p>Despite your instructor calling you...</p>
@@ -2299,7 +2264,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Later that week...</h2>
+          <h2>Later that week...</h2>
           <p>it was finally time for our date No. 3!</p>
           <p>We had predecided you'd lead the way that day!</p>
           <p>So, we arrived to a cozzy little bar...</p>
@@ -2323,7 +2288,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As we were talking and drinking...</h2>
+          <h2>As we were talking and drinking...</h2>
           <p>I remember you saying to me for the first time :</p>
           <p><strong>"I'm just a girl!"</strong></p>
           <p>In that moment, I knew...</p>
@@ -2348,7 +2313,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">
+          <h2>
             I remember asking you to dance with me again...
           </h2>
           <p>and this time around...</p>
@@ -2374,7 +2339,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">So, we danced...</h2>
+          <h2>So, we danced...</h2>
           <p>and we swayed our bodies...</p>
           <p>rhythmically, left and right...</p>
           <p>being in total sync!</p>
@@ -2414,7 +2379,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As we were dancing...</h2>
+          <h2>As we were dancing...</h2>
           <p>I was holding you tighter in my arms...</p>
           <p>bringing you closer to my chest...</p>
           <p>appreciating every second!</p>
@@ -2439,7 +2404,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I was confident that...</h2>
+          <h2>I was confident that...</h2>
           <p>this would be the night...</p>
           <p>that I'd bring you home with me!</p>
           <p>I mean...</p>
@@ -2463,7 +2428,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">And so, I built up all the charm I had...</h2>
+          <h2>And so, I built up all the charm I had...</h2>
           <p>I looked you in the eyes and asked the big question :</p>
           <p><strong>"Would you be interested in becoming more intimate with me, tonight?"</strong></p>
           <div
@@ -2484,7 +2449,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h1 class="gift-title">Unlucky for you...</h1>
+          <h1>Unlucky for you...</h1>
           <p>I had put on...</p>
           <p>my smoldering face!</p>
           <div
@@ -2520,7 +2485,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Lucky for me...</h2>
+          <h2>Lucky for me...</h2>
           <p>the drinks we bought on that night were on you!</p>
           <p>For I didn't have any money on me!</p>
           <p>That's a lie — but it made you laugh!</p>
@@ -2546,7 +2511,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">On that very same night...</h2>
+          <h2>On that very same night...</h2>
           <p>I remember you saying to me :</p>
           <p>
             <strong
@@ -2570,7 +2535,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Hearing you say this...</h2>
+          <h2>Hearing you say this...</h2>
           <p>definitely caused my...</p>
           <p>nervous system an error!</p>
           <p><strong>"404 — She can't be real!"</strong></p>
@@ -2595,7 +2560,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Anyway, we arrived at my place!</h2>
+          <h2>Anyway, we arrived at my place!</h2>
           <p>There, you found your spot at the couch and...</p>
           <p>I poured us two glasses of sparkling wine...</p>
           <p>and prepared a platter of snacks!</p>
@@ -2620,7 +2585,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As we got naked, I realized...</h2>
+          <h2>As we got naked, I realized...</h2>
           <p>you were the only girl whose...</p>
           <p>first time getting intimate with me...</p>
           <p>felt so natural and...</p>
@@ -2660,7 +2625,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">On that night, you had put on...</h2>
+          <h2>On that night, you had put on...</h2>
           <p>a bit too much glitter!</p>
           <p>You shoul've known better than this...</p>
           <p>For what we were about to do...</p>
@@ -2686,7 +2651,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">You know what they say...</h2>
+          <h2>You know what they say...</h2>
           <p>where there's fire there's...</p>
           <p><strong>drum roll — 🥁🥁🥁</strong></p>
           <div
@@ -2707,7 +2672,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Yep, you guessed it!</h2>
+          <h2>Yep, you guessed it!</h2>
           <p><strong>smoke!</strong></p>
           <p>Only ours was slightly different!</p>
           <div
@@ -2728,7 +2693,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I remember that sensation when...</h2>
+          <h2>I remember that sensation when...</h2>
           <p>I came on top of you and...</p>
           <p>I believe you remember the rest!</p>
           <div
@@ -2749,7 +2714,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Round and round we rolled...</h2>
+          <h2>Round and round we rolled...</h2>
           <p>not standing still for more than two minutes...</p>
           <p>literally making a mess all over the bed sheets!</p>
           <div
@@ -2770,7 +2735,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Not gonna lie!</h2>
+          <h2>Not gonna lie!</h2>
           <div
             class="gift-img"
             aria-label="Woody from Toy Story rolling his eyes mischievously animation"
@@ -2789,7 +2754,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I remember wanting to eat you so badly...</h2>
+          <h2>I remember wanting to eat you so badly...</h2>
           <p>but for better or for worse, I didn't!</p>
           <p>Either way, don't let that fool you...</p>
           <p>thinking you'll get away the next time!</p>
@@ -2811,7 +2776,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">
+          <h2>
             I think I speak for both of us when I say...
           </h2>
           <p>some serious business went down on that night!</p>
@@ -2833,7 +2798,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">And so, this was the first of...</h2>
+          <h2>And so, this was the first of...</h2>
           <p>hopefully many more nights to come...</p>
           <p>that we slept together!</p>
           <div
@@ -2854,7 +2819,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Next morning, the sun came up!</h2>
+          <h2>Next morning, the sun came up!</h2>
           <p>I remember thinking :</p>
           <p><strong>"I haven't felt this alive in I don't know how long!"</strong></p>
           <div
@@ -2875,7 +2840,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">As I couldn't sleep anymore...</h2>
+          <h2>As I couldn't sleep anymore...</h2>
           <p>and my inner voice was all like : </p>
           <p><strong>"Carpe Diem", I said :</strong></p>
           <p><strong>"Come on, let's wake up!"</strong></p>
@@ -2916,7 +2881,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Next, I went to the kitchen...</h2>
+          <h2>Next, I went to the kitchen...</h2>
           <p>to make us breakfast!</p>
           <p>Scrambled eggs with oats and orange juice!</p>
           <p>But first, coffee!</p>
@@ -2942,7 +2907,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">I still can't wrap my head...</h2>
+          <h2>I still can't wrap my head...</h2>
           <p>around the randomness of it all!</p>
           <div
             class="gift-img"
@@ -2977,7 +2942,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">It feels almost as if...</h2>
+          <h2>It feels almost as if...</h2>
           <p>you fell right from the sky!</p>
           <div
             class="gift-img"
@@ -2997,7 +2962,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Here's to us spending...</h2>
+          <h2>Here's to us spending...</h2>
           <p>I daresay many more birthdays together...</p>
           <p>laughing our heads off!</p>
           <div
@@ -3039,7 +3004,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Here's to us experiencing...</h2>
+          <h2>Here's to us experiencing...</h2>
           <p>this world together and...</p>
           <p>travelling around without a care!</p>
           <div
@@ -3081,7 +3046,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Here's to us holding hands and...</h2>
+          <h2>Here's to us holding hands and...</h2>
           <p>staying together through...</p>
           <p>what life might throw at us!</p>
           <div
@@ -3105,7 +3070,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">For let's face it...</h2>
+          <h2>For let's face it...</h2>
           <p>we make a pretty good team!</p>
           <div
             class="gift-img"
@@ -3128,7 +3093,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">And if I may add...</h2>
+          <h2>And if I may add...</h2>
           <p>Here's to us growing old(er) together!</p>
           <div
             class="gift-img"
@@ -3166,7 +3131,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">If after reading all this...</h2>
+          <h2>If after reading all this...</h2>
           <p>you're like...</p>
           <p>"Hold your horses bro, you're getting ahead of yourself!"</p>
           <p><strong>( which, spoiler alert: I am! )</strong></p>
@@ -3189,7 +3154,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">My answer to that is...</h2>
+          <h2>My answer to that is...</h2>
           <p>Worry not!</p>
           <div
             class="gift-img"
@@ -3209,7 +3174,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">For if you really think about it...</h2>
+          <h2>For if you really think about it...</h2>
           <p>we both want the same thing!</p>
           <p>Which is to keep our wounded and scared...</p>
           <p>inner child safe from harm's way!</p>
@@ -3231,7 +3196,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">Understand this.</h2>
+          <h2>Understand this.</h2>
           <p>If you find yourself in need of help...</p>
           <p>or support of any kind...</p>
           <p>I'm your guy!</p>
@@ -3253,7 +3218,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">All I ask in return is...</h2>
+          <h2>All I ask in return is...</h2>
           <p>that you let me in on...</p>
           <p>your warmth and affection...</p>
           <p>which I'm certain you have plenty of!</p>
@@ -3296,7 +3261,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">And rest assured!</h2>
+          <h2>And rest assured!</h2>
           <p>For I, as long as I choose you...</p>
           <p>I can promise you this :</p>
           <div
@@ -3317,7 +3282,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">If...</h2>
+          <h2>If...</h2>
           <p>you choose me too...</p>
           <p><strong>I'll make it my personal mission to...</strong></p>
           <p><strong>keep your needs met...</strong></p>
@@ -3356,7 +3321,7 @@
         </article>
 
         <article class="slide gift-article">
-          <h2 class="gift-title">The End...</h2>
+          <h2>The End...</h2>
           <p>or better yet...</p>
           <p>Now, it begins!</p>
           <div
@@ -3378,7 +3343,7 @@
 
         <footer class="slide">
           <div class="footer-card">
-            <h2 id="footer" class="gift-title">Happy 25th birthday, Stella!</h2>
+            <h2 id="footer">Happy 25th birthday, Stella!</h2>
             <p>Congratulations on making it to the quarter of your century!</p>
             <p>
               There are so many things I don't know about you yet, and I'm
