@@ -123,15 +123,7 @@
     current = index;
     container.style.transform = `translateX(-${current * 100}vw)`;
 
-    scheduleTypewriter(slides[current]);
     updateNav();
-
-    /* Trigger search scene if applicable */
-    const searchSlide = document.querySelector(".search-scene")?.closest(".slide");
-    const searchSpawn = document.getElementById("search-spawn");
-    if (searchSlide && slides[index] === searchSlide && searchSpawn && searchSpawn.textContent.trim() === "") {
-      setTimeout(typeSearchLinesBetter, 650);
-    }
 
     container.addEventListener("transitionend", function onEnd() {
       container.removeEventListener("transitionend", onEnd);
@@ -216,129 +208,6 @@
   }, { passive: true });
 
   /* ════════════════════════════════════════════
-     TYPEWRITER EFFECT
-  ════════════════════════════════════════════ */
-  const typedSlides = new Set();
-
-  function scheduleTypewriter(slide) {
-    if (typedSlides.has(slide)) return;
-    typedSlides.add(slide);
-
-    // Get elements in order: h1, h2, then p elements
-    const headers = Array.from(slide.querySelectorAll("h1, h2"));
-    const paragraphs = Array.from(slide.querySelectorAll("p"));
-    const els = [...headers, ...paragraphs];
-    
-    if (!els.length) return;
-
-    // Store original text and keep elements visible but empty (preserve space)
-    els.forEach(el => {
-      const originalText = el.textContent;
-      el.setAttribute('data-original-text', originalText);
-      el.textContent = "";
-    });
-
-    // Start sequential typewriter
-    setTimeout(() => {
-      typeSequentialElements(els, 0);
-    }, 500);
-  }
-
-  function typeSequentialElements(elements, elementIndex) {
-    if (elementIndex >= elements.length) return;
-
-    const currentEl = elements[elementIndex];
-    const originalText = currentEl.getAttribute('data-original-text');
-    
-    if (!originalText || !originalText.trim()) {
-      typeSequentialElements(elements, elementIndex + 1);
-      return;
-    }
-
-    // Make current element visible
-    currentEl.style.visibility = "visible";
-    // Type the current element
-    typeSingleElement(currentEl, originalText, 0, () => {
-      // Remove cursor when done
-      currentEl.classList.remove("typewriter-cursor");
-      
-      // Pause before next element
-      setTimeout(() => {
-        typeSequentialElements(elements, elementIndex + 1);
-      }, 800);
-    });
-  }
-
-  function typeSingleElement(el, text, charIndex, done) {
-    if (charIndex >= text.length) {
-      if (done) done();
-      return;
-    }
-    
-    el.textContent = text.slice(0, charIndex + 1);
-    const speed = /[.!?]/.test(text[charIndex]) ? 0 : 50;
-    setTimeout(() => typeSingleElement(el, text, charIndex + 1, done), speed);
-  }
-
-  /* ── Search scene special typewriter ─────── */
-  function typeSearchLinesBetter() {
-    const searchSpawn = document.getElementById('search-spawn');
-    if (!searchSpawn) return;
-
-    const lines = [
-      'Searching social media...',
-      'Checking dating apps...',
-      'Looking through contacts...',
-      'Found it! Instagram profile located!'
-    ];
-
-    // Clear and prepare the container
-    searchSpawn.innerHTML = '';
-    searchSpawn.style.whiteSpace = 'pre-line';
-    searchSpawn.style.textAlign = 'left';
-
-    let lineIndex = 0;
-    let charIndex = 0;
-    let currentText = '';
-
-    const typeWriter = () => {
-      if (lineIndex < lines.length) {
-        const currentLine = lines[lineIndex];
-        
-        if (charIndex < currentLine.length) {
-          // Add character by character
-          currentText += currentLine[charIndex];
-          searchSpawn.textContent = currentText;
-          charIndex++;
-          
-          // Slower speed for reading (120ms per character)
-          setTimeout(typeWriter, 120);
-        } else {
-          // Line complete, add newline and move to next line
-          currentText += '\n';
-          searchSpawn.textContent = currentText;
-          lineIndex++;
-          charIndex = 0;
-          
-          // Pause between lines (800ms for reading)
-          setTimeout(typeWriter, 800);
-        }
-      } else {
-        // Animation complete, keep text visible
-        setTimeout(() => {
-          currentText = '';
-          searchSpawn.textContent = currentText;
-          lineIndex = 0;
-          charIndex = 0;
-          typeWriter(); // Restart animation
-        }, 2000);
-      }
-    };
-
-    typeWriter();
-  }
-
-  /* ════════════════════════════════════════════
      MUSIC TOGGLE
   ════════════════════════════════════════════ */
   const musicBtn = document.createElement("button");
@@ -383,8 +252,7 @@
   document.body.appendChild(hint);
   setTimeout(() => hint.remove(), 3500);
 
-  /* ── Init ─────────────────────────────────── */
+  /* ── Init ───────────────────────────────────/*  Init  */
   updateNav();
-  setTimeout(() => scheduleTypewriter(slides[0]), 350);
 
 })();
