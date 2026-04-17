@@ -313,14 +313,15 @@
     ">> SEARCHING: sharp wit............... ✓",
     ">> SEARCHING: warm eyes............... ✓",
     ">> SEARCHING: unmatched sex appeal.... ✓",
+    ">> SEARCHING: good sense of humor..... ✓",
+    ">> SEARCHING: emotionally mature...... ✓",
+    ">> SEARCHING: has chest hair.......... ✓",
     "[ CROSS-REFERENCING PARAMETERS ]",
     ">> MATCH CONFIDENCE: 99.9%",
     "[ WARNING: SUBJECT IS TOO CHARMING ]",
     "[ ALERT: HEART RATE SPIKE DETECTED ]",
-    ">> SEARCHING: makes her laugh......... ✓",
-    ">> SEARCHING: worth chasing........... ✓",
     "[ ANALYSIS COMPLETE ]",
-    "[ TARGET ACQUIRED. ]",
+    "[ TARGET ACQUIRED! ]",
   ];
 
   function spawnScanLine() {
