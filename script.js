@@ -119,11 +119,20 @@
     if (isAnimating || index < 0 || index >= total) return;
     isAnimating = true;
 
+    const leaving = current;
     slides[index].scrollTop = 0;
     current = index;
     container.style.transform = `translateX(-${current * 100}vw)`;
 
     updateNav();
+
+    /* Kiss emoji effect */
+    if (slides[current] === kissSlide) startKisses();
+    else if (slides[leaving] === kissSlide) stopKisses();
+
+    /* Inspector scan text effect */
+    if (slides[current] === inspectorSlide) startScan();
+    else if (slides[leaving] === inspectorSlide) stopScan();
 
     container.addEventListener("transitionend", function onEnd() {
       container.removeEventListener("transitionend", onEnd);
@@ -251,6 +260,96 @@
   hint.innerHTML = `<span>👆</span> Swipe, scroll or use arrows`;
   document.body.appendChild(hint);
   setTimeout(() => hint.remove(), 3500);
+
+  /* ════════════════════════════════════════════
+     KISS EMOJI BURST — #kiss-again-slide
+  ════════════════════════════════════════════ */
+  const kissSlide   = document.getElementById("kiss-again-slide");
+  let   kissTimers  = [];
+
+  function spawnKiss() {
+    const el = document.createElement("span");
+    el.className  = "kiss-float";
+    el.textContent = ["💋", "😘", "💋", "💋", "😘"][Math.floor(Math.random() * 5)];
+
+    el.style.left   = Math.random() * 90 + 5 + "%";
+    el.style.bottom = Math.random() * 30 + 5 + "%";
+
+    kissSlide.appendChild(el);
+    setTimeout(() => el.remove(), 2200);
+  }
+
+  function startKisses() {
+    stopKisses();
+    /* Initial burst */
+    for (let i = 0; i < 6; i++) {
+      kissTimers.push(setTimeout(spawnKiss, i * 120));
+    }
+    /* Continuous drizzle */
+    kissTimers.push(setInterval(spawnKiss, 500));
+  }
+
+  function stopKisses() {
+    kissTimers.forEach(clearTimeout);
+    kissTimers.forEach(clearInterval);
+    kissTimers = [];
+    kissSlide.querySelectorAll(".kiss-float").forEach(el => el.remove());
+  }
+
+  /* ════════════════════════════════════════════
+     SCAN TEXT FLOAT — #inspector-slide
+  ════════════════════════════════════════════ */
+  const inspectorSlide = document.getElementById("inspector-slide");
+  let   scanTimers     = [];
+  let   scanIndex      = 0;
+
+  const scanLines = [
+    "[ INITIATING PROTOCOL... ]",
+    "[ SCANNING SUBJECT DATABASE ]",
+    ">> SEARCHING: great smile............. ✓",
+    ">> SEARCHING: kind soul............... ✓",
+    ">> SEARCHING: heart of gold........... ✓",
+    ">> SEARCHING: infectious laugh........ ✓",
+    ">> SEARCHING: sharp wit............... ✓",
+    ">> SEARCHING: warm eyes............... ✓",
+    ">> SEARCHING: unmatched sex appeal.... ✓",
+    ">> SEARCHING: good sense of humor..... ✓",
+    ">> SEARCHING: emotionally mature...... ✓",
+    ">> SEARCHING: has chest hair.......... ✓",
+    "[ CROSS-REFERENCING PARAMETERS ]",
+    ">> MATCH CONFIDENCE: 99.9%",
+    "[ WARNING: SUBJECT IS TOO CHARMING ]",
+    "[ ALERT: HEART RATE SPIKE DETECTED ]",
+    "[ ANALYSIS COMPLETE ]",
+    "[ TARGET ACQUIRED! ]",
+  ];
+
+  function spawnScanLine() {
+    const el = document.createElement("span");
+    el.className   = "scan-float";
+    el.textContent = scanLines[scanIndex % scanLines.length];
+    scanIndex++;
+
+    el.style.left = Math.random() * 60 + 5 + "%";
+    el.style.top  = Math.random() * 75 + 5 + "%";
+
+    inspectorSlide.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+  }
+
+  function startScan() {
+    stopScan();
+    scanIndex = 0;
+    spawnScanLine();
+    scanTimers.push(setInterval(spawnScanLine, 900));
+  }
+
+  function stopScan() {
+    scanTimers.forEach(clearInterval);
+    scanTimers.forEach(clearTimeout);
+    scanTimers = [];
+    inspectorSlide.querySelectorAll(".scan-float").forEach(el => el.remove());
+  }
 
   /* ── Init ───────────────────────────────────/*  Init  */
   updateNav();
