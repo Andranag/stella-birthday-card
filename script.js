@@ -311,16 +311,16 @@
   const scanLines = [
     "[ INITIATING PROTOCOL... ]",
     "[ SCANNING SUBJECT DATABASE ]",
-    ">> SEARCHING: great smile............. ",
-    ">> SEARCHING: kind soul............... ",
-    ">> SEARCHING: heart of gold........... ",
-    ">> SEARCHING: infectious laugh........ ",
-    ">> SEARCHING: sharp wit............... ",
-    ">> SEARCHING: warm eyes............... ",
-    ">> SEARCHING: unmatched sex appeal.... ",
-    ">> SEARCHING: good sense of humor..... ",
-    ">> SEARCHING: emotionally mature...... ",
-    ">> SEARCHING: has chest hair.......... ",
+    ">> SEARCHING: great smile... ✓",
+    ">> SEARCHING: kind soul... ✓",
+    ">> SEARCHING: heart of gold... ✓",
+    ">> SEARCHING: infectious laugh... ✓",
+    ">> SEARCHING: sharp wit... ✓",
+    ">> SEARCHING: warm eyes... ✓",
+    ">> SEARCHING: unmatched sex appeal... ✓",
+    ">> SEARCHING: good sense of humor... ✓",
+    ">> SEARCHING: emotionally mature... ✓",
+    ">> SEARCHING: has chest hair... ✓",
     "[ CROSS-REFERENCING PARAMETERS ]",
     ">> MATCH CONFIDENCE: 99.9%",
     "[ WARNING: SUBJECT IS TOO CHARMING ]",
@@ -335,8 +335,31 @@
     el.textContent = scanLines[scanIndex % scanLines.length];
     scanIndex++;
 
-    el.style.left = Math.random() * 60 + 5 + "%";
-    el.style.top  = Math.random() * 75 + 5 + "%";
+    /* Alternate between left edge and right edge, never over the centre text */
+    const onLeft = scanIndex % 2 === 0;
+    if (onLeft) {
+      el.style.left = (Math.random() * 18) + "%";
+    } else {
+      el.classList.add("scan-right");
+    }
+
+    /* Pick a Y slot that doesn't collide with any currently visible float */
+    const slotH   = 11;  /* percent — min gap between floats */
+    const minTop  = 5;
+    const maxTop  = 88;
+    const slots   = Math.floor((maxTop - minTop) / slotH);
+    const occupied = Array.from(
+      inspectorSlide.querySelectorAll(".scan-float")
+    ).map(f => parseFloat(f.style.top));
+
+    let top = minTop + Math.floor(Math.random() * slots) * slotH;
+    for (let tries = 0; tries < slots; tries++) {
+      const conflict = occupied.some(y => Math.abs(y - top) < slotH);
+      if (!conflict) break;
+      top = minTop + ((Math.floor((top - minTop) / slotH) + 1) % slots) * slotH;
+    }
+
+    el.style.top = top + "%";
 
     inspectorSlide.appendChild(el);
     setTimeout(() => el.remove(), 5000);
@@ -396,7 +419,24 @@
 
   initPeekHints();
 
-  /*  Init  */
+  /* ════════════════════════════════════════════
+     DRUM ROLL — clickable 🥁 paragraphs
+  ════════════════════════════════════════════ */
+  const drumAudio = new Audio("assets/music/drum-roll-sound-effect.mp3");
+  drumAudio.volume = 0.7;
+
+  document.querySelectorAll(".drum-roll").forEach(p => {
+    p.addEventListener("click", () => {
+      drumAudio.currentTime = 0;
+      drumAudio.play().catch(() => {});
+      p.classList.remove("playing");
+      void p.offsetWidth; /* force reflow to restart animation */
+      p.classList.add("playing");
+      p.addEventListener("animationend", () => p.classList.remove("playing"), { once: true });
+    });
+  });
+
+  /* ── Init ─────────────────────────────────── */
   updateNav();
 
 })();

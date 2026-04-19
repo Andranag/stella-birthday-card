@@ -531,19 +531,26 @@ footer.slide { justify-content: center; padding: 40px 24px 60px; }
 .scan-float {
   position: absolute;
   font-family: 'Courier New', monospace;
-  font-size: clamp(0.78rem, 1.6vw, 1rem);
+  font-size: clamp(0.78rem, 1.5vw, 1rem);
   font-weight: 700;
   color: #a8ffda;
   white-space: nowrap;
+  max-width: 28vw;
   pointer-events: none;
   user-select: none;
   background: rgba(0, 20, 10, 0.72);
   border: 1px solid rgba(105,240,174,0.25);
   border-radius: 6px;
-  padding: 3px 10px;
+  padding: 6px 12px;
+  line-height: 1.6;
   text-shadow: 0 0 10px rgba(105,240,174,0.9);
   animation: scanFade 5s ease-out forwards;
   z-index: 10;
+}
+
+.scan-float.scan-right {
+  left: auto;
+  right: 0;
 }
 
 @keyframes scanFade {
@@ -617,6 +624,57 @@ footer.slide { justify-content: center; padding: 40px 24px 60px; }
   .dance-row .gift-img { width: clamp(120px, 28vw, 200px); }
   .search-scene { flex-direction: column; }
   .search-scene .gift-img { width: min(75vw, 280px); margin: 0 auto; }
+}
+
+/* ─────────────────────────────────────────
+   DRUM ROLL — clickable 🥁 lines
+───────────────────────────────────────── */
+.drum-roll {
+  cursor: pointer;
+  display: inline-block;
+  padding: 6px 18px;
+  border: 2px solid rgba(255, 215, 0, 0.55);
+  border-radius: 40px;
+  background: rgba(255, 215, 0, 0.08);
+  color: var(--gold-light);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  user-select: none;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+  animation: drumPulse 2s ease-in-out infinite;
+}
+
+.drum-roll::after {
+  content: ' 👆 tap me!';
+  font-size: 0.7em;
+  opacity: 0.6;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.drum-roll:hover {
+  background: rgba(255, 215, 0, 0.18);
+  border-color: var(--gold);
+  transform: scale(1.04);
+  animation: none;
+}
+
+.drum-roll.playing {
+  animation: drumShake 0.5s ease;
+}
+
+@keyframes drumPulse {
+  0%, 100% { box-shadow: 0 0 0px rgba(255,215,0,0); }
+  50%       { box-shadow: 0 0 14px rgba(255,215,0,0.45); }
+}
+
+@keyframes drumShake {
+  0%   { transform: translateX(0)    scale(1); }
+  20%  { transform: translateX(-5px) scale(1.05) rotate(-1deg); }
+  40%  { transform: translateX(5px)  scale(1.05) rotate(1deg); }
+  60%  { transform: translateX(-4px) scale(1.03) rotate(-0.5deg); }
+  80%  { transform: translateX(4px)  scale(1.03) rotate(0.5deg); }
+  100% { transform: translateX(0)    scale(1); }
 }
 
 /* ─────────────────────────────────────────
