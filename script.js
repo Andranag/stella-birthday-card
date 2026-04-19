@@ -1,21 +1,21 @@
-/* ─────────────────────────────────────────
-   script.js — Birthday Story Interactive
+/* 
+   script.js  Birthday Story Interactive
    Features: horizontal slide layout builder,
    swipe + scroll + keyboard navigation,
    typewriter effect, music toggle.
-───────────────────────────────────────── */
+ */
 
 (function () {
   "use strict";
 
-  /* ── DOM refs ─────────────────────────────── */
+  /*  DOM refs  */
   const container = document.getElementById("swipe-container");
   const prevBtn   = document.getElementById("prev-page");
   const nextBtn   = document.getElementById("next-page");
   const indicator = document.getElementById("page-indicator");
   const storyEl   = document.getElementById("story");
 
-  /* ── Slides ───────────────────────────────── */
+  /*  Slides  */
   const slides = Array.from(container.querySelectorAll(".slide"));
   const total  = slides.length;
   let current  = 0;
@@ -23,15 +23,15 @@
 
   container.style.width = `${total * 100}vw`;
 
-  /* ════════════════════════════════════════════
+  /* 
      LAYOUT BUILDER
      Wraps each gift-article's content into
      a three-column grid:
        [left video] [text block] [right video]
-     Runs once at startup — does NOT touch
+     Runs once at startup  does NOT touch
      special slides (header, footer,
      dance-collage, search-scene).
-  ════════════════════════════════════════════ */
+   */
   function buildLayouts() {
     slides.forEach((slide) => {
       /* Skip non-gift slides */
@@ -112,9 +112,9 @@
 
   buildLayouts();
 
-  /* ════════════════════════════════════════════
+  /* 
      NAVIGATION
-  ════════════════════════════════════════════ */
+   */
   function goTo(index) {
     if (isAnimating || index < 0 || index >= total) return;
     isAnimating = true;
@@ -134,6 +134,13 @@
     if (slides[current] === inspectorSlide) startScan();
     else if (slides[leaving] === inspectorSlide) stopScan();
 
+    /* Reset peek hints on the slide we are leaving */
+    slides[leaving].querySelectorAll(".peek-hint.revealed").forEach(p => {
+      p.classList.remove("revealed");
+      const btn = p.querySelector(".peek-btn");
+      if (btn) btn.textContent = p.dataset.label || "spoiler";
+    });
+
     container.addEventListener("transitionend", function onEnd() {
       container.removeEventListener("transitionend", onEnd);
       isAnimating = false;
@@ -150,11 +157,11 @@
   prevBtn.addEventListener("click", () => goTo(current - 1));
   nextBtn.addEventListener("click", () => goTo(current + 1));
 
-  /* ── Keyboard ─────────────────────────────── */
+  /*  Keyboard  */
   document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight" || e.key === "ArrowDown")  goTo(current + 1);
     if (e.key === "ArrowLeft"  || e.key === "ArrowUp")    goTo(current - 1);
-    
+
     /* Dev feature: Press 'G' to jump to a specific slide */
     if (e.key === "g" || e.key === "G") {
       const slideNum = prompt(`Jump to slide (1-${total}):`, `${current + 1}`);
@@ -169,19 +176,17 @@
     }
   });
 
-  /* ── Wheel / Trackpad scroll ──────────────── */
+  /*  Wheel / Trackpad scroll  */
   let scrollCooldown = false;
 
   storyEl.addEventListener("wheel", (e) => {
-    /* Ignore vertical scrolling within a slide that has overflow */
-    const slide = slides[current];
+    const slide    = slides[current];
     const atBottom = slide.scrollTop + slide.clientHeight >= slide.scrollHeight - 5;
     const atTop    = slide.scrollTop <= 5;
 
     const goingDown = e.deltaY > 0;
     const goingUp   = e.deltaY < 0;
 
-    /* Only change slide when at the edge of scroll */
     if ((goingDown && !atBottom) || (goingUp && !atTop)) return;
     if (scrollCooldown) return;
 
@@ -193,7 +198,7 @@
     else           goTo(current - 1);
   }, { passive: false });
 
-  /* ── Touch / Swipe ────────────────────────── */
+  /*  Touch / Swipe  */
   let touchStartX = 0;
   let touchStartY = 0;
   let touchMoved  = false;
@@ -216,9 +221,9 @@
     }
   }, { passive: true });
 
-  /* ════════════════════════════════════════════
+  /* 
      MUSIC TOGGLE
-  ════════════════════════════════════════════ */
+   */
   const musicBtn = document.createElement("button");
   musicBtn.id = "music-btn";
   musicBtn.setAttribute("aria-label", "Toggle background music");
@@ -254,22 +259,22 @@
     }
   });
 
-  /* ── Swipe / scroll hint ──────────────────── */
+  /*  Swipe / scroll hint  */
   const hint = document.createElement("div");
   hint.id = "swipe-hint";
   hint.innerHTML = `<span>👆</span> Swipe, scroll or use arrows`;
   document.body.appendChild(hint);
   setTimeout(() => hint.remove(), 3500);
 
-  /* ════════════════════════════════════════════
-     KISS EMOJI BURST — #kiss-again-slide
-  ════════════════════════════════════════════ */
-  const kissSlide   = document.getElementById("kiss-again-slide");
-  let   kissTimers  = [];
+  /* 
+     KISS EMOJI BURST  #kiss-again-slide
+   */
+  const kissSlide  = document.getElementById("kiss-again-slide");
+  let   kissTimers = [];
 
   function spawnKiss() {
     const el = document.createElement("span");
-    el.className  = "kiss-float";
+    el.className   = "kiss-float";
     el.textContent = ["💋", "😘", "💋", "💋", "😘"][Math.floor(Math.random() * 5)];
 
     el.style.left   = Math.random() * 90 + 5 + "%";
@@ -296,9 +301,9 @@
     kissSlide.querySelectorAll(".kiss-float").forEach(el => el.remove());
   }
 
-  /* ════════════════════════════════════════════
-     SCAN TEXT FLOAT — #inspector-slide
-  ════════════════════════════════════════════ */
+  /* 
+     SCAN TEXT FLOAT  #inspector-slide
+   */
   const inspectorSlide = document.getElementById("inspector-slide");
   let   scanTimers     = [];
   let   scanIndex      = 0;
@@ -306,16 +311,16 @@
   const scanLines = [
     "[ INITIATING PROTOCOL... ]",
     "[ SCANNING SUBJECT DATABASE ]",
-    ">> SEARCHING: great smile............. ✓",
-    ">> SEARCHING: kind soul............... ✓",
-    ">> SEARCHING: heart of gold........... ✓",
-    ">> SEARCHING: infectious laugh........ ✓",
-    ">> SEARCHING: sharp wit............... ✓",
-    ">> SEARCHING: warm eyes............... ✓",
-    ">> SEARCHING: unmatched sex appeal.... ✓",
-    ">> SEARCHING: good sense of humor..... ✓",
-    ">> SEARCHING: emotionally mature...... ✓",
-    ">> SEARCHING: has chest hair.......... ✓",
+    ">> SEARCHING: great smile............. ",
+    ">> SEARCHING: kind soul............... ",
+    ">> SEARCHING: heart of gold........... ",
+    ">> SEARCHING: infectious laugh........ ",
+    ">> SEARCHING: sharp wit............... ",
+    ">> SEARCHING: warm eyes............... ",
+    ">> SEARCHING: unmatched sex appeal.... ",
+    ">> SEARCHING: good sense of humor..... ",
+    ">> SEARCHING: emotionally mature...... ",
+    ">> SEARCHING: has chest hair.......... ",
     "[ CROSS-REFERENCING PARAMETERS ]",
     ">> MATCH CONFIDENCE: 99.9%",
     "[ WARNING: SUBJECT IS TOO CHARMING ]",
@@ -351,7 +356,47 @@
     inspectorSlide.querySelectorAll(".scan-float").forEach(el => el.remove());
   }
 
-  /* ── Init ───────────────────────────────────/*  Init  */
+  /* 
+     PEEK HINTS  spoiler / reference / check out
+     Hides the text inside .peek-hint elements
+     and shows a toggle button to reveal/hide it.
+     Resets to hidden whenever you navigate away.
+   */
+  function initPeekHints() {
+    document.querySelectorAll(".peek-hint").forEach(p => {
+      const label       = p.dataset.label || "spoiler";
+      const originalHTML = p.innerHTML;
+
+      const btn = document.createElement("button");
+      btn.className = "peek-btn";
+      btn.textContent = label;
+      btn.setAttribute("aria-label", `Reveal ${label}`);
+
+      const textSpan = document.createElement("span");
+      textSpan.className = "peek-text";
+      textSpan.innerHTML = originalHTML;
+
+      p.innerHTML = "";
+      p.appendChild(btn);
+      p.appendChild(textSpan);
+
+      function updateBtn() {
+        const revealed = p.classList.contains("revealed");
+        btn.textContent = revealed ? "hide" : label;
+        btn.style.opacity  = revealed ? "0.45" : "";
+        btn.style.fontSize = revealed ? "0.65em" : "";
+      }
+
+      btn.addEventListener("click", () => {
+        p.classList.toggle("revealed");
+        updateBtn();
+      });
+    });
+  }
+
+  initPeekHints();
+
+  /*  Init  */
   updateNav();
 
 })();

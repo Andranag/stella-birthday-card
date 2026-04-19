@@ -618,3 +618,47 @@ footer.slide { justify-content: center; padding: 40px 24px 60px; }
   .search-scene { flex-direction: column; }
   .search-scene .gift-img { width: min(75vw, 280px); margin: 0 auto; }
 }
+
+/* ─────────────────────────────────────────
+   PEEK HINT — spoiler / reference / check out
+───────────────────────────────────────── */
+.peek-hint {
+  display: block;
+  min-height: 1.6em;
+}
+
+.peek-hint .peek-text {
+  display: none;
+}
+
+.peek-hint.revealed .peek-text {
+  display: inline;
+}
+
+.peek-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.72em;
+  font-family: inherit;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  vertical-align: middle;
+}
+
+.peek-btn::before {
+  content: '👀';
+  font-size: 0.9em;
+}
+
+.peek-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.5);
+}
