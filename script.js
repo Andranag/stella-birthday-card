@@ -29,8 +29,7 @@
      a three-column grid:
        [left video] [text block] [right video]
      Runs once at startup  does NOT touch
-     special slides (header, footer,
-     dance-collage, search-scene).
+     non-gift slides (header, footer).
    */
   function buildLayouts() {
     slides.forEach((slide) => {
@@ -38,8 +37,6 @@
       if (!slide.classList.contains("gift-article")) return;
       /* Skip already-processed or special-layout slides */
       if (slide.querySelector(".slide-layout"))    return;
-      if (slide.querySelector(".dance-collage"))   return;
-      if (slide.querySelector(".search-scene"))    return;
 
       /* Collect direct children */
       const children = Array.from(slide.childNodes).filter(
@@ -134,11 +131,24 @@
     if (slides[current] === inspectorSlide) startScan();
     else if (slides[leaving] === inspectorSlide) stopScan();
 
+    /* Final slide video with audio */
+    if (slides[current] === finalSlide) startFinalVideo();
+    else if (slides[leaving] === finalSlide) stopFinalVideo();
+
+    /* Stop any text-to-sound audio on the slide we are leaving */
+    slides[leaving].querySelectorAll(".text-to-sound").forEach(btn => {
+      const src = btn.dataset.sound;
+      if (src && soundCache[src]) {
+        soundCache[src].pause();
+        soundCache[src].currentTime = 0;
+      }
+      btn.classList.remove("playing");
+    });
+
     /* Reset peek hints on the slide we are leaving */
-    slides[leaving].querySelectorAll(".peek-hint.revealed").forEach(p => {
-      p.classList.remove("revealed");
-      const btn = p.querySelector(".peek-btn");
-      if (btn) btn.textContent = p.dataset.label || "spoiler";
+    slides[leaving].querySelectorAll(".peek-hint.revealed").forEach(btn => {
+      btn.classList.remove("revealed");
+      if (btn.firstChild) btn.firstChild.textContent = btn.dataset.label || "spoiler";
     });
 
     container.addEventListener("transitionend", function onEnd() {
@@ -302,8 +312,19 @@
   }
 
   /* 
-     SCAN TEXT FLOAT  #inspector-slide
+     FINAL SLIDE VIDEO — plays audio only when on the slide
    */
+  const finalSlide = document.getElementById("final-slide");
+  const finalVideo = finalSlide ? finalSlide.querySelector(".gift-video") : null;
+
+  function startFinalVideo() {
+    if (finalVideo) finalVideo.play().catch(() => {});
+  }
+
+  function stopFinalVideo() {
+    if (finalVideo) { finalVideo.pause(); finalVideo.currentTime = 0; }
+  }
+
   const inspectorSlide = document.getElementById("inspector-slide");
   let   scanTimers     = [];
   let   scanIndex      = 0;
@@ -386,32 +407,25 @@
      Resets to hidden whenever you navigate away.
    */
   function initPeekHints() {
-    document.querySelectorAll(".peek-hint").forEach(p => {
-      const label       = p.dataset.label || "spoiler";
-      const originalHTML = p.innerHTML;
-
-      const btn = document.createElement("button");
-      btn.className = "peek-btn";
-      btn.textContent = label;
-      btn.setAttribute("aria-label", `Reveal ${label}`);
+    document.querySelectorAll(".peek-hint").forEach(btn => {
+      const label        = btn.dataset.label || "spoiler";
+      const originalHTML = btn.innerHTML;
 
       const textSpan = document.createElement("span");
       textSpan.className = "peek-text";
       textSpan.innerHTML = originalHTML;
 
-      p.innerHTML = "";
-      p.appendChild(btn);
-      p.appendChild(textSpan);
+      btn.innerHTML = label;
+      btn.setAttribute("aria-label", `Reveal ${label}`);
+      btn.appendChild(textSpan);
 
       function updateBtn() {
-        const revealed = p.classList.contains("revealed");
-        btn.textContent = revealed ? "hide" : label;
-        btn.style.opacity  = revealed ? "0.45" : "";
-        btn.style.fontSize = revealed ? "0.65em" : "";
+        const revealed = btn.classList.contains("revealed");
+        btn.firstChild.textContent = revealed ? "hide" : label;
       }
 
       btn.addEventListener("click", () => {
-        p.classList.toggle("revealed");
+        btn.classList.toggle("revealed");
         updateBtn();
       });
     });
@@ -420,17 +434,28 @@
   initPeekHints();
 
   /* ════════════════════════════════════════════
-     DRUM ROLL — clickable 🥁 paragraphs
+     TEXT TO SOUND — clickable sound elements
   ════════════════════════════════════════════ */
-  const drumAudio = new Audio("assets/music/drum-roll-sound-effect.mp3");
-  drumAudio.volume = 0.7;
+  const soundCache = {};
 
-  document.querySelectorAll(".drum-roll").forEach(p => {
+  function getSound(src) {
+    if (!soundCache[src]) {
+      const a = new Audio(src);
+      a.volume = 0.7;
+      soundCache[src] = a;
+    }
+    return soundCache[src];
+  }
+
+  document.querySelectorAll(".text-to-sound").forEach(p => {
+    const src = p.dataset.sound;
+    if (!src) return;
     p.addEventListener("click", () => {
-      drumAudio.currentTime = 0;
-      drumAudio.play().catch(() => {});
+      const audio = getSound(src);
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
       p.classList.remove("playing");
-      void p.offsetWidth; /* force reflow to restart animation */
+      void p.offsetWidth;
       p.classList.add("playing");
       p.addEventListener("animationend", () => p.classList.remove("playing"), { once: true });
     });
