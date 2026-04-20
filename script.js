@@ -12,7 +12,7 @@
   const container = document.getElementById("swipe-container");
   const prevBtn   = document.getElementById("prev-page");
   const nextBtn   = document.getElementById("next-page");
-  const indicator = document.getElementById("page-indicator");
+  const indicator = document.getElementById("top-indicator");
   const storyEl   = document.getElementById("story");
 
   /*  Slides  */
