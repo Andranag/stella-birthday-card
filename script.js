@@ -13,6 +13,7 @@
   const prevBtn   = document.getElementById("prev-page");
   const nextBtn   = document.getElementById("next-page");
   const indicator = document.getElementById("top-indicator");
+  const progressFill = document.getElementById("progress-fill");
   const storyEl   = document.getElementById("story");
 
   /*  Slides  */
@@ -165,6 +166,10 @@
     indicator.textContent = `${current + 1} / ${total}`;
     prevBtn.disabled = current === 0;
     nextBtn.disabled = current === total - 1;
+    if (progressFill) {
+      const progress = ((current + 1) / total) * 100;
+      progressFill.style.width = `${progress}%`;
+    }
   }
 
   /* Buttons */

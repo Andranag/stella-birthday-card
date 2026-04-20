@@ -122,12 +122,36 @@ body::after {
   font-size: clamp(1.3rem, 3vw, 1.9rem);
   line-height: 1.4;
   letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+
+#header h1 button.text-to-sound {
   background: linear-gradient(135deg, var(--gold), var(--rose), var(--sky));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: shimmer 3s ease-in-out infinite alternate;
-  margin-bottom: 10px;
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,215,0,0.1);
+  font-size: inherit;
+  font-weight: inherit;
+  font-family: inherit;
+  width: auto;
+  padding: 8px 24px;
+}
+
+#header h1 button.text-to-sound:hover {
+  background: linear-gradient(135deg, var(--gold), var(--rose), var(--sky));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border-color: var(--gold);
+  box-shadow: 0 0 30px rgba(255,215,0,0.4), inset 0 0 30px rgba(255,215,0,0.15);
+  transform: scale(1.02);
+}
+
+#header h1 button.text-to-sound::after {
+  display: none;
 }
 @keyframes shimmer {
   0%   { filter: drop-shadow(0 2px 8px rgba(255,215,0,0.4)); }
@@ -284,6 +308,26 @@ body::after {
 footer.slide { justify-content: center; padding: 40px 24px 60px; }
 
 /* ─────────────────────────────────────────
+   PROGRESS BAR — at very top
+───────────────────────────────────────── */
+#progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 215, 0, 0.15);
+  z-index: 1000;
+}
+#progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--rose-light) 50%, var(--sky-light) 100%);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  transition: width 0.4s ease;
+}
+
+/* ─────────────────────────────────────────
    TOP PAGE INDICATOR
 ───────────────────────────────────────── */
 #top-indicator {
@@ -415,11 +459,7 @@ footer.slide { justify-content: center; padding: 40px 24px 60px; }
 }
 
 .text-to-sound::after {
-  content: ' 👆 tap me!';
-  font-size: 0.7em;
-  opacity: 0.6;
-  font-weight: 400;
-  letter-spacing: 0;
+  display: none;
 }
 
 .text-to-sound:hover {
