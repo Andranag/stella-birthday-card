@@ -306,7 +306,9 @@ footer.slide { justify-content: center; padding: 40px 24px 60px; }
 ───────────────────────────────────────── */
 .text-to-sound {
   cursor: pointer;
-  display: inline-block;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
   padding: 6px 18px;
   font-size: 0.85em;
   font-family: inherit;

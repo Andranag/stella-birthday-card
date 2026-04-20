@@ -135,6 +135,10 @@
     if (slides[current] === finalSlide) startFinalVideo();
     else if (slides[leaving] === finalSlide) stopFinalVideo();
 
+    /* Dance section background song */
+    if (isInDanceSection(slides[current]) && !isInDanceSection(slides[leaving])) startDanceMusic();
+    else if (!isInDanceSection(slides[current]) && isInDanceSection(slides[leaving])) stopDanceMusic();
+
     /* Stop any text-to-sound audio on the slide we are leaving */
     slides[leaving].querySelectorAll(".text-to-sound").forEach(btn => {
       const src = btn.dataset.sound;
@@ -325,6 +329,31 @@
     if (finalVideo) { finalVideo.pause(); finalVideo.currentTime = 0; }
   }
 
+  /* 
+     DANCE SECTION SONG — plays across slides #dance-section-start to #dance-section-end
+   */
+  const danceSectionStart = document.getElementById("dance-section-start");
+  const danceSectionEnd   = document.getElementById("dance-section-end");
+  const danceSectionIdxStart = slides.indexOf(danceSectionStart);
+  const danceSectionIdxEnd   = slides.indexOf(danceSectionEnd);
+  const danceSectionAudio = new Audio("assets/music/put your head on my shoulder.mp3");
+  danceSectionAudio.loop   = true;
+  danceSectionAudio.volume = 0.7;
+
+  function isInDanceSection(slide) {
+    const idx = slides.indexOf(slide);
+    return idx >= danceSectionIdxStart && idx <= danceSectionIdxEnd;
+  }
+
+  function startDanceMusic() {
+    danceSectionAudio.play().catch(() => {});
+  }
+
+  function stopDanceMusic() {
+    danceSectionAudio.pause();
+    danceSectionAudio.currentTime = 0;
+  }
+
   const inspectorSlide = document.getElementById("inspector-slide");
   let   scanTimers     = [];
   let   scanIndex      = 0;
@@ -451,6 +480,14 @@
     const src = p.dataset.sound;
     if (!src) return;
     p.addEventListener("click", () => {
+      /* Stop any other text-to-sound audio currently playing */
+      Object.entries(soundCache).forEach(([url, audio]) => {
+        if (url !== src && !audio.paused) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      });
+
       const audio = getSound(src);
       audio.currentTime = 0;
       audio.play().catch(() => {});
