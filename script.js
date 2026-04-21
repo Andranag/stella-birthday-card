@@ -445,6 +445,20 @@
       const label        = btn.dataset.label || "spoiler";
       const originalHTML = btn.innerHTML;
 
+      // For simple-question: start blank, show ? on reveal
+      if (btn.classList.contains("simple-question")) {
+        const textSpan = document.createElement("span");
+        textSpan.className = "peek-text";
+        textSpan.innerHTML = '<span class="purple-q">?</span>';
+        btn.appendChild(textSpan);
+
+        btn.addEventListener("click", () => {
+          btn.classList.toggle("revealed");
+        });
+        return;
+      }
+
+      // Regular peek-hint buttons
       const textSpan = document.createElement("span");
       textSpan.className = "peek-text";
       textSpan.innerHTML = originalHTML;

@@ -126,6 +126,9 @@ body::after {
 }
 
 #header h1 button.text-to-sound {
+  font-family: 'Pacifico', cursive;
+  font-weight: 400;
+  letter-spacing: 0.1em;
   background: linear-gradient(135deg, var(--gold), var(--rose), var(--sky));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -134,10 +137,8 @@ body::after {
   border: 2px solid rgba(255, 215, 0, 0.5);
   box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,215,0,0.1);
   font-size: inherit;
-  font-weight: inherit;
-  font-family: inherit;
   width: auto;
-  padding: 8px 24px;
+  padding: 10px 28px;
 }
 
 #header h1 button.text-to-sound:hover {
@@ -514,38 +515,81 @@ footer.slide { justify-content: center; padding: 40px 24px 60px; }
   letter-spacing: normal;
 }
 
-/* ─────────────────────────────────────────
-   MUSIC BUTTON
-───────────────────────────────────────── */
-#music-btn {
-  position: fixed;
-  top: 18px; right: 18px;
-  z-index: 200;
-  width: 48px; height: 48px;
+/* Big purple question mark spoiler button */
+.peek-hint.big-question-spoiler {
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  border: 2px solid rgba(255,215,0,0.5);
+  border: 3px solid #9b59b6;
   background: rgba(10,5,30,0.75);
   backdrop-filter: blur(10px);
-  color: var(--gold);
-  font-size: 1.3rem;
+  color: #9b59b6;
+  font-size: 4rem;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  box-shadow: 0 0 20px rgba(155, 89, 182, 0.4);
+  animation: pulsePurple 2s ease-in-out infinite;
   -webkit-tap-highlight-color: transparent;
 }
-#music-btn:hover {
-  background: rgba(255,215,0,0.2);
-  transform: scale(1.1) rotate(10deg);
-  box-shadow: 0 0 20px rgba(255,215,0,0.4);
+
+/* Remove the 👀 emoji icon */
+.peek-hint.big-question-spoiler::before {
+  content: none;
 }
+
+/* Remove hide text that appears on reveal */
+.peek-hint.big-question-spoiler[data-label="spoiler"]::after,
+.peek-hint.big-question-spoiler.revealed::after {
+  content: none !important;
+  display: none;
+}
+
+.peek-hint.big-question-spoiler:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(155, 89, 182, 0.6);
+}
+
+@keyframes pulsePurple {
+  0%, 100% { box-shadow: 0 0 20px rgba(155, 89, 182, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(155, 89, 182, 0.7); }
+}
+
+/* Simple question mark button — only the ? is purple */
+.peek-hint.simple-question {
+  min-width: 60px;
+  min-height: 48px;
+}
+
+.peek-hint.simple-question .purple-q {
+  color: #9b59b6;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.peek-hint.simple-question::before {
+  content: none;
+}
+
+/* Remove show/hide text for this button */
+.peek-hint.simple-question::after,
+.peek-hint.simple-question.revealed::after,
+.peek-hint.simple-question[data-label="spoiler"]::after,
+.peek-hint.simple-question[data-label="spoiler"].revealed::after {
+  content: none !important;
+  display: none !important;
+}
+
 #music-btn.playing {
   animation: musicPulse 1.2s ease-in-out infinite;
   border-color: var(--gold);
   background: rgba(255,215,0,0.15);
 }
+
 @keyframes musicPulse {
   0%, 100% { box-shadow: 0 0 8px rgba(255,215,0,0.4); }
   50%       { box-shadow: 0 0 24px rgba(255,215,0,0.8); }
