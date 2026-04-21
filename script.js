@@ -275,6 +275,20 @@
   }, { passive: true });
 
   /* 
+     CONTEXT COMPASS NAVIGATION
+   */
+  document.querySelectorAll('.compass-sections li').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const targetSlide = parseInt(item.dataset.slide, 10);
+      const slideNum = Math.min(targetSlide - 1, total - 1);
+      if (slideNum >= 0) {
+        goTo(slideNum);
+      }
+    });
+  });
+
+  /* 
      MUSIC TOGGLE
    */
   const musicBtn = document.createElement("button");
