@@ -565,10 +565,23 @@ footer.slide { justify-content: center; padding: 40px 24px 60px; }
   min-height: 48px;
 }
 
+.peek-hint.simple-question .peek-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
 .peek-hint.simple-question .purple-q {
   color: #9b59b6;
   font-size: 2rem;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 .peek-hint.simple-question::before {

@@ -128,9 +128,10 @@
     if (slides[current] === kissSlide) startKisses();
     else if (slides[leaving] === kissSlide) stopKisses();
 
-    /* Inspector scan text effect */
-    if (slides[current] === inspectorSlide) startScan();
-    else if (slides[leaving] === inspectorSlide) stopScan();
+    /* Inspector scan text effect - only manual trigger via R2-D2 button */
+    else if (slides[leaving] === inspectorSlide) {
+      stopScan();
+    }
 
     /* Final slide video with audio */
     if (slides[current] === finalSlide) startFinalVideo();
@@ -139,6 +140,10 @@
     /* Dance section background song */
     if (isInDanceSection(slides[current]) && !isInDanceSection(slides[leaving])) startDanceMusic();
     else if (!isInDanceSection(slides[current]) && isInDanceSection(slides[leaving])) stopDanceMusic();
+
+    /* Sad section background song */
+    if (isInSadSection(slides[current]) && !isInSadSection(slides[leaving])) startSadMusic();
+    else if (!isInSadSection(slides[current]) && isInSadSection(slides[leaving])) stopSadMusic();
 
     /* Stop any text-to-sound audio on the slide we are leaving */
     slides[leaving].querySelectorAll(".text-to-sound").forEach(btn => {
@@ -407,6 +412,31 @@
     danceSectionAudio.currentTime = 0;
   }
 
+  /* 
+     SAD SECTION SONG - plays across slides #sad-section-start to #sad-section-end
+   */
+  const sadSectionStart = document.getElementById("sad-section-start");
+  const sadSectionEnd   = document.getElementById("sad-section-end");
+  const sadSectionIdxStart = slides.indexOf(sadSectionStart);
+  const sadSectionIdxEnd   = slides.indexOf(sadSectionEnd);
+  const sadSectionAudio = new Audio("assets/music/sad caroll.mp3");
+  sadSectionAudio.loop   = true;
+  sadSectionAudio.volume = 0.7;
+
+  function isInSadSection(slide) {
+    const idx = slides.indexOf(slide);
+    return idx >= sadSectionIdxStart && idx <= sadSectionIdxEnd;
+  }
+
+  function startSadMusic() {
+    sadSectionAudio.play().catch(() => {});
+  }
+
+  function stopSadMusic() {
+    sadSectionAudio.pause();
+    sadSectionAudio.currentTime = 0;
+  }
+
   const inspectorSlide = document.getElementById("inspector-slide");
   let   scanTimers     = [];
   let   scanIndex      = 0;
@@ -562,6 +592,15 @@
       void p.offsetWidth;
       p.classList.add("playing");
       p.addEventListener("animationend", () => p.classList.remove("playing"), { once: true });
+
+      /* Trigger scanning effect for inspector gadget button (detective theme) */
+      if (src.includes("inspector gadget.mp3")) {
+        startScan();
+        /* Auto-stop scan after the audio finishes playing */
+        audio.addEventListener("ended", () => {
+          setTimeout(stopScan, 2000); // Let final scan lines finish before stopping
+        }, { once: true });
+      }
     });
   });
 
