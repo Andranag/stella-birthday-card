@@ -183,16 +183,50 @@
 
     /* Dev feature: Press 'G' to jump to a specific slide */
     if (e.key === "g" || e.key === "G") {
-      const slideNum = prompt(`Jump to slide (1-${total}):`, `${current + 1}`);
-      if (slideNum !== null) {
-        const num = parseInt(slideNum, 10) - 1;
-        if (num >= 0 && num < total) {
-          goTo(num);
-        } else {
-          alert(`Please enter a number between 1 and ${total}`);
-        }
-      }
+      showJumpModal();
     }
+  });
+
+  /* Custom jump modal */
+  const jumpModal = document.getElementById('jump-modal');
+  const jumpInput = document.getElementById('jump-input');
+  const jumpTotal = document.getElementById('jump-total');
+  const jumpCancel = document.getElementById('jump-cancel');
+  const jumpConfirm = document.getElementById('jump-confirm');
+
+  function showJumpModal() {
+    jumpTotal.textContent = total;
+    jumpInput.value = current + 1;
+    jumpModal.style.display = 'flex';
+    jumpInput.focus();
+    jumpInput.select();
+  }
+
+  function hideJumpModal() {
+    jumpModal.style.display = 'none';
+  }
+
+  function confirmJump() {
+    const num = parseInt(jumpInput.value, 10) - 1;
+    if (num >= 0 && num < total) {
+      goTo(num);
+      hideJumpModal();
+    } else {
+      jumpInput.style.borderColor = '#e74c3c';
+      setTimeout(() => {
+        jumpInput.style.borderColor = '';
+      }, 1000);
+    }
+  }
+
+  jumpCancel.addEventListener('click', hideJumpModal);
+  jumpConfirm.addEventListener('click', confirmJump);
+  jumpInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') confirmJump();
+    if (e.key === 'Escape') hideJumpModal();
+  });
+  jumpModal.addEventListener('click', (e) => {
+    if (e.target === jumpModal) hideJumpModal();
   });
 
   /*  Wheel / Trackpad scroll  */
