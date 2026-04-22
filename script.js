@@ -169,7 +169,7 @@
 
     // Show slides based on book layout
     if (index === 0) {
-      // Blank book cover - show nothing or a simple cover image
+      // Cover page - show original slide 0 content (Happy Birthday, Babe)
       if (slides[0]) {
         slides[0].style.display = 'flex';
         slides[0].style.opacity = '1';
@@ -178,8 +178,8 @@
         slides[0].style.setProperty('left', '2.5vw', 'important');
         slides[0].style.setProperty('top', '5vh', 'important');
         slides[0].style.setProperty('position', 'absolute', 'important');
-        slides[0].style.setProperty('background', 'linear-gradient(45deg, #8B4513, #D2691E)', 'important');
-        slides[0].innerHTML = '<div style="text-align: center; color: white; font-size: 2rem;">Click to Open Book</div>';
+        // Restart videos
+        slides[0].querySelectorAll('video').forEach(v => v.play().catch(() => {}));
       }
     } else {
       // Book spread - odd page left, even page right (starting from slide 1)
