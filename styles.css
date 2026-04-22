@@ -84,29 +84,65 @@ body::before {
 #story {
   position: fixed; inset: 0; z-index: 1;
   display: flex; align-items: center; justify-content: center;
-  padding: 44px 56px 52px;
+  padding: 0;
 }
 
 #swipe-container {
   position: relative;
-  width: 100%; max-width: 520px;
-  height: 100%;
+  width: 100%;
+  height: 85vh;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ── Slides ────────────────────────────────────────────────── */
+/* Slides - Book Style Layout */
 .slide {
-  position: absolute; inset: 0;
+  position: absolute;
+  width: 80%; height: 90%;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: flex-start;
-  padding: 36px 28px 28px;
+  align-items: center; justify-content: center;
+  padding: 30px;
   overflow-y: auto; overflow-x: hidden;
   scrollbar-width: none; -ms-overflow-style: none;
   will-change: transform, opacity;
+  border-radius: 0 15px 15px 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.slide.left-page {
+  left: 0;
+  border-radius: 15px 0 0 15px;
+  transform: perspective(1000px) rotateY(5deg);
+  z-index: 5;
+}
+
+.slide.right-page {
+  right: 0;
+  border-radius: 0 15px 15px 0;
+  transform: perspective(1000px) rotateY(-5deg);
+  z-index: 5;
+}
+
+.slide.cover {
+  width: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 15px;
+  z-index: 10;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+
+.slide.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
 }
 .slide::-webkit-scrollbar { display: none; }
 
-/* Card shell — golden storybook border */
+/* Card shell - golden storybook border */
 .gift-article {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -120,6 +156,8 @@ body::before {
     inset 0 1px 0 rgba(255,255,255,0.04),
     inset 0 -1px 0 rgba(0,0,0,0.3);
   position: relative;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Ornamental corner flourishes */

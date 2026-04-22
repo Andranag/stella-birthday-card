@@ -111,6 +111,7 @@
       s.style.transform   = 'translateX(0)';
       s.style.transition  = 'none';
       s.style.pointerEvents = 'none';
+      s.classList.remove('cover', 'left-page', 'right-page', 'hidden');
     });
     if (jumpTotal) jumpTotal.textContent = total;
   }
@@ -125,70 +126,65 @@
     if (index < 0 || index >= total) return;
     if (index === current && !instant) return;
 
-    const from  = slides[current];
-    const to    = slides[index];
-    const dir   = index > current ? 1 : -1; // 1 = forward
-
+    const prevIndex = current;
+    current = index;
     animating = true;
 
-    if (instant) {
-      slides.forEach(s => {
-        s.style.display       = 'none';
-        s.style.opacity       = '0';
-        s.style.transform     = 'translateX(0)';
-        s.style.transition    = 'none';
-        s.style.pointerEvents = 'none';
-      });
-      to.style.display       = 'flex';
-      to.style.opacity       = '1';
-      to.style.transform     = 'translateX(0)';
-      to.style.pointerEvents = 'all';
-      to.scrollTop           = 0;
-      current   = index;
-      animating = false;
-      updateHUD();
-      return;
-    }
-
-    const DURATION = 520; // ms
-    const EASE     = 'cubic-bezier(0.42, 0, 0.18, 1)';
-
-    // ① Freeze "from" slide
-    from.style.transition    = `transform ${DURATION}ms ${EASE}, opacity ${DURATION}ms ease`;
-    from.style.pointerEvents = 'none';
-
-    // ② Position "to" slide off-screen instantly (no transition)
-    to.style.transition    = 'none';
-    to.style.display       = 'flex';
-    to.style.opacity       = '0.01';
-    to.style.transform     = dir > 0 ? 'translateX(100%)' : 'translateX(-100%)';
-    to.style.pointerEvents = 'none';
-    to.scrollTop           = 0;
-
-    // Force layout
-    to.offsetHeight; // eslint-disable-line
-
-    // ③ Animate both simultaneously
-    requestAnimationFrame(() => {
-      from.style.transform = dir > 0 ? 'translateX(-100%)' : 'translateX(100%)';
-      from.style.opacity   = '0';
-
-      to.style.transition  = `transform ${DURATION}ms ${EASE}, opacity ${DURATION}ms ease`;
-      to.style.transform   = 'translateX(0)';
-      to.style.opacity     = '1';
-      to.style.pointerEvents = 'all';
+    // Update slide classes for book-style layout
+    slides.forEach((slide, i) => {
+      slide.classList.remove('cover', 'left-page', 'right-page', 'hidden');
+      slide.style.transition = instant ? 'none' : 'all 0.6s cubic-bezier(0.42, 0, 0.18, 1)';
+      
+      if (i === 0 && index === 0) {
+        // First slide as cover when it's the current slide
+        slide.classList.add('cover');
+        slide.style.display = 'flex';
+        slide.style.opacity = '1';
+        slide.style.pointerEvents = 'all';
+      } else if (i === index) {
+        // Left page - current position (always horizontal layout)
+        slide.classList.add('left-page');
+        slide.style.display = 'flex';
+        slide.style.opacity = '1';
+        slide.style.pointerEvents = 'all';
+      } else if (i === index + 1) {
+        // Right page - next position (always horizontal layout)
+        slide.classList.add('right-page');
+        slide.style.display = 'flex';
+        slide.style.opacity = '1';
+        slide.style.pointerEvents = 'all';
+      } else if (i === index - 1) {
+        // Previous slide - left of current (for navigation)
+        slide.classList.add('left-page');
+        slide.style.display = 'flex';
+        slide.style.opacity = '0.3';
+        slide.style.pointerEvents = 'none';
+      } else {
+        // Hidden slides - but ensure they have base slide styling
+        slide.classList.add('hidden');
+        slide.style.display = 'none';
+        slide.style.opacity = '0';
+        slide.style.pointerEvents = 'none';
+      }
+      
+      // Ensure all slides have base slide styling
+      slide.style.width = '80%';
+      slide.style.height = '90%';
+      slide.style.position = 'absolute';
+      
+      // Reset scroll position for visible slides
+      if (slide.style.display === 'flex') {
+        slide.scrollTop = 0;
+      }
     });
 
-    // ④ Cleanup
+    // Update HUD
+    updateHUD();
+    
+    // Reset animation flag
     setTimeout(() => {
-      from.style.display       = 'none';
-      from.style.transform     = 'translateX(0)';
-      from.style.opacity       = '0';
-      from.style.transition    = 'none';
-      current   = index;
       animating = false;
-      updateHUD();
-    }, DURATION + 30);
+    }, instant ? 0 : 600);
   }
 
   function updateHUD() {
