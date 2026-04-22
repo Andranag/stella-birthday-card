@@ -1,336 +1,423 @@
-// Disney Birthday Card - Interactive Book Navigation
+/* ============================================================
+   ✨ Stella's Birthday Story — Script
+   ============================================================ */
 
-class BookNavigation {
-    constructor() {
-        this.currentSlide = 0;
-        this.slides = document.querySelectorAll('.slide');
-        this.totalSlides = this.slides.length;
-        this.isAnimating = false;
-        this.touchStartX = 0;
-        this.touchEndX = 0;
-        
-        this.init();
-    }
+(function () {
+  'use strict';
 
-    init() {
-        this.createNavigationButtons();
-        this.createBookmark();
-        this.addEventListeners();
-        this.updateProgress();
-        this.showSlide(0);
-        this.addSparkles();
-    }
+  // ── Elements ────────────────────────────────────────────────
+  const slides        = Array.from(document.querySelectorAll('.slide'));
+  const container     = document.getElementById('swipe-container');
+  const progressFill  = document.getElementById('progress-fill');
+  const indicator     = document.getElementById('top-indicator');
+  const prevBtn       = document.getElementById('prev-page');
+  const nextBtn       = document.getElementById('next-page');
+  const jumpModal     = document.getElementById('jump-modal');
+  const jumpInput     = document.getElementById('jump-input');
+  const jumpTotal     = document.getElementById('jump-total');
+  const jumpConfirm   = document.getElementById('jump-confirm');
+  const jumpCancel    = document.getElementById('jump-cancel');
+  const compassBtn    = document.getElementById('compass-trigger');
+  const compass       = document.getElementById('context-compass');
+  const tipsBar       = document.getElementById('tips-bar');
 
-    createNavigationButtons() {
-        // Previous button
-        const prevBtn = document.createElement('button');
-        prevBtn.className = 'nav-button prev';
-        prevBtn.innerHTML = '«';
-        prevBtn.setAttribute('aria-label', 'Previous page');
-        document.body.appendChild(prevBtn);
+  // ── State ────────────────────────────────────────────────────
+  const total       = slides.length;
+  let current       = 0;
+  let animating     = false;
+  let activeAudio   = null;
+  let activeAudioBtn= null;
+  let tipIndex      = 0;
 
-        // Next button
-        const nextBtn = document.createElement('button');
-        nextBtn.className = 'nav-button next';
-        nextBtn.innerHTML = '»';
-        nextBtn.setAttribute('aria-label', 'Next page');
-        document.body.appendChild(nextBtn);
-    }
+  // ── Initialise ───────────────────────────────────────────────
+  function init() {
+    buildStarfield();
+    hideAllSlides();
+    populateJumpTotal();
+    setupSlideNavigation();
+    setupSoundButtons();
+    setupPeekHints();
+    setupSimpleQuestion();
+    setupJumpModal();
+    setupCompass();
+    setupTips();
+    goTo(0, true);
+  }
 
-    createBookmark() {
-        const bookmark = document.createElement('div');
-        bookmark.className = 'bookmark';
-        bookmark.setAttribute('aria-label', 'Bookmark');
-        document.body.appendChild(bookmark);
-    }
+  // ── Starfield Canvas ─────────────────────────────────────────
+  function buildStarfield() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'starfield';
+    document.body.insertBefore(canvas, document.body.firstChild);
 
-    addEventListeners() {
-        // Navigation buttons
-        document.querySelector('.nav-button.prev').addEventListener('click', () => this.previousSlide());
-        document.querySelector('.nav-button.next').addEventListener('click', () => this.nextSlide());
+    const ctx = canvas.getContext('2d');
 
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            switch(e.key) {
-                case 'ArrowLeft':
-                    this.previousSlide();
-                    break;
-                case 'ArrowRight':
-                    this.nextSlide();
-                    break;
-                case 'Home':
-                    this.goToSlide(0);
-                    break;
-                case 'End':
-                    this.goToSlide(this.totalSlides - 1);
-                    break;
-            }
-        });
-
-        // Touch/swipe navigation
-        const container = document.getElementById('swipe-container');
-        container.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
-        container.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
-
-        // Mouse wheel navigation
-        container.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            if (e.deltaY > 0) {
-                this.nextSlide();
-            } else {
-                this.previousSlide();
-            }
-        }, { passive: false });
-
-        // Sound buttons
-        document.querySelectorAll('.text-to-sound').forEach(button => {
-            button.addEventListener('click', (e) => this.playSound(e));
-        });
-
-        // Hint buttons
-        document.querySelectorAll('.peek-hint').forEach(button => {
-            button.addEventListener('click', (e) => this.toggleHint(e));
-        });
-    }
-
-    handleTouchStart(e) {
-        this.touchStartX = e.changedTouches[0].screenX;
-    }
-
-    handleTouchEnd(e) {
-        this.touchEndX = e.changedTouches[0].screenX;
-        this.handleSwipe();
-    }
-
-    handleSwipe() {
-        const swipeThreshold = 50;
-        const diff = this.touchStartX - this.touchEndX;
-
-        if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0) {
-                this.nextSlide();
-            } else {
-                this.previousSlide();
-            }
-        }
-    }
-
-    showSlide(index) {
-        if (this.isAnimating || index < 0 || index >= this.totalSlides) return;
-
-        this.isAnimating = true;
-
-        // Hide all slides
-        this.slides.forEach((slide, i) => {
-            slide.style.display = 'none';
-            slide.classList.remove('active');
-        });
-
-        // Show current slide with animation
-        const currentSlideEl = this.slides[index];
-        currentSlideEl.style.display = 'grid';
-        currentSlideEl.classList.add('turning');
-
-        setTimeout(() => {
-            currentSlideEl.classList.remove('turning');
-            currentSlideEl.classList.add('active');
-            this.isAnimating = false;
-        }, 800);
-
-        this.currentSlide = index;
-        this.updateProgress();
-        this.updateNavigationButtons();
-    }
-
-    nextSlide() {
-        if (this.currentSlide < this.totalSlides - 1) {
-            this.showSlide(this.currentSlide + 1);
-        }
-        // Removed looping - stay at last page
-    }
-
-    previousSlide() {
-        if (this.currentSlide > 0) {
-            this.showSlide(this.currentSlide - 1);
-        }
-        // Removed looping - stay at first page
-    }
-
-    goToSlide(index) {
-        if (index >= 0 && index < this.totalSlides) {
-            this.showSlide(index);
-        }
-    }
-
-    updateProgress() {
-        const progress = ((this.currentSlide + 1) / this.totalSlides) * 100;
-        document.getElementById('progress-fill').style.width = `${progress}%`;
-    }
-
-    updateNavigationButtons() {
-        const prevBtn = document.querySelector('.nav-button.prev');
-        const nextBtn = document.querySelector('.nav-button.next');
-
-        // Update button states based on current position
-        if (this.currentSlide === 0) {
-            prevBtn.style.opacity = '0.5';
-        } else {
-            prevBtn.style.opacity = '1';
-        }
-
-        if (this.currentSlide === this.totalSlides - 1) {
-            nextBtn.style.opacity = '0.5';
-        } else {
-            nextBtn.style.opacity = '1';
-        }
-    }
-
-    playSound(e) {
-        const button = e.target;
-        const soundFile = button.getAttribute('data-sound');
-        
-        if (soundFile) {
-            // Create audio element
-            const audio = new Audio(soundFile);
-            audio.play().catch(err => {
-                console.log('Audio play failed:', err);
-            });
-
-            // Visual feedback
-            button.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                button.style.transform = '';
-            }, 200);
-        }
-    }
-
-    toggleHint(e) {
-        const button = e.target;
-        const isSpoiler = button.getAttribute('data-label') === 'spoiler';
-        
-        if (isSpoiler) {
-            // Toggle spoiler visibility
-            if (button.style.opacity === '0.3') {
-                button.style.opacity = '1';
-                button.style.filter = 'none';
-            } else {
-                button.style.opacity = '0.3';
-                button.style.filter = 'blur(4px)';
-            }
-        }
-
-        // Visual feedback
-        button.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            button.style.transform = '';
-        }, 200);
-    }
-
-    addSparkles() {
-        // Add random sparkle effects to create Disney magic
-        setInterval(() => {
-            if (Math.random() > 0.7) {
-                this.createSparkle();
-            }
-        }, 2000);
-    }
-
-    createSparkle() {
-        const sparkle = document.createElement('div');
-        sparkle.className = 'sparkle';
-        sparkle.style.left = Math.random() * window.innerWidth + 'px';
-        sparkle.style.top = Math.random() * window.innerHeight + 'px';
-        sparkle.style.animationDelay = Math.random() * 2 + 's';
-        
-        document.body.appendChild(sparkle);
-
-        // Remove sparkle after animation
-        setTimeout(() => {
-            sparkle.remove();
-        }, 2000);
-    }
-}
-
-// Page turn effects
-class PageTurnEffects {
-    constructor() {
-        this.init();
-    }
-
-    init() {
-        this.addPageCurlEffect();
-        this.addBookSoundEffects();
-    }
-
-    addPageCurlEffect() {
-        // Add subtle page curl animation on hover
-        const slides = document.querySelectorAll('.slide');
-        slides.forEach(slide => {
-            slide.addEventListener('mouseenter', () => {
-                slide.style.transform = 'rotateY(2deg)';
-            });
-
-            slide.addEventListener('mouseleave', () => {
-                slide.style.transform = 'rotateY(0deg)';
-            });
-        });
-    }
-
-    addBookSoundEffects() {
-        // Create page turn sound effect (using Web Audio API for simple sound)
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
-        window.playPageTurnSound = () => {
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
-            
-            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.1);
-        };
-    }
-}
-
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    const bookNav = new BookNavigation();
-    const pageEffects = new PageTurnEffects();
-
-    // Add page turn sound to navigation
-    const originalNextSlide = bookNav.nextSlide.bind(bookNav);
-    const originalPrevSlide = bookNav.previousSlide.bind(bookNav);
-    
-    bookNav.nextSlide = () => {
-        if (window.playPageTurnSound) {
-            window.playPageTurnSound();
-        }
-        originalNextSlide();
+    const resize = () => {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
     };
-    
-    bookNav.previousSlide = () => {
-        if (window.playPageTurnSound) {
-            window.playPageTurnSound();
-        }
-        originalPrevSlide();
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
+
+    // White star specs
+    const stars = Array.from({ length: 220 }, () => ({
+      x: Math.random(), y: Math.random(),
+      r: Math.random() * 1.3 + 0.15,
+      a: Math.random() * 0.8 + 0.1,
+      speed: Math.random() * 0.6 + 0.1,
+      phase: Math.random() * Math.PI * 2
+    }));
+
+    // Gold dust specs
+    const dust = Array.from({ length: 28 }, () => ({
+      x: Math.random(), y: Math.random(),
+      r: Math.random() * 1.6 + 0.4,
+      a: Math.random() * 0.4 + 0.05,
+      speed: Math.random() * 0.25 + 0.05,
+      phase: Math.random() * Math.PI * 2
+    }));
+
+    let t = 0;
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      t += 0.004;
+
+      stars.forEach(s => {
+        const alpha = s.a * (0.45 + 0.55 * Math.sin(t * s.speed + s.phase));
+        ctx.beginPath();
+        ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${alpha.toFixed(3)})`;
+        ctx.fill();
+      });
+
+      dust.forEach(s => {
+        const alpha = s.a * (0.35 + 0.65 * Math.sin(t * s.speed + s.phase));
+        ctx.beginPath();
+        ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(245,197,24,${alpha.toFixed(3)})`;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
     };
+    draw();
+  }
 
-    // Make bookNav globally accessible for debugging
-    window.bookNav = bookNav;
-});
+  // ── Slide System ─────────────────────────────────────────────
+  function hideAllSlides() {
+    slides.forEach(s => {
+      s.style.display     = 'none';
+      s.style.opacity     = '0';
+      s.style.transform   = 'translateX(0)';
+      s.style.transition  = 'none';
+      s.style.pointerEvents = 'none';
+    });
+    if (jumpTotal) jumpTotal.textContent = total;
+  }
 
-// Add loading animation
-window.addEventListener('load', () => {
-    document.body.style.opacity = '0';
+  function populateJumpTotal() {
+    if (jumpTotal) jumpTotal.textContent = total;
+  }
+
+  /** Go to slide index. instant = no animation (for first load) */
+  function goTo(index, instant = false) {
+    if (animating && !instant) return;
+    if (index < 0 || index >= total) return;
+    if (index === current && !instant) return;
+
+    const from  = slides[current];
+    const to    = slides[index];
+    const dir   = index > current ? 1 : -1; // 1 = forward
+
+    animating = true;
+
+    if (instant) {
+      slides.forEach(s => {
+        s.style.display       = 'none';
+        s.style.opacity       = '0';
+        s.style.transform     = 'translateX(0)';
+        s.style.transition    = 'none';
+        s.style.pointerEvents = 'none';
+      });
+      to.style.display       = 'flex';
+      to.style.opacity       = '1';
+      to.style.transform     = 'translateX(0)';
+      to.style.pointerEvents = 'all';
+      to.scrollTop           = 0;
+      current   = index;
+      animating = false;
+      updateHUD();
+      return;
+    }
+
+    const DURATION = 520; // ms
+    const EASE     = 'cubic-bezier(0.42, 0, 0.18, 1)';
+
+    // ① Freeze "from" slide
+    from.style.transition    = `transform ${DURATION}ms ${EASE}, opacity ${DURATION}ms ease`;
+    from.style.pointerEvents = 'none';
+
+    // ② Position "to" slide off-screen instantly (no transition)
+    to.style.transition    = 'none';
+    to.style.display       = 'flex';
+    to.style.opacity       = '0.01';
+    to.style.transform     = dir > 0 ? 'translateX(100%)' : 'translateX(-100%)';
+    to.style.pointerEvents = 'none';
+    to.scrollTop           = 0;
+
+    // Force layout
+    to.offsetHeight; // eslint-disable-line
+
+    // ③ Animate both simultaneously
+    requestAnimationFrame(() => {
+      from.style.transform = dir > 0 ? 'translateX(-100%)' : 'translateX(100%)';
+      from.style.opacity   = '0';
+
+      to.style.transition  = `transform ${DURATION}ms ${EASE}, opacity ${DURATION}ms ease`;
+      to.style.transform   = 'translateX(0)';
+      to.style.opacity     = '1';
+      to.style.pointerEvents = 'all';
+    });
+
+    // ④ Cleanup
     setTimeout(() => {
-        document.body.style.transition = 'opacity 1s ease-in';
-        document.body.style.opacity = '1';
-    }, 100);
-});
+      from.style.display       = 'none';
+      from.style.transform     = 'translateX(0)';
+      from.style.opacity       = '0';
+      from.style.transition    = 'none';
+      current   = index;
+      animating = false;
+      updateHUD();
+    }, DURATION + 30);
+  }
+
+  function updateHUD() {
+    // Progress
+    if (progressFill) {
+      progressFill.style.width = `${((current + 1) / total) * 100}%`;
+    }
+    // Indicator
+    if (indicator) {
+      indicator.textContent = `${current + 1}  /  ${total}`;
+    }
+    // Arrows
+    if (prevBtn) prevBtn.style.opacity = current > 0         ? '1' : '0.18';
+    if (nextBtn) nextBtn.style.opacity = current < total - 1 ? '1' : '0.18';
+  }
+
+  // ── Navigation ───────────────────────────────────────────────
+  function setupSlideNavigation() {
+    prevBtn?.addEventListener('click', () => goTo(current - 1));
+    nextBtn?.addEventListener('click', () => goTo(current + 1));
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+      if (jumpModal && jumpModal.style.display !== 'none') return;
+      switch (e.key) {
+        case 'ArrowRight': case 'ArrowDown': case ' ':
+          e.preventDefault(); goTo(current + 1); break;
+        case 'ArrowLeft': case 'ArrowUp':
+          e.preventDefault(); goTo(current - 1); break;
+        case 'g': case 'G':
+          openJump(); break;
+        case 'Escape':
+          closeJump(); break;
+      }
+    });
+
+    // Scroll wheel navigation
+    document.addEventListener('wheel', e => {
+      if (jumpModal && jumpModal.style.display !== 'none') return;
+      e.preventDefault();
+      
+      if (e.deltaY > 0) {
+        // Scrolling down - go to next slide
+        goTo(current + 1);
+      } else if (e.deltaY < 0) {
+        // Scrolling up - go to previous slide
+        goTo(current - 1);
+      }
+    }, { passive: false });
+
+    // Touch swipe
+    let tx = 0, ty = 0;
+    container?.addEventListener('touchstart', e => {
+      tx = e.touches[0].clientX;
+      ty = e.touches[0].clientY;
+    }, { passive: true });
+
+    container?.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - tx;
+      const dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 44) {
+        dx < 0 ? goTo(current + 1) : goTo(current - 1);
+      }
+    }, { passive: true });
+  }
+
+  // ── Sound Buttons ─────────────────────────────────────────────
+  function setupSoundButtons() {
+    document.querySelectorAll('.text-to-sound').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const src = btn.dataset.sound;
+        if (!src) return;
+
+        // Toggle off if same button
+        if (activeAudio && activeAudioBtn === btn) {
+          activeAudio.pause();
+          activeAudio.currentTime = 0;
+          activeAudio   = null;
+          activeAudioBtn = null;
+          btn.classList.remove('playing');
+          return;
+        }
+
+        // Stop previous
+        if (activeAudio) {
+          activeAudio.pause();
+          activeAudio.currentTime = 0;
+          activeAudioBtn?.classList.remove('playing');
+        }
+
+        const audio = new Audio(src);
+        audio.volume = 0.72;
+        audio.play().catch(() => {});
+
+        audio.addEventListener('ended', () => {
+          btn.classList.remove('playing');
+          if (activeAudio === audio) { activeAudio = null; activeAudioBtn = null; }
+        });
+
+        activeAudio    = audio;
+        activeAudioBtn = btn;
+        btn.classList.add('playing');
+        spawnSparkles(btn, 6);
+      });
+    });
+  }
+
+  // ── Peek Hints ────────────────────────────────────────────────
+  function setupPeekHints() {
+    document.querySelectorAll('.peek-hint:not(.simple-question)').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        if (btn.classList.contains('revealed')) return; // one-way reveal
+        btn.classList.add('revealed');
+        spawnSparkles(btn, 5);
+      });
+    });
+  }
+
+  // ── Simple Question (Slide 30 – his first message) ────────────
+  function setupSimpleQuestion() {
+    const btn = document.querySelector('.peek-hint.simple-question');
+    if (!btn) return;
+    btn.innerHTML = '<em>👁 Tap to see his very first message...</em>';
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (btn.classList.contains('revealed')) return;
+      btn.innerHTML = '<em>💬 "Hey 👋 — do you know who this is?"</em>';
+      btn.classList.add('revealed');
+      spawnSparkles(btn, 7);
+    });
+  }
+
+  // ── Sparkle Effect ────────────────────────────────────────────
+  const SPARKS = ['✦', '★', '✨', '💫', '⭐', '✧', '❋'];
+
+  function spawnSparkles(element, count = 5) {
+    const rect = element.getBoundingClientRect();
+    const cx   = rect.left + rect.width  / 2;
+    const cy   = rect.top  + rect.height / 2;
+
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const el = document.createElement('span');
+        el.className   = 'sparkle-particle';
+        el.textContent = SPARKS[Math.floor(Math.random() * SPARKS.length)];
+        el.style.cssText = [
+          `left: ${cx + (Math.random() - 0.5) * 90}px`,
+          `top:  ${cy + (Math.random() - 0.5) * 50}px`,
+          `font-size: ${10 + Math.random() * 16}px`,
+          'animation-duration: ' + (0.7 + Math.random() * 0.5) + 's'
+        ].join(';');
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1200);
+      }, i * 90);
+    }
+  }
+
+  // ── Jump Modal ────────────────────────────────────────────────
+  function openJump() {
+    if (!jumpModal) return;
+    jumpModal.style.display = 'flex';
+    if (jumpInput) { jumpInput.value = ''; jumpInput.focus(); }
+  }
+
+  function closeJump() {
+    if (jumpModal) jumpModal.style.display = 'none';
+  }
+
+  function confirmJump() {
+    const n = parseInt(jumpInput?.value, 10);
+    if (!isNaN(n) && n >= 1 && n <= total) { goTo(n - 1); closeJump(); }
+  }
+
+  function setupJumpModal() {
+    jumpConfirm?.addEventListener('click', confirmJump);
+    jumpCancel?.addEventListener('click',  closeJump);
+    jumpInput?.addEventListener('keydown', e => {
+      if (e.key === 'Enter')  confirmJump();
+      if (e.key === 'Escape') closeJump();
+    });
+    jumpModal?.addEventListener('click', e => {
+      if (e.target === jumpModal) closeJump();
+    });
+  }
+
+  // ── Context Compass ───────────────────────────────────────────
+  function setupCompass() {
+    compassBtn?.addEventListener('click', e => {
+      e.stopPropagation();
+      compass?.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.compass-sections li').forEach(li => {
+      li.addEventListener('click', () => {
+        const n = parseInt(li.dataset.slide, 10);
+        if (!isNaN(n)) { goTo(n - 1); compass?.classList.remove('open'); }
+      });
+    });
+
+    document.addEventListener('click', e => {
+      if (!compass?.contains(e.target) && e.target !== compassBtn) {
+        compass?.classList.remove('open');
+      }
+    });
+  }
+
+  // ── Rotating Tips ─────────────────────────────────────────────
+  function setupTips() {
+    if (!tipsBar) return;
+    const tips = Array.from(tipsBar.querySelectorAll('span'));
+    if (!tips.length) return;
+
+    tips.forEach((s, i) => s.classList.toggle('tip-active', i === 0));
+
+    setInterval(() => {
+      tips[tipIndex].classList.remove('tip-active');
+      tipIndex = (tipIndex + 1) % tips.length;
+      // Brief pause then activate
+      setTimeout(() => tips[tipIndex].classList.add('tip-active'), 200);
+    }, 9000);
+  }
+
+  // ── Boot ──────────────────────────────────────────────────────
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
