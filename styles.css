@@ -318,7 +318,7 @@ em {
 /* ── Peek Hint (Spoiler) Buttons ───────────────────────────── */
 .peek-hint {
   display: inline-flex; align-items: center;
-  padding: 12px 24px; margin: 8px auto;
+  padding: 12px 24px; margin: 8px auto 16px auto;
   background: rgba(230,57,70,0.08);
   border: 1px dashed rgba(244,143,177,0.35);
   border-radius: 100px;
