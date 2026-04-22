@@ -169,22 +169,26 @@
 
     // Show slides based on book layout
     if (index === 0) {
-      // Cover page
-      slides[0].style.display = 'flex';
-      slides[0].style.opacity = '1';
-      slides[0].style.pointerEvents = 'all';
-      slides[0].style.setProperty('width', '95vw', 'important');
-      slides[0].style.setProperty('left', '2.5vw', 'important');
-      slides[0].style.setProperty('top', '5vh', 'important');
-      slides[0].style.setProperty('position', 'absolute', 'important');
-      // Restart videos
-      slides[0].querySelectorAll('video').forEach(v => v.play().catch(() => {}));
+      // Blank book cover - show nothing or a simple cover image
+      if (slides[0]) {
+        slides[0].style.display = 'flex';
+        slides[0].style.opacity = '1';
+        slides[0].style.pointerEvents = 'all';
+        slides[0].style.setProperty('width', '95vw', 'important');
+        slides[0].style.setProperty('left', '2.5vw', 'important');
+        slides[0].style.setProperty('top', '5vh', 'important');
+        slides[0].style.setProperty('position', 'absolute', 'important');
+        slides[0].style.setProperty('background', 'linear-gradient(45deg, #8B4513, #D2691E)', 'important');
+        slides[0].innerHTML = '<div style="text-align: center; color: white; font-size: 2rem;">Click to Open Book</div>';
+      }
     } else {
-      // Book spread - even page left, odd page right
-      const leftPage = index % 2 === 0 ? index : index - 1;
+      // Book spread - odd page left, even page right (starting from slide 1)
+      const leftPage = index % 2 === 1 ? index : index - 1;
       const rightPage = leftPage + 1;
       
-      // Left page (even)
+      console.log('Spread:', leftPage, '(left) +', rightPage, '(right)');
+      
+      // Left page (odd number)
       if (slides[leftPage]) {
         console.log('Showing left page:', leftPage, slides[leftPage]);
         slides[leftPage].style.display = 'flex';
@@ -199,8 +203,9 @@
         slides[leftPage].querySelectorAll('video').forEach(v => v.play().catch(() => {}));
       }
       
-      // Right page (odd)
+      // Right page (even number)
       if (slides[rightPage]) {
+        console.log('Showing right page:', rightPage, slides[rightPage]);
         slides[rightPage].style.display = 'flex';
         slides[rightPage].style.opacity = '1';
         slides[rightPage].style.pointerEvents = 'all';
