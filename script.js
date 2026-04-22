@@ -155,6 +155,9 @@
     current = index;
     animating = true;
 
+    // Stop all background audio and video audio when changing slides
+    stopAllBackgroundAudio();
+
     // Hide only currently visible slides
     const visibleSlides = document.querySelectorAll('.slide[style*="display: flex"]');
     visibleSlides.forEach(slide => {
@@ -246,6 +249,28 @@
     // Arrows
     if (prevBtn) prevBtn.style.opacity = current > 0         ? '1' : '0.18';
     if (nextBtn) nextBtn.style.opacity = current < total - 1 ? '1' : '0.18';
+  }
+
+  // Stop all background audio (but keep video animations playing)
+  function stopAllBackgroundAudio() {
+    // Stop all audio elements
+    document.querySelectorAll('audio').forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+    
+    // Stop any active audio from sound buttons
+    if (activeAudio) {
+      activeAudio.pause();
+      activeAudio.currentTime = 0;
+      activeAudio = null;
+      activeAudioBtn = null;
+    }
+    
+    // Remove playing class from all sound buttons
+    document.querySelectorAll('.text-to-sound.playing').forEach(btn => {
+      btn.classList.remove('playing');
+    });
   }
 
   // ── Navigation ───────────────────────────────────────────────
