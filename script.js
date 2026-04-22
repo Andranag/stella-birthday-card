@@ -200,24 +200,24 @@
       const leftPage = index % 2 === 1 ? index : index - 1;
       const rightPage = leftPage + 1;
       
-      // Left page (odd number) - aligned with page number center
+      // Left page (odd number) - match cover page width
       if (slides[leftPage]) {
         slides[leftPage].style.display = 'flex';
         slides[leftPage].style.opacity = '1';
         slides[leftPage].style.pointerEvents = 'all';
-        slides[leftPage].style.setProperty('width', '25vw', 'important');
-        slides[leftPage].style.setProperty('left', '25vw', 'important');
+        slides[leftPage].style.setProperty('width', '34vw', 'important');
+        slides[leftPage].style.setProperty('left', '16vw', 'important');
         slides[leftPage].style.setProperty('top', '5vh', 'important');
         slides[leftPage].style.setProperty('position', 'absolute', 'important');
         slides[leftPage].style.setProperty('z-index', '1', 'important');
       }
       
-      // Right page (even number) - aligned with page number center
+      // Right page (even number) - match cover page width
       if (slides[rightPage]) {
         slides[rightPage].style.display = 'flex';
         slides[rightPage].style.opacity = '1';
         slides[rightPage].style.pointerEvents = 'all';
-        slides[rightPage].style.setProperty('width', '25vw', 'important');
+        slides[rightPage].style.setProperty('width', '34vw', 'important');
         slides[rightPage].style.setProperty('left', '50vw', 'important');
         slides[rightPage].style.setProperty('top', '5vh', 'important');
         slides[rightPage].style.setProperty('position', 'absolute', 'important');
