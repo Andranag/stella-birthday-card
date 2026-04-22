@@ -179,7 +179,7 @@ h1 {
 }
 
 h2, .gift-article h2, article h2, .slide h2, .gift-article .slide h2, article .slide h2, .slide.gift-article h2 {
-  font-family: var(--font-display) !important;
+  font-family: 'Lora', serif !important;
   font-size: clamp(1.1rem, 3.5vw, 1.4rem) !important;
   color: var(--gold) !important;
   text-align: center !important;
@@ -191,14 +191,20 @@ h2, .gift-article h2, article h2, .slide h2, .gift-article .slide h2, article .s
 }
 
 /* Force H2 to display as written - override any uppercase */
-h2:not([style]), 
-.gift-article h2:not([style]), 
-article h2:not([style]), 
-.slide h2:not([style]),
-.gift-article .slide h2:not([style]),
-article .slide h2:not([style]),
-.slide.gift-article h2:not([style]) {
+h2, 
+.gift-article h2, 
+article h2, 
+.slide h2,
+.gift-article .slide h2,
+article .slide h2,
+.slide.gift-article h2,
+main h2,
+main .slide h2,
+main .gift-article h2,
+body h2,
+#story h2 {
   text-transform: none !important;
+  font-variant: normal !important;
   text-transform: unset !important;
 }
 
