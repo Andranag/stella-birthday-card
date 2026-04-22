@@ -148,69 +148,69 @@
 
   /** Go to slide index. instant = no animation (for first load) */
   function goTo(index, instant = false) {
+    console.log('goTo called with index:', index);
+    
     if (animating && !instant) return;
     if (index < 0 || index >= total) return;
     if (index === current && !instant) return;
 
-    const prevIndex = current;
     current = index;
     animating = true;
 
     // Stop all audio when changing slides
     stopAllAudio();
 
-    // Hide all slides first
+    // Hide all slides
     slides.forEach(slide => {
       slide.style.display = 'none';
       slide.style.opacity = '0';
       slide.style.pointerEvents = 'none';
-      slide.classList.remove('cover', 'left-page', 'right-page', 'hidden');
     });
 
     // Show slides based on book layout
     if (index === 0) {
-      // Cover page - show slide 0 as big cover
-      const coverSlide = slides[0];
-      coverSlide.classList.add('cover');
-      coverSlide.style.display = 'flex';
-      coverSlide.style.opacity = '1';
-      coverSlide.style.pointerEvents = 'all';
-      coverSlide.style.setProperty('width', '95vw', 'important');
-      coverSlide.style.left = '50%';
-      coverSlide.style.transform = 'translateX(-50%)';
-      coverSlide.style.height = '90%';
-      coverSlide.style.position = 'absolute';
+      // Cover page
+      slides[0].style.display = 'flex';
+      slides[0].style.opacity = '1';
+      slides[0].style.pointerEvents = 'all';
+      slides[0].style.setProperty('width', '95vw', 'important');
+      slides[0].style.setProperty('left', '2.5vw', 'important');
+      slides[0].style.setProperty('top', '5vh', 'important');
+      slides[0].style.setProperty('position', 'absolute', 'important');
+      // Restart videos
+      slides[0].querySelectorAll('video').forEach(v => v.play().catch(() => {}));
     } else {
-      // Book open - show 2 pages
-      const leftSlide = slides[index];
-      const rightSlide = slides[index + 1];
-
-      // Left page
-      if (leftSlide) {
-        leftSlide.classList.add('left-page');
-        leftSlide.style.display = 'flex';
-        leftSlide.style.opacity = '1';
-        leftSlide.style.pointerEvents = 'all';
-        leftSlide.style.setProperty('width', '48vw', 'important');
-        leftSlide.style.left = '2vw';
-        leftSlide.style.right = 'auto';
-        leftSlide.style.transform = 'none';
-        leftSlide.style.height = '90%';
-        leftSlide.style.position = 'absolute';
+      // Book spread - even page left, odd page right
+      const leftPage = index % 2 === 0 ? index : index - 1;
+      const rightPage = leftPage + 1;
+      
+      // Left page (even)
+      if (slides[leftPage]) {
+        console.log('Showing left page:', leftPage, slides[leftPage]);
+        slides[leftPage].style.display = 'flex';
+        slides[leftPage].style.opacity = '1';
+        slides[leftPage].style.pointerEvents = 'all';
+        slides[leftPage].style.setProperty('width', '47vw', 'important');
+        slides[leftPage].style.setProperty('left', '1vw', 'important');
+        slides[leftPage].style.setProperty('top', '5vh', 'important');
+        slides[leftPage].style.setProperty('position', 'absolute', 'important');
+        slides[leftPage].style.setProperty('z-index', '1', 'important');
+        // Restart videos
+        slides[leftPage].querySelectorAll('video').forEach(v => v.play().catch(() => {}));
       }
-
-      // Right page
-      if (rightSlide) {
-        rightSlide.classList.add('right-page');
-        rightSlide.style.display = 'flex';
-        rightSlide.style.opacity = '1';
-        rightSlide.style.pointerEvents = 'all';
-        rightSlide.style.setProperty('width', '48vw', 'important');
-        rightSlide.style.right = '2vw';
-        rightSlide.style.left = 'auto';
-        rightSlide.style.transform = 'none';
-        rightSlide.style.height = '90%';
-        rightSlide.style.position = 'absolute';
+      
+      // Right page (odd)
+      if (slides[rightPage]) {
+        slides[rightPage].style.display = 'flex';
+        slides[rightPage].style.opacity = '1';
+        slides[rightPage].style.pointerEvents = 'all';
+        slides[rightPage].style.setProperty('width', '47vw', 'important');
+        slides[rightPage].style.setProperty('right', '1vw', 'important');
+        slides[rightPage].style.setProperty('top', '5vh', 'important');
+        slides[rightPage].style.setProperty('position', 'absolute', 'important');
+        slides[rightPage].style.setProperty('z-index', '2', 'important');
+        // Restart videos
+        slides[rightPage].querySelectorAll('video').forEach(v => v.play().catch(() => {}));
       }
     }
 
@@ -220,7 +220,7 @@
     // Reset animation flag
     setTimeout(() => {
       animating = false;
-    }, instant ? 0 : 600);
+    }, instant ? 0 : 100);
   }
 
   function updateHUD() {
@@ -239,17 +239,17 @@
 
   // ── Navigation ───────────────────────────────────────────────
   function setupSlideNavigation() {
-    prevBtn?.addEventListener('click', () => goTo(current - 1));
-    nextBtn?.addEventListener('click', () => goTo(current + 1));
+    prevBtn?.addEventListener('click', () => goTo(current - 2));
+    nextBtn?.addEventListener('click', () => goTo(current + 2));
 
     // Keyboard
     document.addEventListener('keydown', e => {
       if (jumpModal && jumpModal.style.display !== 'none') return;
       switch (e.key) {
         case 'ArrowRight': case 'ArrowDown': case ' ':
-          e.preventDefault(); goTo(current + 1); break;
+          e.preventDefault(); goTo(current + 2); break;
         case 'ArrowLeft': case 'ArrowUp':
-          e.preventDefault(); goTo(current - 1); break;
+          e.preventDefault(); goTo(current - 2); break;
         case 'g': case 'G':
           openJump(); break;
         case 'Escape':
@@ -257,19 +257,21 @@
       }
     });
 
-    // Scroll wheel navigation
-    document.addEventListener('wheel', e => {
-      if (jumpModal && jumpModal.style.display !== 'none') return;
-      e.preventDefault();
-      
-      if (e.deltaY > 0) {
-        // Scrolling down - go to next slide
-        goTo(current + 1);
-      } else if (e.deltaY < 0) {
-        // Scrolling up - go to previous slide
-        goTo(current - 1);
-      }
-    }, { passive: false });
+    // Wheel
+    const container = document.getElementById('swipe-container');
+    if (container) {
+      container.addEventListener('wheel', e => {
+        e.preventDefault();
+        
+        if (e.deltaY > 0) {
+          // Scrolling down - go to next spread
+          goTo(current + 2);
+        } else if (e.deltaY < 0) {
+          // Scrolling up - go to previous spread
+          goTo(current - 2);
+        }
+      }, { passive: false });
+    } 
 
     // Touch swipe
     let tx = 0, ty = 0;
