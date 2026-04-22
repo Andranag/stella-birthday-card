@@ -444,16 +444,16 @@
   const scanLines = [
     "[ INITIATING PROTOCOL... ]",
     "[ SCANNING SUBJECT DATABASE ]",
-    ">> SEARCHING: great smile... ✓",
-    ">> SEARCHING: kind soul... ✓",
-    ">> SEARCHING: heart of gold... ✓",
-    ">> SEARCHING: infectious laugh... ✓",
-    ">> SEARCHING: sharp wit... ✓",
-    ">> SEARCHING: warm eyes... ✓",
-    ">> SEARCHING: unmatched sex appeal... ✓",
-    ">> SEARCHING: good sense of humor... ✓",
-    ">> SEARCHING: emotionally mature... ✓",
-    ">> SEARCHING: has chest hair... ✓",
+    ">> SEARCHING: great smile... ",
+    ">> SEARCHING: kind soul... ",
+    ">> SEARCHING: heart of gold... ",
+    ">> SEARCHING: infectious laugh... ",
+    ">> SEARCHING: sharp wit... ",
+    ">> SEARCHING: warm eyes... ",
+    ">> SEARCHING: unmatched sex appeal... ",
+    ">> SEARCHING: good sense of humor... ",
+    ">> SEARCHING: emotionally mature... ",
+    ">> SEARCHING: has chest hair... ",
     "[ CROSS-REFERENCING PARAMETERS ]",
     ">> MATCH CONFIDENCE: 99.9%",
     "[ WARNING: SUBJECT IS TOO CHARMING ]",
@@ -468,34 +468,66 @@
     el.textContent = scanLines[scanIndex % scanLines.length];
     scanIndex++;
 
-    /* Alternate between left edge and right edge, never over the centre text */
-    const onLeft = scanIndex % 2 === 0;
-    if (onLeft) {
+    /* Alternate between 4 positions: left, right (closer), top, bottom */
+    const positionType = scanIndex % 4;
+    
+    if (positionType === 0) {
+      // Left side (original position)
       el.style.left = (Math.random() * 18) + "%";
+      el.style.top = (Math.random() * 80) + 10 + "%";
+    } else if (positionType === 1) {
+      // Right side (moved closer to center)
+      el.style.right = (Math.random() * 15) + 5 + "%"; // 5-20% from right
+      el.style.top = (Math.random() * 80) + 10 + "%";
+    } else if (positionType === 2) {
+      // Top area (above video-text)
+      el.style.left = (Math.random() * 60) + 20 + "%"; // Centered horizontally
+      el.style.top = (Math.random() * 8) + 2 + "%"; // 2-10% from top
     } else {
-      el.classList.add("scan-right");
+      // Bottom area (below video-text)
+      el.style.left = (Math.random() * 60) + 20 + "%"; // Centered horizontally
+      el.style.bottom = (Math.random() * 8) + 2 + "%"; // 2-10% from bottom
     }
 
-    /* Pick a Y slot that doesn't collide with any currently visible float */
-    const slotH   = 11;  /* percent — min gap between floats */
-    const minTop  = 5;
-    const maxTop  = 88;
-    const slots   = Math.floor((maxTop - minTop) / slotH);
-    const occupied = Array.from(
-      inspectorSlide.querySelectorAll(".scan-float")
-    ).map(f => parseFloat(f.style.top));
-
-    let top = minTop + Math.floor(Math.random() * slots) * slotH;
-    for (let tries = 0; tries < slots; tries++) {
-      const conflict = occupied.some(y => Math.abs(y - top) < slotH);
-      if (!conflict) break;
-      top = minTop + ((Math.floor((top - minTop) / slotH) + 1) % slots) * slotH;
+    /* Check for collisions with existing scan lines and adjust position */
+    const existingScans = Array.from(inspectorSlide.querySelectorAll(".scan-float"));
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    while (attempts < maxAttempts) {
+      let collision = false;
+      
+      existingScans.forEach(existing => {
+        if (existing === el) return; // Skip self
+        
+        const existingRect = existing.getBoundingClientRect();
+        const newRect = el.getBoundingClientRect();
+        
+        // Check if positions overlap (with some tolerance)
+        if (Math.abs(existingRect.left - newRect.left) < 100 && 
+            Math.abs(existingRect.top - newRect.top) < 30) {
+          collision = true;
+        }
+      });
+      
+      if (!collision) break;
+      
+      // Adjust position slightly if collision detected
+      if (positionType === 0 || positionType === 1) {
+        // Adjust vertical position for left/right
+        const currentTop = parseFloat(el.style.top) || 50;
+        el.style.top = Math.max(5, Math.min(85, currentTop + (Math.random() - 0.5) * 20)) + "%";
+      } else {
+        // Adjust horizontal position for top/bottom
+        const currentLeft = parseFloat(el.style.left) || 50;
+        el.style.left = Math.max(10, Math.min(80, currentLeft + (Math.random() - 0.5) * 20)) + "%";
+      }
+      
+      attempts++;
     }
-
-    el.style.top = top + "%";
 
     inspectorSlide.appendChild(el);
-    setTimeout(() => el.remove(), 5000);
+    setTimeout(() => el.remove(), 12000); // Increased from 5s to 12s for better readability
   }
 
   function startScan() {
@@ -559,15 +591,64 @@
 
   initPeekHints();
 
-  /* ════════════════════════════════════════════
-     TEXT TO SOUND — clickable sound elements
-  ════════════════════════════════════════════ */
+  /* ════════════════════════════════════════════/* 
+     TEXT TO SOUND - clickable sound elements
+  */
   const soundCache = {};
+
+  /* Volume normalization levels for different audio files */
+  const volumeLevels = {
+    // Music files (generally louder) - slightly reduced for balance
+    'assets/music/louis armstrong.mp3': 0.45,
+    'assets/music/congratulations.mp3': 0.55,
+    'assets/music/remember.mp3': 0.5,
+    'assets/music/one piece intro.mp3': 0.45,
+    'assets/music/stops and stares.mp3': 0.55,
+    'assets/music/just the way you are.mp3': 0.5,
+    'assets/music/wish upon a star.mp3': 0.45,
+    'assets/music/lose yourself.mp3': 0.5,
+    'assets/music/passenger.mp3': 0.55,
+    'assets/music/megara singing.mp3': 0.55,
+    'assets/music/aladdin this girl.mp3': 0.5,
+    'assets/music/aladdin smart fun beautiful.mp3': 0.5,
+    'assets/music/aladdin eyes hair smile.mp3': 0.5,
+    'assets/music/gaston chest hair.mp3': 0.6,
+    'assets/music/happy feet.mp3': 0.55,
+    'assets/music/mowgli singing.mp3': 0.55,
+    'assets/music/found me.mp3': 0.55,
+    'assets/music/pinocchio.mp3': 0.6,
+    'assets/music/abba dancing queen.mp3': 0.5,
+    'assets/music/notre-dame.mp3': 0.55,
+    'assets/music/woman-surprised-sound-effect.mp3': 0.65,
+    
+    // Voice/dialogue files (generally quieter) - boosted to match music levels
+    'assets/music/reap what you sow.mp3': 0.9,
+    'assets/music/tarzan take my hand.mp3': 0.9,
+    'assets/music/beast surprise.mp3': 0.9,
+    'assets/music/page-turn-sound-effect.mp3': 0.9,
+    'assets/music/hercules amazing.mp3': 0.9,
+    'assets/music/wait for it.mp3': 0.9,
+    'assets/music/why not.mp3': 0.9,
+    'assets/music/who gives a shit.mp3': 0.9,
+    
+    // Sound effects (vary widely)
+    'assets/music/good-bad-ugly-sound-effect.mp3': 0.6,
+    'assets/music/fireworks.mp3': 0.5,
+    'assets/music/drum-roll-sound-effect.mp3': 0.6,
+    'assets/music/joke-sound-effect.mp3': 0.7,
+    'assets/music/heartbeat-sound-effect.mp3': 0.6,
+    'assets/music/pour-sound-effect.mp3': 0.7,
+    'assets/music/inspector gadget.mp3': 0.7,
+    
+    // Add more specific volume levels as needed for other files
+    'default': 0.7
+  };
 
   function getSound(src) {
     if (!soundCache[src]) {
       const a = new Audio(src);
-      a.volume = 0.7;
+      // Use specific volume if defined, otherwise use default
+      a.volume = volumeLevels[src] || volumeLevels['default'];
       soundCache[src] = a;
     }
     return soundCache[src];
