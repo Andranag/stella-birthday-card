@@ -86,13 +86,13 @@ body::before {
 #story {
   position: fixed; inset: 0; z-index: 1;
   display: flex; align-items: center; justify-content: center;
-  padding: 0;
+  padding: 20px 30px 40px 30px;
 }
 
 #swipe-container {
   position: relative;
   width: 100%;
-  height: 85vh;
+  height: 90vh;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -614,7 +614,7 @@ em {
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 500px) {
-  #story { padding: 44px 6px 48px; }
+  #story { padding: 20px 15px 30px 15px; }
   .slide { padding: 28px 16px 20px; }
   #prev-page { left: 4px; }
   #next-page { right: 4px; }
@@ -626,8 +626,8 @@ em {
 }
 
 @media (min-width: 900px) {
-  #story { padding: 52px 90px 58px; }
-  #swipe-container { max-width: none; width: 100%; }
+  #story { padding: 15px 40px 30px 40px; }
+  #swipe-container { max-width: none; width: 100%; height: 92vh; }
 }
 
 /* ── Final-slide sparkle center ────────────────────────────── */
