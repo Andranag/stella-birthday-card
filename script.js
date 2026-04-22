@@ -369,7 +369,6 @@
         activeAudio    = audio;
         activeAudioBtn = btn;
         btn.classList.add('playing');
-        spawnSparkles(btn, 6);
       });
     });
   }
@@ -377,10 +376,23 @@
   // ── Peek Hints ────────────────────────────────────────────────
   function setupPeekHints() {
     document.querySelectorAll('.peek-hint:not(.simple-question)').forEach(btn => {
+      // Only initialize if not already done
+      if (!btn.dataset.originalContent) {
+        // Store original content and hide it initially
+        const originalContent = btn.innerHTML;
+        btn.dataset.originalContent = originalContent;
+        btn.innerHTML = '<em>Tap to reveal spoiler...</em>';
+        btn.style.opacity = '0.7';
+        btn.style.fontStyle = 'italic';
+      }
+      
       btn.addEventListener('click', e => {
         e.stopPropagation();
         if (btn.classList.contains('revealed')) return; // one-way reveal
         btn.classList.add('revealed');
+        btn.innerHTML = btn.dataset.originalContent;
+        btn.style.opacity = '1';
+        btn.style.fontStyle = 'normal';
         spawnSparkles(btn, 5);
       });
     });
