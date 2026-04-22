@@ -148,8 +148,6 @@
 
   /** Go to slide index. instant = no animation (for first load) */
   function goTo(index, instant = false) {
-    console.log('goTo called with index:', index);
-    
     if (animating && !instant) return;
     if (index < 0 || index >= total) return;
     if (index === current && !instant) return;
@@ -157,11 +155,9 @@
     current = index;
     animating = true;
 
-    // Stop all audio when changing slides
-    stopAllAudio();
-
-    // Hide all slides
-    slides.forEach(slide => {
+    // Hide only currently visible slides
+    const visibleSlides = document.querySelectorAll('.slide[style*="display: flex"]');
+    visibleSlides.forEach(slide => {
       slide.style.display = 'none';
       slide.style.opacity = '0';
       slide.style.pointerEvents = 'none';
@@ -174,48 +170,38 @@
         slides[0].style.display = 'flex';
         slides[0].style.opacity = '1';
         slides[0].style.pointerEvents = 'all';
-        slides[0].style.setProperty('width', '95vw', 'important');
-        slides[0].style.setProperty('left', '2.5vw', 'important');
+        slides[0].style.setProperty('width', '70vw', 'important');
+        slides[0].style.setProperty('left', '15vw', 'important');
         slides[0].style.setProperty('top', '5vh', 'important');
         slides[0].style.setProperty('position', 'absolute', 'important');
-        // Restart videos
-        slides[0].querySelectorAll('video').forEach(v => v.play().catch(() => {}));
       }
     } else {
       // Book spread - odd page left, even page right (starting from slide 1)
       const leftPage = index % 2 === 1 ? index : index - 1;
       const rightPage = leftPage + 1;
       
-      console.log('Spread:', leftPage, '(left) +', rightPage, '(right)');
-      
-      // Left page (odd number)
+      // Left page (odd number) - dramatically shifted left for proper centering
       if (slides[leftPage]) {
-        console.log('Showing left page:', leftPage, slides[leftPage]);
         slides[leftPage].style.display = 'flex';
         slides[leftPage].style.opacity = '1';
         slides[leftPage].style.pointerEvents = 'all';
-        slides[leftPage].style.setProperty('width', '47vw', 'important');
-        slides[leftPage].style.setProperty('left', '1vw', 'important');
+        slides[leftPage].style.setProperty('width', '30vw', 'important');
+        slides[leftPage].style.setProperty('left', '20vw', 'important');
         slides[leftPage].style.setProperty('top', '5vh', 'important');
         slides[leftPage].style.setProperty('position', 'absolute', 'important');
         slides[leftPage].style.setProperty('z-index', '1', 'important');
-        // Restart videos
-        slides[leftPage].querySelectorAll('video').forEach(v => v.play().catch(() => {}));
       }
       
-      // Right page (even number)
+      // Right page (even number) - dramatically shifted left for proper centering
       if (slides[rightPage]) {
-        console.log('Showing right page:', rightPage, slides[rightPage]);
         slides[rightPage].style.display = 'flex';
         slides[rightPage].style.opacity = '1';
         slides[rightPage].style.pointerEvents = 'all';
-        slides[rightPage].style.setProperty('width', '47vw', 'important');
-        slides[rightPage].style.setProperty('right', '1vw', 'important');
+        slides[rightPage].style.setProperty('width', '30vw', 'important');
+        slides[rightPage].style.setProperty('left', '50vw', 'important');
         slides[rightPage].style.setProperty('top', '5vh', 'important');
         slides[rightPage].style.setProperty('position', 'absolute', 'important');
         slides[rightPage].style.setProperty('z-index', '2', 'important');
-        // Restart videos
-        slides[rightPage].querySelectorAll('video').forEach(v => v.play().catch(() => {}));
       }
     }
 
