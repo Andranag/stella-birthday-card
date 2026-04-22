@@ -101,7 +101,7 @@ body::before {
 /* Slides - Book Style Layout */
 .slide {
   position: absolute;
-  width: 80%; height: 90%;
+  height: 90%;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   padding: 30px;
@@ -113,21 +113,17 @@ body::before {
 }
 
 .slide.left-page {
-  left: 0;
   border-radius: 15px 0 0 15px;
-  transform: perspective(1000px) rotateY(5deg);
   z-index: 5;
 }
 
 .slide.right-page {
-  right: 0;
   border-radius: 0 15px 15px 0;
-  transform: perspective(1000px) rotateY(-5deg);
   z-index: 5;
 }
 
 .slide.cover {
-  width: 90%;
+  width: 95%;
   left: 50%;
   transform: translateX(-50%);
   border-radius: 15px;

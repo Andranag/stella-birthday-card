@@ -120,6 +120,32 @@
     if (jumpTotal) jumpTotal.textContent = total;
   }
 
+  /** Stop all audio playback */
+  function stopAllAudio() {
+    // Stop the active audio from text-to-sound buttons
+    if (activeAudio) {
+      activeAudio.pause();
+      activeAudio.currentTime = 0;
+      activeAudioBtn?.classList.remove('playing');
+      activeAudio = null;
+      activeAudioBtn = null;
+    }
+    
+    // Stop all audio elements
+    const allAudio = document.querySelectorAll('audio');
+    allAudio.forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+    
+    // Stop all HTML5 audio/video elements that might be playing audio
+    const allMedia = document.querySelectorAll('video, audio');
+    allMedia.forEach(media => {
+      media.pause();
+      media.currentTime = 0;
+    });
+  }
+
   /** Go to slide index. instant = no animation (for first load) */
   function goTo(index, instant = false) {
     if (animating && !instant) return;
@@ -130,66 +156,63 @@
     current = index;
     animating = true;
 
-    // Update slide classes for realistic storybook layout
-    slides.forEach((slide, i) => {
+    // Stop all audio when changing slides
+    stopAllAudio();
+
+    // Hide all slides first
+    slides.forEach(slide => {
+      slide.style.display = 'none';
+      slide.style.opacity = '0';
+      slide.style.pointerEvents = 'none';
       slide.classList.remove('cover', 'left-page', 'right-page', 'hidden');
-      slide.style.transition = instant ? 'none' : 'all 0.6s cubic-bezier(0.42, 0, 0.18, 1)';
-      
-      if (i === 0 && index === 0) {
-        // Big cover page - full width when it's the current slide
-        slide.classList.add('cover');
-        slide.style.display = 'flex';
-        slide.style.opacity = '1';
-        slide.style.pointerEvents = 'all';
-        slide.style.width = '90%';
-        slide.style.left = '50%';
-        slide.style.transform = 'translateX(-50%)';
-      } else if (index === 0) {
-        // All other slides hidden when on cover
-        slide.classList.add('hidden');
-        slide.style.display = 'none';
-        slide.style.opacity = '0';
-        slide.style.pointerEvents = 'none';
-      } else {
-        // Book is open - show 2 pages per spread
-        const currentPageIndex = index - 1; // Adjust for cover (slide 0)
-        const leftPageIndex = Math.floor(currentPageIndex / 2) * 2 + 1;
-        const rightPageIndex = leftPageIndex + 1;
-        
-        slide.style.width = '48%';
-        slide.style.height = '90%';
-        slide.style.position = 'absolute';
-        
-        if (i === leftPageIndex) {
-          // Left page of current spread
-          slide.classList.add('left-page');
-          slide.style.display = 'flex';
-          slide.style.opacity = '1';
-          slide.style.pointerEvents = 'all';
-          slide.style.left = '2%';
-          slide.style.transform = 'none';
-        } else if (i === rightPageIndex && rightPageIndex < slides.length) {
-          // Right page of current spread
-          slide.classList.add('right-page');
-          slide.style.display = 'flex';
-          slide.style.opacity = '1';
-          slide.style.pointerEvents = 'all';
-          slide.style.right = '2%';
-          slide.style.transform = 'none';
-        } else {
-          // Hidden slides
-          slide.classList.add('hidden');
-          slide.style.display = 'none';
-          slide.style.opacity = '0';
-          slide.style.pointerEvents = 'none';
-        }
-      }
-      
-      // Reset scroll position for visible slides
-      if (slide.style.display === 'flex') {
-        slide.scrollTop = 0;
-      }
     });
+
+    // Show slides based on book layout
+    if (index === 0) {
+      // Cover page - show slide 0 as big cover
+      const coverSlide = slides[0];
+      coverSlide.classList.add('cover');
+      coverSlide.style.display = 'flex';
+      coverSlide.style.opacity = '1';
+      coverSlide.style.pointerEvents = 'all';
+      coverSlide.style.setProperty('width', '95vw', 'important');
+      coverSlide.style.left = '50%';
+      coverSlide.style.transform = 'translateX(-50%)';
+      coverSlide.style.height = '90%';
+      coverSlide.style.position = 'absolute';
+    } else {
+      // Book open - show 2 pages
+      const leftSlide = slides[index];
+      const rightSlide = slides[index + 1];
+
+      // Left page
+      if (leftSlide) {
+        leftSlide.classList.add('left-page');
+        leftSlide.style.display = 'flex';
+        leftSlide.style.opacity = '1';
+        leftSlide.style.pointerEvents = 'all';
+        leftSlide.style.setProperty('width', '48vw', 'important');
+        leftSlide.style.left = '2vw';
+        leftSlide.style.right = 'auto';
+        leftSlide.style.transform = 'none';
+        leftSlide.style.height = '90%';
+        leftSlide.style.position = 'absolute';
+      }
+
+      // Right page
+      if (rightSlide) {
+        rightSlide.classList.add('right-page');
+        rightSlide.style.display = 'flex';
+        rightSlide.style.opacity = '1';
+        rightSlide.style.pointerEvents = 'all';
+        rightSlide.style.setProperty('width', '48vw', 'important');
+        rightSlide.style.right = '2vw';
+        rightSlide.style.left = 'auto';
+        rightSlide.style.transform = 'none';
+        rightSlide.style.height = '90%';
+        rightSlide.style.position = 'absolute';
+      }
+    }
 
     // Update HUD
     updateHUD();
