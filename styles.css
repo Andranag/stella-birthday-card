@@ -86,7 +86,7 @@ body::before {
 #story {
   position: fixed; inset: 0; z-index: 1;
   display: flex; align-items: center; justify-content: center;
-  padding: 20px 30px 40px 30px;
+  padding: 20px 20px 40px 10px;
 }
 
 #swipe-container {
@@ -614,7 +614,7 @@ em {
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 500px) {
-  #story { padding: 20px 15px 30px 15px; }
+  #story { padding: 20px 10px 30px 5px; }
   .slide { padding: 28px 16px 20px; }
   #prev-page { left: 4px; }
   #next-page { right: 4px; }
@@ -626,8 +626,8 @@ em {
 }
 
 @media (min-width: 900px) {
-  #story { padding: 15px 40px 30px 40px; }
-  #swipe-container { max-width: none; width: 100%; height: 92vh; }
+  #story { padding: 15px 30px 30px 5px; }
+  #swipe-container { max-width: none; width: 100%; height: 94vh; }
 }
 
 /* ── Final-slide sparkle center ────────────────────────────── */
