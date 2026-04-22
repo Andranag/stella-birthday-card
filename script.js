@@ -163,6 +163,9 @@
       slide.style.pointerEvents = 'none';
     });
 
+    // Mobile responsive: check screen width
+    const isMobile = window.innerWidth <= 768;
+    
     // Show slides based on book layout
     if (index === 0) {
       // Cover page - show original slide 0 content (Happy Birthday, Babe)
@@ -170,34 +173,51 @@
         slides[0].style.display = 'flex';
         slides[0].style.opacity = '1';
         slides[0].style.pointerEvents = 'all';
-        slides[0].style.setProperty('width', '70vw', 'important');
-        slides[0].style.setProperty('left', '15vw', 'important');
+        if (isMobile) {
+          slides[0].style.setProperty('width', '90vw', 'important');
+          slides[0].style.setProperty('left', '5vw', 'important');
+        } else {
+          slides[0].style.setProperty('width', '68vw', 'important');
+          slides[0].style.setProperty('left', '16vw', 'important');
+        }
         slides[0].style.setProperty('top', '5vh', 'important');
         slides[0].style.setProperty('position', 'absolute', 'important');
       }
+    } else if (isMobile) {
+      // Mobile: show single slide at current index (sequential navigation)
+      if (slides[index]) {
+        slides[index].style.display = 'flex';
+        slides[index].style.opacity = '1';
+        slides[index].style.pointerEvents = 'all';
+        slides[index].style.setProperty('width', '90vw', 'important');
+        slides[index].style.setProperty('left', '5vw', 'important');
+        slides[index].style.setProperty('top', '5vh', 'important');
+        slides[index].style.setProperty('position', 'absolute', 'important');
+        slides[index].style.setProperty('z-index', '1', 'important');
+      }
     } else {
-      // Book spread - odd page left, even page right (starting from slide 1)
+      // Desktop: Book spread - odd page left, even page right (starting from slide 1)
       const leftPage = index % 2 === 1 ? index : index - 1;
       const rightPage = leftPage + 1;
       
-      // Left page (odd number) - dramatically shifted left for proper centering
+      // Left page (odd number) - aligned with page number center
       if (slides[leftPage]) {
         slides[leftPage].style.display = 'flex';
         slides[leftPage].style.opacity = '1';
         slides[leftPage].style.pointerEvents = 'all';
-        slides[leftPage].style.setProperty('width', '30vw', 'important');
-        slides[leftPage].style.setProperty('left', '20vw', 'important');
+        slides[leftPage].style.setProperty('width', '25vw', 'important');
+        slides[leftPage].style.setProperty('left', '25vw', 'important');
         slides[leftPage].style.setProperty('top', '5vh', 'important');
         slides[leftPage].style.setProperty('position', 'absolute', 'important');
         slides[leftPage].style.setProperty('z-index', '1', 'important');
       }
       
-      // Right page (even number) - dramatically shifted left for proper centering
+      // Right page (even number) - aligned with page number center
       if (slides[rightPage]) {
         slides[rightPage].style.display = 'flex';
         slides[rightPage].style.opacity = '1';
         slides[rightPage].style.pointerEvents = 'all';
-        slides[rightPage].style.setProperty('width', '30vw', 'important');
+        slides[rightPage].style.setProperty('width', '25vw', 'important');
         slides[rightPage].style.setProperty('left', '50vw', 'important');
         slides[rightPage].style.setProperty('top', '5vh', 'important');
         slides[rightPage].style.setProperty('position', 'absolute', 'important');
@@ -230,17 +250,22 @@
 
   // ── Navigation ───────────────────────────────────────────────
   function setupSlideNavigation() {
-    prevBtn?.addEventListener('click', () => goTo(current - 2));
-    nextBtn?.addEventListener('click', () => goTo(current + 2));
+    const isMobile = window.innerWidth <= 768;
+    const step = isMobile ? 1 : 2;
+    
+    prevBtn?.addEventListener('click', () => goTo(current - step));
+    nextBtn?.addEventListener('click', () => goTo(current + step));
 
     // Keyboard
     document.addEventListener('keydown', e => {
       if (jumpModal && jumpModal.style.display !== 'none') return;
+      const isMobile = window.innerWidth <= 768;
+      const step = isMobile ? 1 : 2;
       switch (e.key) {
         case 'ArrowRight': case 'ArrowDown': case ' ':
-          e.preventDefault(); goTo(current + 2); break;
+          e.preventDefault(); goTo(current + step); break;
         case 'ArrowLeft': case 'ArrowUp':
-          e.preventDefault(); goTo(current - 2); break;
+          e.preventDefault(); goTo(current - step); break;
         case 'g': case 'G':
           openJump(); break;
         case 'Escape':
@@ -253,13 +278,15 @@
     if (container) {
       container.addEventListener('wheel', e => {
         e.preventDefault();
+        const isMobile = window.innerWidth <= 768;
+        const step = isMobile ? 1 : 2;
         
         if (e.deltaY > 0) {
-          // Scrolling down - go to next spread
-          goTo(current + 2);
+          // Scrolling down - go to next
+          goTo(current + step);
         } else if (e.deltaY < 0) {
-          // Scrolling up - go to previous spread
-          goTo(current - 2);
+          // Scrolling up - go to previous
+          goTo(current - step);
         }
       }, { passive: false });
     } 
