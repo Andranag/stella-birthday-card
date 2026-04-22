@@ -1,691 +1,336 @@
-/* 
-   script.js  Birthday Story Interactive
-   Features: horizontal slide layout builder,
-   swipe + scroll + keyboard navigation,
-   typewriter effect, music toggle.
- */
+// Disney Birthday Card - Interactive Book Navigation
 
-(function () {
-  "use strict";
-
-  /*  DOM refs  */
-  const container = document.getElementById("swipe-container");
-  const prevBtn   = document.getElementById("prev-page");
-  const nextBtn   = document.getElementById("next-page");
-  const indicator = document.getElementById("top-indicator");
-  const progressFill = document.getElementById("progress-fill");
-  const storyEl   = document.getElementById("story");
-
-  /*  Slides  */
-  const slides = Array.from(container.querySelectorAll(".slide"));
-  const total  = slides.length;
-  let current  = 0;
-  let isAnimating = false;
-
-  container.style.width = `${total * 100}vw`;
-
-  /* 
-     LAYOUT BUILDER
-     Wraps each gift-article's content into
-     a three-column grid:
-       [left video] [text block] [right video]
-     Runs once at startup  does NOT touch
-     non-gift slides (header, footer).
-   */
-  function buildLayouts() {
-    slides.forEach((slide) => {
-      /* Skip non-gift slides */
-      if (!slide.classList.contains("gift-article")) return;
-      /* Skip already-processed or special-layout slides */
-      if (slide.querySelector(".slide-layout"))    return;
-
-      /* Collect direct children */
-      const children = Array.from(slide.childNodes).filter(
-        (n) => n.nodeType === Node.ELEMENT_NODE || (n.nodeType === Node.TEXT_NODE && n.textContent.trim())
-      );
-
-      /* Separate text nodes from gift-img containers */
-      const textEls  = [];
-      const videoEls = [];
-
-      children.forEach((el) => {
-        if (el.nodeType === Node.ELEMENT_NODE && el.classList.contains("gift-img")) {
-          videoEls.push(el);
-        } else if (el.nodeType === Node.ELEMENT_NODE) {
-          textEls.push(el);
-        }
-      });
-
-      /* Build text wrapper */
-      const textWrap = document.createElement("div");
-      textWrap.className = "slide-text";
-      textEls.forEach((el) => textWrap.appendChild(el));
-
-      /* Build layout wrapper */
-      const layout = document.createElement("div");
-      layout.className = "slide-layout";
-
-      const leftSlot  = document.createElement("div");
-      leftSlot.className = "slide-video-left";
-
-      const rightSlot = document.createElement("div");
-      rightSlot.className = "slide-video-right";
-
-      if (videoEls.length === 0) {
-        layout.classList.add("no-video");
-        layout.appendChild(textWrap);
-      } else if (videoEls.length === 1) {
-        layout.classList.add("one-video");
-        leftSlot.appendChild(videoEls[0]);
-        rightSlot.appendChild(document.createElement("div")); /* empty placeholder */
-        layout.appendChild(leftSlot);
-        layout.appendChild(textWrap);
-        layout.appendChild(rightSlot);
-      } else {
-        /* Two or more videos: first goes left, second goes right */
-        layout.classList.add("two-video");
-        leftSlot.appendChild(videoEls[0]);
-        rightSlot.appendChild(videoEls[1]);
-        /* Any extra videos go below the layout (rare) */
-        const extras = videoEls.slice(2);
-        layout.appendChild(leftSlot);
-        layout.appendChild(textWrap);
-        layout.appendChild(rightSlot);
-        if (extras.length) {
-          layout.classList.add("with-extras");
-          const extrasContainer = document.createElement("div");
-          extrasContainer.className = "extras-row";
-          extras.forEach((v) => {
-            extrasContainer.appendChild(v);
-          });
-          layout.appendChild(extrasContainer);
-        }
-      }
-
-      /* Clear slide and re-attach */
-      slide.innerHTML = "";
-      slide.appendChild(layout);
-    });
-  }
-
-  buildLayouts();
-
-  /* 
-     NAVIGATION
-   */
-  function goTo(index) {
-    if (isAnimating || index < 0 || index >= total) return;
-    isAnimating = true;
-
-    const leaving = current;
-    slides[index].scrollTop = 0;
-    current = index;
-    container.style.transform = `translateX(-${current * 100}vw)`;
-
-    updateNav();
-
-    /* Kiss emoji effect */
-    if (slides[current] === kissSlide) startKisses();
-    else if (slides[leaving] === kissSlide) stopKisses();
-
-    /* Inspector scan text effect - only manual trigger via R2-D2 button */
-    else if (slides[leaving] === inspectorSlide) {
-      stopScan();
+class BookNavigation {
+    constructor() {
+        this.currentSlide = 0;
+        this.slides = document.querySelectorAll('.slide');
+        this.totalSlides = this.slides.length;
+        this.isAnimating = false;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        
+        this.init();
     }
 
-    /* Final slide video with audio */
-    if (slides[current] === finalSlide) startFinalVideo();
-    else if (slides[leaving] === finalSlide) stopFinalVideo();
-
-    /* Dance section background song */
-    if (isInDanceSection(slides[current]) && !isInDanceSection(slides[leaving])) startDanceMusic();
-    else if (!isInDanceSection(slides[current]) && isInDanceSection(slides[leaving])) stopDanceMusic();
-
-    /* Sad section background song */
-    if (isInSadSection(slides[current]) && !isInSadSection(slides[leaving])) startSadMusic();
-    else if (!isInSadSection(slides[current]) && isInSadSection(slides[leaving])) stopSadMusic();
-
-    /* Stop any text-to-sound audio on the slide we are leaving */
-    slides[leaving].querySelectorAll(".text-to-sound").forEach(btn => {
-      const src = btn.dataset.sound;
-      if (src && soundCache[src]) {
-        soundCache[src].pause();
-        soundCache[src].currentTime = 0;
-      }
-      btn.classList.remove("playing");
-    });
-
-    /* Reset peek hints on the slide we are leaving */
-    slides[leaving].querySelectorAll(".peek-hint.revealed").forEach(btn => {
-      btn.classList.remove("revealed");
-      if (btn.firstChild) btn.firstChild.textContent = btn.dataset.label || "spoiler";
-    });
-
-    container.addEventListener("transitionend", function onEnd() {
-      container.removeEventListener("transitionend", onEnd);
-      isAnimating = false;
-    }, { once: true });
-  }
-
-  function updateNav() {
-    indicator.textContent = `${current + 1} / ${total}`;
-    prevBtn.disabled = current === 0;
-    nextBtn.disabled = current === total - 1;
-    if (progressFill) {
-      const progress = ((current + 1) / total) * 100;
-      progressFill.style.width = `${progress}%`;
+    init() {
+        this.createNavigationButtons();
+        this.createBookmark();
+        this.addEventListeners();
+        this.updateProgress();
+        this.showSlide(0);
+        this.addSparkles();
     }
-  }
 
-  /* Buttons */
-  prevBtn.addEventListener("click", () => goTo(current - 1));
-  nextBtn.addEventListener("click", () => goTo(current + 1));
+    createNavigationButtons() {
+        // Previous button
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'nav-button prev';
+        prevBtn.innerHTML = '«';
+        prevBtn.setAttribute('aria-label', 'Previous page');
+        document.body.appendChild(prevBtn);
 
-  /*  Keyboard  */
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight" || e.key === "ArrowDown")  goTo(current + 1);
-    if (e.key === "ArrowLeft"  || e.key === "ArrowUp")    goTo(current - 1);
-
-    /* Dev feature: Press 'G' to jump to a specific slide */
-    if (e.key === "g" || e.key === "G") {
-      showJumpModal();
+        // Next button
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'nav-button next';
+        nextBtn.innerHTML = '»';
+        nextBtn.setAttribute('aria-label', 'Next page');
+        document.body.appendChild(nextBtn);
     }
-  });
 
-  /* Custom jump modal */
-  const jumpModal = document.getElementById('jump-modal');
-  const jumpInput = document.getElementById('jump-input');
-  const jumpTotal = document.getElementById('jump-total');
-  const jumpCancel = document.getElementById('jump-cancel');
-  const jumpConfirm = document.getElementById('jump-confirm');
-
-  function showJumpModal() {
-    jumpTotal.textContent = total;
-    jumpInput.value = current + 1;
-    jumpModal.style.display = 'flex';
-    jumpInput.focus();
-    jumpInput.select();
-  }
-
-  function hideJumpModal() {
-    jumpModal.style.display = 'none';
-  }
-
-  function confirmJump() {
-    const num = parseInt(jumpInput.value, 10) - 1;
-    if (num >= 0 && num < total) {
-      goTo(num);
-      hideJumpModal();
-    } else {
-      jumpInput.style.borderColor = '#e74c3c';
-      setTimeout(() => {
-        jumpInput.style.borderColor = '';
-      }, 1000);
+    createBookmark() {
+        const bookmark = document.createElement('div');
+        bookmark.className = 'bookmark';
+        bookmark.setAttribute('aria-label', 'Bookmark');
+        document.body.appendChild(bookmark);
     }
-  }
 
-  jumpCancel.addEventListener('click', hideJumpModal);
-  jumpConfirm.addEventListener('click', confirmJump);
-  jumpInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') confirmJump();
-    if (e.key === 'Escape') hideJumpModal();
-  });
-  jumpModal.addEventListener('click', (e) => {
-    if (e.target === jumpModal) hideJumpModal();
-  });
+    addEventListeners() {
+        // Navigation buttons
+        document.querySelector('.nav-button.prev').addEventListener('click', () => this.previousSlide());
+        document.querySelector('.nav-button.next').addEventListener('click', () => this.nextSlide());
 
-  /*  Wheel / Trackpad scroll  */
-  let scrollCooldown = false;
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowLeft':
+                    this.previousSlide();
+                    break;
+                case 'ArrowRight':
+                    this.nextSlide();
+                    break;
+                case 'Home':
+                    this.goToSlide(0);
+                    break;
+                case 'End':
+                    this.goToSlide(this.totalSlides - 1);
+                    break;
+            }
+        });
 
-  storyEl.addEventListener("wheel", (e) => {
-    const slide    = slides[current];
-    const atBottom = slide.scrollTop + slide.clientHeight >= slide.scrollHeight - 5;
-    const atTop    = slide.scrollTop <= 5;
+        // Touch/swipe navigation
+        const container = document.getElementById('swipe-container');
+        container.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+        container.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
 
-    const goingDown = e.deltaY > 0;
-    const goingUp   = e.deltaY < 0;
+        // Mouse wheel navigation
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.deltaY > 0) {
+                this.nextSlide();
+            } else {
+                this.previousSlide();
+            }
+        }, { passive: false });
 
-    if ((goingDown && !atBottom) || (goingUp && !atTop)) return;
-    if (scrollCooldown) return;
+        // Sound buttons
+        document.querySelectorAll('.text-to-sound').forEach(button => {
+            button.addEventListener('click', (e) => this.playSound(e));
+        });
 
-    e.preventDefault();
-    scrollCooldown = true;
-    setTimeout(() => { scrollCooldown = false; }, 800);
-
-    if (goingDown) goTo(current + 1);
-    else           goTo(current - 1);
-  }, { passive: false });
-
-  /*  Touch / Swipe  */
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let touchMoved  = false;
-
-  storyEl.addEventListener("touchstart", (e) => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    touchMoved  = false;
-  }, { passive: true });
-
-  storyEl.addEventListener("touchmove", () => { touchMoved = true; }, { passive: true });
-
-  storyEl.addEventListener("touchend", (e) => {
-    if (!touchMoved) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    if (Math.abs(dx) > Math.abs(dy) * 1.4 && Math.abs(dx) > 40) {
-      if (dx < 0) goTo(current + 1);
-      else        goTo(current - 1);
-    }
-  }, { passive: true });
-
-  /* 
-     CONTEXT COMPASS NAVIGATION
-   */
-  document.querySelectorAll('.compass-sections li').forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const targetSlide = parseInt(item.dataset.slide, 10);
-      const slideNum = Math.min(targetSlide - 1, total - 1);
-      if (slideNum >= 0) {
-        goTo(slideNum);
-      }
-    });
-  });
-
-  /* 
-     MUSIC TOGGLE
-   */
-  const musicBtn = document.createElement("button");
-  musicBtn.id = "music-btn";
-  musicBtn.setAttribute("aria-label", "Toggle background music");
-  musicBtn.setAttribute("aria-pressed", "false");
-  musicBtn.textContent = "🎵";
-  document.body.appendChild(musicBtn);
-
-  let audio = null, musicPlaying = false;
-
-  musicBtn.addEventListener("click", () => {
-    if (!audio) {
-      audio = new Audio("assets/music/Making Today A Perfect Day.mp3");
-      audio.loop   = true;
-      audio.volume = 0.35;
-    }
-    if (musicPlaying) {
-      audio.pause();
-      musicPlaying = false;
-      musicBtn.textContent = "🎵";
-      musicBtn.classList.remove("playing");
-      musicBtn.setAttribute("aria-pressed", "false");
-    } else {
-      audio.play()
-        .then(() => {
-          musicPlaying = true;
-          musicBtn.textContent = "🔊";
-          musicBtn.classList.add("playing");
-          musicBtn.setAttribute("aria-pressed", "true");
-        })
-        .catch(() => {
-          musicBtn.title = "Add assets/music/Making Today A Perfect Day.mp3 to enable music!";
+        // Hint buttons
+        document.querySelectorAll('.peek-hint').forEach(button => {
+            button.addEventListener('click', (e) => this.toggleHint(e));
         });
     }
-  });
 
-  /*  Swipe / scroll hint  */
-  const hint = document.createElement("div");
-  hint.id = "swipe-hint";
-  hint.innerHTML = `<span>👆</span> Swipe, scroll or use arrows`;
-  document.body.appendChild(hint);
-  setTimeout(() => hint.remove(), 3500);
-
-  /* 
-     KISS EMOJI BURST  #kiss-again-slide
-   */
-  const kissSlide  = document.getElementById("kiss-again-slide");
-  let   kissTimers = [];
-
-  function spawnKiss() {
-    const el = document.createElement("span");
-    el.className   = "kiss-float";
-    el.textContent = ["💋", "😘", "💋", "💋", "😘"][Math.floor(Math.random() * 5)];
-
-    el.style.left   = Math.random() * 90 + 5 + "%";
-    el.style.bottom = Math.random() * 30 + 5 + "%";
-
-    kissSlide.appendChild(el);
-    setTimeout(() => el.remove(), 2200);
-  }
-
-  function startKisses() {
-    stopKisses();
-    /* Initial burst */
-    for (let i = 0; i < 6; i++) {
-      kissTimers.push(setTimeout(spawnKiss, i * 120));
-    }
-    /* Continuous drizzle */
-    kissTimers.push(setInterval(spawnKiss, 500));
-  }
-
-  function stopKisses() {
-    kissTimers.forEach(clearTimeout);
-    kissTimers.forEach(clearInterval);
-    kissTimers = [];
-    kissSlide.querySelectorAll(".kiss-float").forEach(el => el.remove());
-  }
-
-  /* 
-     FINAL SLIDE VIDEO — plays audio only when on the slide
-   */
-  const finalSlide = document.getElementById("final-slide");
-  const finalVideo = finalSlide ? finalSlide.querySelector(".gift-video") : null;
-
-  function startFinalVideo() {
-    if (finalVideo) finalVideo.play().catch(() => {});
-  }
-
-  function stopFinalVideo() {
-    if (finalVideo) { finalVideo.pause(); finalVideo.currentTime = 0; }
-  }
-
-  /* 
-     DANCE SECTION SONG — plays across slides #dance-section-start to #dance-section-end
-   */
-  const danceSectionStart = document.getElementById("dance-section-start");
-  const danceSectionEnd   = document.getElementById("dance-section-end");
-  const danceSectionIdxStart = slides.indexOf(danceSectionStart);
-  const danceSectionIdxEnd   = slides.indexOf(danceSectionEnd);
-  const danceSectionAudio = new Audio("assets/music/put your head on my shoulder.mp3");
-  danceSectionAudio.loop   = true;
-  danceSectionAudio.volume = 0.7;
-
-  function isInDanceSection(slide) {
-    const idx = slides.indexOf(slide);
-    return idx >= danceSectionIdxStart && idx <= danceSectionIdxEnd;
-  }
-
-  function startDanceMusic() {
-    danceSectionAudio.play().catch(() => {});
-  }
-
-  function stopDanceMusic() {
-    danceSectionAudio.pause();
-    danceSectionAudio.currentTime = 0;
-  }
-
-  /* 
-     SAD SECTION SONG - plays across slides #sad-section-start to #sad-section-end
-   */
-  const sadSectionStart = document.getElementById("sad-section-start");
-  const sadSectionEnd   = document.getElementById("sad-section-end");
-  const sadSectionIdxStart = slides.indexOf(sadSectionStart);
-  const sadSectionIdxEnd   = slides.indexOf(sadSectionEnd);
-  const sadSectionAudio = new Audio("assets/music/sad caroll.mp3");
-  sadSectionAudio.loop   = true;
-  sadSectionAudio.volume = 0.7;
-
-  function isInSadSection(slide) {
-    const idx = slides.indexOf(slide);
-    return idx >= sadSectionIdxStart && idx <= sadSectionIdxEnd;
-  }
-
-  function startSadMusic() {
-    sadSectionAudio.play().catch(() => {});
-  }
-
-  function stopSadMusic() {
-    sadSectionAudio.pause();
-    sadSectionAudio.currentTime = 0;
-  }
-
-  const inspectorSlide = document.getElementById("inspector-slide");
-  let   scanTimers     = [];
-  let   scanIndex      = 0;
-
-  const scanLines = [
-    "[ INITIATING PROTOCOL... ]",
-    "[ SCANNING SUBJECT DATABASE ]",
-    ">> SEARCHING: great smile... ",
-    ">> SEARCHING: kind soul... ",
-    ">> SEARCHING: heart of gold... ",
-    ">> SEARCHING: infectious laugh... ",
-    ">> SEARCHING: sharp wit... ",
-    ">> SEARCHING: warm eyes... ",
-    ">> SEARCHING: unmatched sex appeal... ",
-    ">> SEARCHING: good sense of humor... ",
-    ">> SEARCHING: emotionally mature... ",
-    ">> SEARCHING: has chest hair... ",
-    "[ CROSS-REFERENCING PARAMETERS ]",
-    ">> MATCH CONFIDENCE: 99.9%",
-    "[ WARNING: SUBJECT IS TOO CHARMING ]",
-    "[ ALERT: HEART RATE SPIKE DETECTED ]",
-    "[ ANALYSIS COMPLETE ]",
-    "[ TARGET ACQUIRED! ]",
-  ];
-
-  function spawnScanLine() {
-    const el = document.createElement("span");
-    el.className   = "scan-float";
-    el.textContent = scanLines[scanIndex % scanLines.length];
-    scanIndex++;
-
-    /* Alternate between 4 positions: left, right (closer), top, bottom */
-    const positionType = scanIndex % 4;
-    
-    if (positionType === 0) {
-      // Left side (original position)
-      el.style.left = (Math.random() * 18) + "%";
-      el.style.top = (Math.random() * 80) + 10 + "%";
-    } else if (positionType === 1) {
-      // Right side (moved closer to center)
-      el.style.right = (Math.random() * 15) + 5 + "%"; // 5-20% from right
-      el.style.top = (Math.random() * 80) + 10 + "%";
-    } else if (positionType === 2) {
-      // Top area (above video-text)
-      el.style.left = (Math.random() * 60) + 20 + "%"; // Centered horizontally
-      el.style.top = (Math.random() * 8) + 2 + "%"; // 2-10% from top
-    } else {
-      // Bottom area (below video-text)
-      el.style.left = (Math.random() * 60) + 20 + "%"; // Centered horizontally
-      el.style.bottom = (Math.random() * 8) + 2 + "%"; // 2-10% from bottom
+    handleTouchStart(e) {
+        this.touchStartX = e.changedTouches[0].screenX;
     }
 
-    /* Check for collisions with existing scan lines and adjust position */
-    const existingScans = Array.from(inspectorSlide.querySelectorAll(".scan-float"));
-    let attempts = 0;
-    const maxAttempts = 10;
-    
-    while (attempts < maxAttempts) {
-      let collision = false;
-      
-      existingScans.forEach(existing => {
-        if (existing === el) return; // Skip self
-        
-        const existingRect = existing.getBoundingClientRect();
-        const newRect = el.getBoundingClientRect();
-        
-        // Check if positions overlap (with some tolerance)
-        if (Math.abs(existingRect.left - newRect.left) < 100 && 
-            Math.abs(existingRect.top - newRect.top) < 30) {
-          collision = true;
+    handleTouchEnd(e) {
+        this.touchEndX = e.changedTouches[0].screenX;
+        this.handleSwipe();
+    }
+
+    handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = this.touchStartX - this.touchEndX;
+
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                this.nextSlide();
+            } else {
+                this.previousSlide();
+            }
         }
-      });
-      
-      if (!collision) break;
-      
-      // Adjust position slightly if collision detected
-      if (positionType === 0 || positionType === 1) {
-        // Adjust vertical position for left/right
-        const currentTop = parseFloat(el.style.top) || 50;
-        el.style.top = Math.max(5, Math.min(85, currentTop + (Math.random() - 0.5) * 20)) + "%";
-      } else {
-        // Adjust horizontal position for top/bottom
-        const currentLeft = parseFloat(el.style.left) || 50;
-        el.style.left = Math.max(10, Math.min(80, currentLeft + (Math.random() - 0.5) * 20)) + "%";
-      }
-      
-      attempts++;
     }
 
-    inspectorSlide.appendChild(el);
-    setTimeout(() => el.remove(), 12000); // Increased from 5s to 12s for better readability
-  }
+    showSlide(index) {
+        if (this.isAnimating || index < 0 || index >= this.totalSlides) return;
 
-  function startScan() {
-    stopScan();
-    scanIndex = 0;
-    spawnScanLine();
-    scanTimers.push(setInterval(spawnScanLine, 900));
-  }
+        this.isAnimating = true;
 
-  function stopScan() {
-    scanTimers.forEach(clearInterval);
-    scanTimers.forEach(clearTimeout);
-    scanTimers = [];
-    inspectorSlide.querySelectorAll(".scan-float").forEach(el => el.remove());
-  }
-
-  /* 
-     PEEK HINTS  spoiler / reference / check out
-     Hides the text inside .peek-hint elements
-     and shows a toggle button to reveal/hide it.
-     Resets to hidden whenever you navigate away.
-   */
-  function initPeekHints() {
-    document.querySelectorAll(".peek-hint").forEach(btn => {
-      const label        = btn.dataset.label || "spoiler";
-      const originalHTML = btn.innerHTML;
-
-      // For simple-question: start blank, show ? on reveal
-      if (btn.classList.contains("simple-question")) {
-        const textSpan = document.createElement("span");
-        textSpan.className = "peek-text";
-        textSpan.innerHTML = '<span class="purple-q">?</span>';
-        btn.appendChild(textSpan);
-
-        btn.addEventListener("click", () => {
-          btn.classList.toggle("revealed");
+        // Hide all slides
+        this.slides.forEach((slide, i) => {
+            slide.style.display = 'none';
+            slide.classList.remove('active');
         });
-        return;
-      }
 
-      // Regular peek-hint buttons
-      const textSpan = document.createElement("span");
-      textSpan.className = "peek-text";
-      textSpan.innerHTML = originalHTML;
+        // Show current slide with animation
+        const currentSlideEl = this.slides[index];
+        currentSlideEl.style.display = 'grid';
+        currentSlideEl.classList.add('turning');
 
-      btn.innerHTML = label;
-      btn.setAttribute("aria-label", `Reveal ${label}`);
-      btn.appendChild(textSpan);
+        setTimeout(() => {
+            currentSlideEl.classList.remove('turning');
+            currentSlideEl.classList.add('active');
+            this.isAnimating = false;
+        }, 800);
 
-      function updateBtn() {
-        const revealed = btn.classList.contains("revealed");
-        btn.firstChild.textContent = revealed ? "hide" : label;
-      }
-
-      btn.addEventListener("click", () => {
-        btn.classList.toggle("revealed");
-        updateBtn();
-      });
-    });
-  }
-
-  initPeekHints();
-
-  /* ════════════════════════════════════════════/* 
-     TEXT TO SOUND - clickable sound elements
-  */
-  const soundCache = {};
-
-  /* Volume normalization levels for different audio files */
-  const volumeLevels = {
-    // Music files (generally louder) - slightly reduced for balance
-    'assets/music/louis armstrong.mp3': 0.45,
-    'assets/music/congratulations.mp3': 0.55,
-    'assets/music/remember.mp3': 0.5,
-    'assets/music/one piece intro.mp3': 0.45,
-    'assets/music/stops and stares.mp3': 0.55,
-    'assets/music/just the way you are.mp3': 0.5,
-    'assets/music/wish upon a star.mp3': 0.45,
-    'assets/music/lose yourself.mp3': 0.5,
-    'assets/music/passenger.mp3': 0.55,
-    'assets/music/megara singing.mp3': 0.55,
-    'assets/music/aladdin this girl.mp3': 0.5,
-    'assets/music/aladdin smart fun beautiful.mp3': 0.5,
-    'assets/music/aladdin eyes hair smile.mp3': 0.5,
-    'assets/music/gaston chest hair.mp3': 0.6,
-    'assets/music/happy feet.mp3': 0.55,
-    'assets/music/mowgli singing.mp3': 0.55,
-    'assets/music/found me.mp3': 0.55,
-    'assets/music/pinocchio.mp3': 0.6,
-    'assets/music/abba dancing queen.mp3': 0.5,
-    'assets/music/notre-dame.mp3': 0.55,
-    'assets/music/woman-surprised-sound-effect.mp3': 0.65,
-    
-    // Voice/dialogue files (generally quieter) - boosted to match music levels
-    'assets/music/reap what you sow.mp3': 0.9,
-    'assets/music/tarzan take my hand.mp3': 0.9,
-    'assets/music/beast surprise.mp3': 0.9,
-    'assets/music/page-turn-sound-effect.mp3': 0.9,
-    'assets/music/hercules amazing.mp3': 0.9,
-    'assets/music/wait for it.mp3': 0.9,
-    'assets/music/why not.mp3': 0.9,
-    'assets/music/who gives a shit.mp3': 0.9,
-    
-    // Sound effects (vary widely)
-    'assets/music/good-bad-ugly-sound-effect.mp3': 0.6,
-    'assets/music/fireworks.mp3': 0.5,
-    'assets/music/drum-roll-sound-effect.mp3': 0.6,
-    'assets/music/joke-sound-effect.mp3': 0.7,
-    'assets/music/heartbeat-sound-effect.mp3': 0.6,
-    'assets/music/pour-sound-effect.mp3': 0.7,
-    'assets/music/inspector gadget.mp3': 0.7,
-    
-    // Add more specific volume levels as needed for other files
-    'default': 0.7
-  };
-
-  function getSound(src) {
-    if (!soundCache[src]) {
-      const a = new Audio(src);
-      // Use specific volume if defined, otherwise use default
-      a.volume = volumeLevels[src] || volumeLevels['default'];
-      soundCache[src] = a;
+        this.currentSlide = index;
+        this.updateProgress();
+        this.updateNavigationButtons();
     }
-    return soundCache[src];
-  }
 
-  document.querySelectorAll(".text-to-sound").forEach(p => {
-    const src = p.dataset.sound;
-    if (!src) return;
-    p.addEventListener("click", () => {
-      /* Stop any other text-to-sound audio currently playing */
-      Object.entries(soundCache).forEach(([url, audio]) => {
-        if (url !== src && !audio.paused) {
-          audio.pause();
-          audio.currentTime = 0;
+    nextSlide() {
+        if (this.currentSlide < this.totalSlides - 1) {
+            this.showSlide(this.currentSlide + 1);
         }
-      });
+        // Removed looping - stay at last page
+    }
 
-      const audio = getSound(src);
-      audio.currentTime = 0;
-      audio.play().catch(() => {});
-      p.classList.remove("playing");
-      void p.offsetWidth;
-      p.classList.add("playing");
-      p.addEventListener("animationend", () => p.classList.remove("playing"), { once: true });
+    previousSlide() {
+        if (this.currentSlide > 0) {
+            this.showSlide(this.currentSlide - 1);
+        }
+        // Removed looping - stay at first page
+    }
 
-      /* Trigger scanning effect for inspector gadget button (detective theme) */
-      if (src.includes("inspector gadget.mp3")) {
-        startScan();
-        /* Auto-stop scan after the audio finishes playing */
-        audio.addEventListener("ended", () => {
-          setTimeout(stopScan, 2000); // Let final scan lines finish before stopping
-        }, { once: true });
-      }
-    });
-  });
+    goToSlide(index) {
+        if (index >= 0 && index < this.totalSlides) {
+            this.showSlide(index);
+        }
+    }
 
-  /* ── Init ─────────────────────────────────── */
-  updateNav();
+    updateProgress() {
+        const progress = ((this.currentSlide + 1) / this.totalSlides) * 100;
+        document.getElementById('progress-fill').style.width = `${progress}%`;
+    }
 
-})();
+    updateNavigationButtons() {
+        const prevBtn = document.querySelector('.nav-button.prev');
+        const nextBtn = document.querySelector('.nav-button.next');
+
+        // Update button states based on current position
+        if (this.currentSlide === 0) {
+            prevBtn.style.opacity = '0.5';
+        } else {
+            prevBtn.style.opacity = '1';
+        }
+
+        if (this.currentSlide === this.totalSlides - 1) {
+            nextBtn.style.opacity = '0.5';
+        } else {
+            nextBtn.style.opacity = '1';
+        }
+    }
+
+    playSound(e) {
+        const button = e.target;
+        const soundFile = button.getAttribute('data-sound');
+        
+        if (soundFile) {
+            // Create audio element
+            const audio = new Audio(soundFile);
+            audio.play().catch(err => {
+                console.log('Audio play failed:', err);
+            });
+
+            // Visual feedback
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                button.style.transform = '';
+            }, 200);
+        }
+    }
+
+    toggleHint(e) {
+        const button = e.target;
+        const isSpoiler = button.getAttribute('data-label') === 'spoiler';
+        
+        if (isSpoiler) {
+            // Toggle spoiler visibility
+            if (button.style.opacity === '0.3') {
+                button.style.opacity = '1';
+                button.style.filter = 'none';
+            } else {
+                button.style.opacity = '0.3';
+                button.style.filter = 'blur(4px)';
+            }
+        }
+
+        // Visual feedback
+        button.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            button.style.transform = '';
+        }, 200);
+    }
+
+    addSparkles() {
+        // Add random sparkle effects to create Disney magic
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                this.createSparkle();
+            }
+        }, 2000);
+    }
+
+    createSparkle() {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = Math.random() * window.innerWidth + 'px';
+        sparkle.style.top = Math.random() * window.innerHeight + 'px';
+        sparkle.style.animationDelay = Math.random() * 2 + 's';
+        
+        document.body.appendChild(sparkle);
+
+        // Remove sparkle after animation
+        setTimeout(() => {
+            sparkle.remove();
+        }, 2000);
+    }
+}
+
+// Page turn effects
+class PageTurnEffects {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        this.addPageCurlEffect();
+        this.addBookSoundEffects();
+    }
+
+    addPageCurlEffect() {
+        // Add subtle page curl animation on hover
+        const slides = document.querySelectorAll('.slide');
+        slides.forEach(slide => {
+            slide.addEventListener('mouseenter', () => {
+                slide.style.transform = 'rotateY(2deg)';
+            });
+
+            slide.addEventListener('mouseleave', () => {
+                slide.style.transform = 'rotateY(0deg)';
+            });
+        });
+    }
+
+    addBookSoundEffects() {
+        // Create page turn sound effect (using Web Audio API for simple sound)
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        window.playPageTurnSound = () => {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        };
+    }
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const bookNav = new BookNavigation();
+    const pageEffects = new PageTurnEffects();
+
+    // Add page turn sound to navigation
+    const originalNextSlide = bookNav.nextSlide.bind(bookNav);
+    const originalPrevSlide = bookNav.previousSlide.bind(bookNav);
+    
+    bookNav.nextSlide = () => {
+        if (window.playPageTurnSound) {
+            window.playPageTurnSound();
+        }
+        originalNextSlide();
+    };
+    
+    bookNav.previousSlide = () => {
+        if (window.playPageTurnSound) {
+            window.playPageTurnSound();
+        }
+        originalPrevSlide();
+    };
+
+    // Make bookNav globally accessible for debugging
+    window.bookNav = bookNav;
+});
+
+// Add loading animation
+window.addEventListener('load', () => {
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+        document.body.style.transition = 'opacity 1s ease-in';
+        document.body.style.opacity = '1';
+    }, 100);
+});
