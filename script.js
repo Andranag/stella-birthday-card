@@ -130,47 +130,60 @@
     current = index;
     animating = true;
 
-    // Update slide classes for book-style layout
+    // Update slide classes for realistic storybook layout
     slides.forEach((slide, i) => {
       slide.classList.remove('cover', 'left-page', 'right-page', 'hidden');
       slide.style.transition = instant ? 'none' : 'all 0.6s cubic-bezier(0.42, 0, 0.18, 1)';
       
       if (i === 0 && index === 0) {
-        // First slide as cover when it's the current slide
+        // Big cover page - full width when it's the current slide
         slide.classList.add('cover');
         slide.style.display = 'flex';
         slide.style.opacity = '1';
         slide.style.pointerEvents = 'all';
-      } else if (i === index) {
-        // Left page - current position (always horizontal layout)
-        slide.classList.add('left-page');
-        slide.style.display = 'flex';
-        slide.style.opacity = '1';
-        slide.style.pointerEvents = 'all';
-      } else if (i === index + 1) {
-        // Right page - next position (always horizontal layout)
-        slide.classList.add('right-page');
-        slide.style.display = 'flex';
-        slide.style.opacity = '1';
-        slide.style.pointerEvents = 'all';
-      } else if (i === index - 1) {
-        // Previous slide - left of current (for navigation)
-        slide.classList.add('left-page');
-        slide.style.display = 'flex';
-        slide.style.opacity = '0.3';
-        slide.style.pointerEvents = 'none';
-      } else {
-        // Hidden slides - but ensure they have base slide styling
+        slide.style.width = '90%';
+        slide.style.left = '50%';
+        slide.style.transform = 'translateX(-50%)';
+      } else if (index === 0) {
+        // All other slides hidden when on cover
         slide.classList.add('hidden');
         slide.style.display = 'none';
         slide.style.opacity = '0';
         slide.style.pointerEvents = 'none';
+      } else {
+        // Book is open - show 2 pages per spread
+        const currentPageIndex = index - 1; // Adjust for cover (slide 0)
+        const leftPageIndex = Math.floor(currentPageIndex / 2) * 2 + 1;
+        const rightPageIndex = leftPageIndex + 1;
+        
+        slide.style.width = '48%';
+        slide.style.height = '90%';
+        slide.style.position = 'absolute';
+        
+        if (i === leftPageIndex) {
+          // Left page of current spread
+          slide.classList.add('left-page');
+          slide.style.display = 'flex';
+          slide.style.opacity = '1';
+          slide.style.pointerEvents = 'all';
+          slide.style.left = '2%';
+          slide.style.transform = 'none';
+        } else if (i === rightPageIndex && rightPageIndex < slides.length) {
+          // Right page of current spread
+          slide.classList.add('right-page');
+          slide.style.display = 'flex';
+          slide.style.opacity = '1';
+          slide.style.pointerEvents = 'all';
+          slide.style.right = '2%';
+          slide.style.transform = 'none';
+        } else {
+          // Hidden slides
+          slide.classList.add('hidden');
+          slide.style.display = 'none';
+          slide.style.opacity = '0';
+          slide.style.pointerEvents = 'none';
+        }
       }
-      
-      // Ensure all slides have base slide styling
-      slide.style.width = '80%';
-      slide.style.height = '90%';
-      slide.style.position = 'absolute';
       
       // Reset scroll position for visible slides
       if (slide.style.display === 'flex') {

@@ -127,7 +127,7 @@ body::before {
 }
 
 .slide.cover {
-  width: 80%;
+  width: 90%;
   left: 50%;
   transform: translateX(-50%);
   border-radius: 15px;
