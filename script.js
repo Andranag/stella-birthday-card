@@ -332,7 +332,7 @@
           activeAudioBtn?.classList.remove('playing');
         }
 
-        const audio = new Audio(src);
+        const audio = new Audio(src + '?t=' + Date.now());
         audio.volume = 0.72;
         audio.play().catch(() => {});
 
@@ -369,7 +369,7 @@
     btn.addEventListener('click', e => {
       e.stopPropagation();
       if (btn.classList.contains('revealed')) return;
-      btn.innerHTML = '<em>💬 "Hey 👋 — do you know who this is?"</em>';
+      btn.innerHTML = '<em>?</em>';
       btn.classList.add('revealed');
       spawnSparkles(btn, 7);
     });
