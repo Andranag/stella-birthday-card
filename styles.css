@@ -242,14 +242,16 @@ em {
 /* ── Video / Media ─────────────────────────────────────────── */
 .gift-img {
   width: 100%; 
-  max-width: min(45vw, 420px);
+  max-width: min(55vw, 520px);
   margin: 20px auto;
   border-radius: 16px; overflow: hidden;
   border: 1px solid rgba(245,197,24,0.12);
   box-shadow: 0 10px 40px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.02);
   flex-shrink: 0;
-  aspect-ratio: 16/9;
-  object-fit: cover;
+  /* Remove fixed aspect ratio to allow videos to show their natural dimensions */
+  /* aspect-ratio: 16/9; */
+  object-fit: contain;
+  background: rgba(0,0,0,0.3);
 }
 
 .gift-video {
@@ -257,7 +259,24 @@ em {
   height: 100%;
   display: block;
   border-radius: 16px;
-  object-fit: cover;
+  object-fit: contain; /* Changed from cover to contain to prevent cropping */
+  background: rgba(0,0,0,0.2);
+}
+
+/* Special sizing for videos that need more space */
+.gift-img.wide-video {
+  max-width: min(65vw, 620px);
+}
+
+.gift-img.tall-video {
+  max-width: min(40vw, 380px);
+}
+
+/* Alternative sizing for specific problematic slides */
+.gift-img.flexible {
+  aspect-ratio: auto;
+  min-height: 200px;
+  max-height: 400px;
 }
 
 /* ── Sound Buttons ─────────────────────────────────────────── */
