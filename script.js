@@ -37,8 +37,7 @@
     setupSlideNavigation();
     setupSoundButtons();
     setupPeekHints();
-    setupSimpleQuestion();
-    setupJumpModal();
+        setupJumpModal();
     setupCompass();
     setupTips();
     goTo(0, true);
@@ -155,8 +154,18 @@
     current = index;
     animating = true;
 
-    // Stop all background audio and video audio when changing slides
-    stopAllBackgroundAudio();
+    // Stop all audio except background audio when changing slides
+    if (activeAudio) {
+      activeAudio.pause();
+      activeAudio.currentTime = 0;
+      activeAudio = null;
+      activeAudioBtn = null;
+    }
+    
+    // Remove playing class from all sound buttons
+    document.querySelectorAll('.text-to-sound.playing').forEach(btn => {
+      btn.classList.remove('playing');
+    });
 
     // Hide only currently visible slides
     const visibleSlides = document.querySelectorAll('.slide[style*="display: flex"]');
@@ -233,6 +242,25 @@
     
     // Reset animation flag
     setTimeout(() => {
+      // Check if we're in the sad section (from "life was not exactly fair" to "phoenix reborn")
+      const sadSectionStart = document.getElementById('sad-section-start');
+      const sadSectionEnd = document.getElementById('sad-section-end');
+      
+      if (sadSectionStart && sadSectionEnd) {
+        const startIndex = Array.from(slides).indexOf(sadSectionStart);
+        const endIndex = Array.from(slides).indexOf(sadSectionEnd);
+        
+        if (current >= startIndex && current <= endIndex) {
+          // Only play if not already playing
+          if (!backgroundAudio || backgroundAudio.paused) {
+            playBackgroundAudio('assets/music/sad carol.mp3', 0.25, true);
+          }
+        } else {
+          // Stop background audio when leaving the sad section
+          stopBackgroundAudio();
+        }
+      }
+      
       animating = false;
     }, instant ? 0 : 100);
   }
@@ -251,8 +279,41 @@
     if (nextBtn) nextBtn.style.opacity = current < total - 1 ? '1' : '0.18';
   }
 
+  // Background audio for sad section
+  let backgroundAudio = null;
+
+  // Play background audio
+  function playBackgroundAudio(src, volume = 0.3, loop = true) {
+    // Check if background audio is already playing the same source
+    if (backgroundAudio && !backgroundAudio.paused && backgroundAudio.src.includes(src)) {
+      return; // Already playing, don't restart
+    }
+    
+    if (backgroundAudio) {
+      backgroundAudio.pause();
+      backgroundAudio.currentTime = 0;
+    }
+    
+    backgroundAudio = new Audio(src + '?t=' + Date.now());
+    backgroundAudio.volume = volume;
+    backgroundAudio.loop = loop;
+    backgroundAudio.play().catch(() => {});
+  }
+
+  // Stop background audio
+  function stopBackgroundAudio() {
+    if (backgroundAudio) {
+      backgroundAudio.pause();
+      backgroundAudio.currentTime = 0;
+      backgroundAudio = null;
+    }
+  }
+
   // Stop all background audio (but keep video animations playing)
   function stopAllBackgroundAudio() {
+    // Stop background audio
+    stopBackgroundAudio();
+    
     // Stop all audio elements
     document.querySelectorAll('audio').forEach(audio => {
       audio.pause();
@@ -381,7 +442,7 @@
         // Store original content and hide it initially
         const originalContent = btn.innerHTML;
         btn.dataset.originalContent = originalContent;
-        btn.innerHTML = '<em>Tap to reveal spoiler...</em>';
+        btn.innerHTML = '<em>👁 Tap to reveal spoiler...</em>';
         btn.style.opacity = '0.7';
         btn.style.fontStyle = 'italic';
       }
@@ -395,20 +456,6 @@
         btn.style.fontStyle = 'normal';
         spawnSparkles(btn, 5);
       });
-    });
-  }
-
-  // ── Simple Question (Slide 30 – his first message) ────────────
-  function setupSimpleQuestion() {
-    const btn = document.querySelector('.peek-hint.simple-question');
-    if (!btn) return;
-    btn.innerHTML = '<em>👁 Tap to see his very first message...</em>';
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      if (btn.classList.contains('revealed')) return;
-      btn.innerHTML = '<em>?</em>';
-      btn.classList.add('revealed');
-      spawnSparkles(btn, 7);
     });
   }
 
