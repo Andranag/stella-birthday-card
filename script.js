@@ -297,6 +297,7 @@
     backgroundAudio = new Audio(src);
     backgroundAudio.volume = volume;
     backgroundAudio.loop = loop;
+    backgroundAudio.preload = 'auto';
     backgroundAudio.play().catch(() => {});
   }
 
@@ -420,6 +421,7 @@
 
         const audio = new Audio(src);
         audio.volume = 0.72;
+        audio.preload = 'auto';
         audio.play().catch(() => {});
 
         audio.addEventListener('ended', () => {

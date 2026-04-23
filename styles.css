@@ -305,7 +305,7 @@ p em {
 .text-to-sound em,
 .peek-hint em {
   display: inline !important;
-  margin: 0 0.1em !important;
+  margin: 0 0.15em !important;
 }
 
 /* Ensure proper spacing in buttons */
