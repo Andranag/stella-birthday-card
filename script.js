@@ -294,7 +294,7 @@
       backgroundAudio.currentTime = 0;
     }
     
-    backgroundAudio = new Audio(src + '?t=' + Date.now());
+    backgroundAudio = new Audio(src);
     backgroundAudio.volume = volume;
     backgroundAudio.loop = loop;
     backgroundAudio.play().catch(() => {});
@@ -418,7 +418,7 @@
           activeAudioBtn?.classList.remove('playing');
         }
 
-        const audio = new Audio(src + '?t=' + Date.now());
+        const audio = new Audio(src);
         audio.volume = 0.72;
         audio.play().catch(() => {});
 

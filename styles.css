@@ -169,13 +169,69 @@ body::before {
 /* ── Typography ────────────────────────────────────────────── */
 h1 {
   font-family: var(--font-display);
-  font-size: clamp(1.3rem, 4.5vw, 2rem);
+  font-size: clamp(1.4rem, 5vw, 2.2rem);
   color: var(--gold);
   text-align: center;
   line-height: 1.35;
-  text-shadow: 0 0 30px rgba(245,197,24,0.35);
-  margin-bottom: 16px;
-  letter-spacing: 0.02em;
+  text-shadow: 
+    0 0 10px rgba(245,197,24,0.8),
+    0 0 20px rgba(245,197,24,0.6),
+    0 0 30px rgba(245,197,24,0.4),
+    1px 1px 2px rgba(0,0,0,0.9),
+    -1px -1px 2px rgba(255,255,255,0.1);
+  margin-bottom: 20px;
+  letter-spacing: 0.03em;
+  position: relative;
+  animation: h1-glow 2s ease-in-out infinite alternate, h1-subtle-bounce 3s ease-in-out infinite;
+}
+
+h1::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    transparent, 
+    rgba(245,197,24,0.3), 
+    transparent, 
+    rgba(245,197,24,0.3), 
+    transparent);
+  background-size: 400% 400%;
+  z-index: -1;
+  filter: blur(8px);
+  opacity: 0.7;
+  animation: h1-border-flow 4s ease-in-out infinite;
+  border-radius: 50px;
+}
+
+@keyframes h1-glow {
+  0% { 
+    text-shadow: 
+      0 0 10px rgba(245,197,24,0.8),
+      0 0 20px rgba(245,197,24,0.6),
+      0 0 30px rgba(245,197,24,0.4),
+      1px 1px 2px rgba(0,0,0,0.9);
+  }
+  100% { 
+    text-shadow: 
+      0 0 15px rgba(245,197,24,1),
+      0 0 30px rgba(245,197,24,0.8),
+      0 0 45px rgba(245,197,24,0.6),
+      1px 1px 2px rgba(0,0,0,0.9);
+  }
+}
+
+@keyframes h1-subtle-bounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes h1-border-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 h2, .gift-article h2, article h2, .slide h2, .gift-article .slide h2, article .slide h2, .slide.gift-article h2 {
@@ -230,13 +286,58 @@ p strong {
   font-weight: 600;
 }
 
+/* Em tags inside paragraphs */
+p em {
+  display: inline;
+  margin: 0 0.1em;
+}
+
+/* Strong tags inside buttons */
+.text-to-sound strong,
+.peek-hint strong {
+  color: var(--gold-light);
+  font-weight: 600;
+  display: inline;
+  margin: 0;
+}
+
+/* Em tags inside buttons */
+.text-to-sound em,
+.peek-hint em {
+  display: inline !important;
+  margin: 0 0.1em !important;
+}
+
+/* Ensure proper spacing in buttons */
+.text-to-sound,
+.peek-hint {
+  word-spacing: normal;
+  white-space: normal;
+  letter-spacing: normal;
+  width: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
+  display: inline-block !important;
+  text-align: center !important;
+}
+
+/* Make br tags work in buttons */
+.text-to-sound br,
+.peek-hint br {
+  display: block !important;
+  content: "" !important;
+}
+
 /* Script accent for standalone em elements */
 em {
   font-family: var(--font-script);
   font-style: normal;
   font-size: 1.02em;
-  color: #f0e6ff;
-  text-shadow: 0 0 8px rgba(240,230,255,0.4);
+  color: #e6f3ff;
+  text-shadow: 
+    0 0 10px rgba(135,206,250,0.8),
+    0 0 20px rgba(135,206,250,0.5),
+    0 0 30px rgba(135,206,250,0.3);
 }
 
 /* ── Video / Media ─────────────────────────────────────────── */
@@ -288,7 +389,7 @@ em {
   border: 1px solid rgba(245,197,24,0.25);
   border-radius: 100px;
   color: var(--cream);
-  font-family: var(--font-script);
+  font-family: var(--font-body);
   font-size: clamp(1.1rem, 2.8vw, 1.3rem);
   font-weight: 600;
   text-align: center; line-height: 1.4;
@@ -325,7 +426,7 @@ em {
   color: var(--rose);
   font-family: var(--font-body);
   font-size: clamp(1rem, 2.4vw, 1.1rem);
-  font-style: italic;
+  font-style: normal;
   cursor: pointer;
   text-align: center; line-height: 1.5;
   width: fit-content; max-width: 100%;
