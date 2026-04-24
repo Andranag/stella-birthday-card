@@ -103,7 +103,8 @@ body::before {
 /* Slides - Book Style Layout */
 .slide {
   position: absolute;
-  height: 90%;
+  height: 95%;
+  max-height: 95vh;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   padding: 30px;
@@ -314,11 +315,12 @@ p em {
   word-spacing: normal;
   white-space: normal;
   letter-spacing: normal;
-  width: auto !important;
+  width: fit-content !important;
   min-width: auto !important;
-  max-width: none !important;
+  max-width: 90% !important;
   display: inline-block !important;
   text-align: center !important;
+  margin: 8px auto !important;
 }
 
 /* Make br tags work in buttons */
@@ -716,10 +718,80 @@ em {
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 500px) {
   #story { padding: 20px 10px 30px 5px; }
-  .slide { padding: 28px 16px 20px; }
+  .slide { 
+    padding: 20px 12px 15px;
+    height: 98%;
+    max-height: 98vh;
+  }
   #prev-page { left: 4px; }
   #next-page { right: 4px; }
   #prev-page, #next-page { width: 36px; height: 36px; font-size: 1rem; }
+  
+  /* Adjust button text spacing for small screens */
+  .text-to-sound em,
+  .peek-hint em {
+    margin: 0 0.08em !important;
+  }
+  
+  .text-to-sound strong,
+  .peek-hint strong {
+    margin: 0 0.05em !important;
+  }
+  
+  p em {
+    margin: 0 0.08em !important;
+  }
+  
+  /* Adjust button sizes for better fit */
+  .text-to-sound {
+    padding: 12px 20px;
+    font-size: clamp(0.9rem, 2.2vw, 1rem);
+    max-width: 95% !important;
+  }
+  
+  .peek-hint {
+    padding: 10px 18px;
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    max-width: 95% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Adjust button text spacing for medium screens */
+  .text-to-sound em,
+  .peek-hint em {
+    margin: 0 0.1em !important;
+  }
+  
+  .text-to-sound strong,
+  .peek-hint strong {
+    margin: 0 0.08em !important;
+  }
+  
+  p em {
+    margin: 0 0.08em !important;
+  }
+  
+  /* Adjust button sizes for medium screens */
+  .text-to-sound {
+    padding: 13px 22px;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    max-width: 92% !important;
+  }
+  
+  .peek-hint {
+    padding: 11px 20px;
+    font-size: clamp(0.9rem, 2.2vw, 1rem);
+    max-width: 92% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .slide { 
+    padding: 25px 15px 20px;
+    height: 96%;
+    max-height: 96vh;
+  }
 }
 
 @media (min-height: 800px) {
