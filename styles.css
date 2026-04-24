@@ -306,7 +306,7 @@ p em {
 .text-to-sound em,
 .peek-hint em {
   display: inline !important;
-  margin: 0 0.08em !important;
+  margin: 0 0.2em !important;
 }
 
 
