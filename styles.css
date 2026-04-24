@@ -310,12 +310,6 @@ p em {
 }
 
 
-/* Make br tags work in buttons */
-.text-to-sound br,
-.peek-hint br {
-  display: block !important;
-  content: "" !important;
-}
 
 /* Script accent for standalone em elements */
 em {
@@ -371,8 +365,7 @@ em {
 
 /* ── Sound Buttons ─────────────────────────────────────────── */
 .text-to-sound {
-  display: inline-flex; align-items: center;
-  justify-content: center; gap: 6px;
+  display: inline-block;
   padding: 8px 16px; margin: 6px auto;
   background: rgba(245,197,24,0.08);
   border: 1px solid rgba(245,197,24,0.25);
@@ -407,7 +400,7 @@ em {
 
 /* ── Peek Hint (Spoiler) Buttons ───────────────────────────── */
 .peek-hint {
-  display: inline-flex; align-items: center;
+  display: inline-block;
   padding: 6px 14px; margin: 6px auto 12px auto;
   background: rgba(230,57,70,0.08);
   border: 1px dashed rgba(244,143,177,0.35);
@@ -715,16 +708,6 @@ em {
   #prev-page, #next-page { width: 36px; height: 36px; font-size: 1rem; }
   
   /* Adjust button text spacing for small screens */
-  .text-to-sound em,
-  .peek-hint em {
-    margin: 0 0.08em !important;
-  }
-  
-  .text-to-sound strong,
-  .peek-hint strong {
-    margin: 0 0.05em !important;
-  }
-  
   p em {
     margin: 0 0.08em !important;
   }
@@ -733,28 +716,16 @@ em {
   .text-to-sound {
     padding: 12px 20px;
     font-size: clamp(0.9rem, 2.2vw, 1rem);
-    max-width: 95% !important;
   }
   
   .peek-hint {
     padding: 10px 18px;
     font-size: clamp(0.85rem, 2vw, 0.95rem);
-    max-width: 95% !important;
   }
 }
 
 @media (max-width: 768px) {
   /* Adjust button text spacing for medium screens */
-  .text-to-sound em,
-  .peek-hint em {
-    margin: 0 0.1em !important;
-  }
-  
-  .text-to-sound strong,
-  .peek-hint strong {
-    margin: 0 0.08em !important;
-  }
-  
   p em {
     margin: 0 0.08em !important;
   }
@@ -763,13 +734,11 @@ em {
   .text-to-sound {
     padding: 13px 22px;
     font-size: clamp(1rem, 2.5vw, 1.1rem);
-    max-width: 92% !important;
   }
   
   .peek-hint {
     padding: 11px 20px;
     font-size: clamp(0.9rem, 2.2vw, 1rem);
-    max-width: 92% !important;
   }
 }
 
