@@ -295,10 +295,20 @@
     }
     
     backgroundAudio = new Audio(src);
-    backgroundAudio.volume = volume;
+    
+    // Apply universal volume normalization to background audio
+    const normalizedVolume = Math.min(Math.max(volume, 0.2), 0.4); // Clamp between 0.2 and 0.4
+    backgroundAudio.volume = normalizedVolume;
     backgroundAudio.loop = loop;
-    backgroundAudio.preload = 'auto';
-    backgroundAudio.play().catch(() => {});
+    
+    // Add audio normalization to prevent extreme volume differences
+    backgroundAudio.addEventListener('loadedmetadata', () => {
+      // Ensure background audio never exceeds safe limits
+      if (backgroundAudio.volume > 0.4) backgroundAudio.volume = 0.4;
+      if (backgroundAudio.volume < 0.2) backgroundAudio.volume = 0.2;
+    }, { once: true });
+    
+    backgroundAudio.play();
   }
 
   // Stop background audio
@@ -402,34 +412,65 @@
         const src = btn.dataset.sound;
         if (!src) return;
 
-        // Toggle off if same button
-        if (activeAudio && activeAudioBtn === btn) {
-          activeAudio.pause();
-          activeAudio.currentTime = 0;
-          activeAudio   = null;
-          activeAudioBtn = null;
-          btn.classList.remove('playing');
-          return;
-        }
-
-        // Stop previous
+        // Stop previous audio if playing
         if (activeAudio) {
           activeAudio.pause();
           activeAudio.currentTime = 0;
           activeAudioBtn?.classList.remove('playing');
         }
 
+        // Simple audio playback for local files
         const audio = new Audio(src);
-        audio.volume = 0.72;
-        audio.preload = 'auto';
-        audio.play().catch(() => {});
+        
+        // Force immediate volume control
+        const forceVolume = (audioSrc) => {
+          // Aggressively reduce known loud files
+          if (audioSrc.toLowerCase().includes('you found me')) {
+            return 0.15; // Very low for "you found me"
+          } else if (audioSrc.toLowerCase().includes('inspector gadget')) {
+            return 0.2;
+          } else if (audioSrc.toLowerCase().includes('one piece intro')) {
+            return 0.2;
+          } else if (audioSrc.toLowerCase().includes('pokemon theme')) {
+            return 0.2;
+          } else if (audioSrc.toLowerCase().includes('all I know is')) {
+            return 0.6; // Boost quiet files
+          } else if (audioSrc.toLowerCase().includes('hercules amazing')) {
+            return 0.6;
+          } else {
+            return 0.4; // Conservative default
+          }
+        };
+        
+        // Apply forced volume immediately and repeatedly
+        const targetVolume = forceVolume(src);
+        audio.volume = targetVolume;
+        
+        // Force volume to stay low with multiple checks
+        const enforceVolume = () => {
+          audio.volume = targetVolume;
+          if (audio.volume > targetVolume) {
+            audio.volume = targetVolume;
+          }
+        };
+        
+        // Enforce volume at multiple points
+        enforceVolume();
+        setTimeout(enforceVolume, 100);
+        setTimeout(enforceVolume, 500);
+        
+        audio.addEventListener('loadedmetadata', enforceVolume);
+        audio.addEventListener('canplay', enforceVolume);
+        
+        audio.play();
 
         audio.addEventListener('ended', () => {
           btn.classList.remove('playing');
-          if (activeAudio === audio) { activeAudio = null; activeAudioBtn = null; }
+          activeAudio = null;
+          activeAudioBtn = null;
         });
 
-        activeAudio    = audio;
+        activeAudio = audio;
         activeAudioBtn = btn;
         btn.classList.add('playing');
       });
