@@ -369,11 +369,77 @@ em {
   }
 }
 
-/* Alternative sizing for specific problematic slides */
-.gift-img.flexible {
-  aspect-ratio: auto;
-  min-height: 200px;
-  max-height: 400px;
+/* Intentional element ordering patterns */
+.gift-article {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  padding: 20px;
+  min-height: 100%;
+}
+
+/* Flexible pattern: h2 → video → p → audio → spoiler */
+.gift-article.layout-consistent {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gift-article.layout-consistent h2 {
+  text-align: center;
+  max-width: 580px;
+  margin-bottom: 10px;
+  order: 1;
+}
+
+.gift-article.layout-consistent .gift-img {
+  align-self: center;
+  margin-bottom: 15px;
+  order: 2;
+}
+
+.gift-article.layout-consistent p {
+  text-align: center;
+  max-width: 500px;
+  align-self: center;
+  margin-bottom: 15px;
+  order: 3;
+}
+
+.gift-article.layout-consistent .text-to-sound {
+  text-align: center;
+  max-width: 500px;
+  align-self: center;
+  margin-bottom: 15px;
+  order: 4;
+}
+
+.gift-article.layout-consistent .peek-hint {
+  text-align: center;
+  max-width: 500px;
+  align-self: center;
+  order: 5;
+}
+
+/* Mobile responsive - simplify all patterns to centered */
+@media (max-width: 768px) {
+  .gift-article {
+    align-items: center !important;
+    padding: 15px;
+    gap: 15px;
+  }
+  
+  .gift-article .gift-img,
+  .gift-article h2,
+  .gift-article p,
+  .gift-article button {
+    align-self: center !important;
+    text-align: center !important;
+    max-width: 100% !important;
+    margin: 5px 0 !important;
+  }
 }
 
 /* ── Sound Buttons ─────────────────────────────────────────── */

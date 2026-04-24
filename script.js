@@ -29,17 +29,67 @@
   let activeAudioBtn= null;
   let tipIndex      = 0;
 
+  // ── Intentional Element Ordering System ─────────────────────────
+  function setupBookLayouts() {
+    const slides = document.querySelectorAll('.gift-article');
+    
+    slides.forEach((slide, index) => {
+      // Skip header slide
+      if (slide.id === 'header') return;
+      
+      // Remove existing layout classes
+      slide.classList.remove('layout-left', 'layout-right', 'layout-center', 'layout-top', 'layout-bottom');
+      
+      // Apply flexible pattern: h2 → video → p → audio → spoiler
+      slide.classList.add('layout-consistent');
+      reorderElements(slide, ['h2', '.gift-img', 'p', '.text-to-sound', '.peek-hint']);
+    });
+  }
+
+  // Helper function to reorder elements
+  function reorderElements(slide, order) {
+    const container = slide;
+    const elements = [];
+    
+    // Collect elements in the desired order
+    order.forEach(selector => {
+      if (selector === 'h2') {
+        // Get all h2 elements (including those with buttons inside)
+        const h2Elements = slide.querySelectorAll('h2');
+        h2Elements.forEach(h2 => elements.push(h2));
+      } else if (selector === '.text-to-sound') {
+        // Get audio buttons that are NOT inside h2 elements
+        const audioButtons = slide.querySelectorAll('.text-to-sound:not(h2 .text-to-sound)');
+        audioButtons.forEach(btn => elements.push(btn));
+      } else if (selector === '.peek-hint') {
+        // Get spoiler buttons that are NOT inside h2 elements
+        const spoilerButtons = slide.querySelectorAll('.peek-hint:not(h2 .peek-hint)');
+        spoilerButtons.forEach(btn => elements.push(btn));
+      } else {
+        const element = slide.querySelector(selector);
+        if (element) elements.push(element);
+      }
+    });
+    
+    // Re-append elements in new order
+    elements.forEach(element => {
+      container.appendChild(element);
+    });
+  }
+
   // ── Initialise ───────────────────────────────────────────────
   function init() {
+    setupBookLayouts();
     buildStarfield();
     hideAllSlides();
     populateJumpTotal();
     setupSlideNavigation();
     setupSoundButtons();
     setupPeekHints();
-        setupJumpModal();
+    setupJumpModal();
     setupCompass();
     setupTips();
+    updateHUD();
     goTo(0, true);
   }
 
