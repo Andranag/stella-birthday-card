@@ -298,8 +298,6 @@ p em {
 .peek-hint strong {
   color: var(--gold-light);
   font-weight: 600;
-  display: inline;
-  margin: 0 0.05em;
 }
 
 /* Em tags inside buttons */
@@ -312,7 +310,7 @@ p em {
 /* Separate audio and spoiler buttons onto different lines */
 .text-to-sound + .peek-hint,
 .peek-hint + .text-to-sound {
-  display: block !important;
+  display: inline-block;
   margin-top: 12px !important;
 }
 
@@ -423,6 +421,45 @@ em {
   order: 5;
 }
 
+/* Special case for slide 95 - spoiler before audio */
+.gift-article.slide-95-special .text-to-sound {
+  order: 5;
+}
+
+.gift-article.slide-95-special .peek-hint {
+  order: 4;
+}
+
+/* Special case for Notre-Dame slide - audio before paragraph */
+.gift-article.notre-dame-special .text-to-sound {
+  order: 2;
+}
+
+/* Special case for slide 145 - audio before video */
+.gift-article.slide-145-audio-first .text-to-sound {
+  order: 2;
+}
+
+.gift-article.slide-145-audio-first .gift-img {
+  order: 3;
+}
+
+.gift-article.slide-145-audio-first p {
+  order: 4;
+}
+
+.gift-article.notre-dame-special p {
+  order: 3;
+}
+
+.gift-article.notre-dame-special .peek-hint {
+  order: 4;
+}
+
+.gift-article.notre-dame-special .gift-img {
+  order: 5;
+}
+
 /* Mobile responsive - simplify all patterns to centered */
 @media (max-width: 768px) {
   .gift-article {
@@ -480,23 +517,29 @@ em {
 /* ── Peek Hint (Spoiler) Buttons ───────────────────────────── */
 .peek-hint {
   display: inline-block;
-  padding: 6px 14px; margin: 6px auto 12px auto;
+  padding: 16px 24px;
+  margin: 6px auto 12px auto;
   background: rgba(230,57,70,0.08);
-  border: 1px dashed rgba(244,143,177,0.35);
-  border-radius: 100px;
-  color: var(--rose);
-  font-family: var(--font-body);
-  font-size: clamp(0.85rem, 2vw, 1rem);
-  font-style: normal;
+  border: 2px solid rgba(230,57,70,0.4);
+  border-radius: 8px;
+  color: var(--text-light);
+  text-decoration: none;
   cursor: pointer;
-  text-align: center; line-height: 1.5;
-  width: fit-content; max-width: 100%;
   transition: background 0.28s, border-color 0.28s, box-shadow 0.28s;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  min-width: 250px;
+  max-width: 500px;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+  min-height: 5em;
 }
 
-.peek-hint:not(.revealed)::before {
-  content: '🔮 ';
-  font-style: normal;
+/* Make peek-hint buttons keyboard accessible */
+.peek-hint:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
 }
 
 .peek-hint.revealed {
@@ -672,80 +715,8 @@ em {
   transform: translateY(-1px);
 }
 
-/* ── Context Compass ───────────────────────────────────────── */
-.compass-trigger {
-  position: fixed; top: 14px; right: 14px;
-  z-index: 100; font-size: 1.4rem;
-  cursor: pointer;
-  transition: transform 0.35s ease, filter 0.35s ease;
-  filter: drop-shadow(0 0 6px rgba(245,197,24,0.35));
-  user-select: none;
-}
-.compass-trigger:hover { transform: rotate(25deg) scale(1.1); }
+  
 
-.context-compass {
-  position: fixed; top: 50px; right: 10px;
-  z-index: 100;
-  background: rgba(8,8,28,0.96);
-  border: 1px solid var(--border);
-  border-radius: 18px; padding: 16px;
-  width: 195px;
-  backdrop-filter: blur(22px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 0 30px rgba(245,197,24,0.05);
-  opacity: 0; transform: translateY(-8px) scale(0.94);
-  transform-origin: top right;
-  transition: opacity 0.25s, transform 0.25s;
-  pointer-events: none;
-}
-.context-compass.open {
-  opacity: 1; transform: translateY(0) scale(1);
-  pointer-events: all;
-}
-
-.compass-header {
-  display: flex; align-items: center; gap: 7px;
-  margin-bottom: 12px; padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.compass-icon { font-size: 1rem; }
-.compass-title {
-  font-family: var(--font-display);
-  font-size: 0.62rem; letter-spacing: 0.12em;
-  color: var(--gold);
-}
-
-.compass-sections { list-style: none; }
-.compass-sections li {
-  display: flex; align-items: center; gap: 9px;
-  padding: 7px 9px; border-radius: 9px;
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 0.75rem; color: var(--text-muted);
-  transition: background 0.2s, color 0.2s;
-}
-.compass-sections li:hover {
-  background: rgba(245,197,24,0.07);
-  color: var(--text);
-}
-
-.section-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%; flex-shrink: 0;
-}
-.section-dot.prologue  { background: #f5c518; }
-.section-dot.approach  { background: #4fc3f7; }
-.section-dot.date      { background: #e91e63; }
-.section-dot.connection{ background: #ab47bc; }
-.section-dot.team      { background: #66bb6a; }
-.section-dot.present   { background: #ff8a65; }
-
-.compass-hint {
-  margin-top: 10px; padding-top: 10px;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  font-size: 0.62rem;
-  color: rgba(255,255,255,0.2);
-  text-align: center; font-family: var(--font-body);
-}
 
 /* ── Special Slide: Header ─────────────────────────────────── */
 #header {
@@ -770,9 +741,6 @@ em {
   100% { opacity: 0; transform: scale(0.2) translateY(-40px) rotate(180deg); }
 }
 
-/* ── Slide-in animation class (added by JS briefly) ───────── */
-.slide-entering-right  { transform: translateX(100%) !important; opacity: 0 !important; }
-.slide-entering-left   { transform: translateX(-100%) !important; opacity: 0 !important; }
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 500px) {

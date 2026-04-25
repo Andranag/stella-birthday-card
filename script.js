@@ -40,9 +40,26 @@
       // Remove existing layout classes
       slide.classList.remove('layout-left', 'layout-right', 'layout-center', 'layout-top', 'layout-bottom');
       
-      // Apply flexible pattern: h2 → video → p → audio → spoiler
-      slide.classList.add('layout-consistent');
-      reorderElements(slide, ['h2', '.gift-img', 'p', '.text-to-sound', '.peek-hint']);
+      // Check for special slides
+      const h2Element = slide.querySelector('h2');
+      const isSlide95 = h2Element && h2Element.textContent.includes('His first message?');
+      const isNotreDameSlide = h2Element && h2Element.textContent.includes('Anyhow...');
+      
+      if (isSlide95) {
+        console.log('Detected slide 95 - applying special order');
+        // Special order for slide 95: h2 → video → spoiler → audio
+        slide.classList.add('layout-consistent', 'slide-95-special');
+        reorderElements(slide, ['h2', '.gift-img', '.peek-hint', '.text-to-sound']);
+      } else if (isNotreDameSlide) {
+        console.log('Detected Notre-Dame slide - applying special order');
+        // Special order for Notre-Dame slide: h2 → audio → p → spoiler → video
+        slide.classList.add('layout-consistent', 'notre-dame-special');
+        reorderElements(slide, ['h2', '.text-to-sound', 'p', '.peek-hint', '.gift-img']);
+      } else {
+        // Apply flexible pattern: h2 → video → p → audio → spoiler
+        slide.classList.add('layout-consistent');
+        reorderElements(slide, ['h2', '.gift-img', 'p', '.text-to-sound', '.peek-hint']);
+      }
     });
   }
 
@@ -370,31 +387,6 @@
     }
   }
 
-  // Stop all background audio (but keep video animations playing)
-  function stopAllBackgroundAudio() {
-    // Stop background audio
-    stopBackgroundAudio();
-    
-    // Stop all audio elements
-    document.querySelectorAll('audio').forEach(audio => {
-      audio.pause();
-      audio.currentTime = 0;
-    });
-    
-    // Stop any active audio from sound buttons
-    if (activeAudio) {
-      activeAudio.pause();
-      activeAudio.currentTime = 0;
-      activeAudio = null;
-      activeAudioBtn = null;
-    }
-    
-    // Remove playing class from all sound buttons
-    document.querySelectorAll('.text-to-sound.playing').forEach(btn => {
-      btn.classList.remove('playing');
-    });
-  }
-
   // ── Navigation ───────────────────────────────────────────────
   function setupSlideNavigation() {
     const isMobile = window.innerWidth <= 768;
@@ -535,7 +527,7 @@
         // Store original content and hide it initially
         const originalContent = btn.innerHTML;
         btn.dataset.originalContent = originalContent;
-        btn.innerHTML = '<em>👁 Tap to reveal spoiler...</em>';
+        btn.innerHTML = '<em>Tap to reveal spoiler...</em>';
         btn.style.opacity = '0.7';
         btn.style.fontStyle = 'italic';
       }
