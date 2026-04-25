@@ -86,17 +86,19 @@ body::before {
 #story {
   position: fixed; inset: 0; z-index: 1;
   display: flex; align-items: center; justify-content: center;
-  padding: 20px 20px 40px 10px;
+  padding: 0;
 }
 
 #swipe-container {
   position: relative;
-  width: 100%;
+  width: 85vw;
+  max-width: 480px;
   height: 90vh;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 /* ── Slides ────────────────────────────────────────────────── */
@@ -105,14 +107,17 @@ body::before {
   position: absolute;
   height: 95%;
   max-height: 95vh;
+  width: 100%;
+  max-width: 100%;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  padding: 30px;
+  padding: 25px;
   overflow-y: auto; overflow-x: hidden;
   scrollbar-width: none; -ms-overflow-style: none;
   will-change: transform, opacity;
-  border-radius: 0 15px 15px 0;
+  border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-sizing: border-box;
 }
 
 /* Positioning handled by JavaScript */
@@ -128,7 +133,7 @@ body::before {
 .gift-article {
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: 22px;
+  border-radius: 25px;
   backdrop-filter: blur(24px) saturate(1.4);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
   box-shadow:
@@ -466,8 +471,10 @@ em {
     align-items: center !important;
     padding: 15px;
     gap: 15px;
+    overflow-x: hidden;
+    max-width: calc(100vw - 30px) !important;
   }
-  
+
   .gift-article .gift-img,
   .gift-article h2,
   .gift-article p,
@@ -477,23 +484,35 @@ em {
     max-width: 100% !important;
     margin: 5px 0 !important;
   }
+
+  .text-to-sound,
+  .peek-hint {
+    max-width: calc(100% - 30px) !important;
+    min-width: auto !important;
+  }
 }
 
 /* ── Sound Buttons ─────────────────────────────────────────── */
 .text-to-sound {
   display: inline-block;
-  padding: 8px 16px; margin: 6px auto;
+  padding: 16px 24px;
+  margin: 6px auto 12px auto;
   background: rgba(245,197,24,0.08);
-  border: 1px solid rgba(245,197,24,0.25);
-  border-radius: 100px;
+  border: 2px solid rgba(245,197,24,0.4);
+  border-radius: 8px;
   color: var(--cream);
   font-family: var(--font-body);
-  font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+  font-size: 1.2rem;
   font-weight: 600;
-  text-align: center; line-height: 1.4;
+  text-align: center;
+  line-height: 1.7;
   cursor: pointer;
   transition: background 0.28s, border-color 0.28s, box-shadow 0.28s, transform 0.2s;
-  width: fit-content; max-width: 100%;
+  width: fit-content;
+  max-width: 500px;
+  min-width: 250px;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .text-to-sound:hover {
@@ -744,8 +763,9 @@ em {
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 500px) {
-  #story { padding: 20px 10px 30px 5px; }
-  .slide { 
+  #story { padding: 10px; }
+  #swipe-container { max-width: 100%; }
+  .slide {
     padding: 20px 12px 15px;
     height: 98%;
     max-height: 98vh;
@@ -802,7 +822,7 @@ em {
 }
 
 @media (min-width: 900px) {
-  #story { padding: 15px 30px 30px 5px; }
+  #story { padding: 15px; }
   #swipe-container { max-width: none; width: 100%; height: 94vh; }
 }
 

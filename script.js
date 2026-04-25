@@ -527,7 +527,7 @@
         // Store original content and hide it initially
         const originalContent = btn.innerHTML;
         btn.dataset.originalContent = originalContent;
-        btn.innerHTML = '<em>Tap to reveal spoiler...</em>';
+        btn.innerHTML = '<em>🔮 Tap to reveal spoiler...</em>';
         btn.style.opacity = '0.7';
         btn.style.fontStyle = 'italic';
       }
