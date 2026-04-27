@@ -323,8 +323,122 @@
             playBackgroundAudio('assets/music/sad carol.mp3', 0.25, true);
           }
         } else {
-          // Stop background audio when leaving the sad section
-          stopBackgroundAudio();
+          // Check if we're in the dance section
+          const danceSectionStart = document.getElementById('dance-section-start');
+          const danceSectionEnd = document.getElementById('dance-section-end');
+          
+          if (danceSectionStart && danceSectionEnd) {
+            const danceStartIndex = Array.from(slides).indexOf(danceSectionStart);
+            const danceEndIndex = Array.from(slides).indexOf(danceSectionEnd);
+            
+            if (current >= danceStartIndex && current <= danceEndIndex) {
+              // Only play if not already playing
+              if (!backgroundAudio || backgroundAudio.paused) {
+                playBackgroundAudio('assets/music/put your head on my shoulder.mp3', 0.4, true);
+              }
+            } else {
+              // Check if we're in the careless whisper section
+              const carelessSectionStart = document.getElementById('careless-section-start');
+              const carelessSectionEnd = document.getElementById('careless-section-end');
+              
+              if (carelessSectionStart && carelessSectionEnd) {
+                const carelessStartIndex = Array.from(slides).indexOf(carelessSectionStart);
+                const carelessEndIndex = Array.from(slides).indexOf(carelessSectionEnd);
+                
+                if (current >= carelessStartIndex && current <= carelessEndIndex) {
+                  // Only play if not already playing
+                  if (!backgroundAudio || backgroundAudio.paused) {
+                    playBackgroundAudio('assets/music/careless whisper.mp3', 0.35, true);
+                  }
+                } else {
+                  // Stop background audio when leaving the careless section
+                  stopBackgroundAudio();
+                }
+              } else {
+                // Stop background audio when leaving the dance section (and not entering careless section)
+                stopBackgroundAudio();
+              }
+            }
+          } else {
+            // Check if we're in the careless whisper section (when leaving sad section)
+            const carelessSectionStart = document.getElementById('careless-section-start');
+            const carelessSectionEnd = document.getElementById('careless-section-end');
+            
+            if (carelessSectionStart && carelessSectionEnd) {
+              const carelessStartIndex = Array.from(slides).indexOf(carelessSectionStart);
+              const carelessEndIndex = Array.from(slides).indexOf(carelessSectionEnd);
+              
+              if (current >= carelessStartIndex && current <= carelessEndIndex) {
+                // Only play if not already playing
+                if (!backgroundAudio || backgroundAudio.paused) {
+                  playBackgroundAudio('assets/music/careless whisper.mp3', 0.35, true);
+                }
+              } else {
+                // Stop background audio when leaving the careless section
+                stopBackgroundAudio();
+              }
+            } else {
+              // Stop background audio when leaving the sad section (and not entering dance or careless section)
+              stopBackgroundAudio();
+            }
+          }
+        }
+      } else {
+        // Check if we're in the dance section (when not in sad section)
+        const danceSectionStart = document.getElementById('dance-section-start');
+        const danceSectionEnd = document.getElementById('dance-section-end');
+        
+        if (danceSectionStart && danceSectionEnd) {
+          const danceStartIndex = Array.from(slides).indexOf(danceSectionStart);
+          const danceEndIndex = Array.from(slides).indexOf(danceSectionEnd);
+          
+          if (current >= danceStartIndex && current <= danceEndIndex) {
+            // Only play if not already playing
+            if (!backgroundAudio || backgroundAudio.paused) {
+              playBackgroundAudio('assets/music/put your head on my shoulder.mp3', 0.4, true);
+            }
+          } else {
+            // Check if we're in the careless whisper section (when leaving dance section)
+            const carelessSectionStart = document.getElementById('careless-section-start');
+            const carelessSectionEnd = document.getElementById('careless-section-end');
+            
+            if (carelessSectionStart && carelessSectionEnd) {
+              const carelessStartIndex = Array.from(slides).indexOf(carelessSectionStart);
+              const carelessEndIndex = Array.from(slides).indexOf(carelessSectionEnd);
+              
+              if (current >= carelessStartIndex && current <= carelessEndIndex) {
+                // Only play if not already playing
+                if (!backgroundAudio || backgroundAudio.paused) {
+                  playBackgroundAudio('assets/music/careless whisper.mp3', 0.35, true);
+                }
+              } else {
+                // Stop background audio when leaving the careless section
+                stopBackgroundAudio();
+              }
+            } else {
+              // Stop background audio when leaving the dance section (and not entering careless section)
+              stopBackgroundAudio();
+            }
+          }
+        } else {
+          // Check if we're in the careless whisper section (when not in sad or dance section)
+          const carelessSectionStart = document.getElementById('careless-section-start');
+          const carelessSectionEnd = document.getElementById('careless-section-end');
+          
+          if (carelessSectionStart && carelessSectionEnd) {
+            const carelessStartIndex = Array.from(slides).indexOf(carelessSectionStart);
+            const carelessEndIndex = Array.from(slides).indexOf(carelessSectionEnd);
+            
+            if (current >= carelessStartIndex && current <= carelessEndIndex) {
+              // Only play if not already playing
+              if (!backgroundAudio || backgroundAudio.paused) {
+                playBackgroundAudio('assets/music/careless whisper.mp3', 0.35, true);
+              }
+            } else {
+              // Stop background audio when leaving the careless section
+              stopBackgroundAudio();
+            }
+          }
         }
       }
       
