@@ -43,18 +43,12 @@
       // Check for special slides
       const h2Element = slide.querySelector('h2');
       const isSlide95 = h2Element && h2Element.textContent.includes('His first message?');
-      const isNotreDameSlide = h2Element && h2Element.textContent.includes('Anyhow...');
       
       if (isSlide95) {
         console.log('Detected slide 95 - applying special order');
         // Special order for slide 95: h2 → video → spoiler → audio
         slide.classList.add('layout-consistent', 'slide-95-special');
         reorderElements(slide, ['h2', '.gift-img', '.peek-hint', '.text-to-sound']);
-      } else if (isNotreDameSlide) {
-        console.log('Detected Notre-Dame slide - applying special order');
-        // Special order for Notre-Dame slide: h2 → audio → p → spoiler → video
-        slide.classList.add('layout-consistent', 'notre-dame-special');
-        reorderElements(slide, ['h2', '.text-to-sound', 'p', '.peek-hint', '.gift-img']);
       } else {
         // Apply flexible pattern: h2 → video → p → audio → spoiler
         slide.classList.add('layout-consistent');
