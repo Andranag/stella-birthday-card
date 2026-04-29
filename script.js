@@ -845,8 +845,9 @@
   content: '✨ spoiler — tap to reveal ✨';
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: .72rem; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 1.8px;
+  font-size: .64rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1px;
+  white-space: nowrap;
   color: #F0C050 !important; text-shadow: none !important;
   background: linear-gradient(145deg, #2A0E50 0%, #3E1A6A 40%, #2A0E50 100%);
   border-radius: inherit;

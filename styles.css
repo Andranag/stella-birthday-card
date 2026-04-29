@@ -636,7 +636,7 @@ body::after {
   flex-direction: column   !important;
   align-items:  center     !important;
   justify-content: center  !important;
-  gap:          18px       !important;
+  gap:          14px       !important;
   animation:    none       !important;
   margin:       0          !important;
 }
@@ -665,14 +665,16 @@ body::after {
 
 /* Scale videos/images inside pages */
 .slide.gift-article.in-page .gift-img {
-  margin: 5px auto !important;
-  display: inline-block !important;
-  width: fit-content !important;
-  height: fit-content !important;
+  margin: 8px auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  max-height: 40vh !important;
+  height: auto !important;
   padding: 0 !important;
-  background: linear-gradient(165deg, #FBF4DC 0%, #F5E7C2 55%, #EDD6A4 100%) !important;
-  aspect-ratio: auto !important;
-  max-width: none !important;
+  background: transparent !important;
   position: relative !important;
   overflow: hidden !important;
   border-radius: 8px !important;
@@ -682,32 +684,7 @@ body::after {
     0 0 0 8px var(--p2),
     0 0 0 10px rgba(201,160,48,.35),
     0 6px 20px rgba(0,0,0,.30),
-    0 12px 40px rgba(0,0,0,.22) !important;
-}
-
-/* Restore decorative pseudo-elements for in-page slides */
-.slide.gift-article.in-page .gift-img::before {
-  content: '' !important;
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 1 !important;
-  border-radius: 8px !important;
-  pointer-events: none !important;
-  background: linear-gradient(130deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.04) 40%, transparent 70%) !important;
-}
-
-.slide.gift-article.in-page .gift-img::after {
-  content: '' !important;
-  position: absolute !important;
-  inset: -1px !important;
-  border-radius: 8px !important;
-  z-index: 2 !important;
-  pointer-events: none !important;
-  background:
-    linear-gradient(to bottom right, rgba(201,160,48,.22) 0%, transparent 30%) top left  /20px 20px no-repeat,
-    linear-gradient(to bottom left,  rgba(201,160,48,.22) 0%, transparent 30%) top right /20px 20px no-repeat,
-    linear-gradient(to top right,    rgba(201,160,48,.22) 0%, transparent 30%) bottom left /20px 20px no-repeat,
-    linear-gradient(to top left,     rgba(201,160,48,.22) 0%, transparent 30%) bottom right/20px 20px no-repeat !important;
+    0 12px 40px rgba(0,0,0,.22);
 }
 
 /* Ensure videos fit without clipping */
@@ -715,9 +692,9 @@ body::after {
   width: auto !important;
   height: auto !important;
   max-width: 100% !important;
-  max-height: 70vh !important;
+  max-height: 38vh !important;
   display: block !important;
-  margin: 0 !important;
+  margin: 0 auto !important;
   padding: 0 !important;
   object-fit: contain !important;
   border-radius: 6px !important;
@@ -725,21 +702,29 @@ body::after {
 
 /* Scale buttons inside pages */
 .slide.gift-article.in-page .text-to-sound {
+  display: block !important;
+  width: fit-content !important;
   font-size: .90rem !important;
-  padding: 9px 20px 9px 16px !important;
+  padding: 10px 18px !important;
   border-radius: 30px !important;
-  min-height: 3em !important;
-  min-width: 220px !important;
-  white-space: nowrap !important;
+  min-height: 44px !important;
+  min-width: auto !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
   max-width: 100% !important;
-  margin: 4px auto !important;
+  margin: 6px auto 16px auto !important;
 }
 .slide.gift-article.in-page .peek-hint {
+  display: block !important;
+  width: fit-content !important;
   font-size: .90rem !important;
-  line-height: 1.55 !important;
-  padding: 8px 16px !important;
+  line-height: 1.65 !important;
+  padding: 10px 16px !important;
+  min-height: 44px !important;
+  min-width: 270px !important;
   max-width: 100% !important;
-  margin: 4px auto !important;
+  margin: 6px auto 16px auto !important;
 }
 
 /* Thinner h2 divider inside pages */
@@ -813,7 +798,7 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
 .gift-img.wide-video  { aspect-ratio: 16/9; }
 .gift-img.tall-video  { aspect-ratio: 9/16; max-width: 210px; }
 .gift-img.flexible    { aspect-ratio: auto; }
-.gift-video { width:100%; height:100%; object-fit:cover; display:block; border-radius:6px; }
+.gift-video { width:100%; height:100%; object-fit:contain; display:block; border-radius:6px; }
 
 /* ================================================================
    BUTTONS
@@ -826,8 +811,8 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   color: var(--i0); line-height: 1.55; text-align: center;
   background: linear-gradient(180deg, #FEFBEE 0%, #F8EDCC 30%, #F0D99A 70%, #E8CB80 100%);
   border: 2px solid var(--g2); border-radius: 40px;
-  padding: 11px 28px 11px 22px;
-  margin: 4px auto; max-width: 100%;
+  padding: 11px 25px;
+  margin: 4px auto 12px auto; max-width: 100%;
   cursor: pointer; position: relative; overflow: hidden;
   min-height: 3.2em;
   min-width: 260px;
@@ -863,17 +848,20 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
 .peek-hint {
   display: inline-block;
   font-family: 'Nunito', sans-serif;
-  font-size: .875rem; font-weight: 700; line-height: 1.5;
-  color: #FFF8E7; text-align: center; max-width: 100%;
-  background: linear-gradient(145deg, #2A0E50 0%, #3E1A6A 40%, #2A0E50 100%);
-  border: 1.5px solid rgba(201,160,48,.55); border-radius: 8px;
-  padding: 9px 18px 10px; margin: 4px auto;
-  cursor: pointer; position: relative; overflow: hidden;
-  box-shadow: 0 2px 0 rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
-  transition: transform .18s ease, box-shadow .18s ease;
-  min-height: 3.5em;
-  white-space: nowrap;
-  min-width: 300px;
+  font-size: .90rem; font-weight: 700; line-height: 1.65;
+  color: #E8D5A3;
+  text-shadow: 0 1px 3px rgba(0,0,0,.65);
+  background: linear-gradient(145deg, #2D0D5E 0%, #4A1E8A 40%, #2D0D5E 100%);
+  border: 1px solid rgba(201,160,48,.55);
+  border-radius: 10px;
+  padding: 10px 16px 12px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  white-space: normal;
+  text-align: center;
+  min-width: 270px;
+  max-width: 100%;
 }
 .peek-hint::before {
   content: ''; position: absolute; inset: 0;
@@ -997,6 +985,29 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   #prev-page, #next-page { width: 38px; height: 56px; font-size: 1.1rem; }
   #prev-page { left: 4px; }
   #next-page { right: 4px; }
+
+  /* Button wrapping and sizing inside narrow mobile pages */
+  .slide .text-to-sound,
+  .slide.gift-article.in-page .text-to-sound,
+  .slide .peek-hint,
+  .slide.gift-article.in-page .peek-hint {
+    display: block !important;
+    width: fit-content !important;
+    font-size: .78rem !important;
+    padding: 9px 12px !important;
+    white-space: normal !important;
+    min-width: 270px !important;
+    max-width: 100% !important;
+    min-height: 44px !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5 !important;
+    margin-bottom: 14px !important;
+  }
+
+  /* Reduce headings on mobile so they don't push buttons off */
+  .slide h2 { font-size: 1.05rem !important; }
+  .slide p  { font-size: .88rem !important; }
 }
 
 /* Focus ring */
