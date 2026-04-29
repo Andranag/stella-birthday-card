@@ -14,6 +14,7 @@
   let currentAudio = null;
   let playingBtn   = null;
   let navDirection = 'forward';
+  let sadSectionAudio = null;  // background audio for sad section
 
   /* ── Chapter config ────────────────────────────────────────── */
   const CHAPTERS = [
@@ -90,6 +91,13 @@
     updateCounter();
     updateNavButtons();
     syncNavPanel();
+    
+    // Manage sad section background audio
+    if (isInSadSection()) {
+      startSadSectionAudio();
+    } else {
+      stopSadSectionAudio();
+    }
   }
 
   /* Mobile: single page in right slot */
@@ -270,6 +278,30 @@
       currentAudio = null;
       playingBtn = null;
     }
+  }
+
+  function stopSadSectionAudio() {
+    if (sadSectionAudio) {
+      sadSectionAudio.pause();
+      sadSectionAudio.currentTime = 0;
+      sadSectionAudio = null;
+    }
+  }
+
+  function startSadSectionAudio() {
+    if (sadSectionAudio) return; // already playing
+    sadSectionAudio = new Audio('assets/music/sad carol.mp3');
+    sadSectionAudio.loop = true;
+    sadSectionAudio.volume = 0.3; // low volume for background
+    sadSectionAudio.play().catch(() => {});
+  }
+
+  function isInSadSection() {
+    const startIdx = slides.findIndex(s => s.id === 'sad-section-start');
+    const endIdx = slides.findIndex(s => s.id === 'sad-section-end');
+    if (startIdx === -1 || endIdx === -1) return false;
+    const currentIdx = isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+    return currentIdx >= startIdx && currentIdx <= endIdx;
   }
 
   function next() {
