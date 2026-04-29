@@ -414,7 +414,7 @@
     const startIdx = slides.findIndex(s => s.id === 'sad-section-start');
     const endIdx = slides.findIndex(s => s.id === 'sad-section-end');
     if (startIdx === -1 || endIdx === -1) return false;
-    const currentIdx = isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+    const currentIdx = getCurrentSlideIndex();
     return currentIdx >= startIdx && currentIdx <= endIdx;
   }
 
@@ -448,7 +448,7 @@
 
   function goTo(slideIndex) {
     if (slideIndex < 0 || slideIndex >= slides.length) return;
-    const currentIdx = isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+    const currentIdx = getCurrentSlideIndex();
     if (slideIndex === currentIdx) return;
     stopCurrentAudio();
     navDirection = slideIndex > currentIdx ? 'forward' : 'backward';
@@ -467,7 +467,7 @@
     const bar   = document.getElementById('progress-bar');
     if (!fill || !bar) return;
     const total = slides.length - 1;
-    const idx   = isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+    const idx   = getCurrentSlideIndex();
     const percent = total > 0 ? (idx / total) * 100 : 100;
     fill.style.width = percent + '%';
     bar.setAttribute('aria-valuenow', Math.round(percent));
@@ -477,7 +477,7 @@
     const announcer = document.getElementById('sr-announcer');
     if (!announcer) return;
     const total = slides.length - 1;
-    const idx = isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+    const idx = getCurrentSlideIndex();
     const message = idx === 0 ? 'Cover page' : `Slide ${idx} of ${total}`;
     announcer.textContent = message;
   }
@@ -889,8 +889,24 @@
 
     const toggle = mk('button', { id: 'nav-toggle', 'aria-label': 'Open navigation', 'aria-expanded': 'false', title: 'Navigation (N)' });
     toggle.innerHTML = '<span class="nav-toggle-icon">📖</span>';
-    toggle.addEventListener('click', toggleNavPanel);
+    toggle.addEventListener('click', () => {
+      toggleNavPanel();
+      // Remove attention animation after first interaction
+      toggle.classList.remove('has-attention');
+      document.querySelector('.corner-hint-br')?.classList.add('hidden');
+    });
     document.body.appendChild(toggle);
+
+    // Add corner bracket hint in bottom-right
+    const cornerHint = mk('div', { class: 'corner-hint-br' });
+    document.body.appendChild(cornerHint);
+
+    // Add first-time attention animation
+    const hasVisited = localStorage.getItem('storybook-visited');
+    if (!hasVisited) {
+      toggle.classList.add('has-attention');
+      localStorage.setItem('storybook-visited', 'true');
+    }
 
     const panel = mk('aside', { id: 'nav-panel', 'aria-hidden': 'true' });
 
@@ -994,9 +1010,14 @@
     document.getElementById('nav-overlay')?.classList.add('visible');
     document.getElementById('nav-panel')?.setAttribute('aria-hidden', 'false');
     const navToggle = document.getElementById('nav-toggle');
-    if (navToggle) { navToggle.setAttribute('aria-expanded', 'true'); navToggle.setAttribute('aria-label', 'Close navigation'); }
+    if (navToggle) {
+      navToggle.setAttribute('aria-expanded', 'true');
+      navToggle.setAttribute('aria-label', 'Close navigation');
+      navToggle.classList.remove('has-attention');
+    }
     const icon = document.querySelector('#nav-toggle .nav-toggle-icon');
     if (icon) icon.textContent = '✕';
+    document.querySelector('.corner-hint-br')?.classList.add('hidden');
     syncNavPanel();
     
     // Focus first interactive element in panel
@@ -1019,7 +1040,7 @@
   }
 
   function syncNavPanel() {
-    const currentSi = isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+    const currentSi = getCurrentSlideIndex();
     document.querySelectorAll('.np-slide-btn').forEach(btn => {
       const si = parseInt(btn.dataset.si, 10);
       let active = false;
@@ -1169,7 +1190,11 @@
         case 'Escape':
           modalOpen ? closeJumpModal() : navOpen ? closeNavPanel() : closeHelpModal(); break;
         case 'g': case 'G': if (!navOpen) openJumpModal(); break;
-        case 'n': case 'N': toggleNavPanel(); break;
+        case 'n': case 'N':
+          toggleNavPanel();
+          document.getElementById('nav-toggle')?.classList.remove('has-attention');
+          document.querySelector('.corner-hint-br')?.classList.add('hidden');
+          break;
         case 'Home': e.preventDefault(); goTo(0); break;
         case 'End':  e.preventDefault(); goTo(slides.length - 1); break;
         case '?': case '/': if (!navOpen) toggleHelpModal(); break;
@@ -1366,6 +1391,56 @@
 #nav-toggle:hover { transform: scale(1.1) rotate(-5deg); border-color: rgba(201,160,48,.85); }
 #nav-toggle:active { transform: scale(.94); }
 
+/* ── Corner bracket hint (bottom-right) ── */
+.corner-hint-br {
+  position: fixed;
+  bottom: max(18px, calc(18px + env(safe-area-inset-bottom, 0px)));
+  right: 12px;
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+  z-index: 1099;
+  opacity: 0.55;
+}
+.corner-hint-br::before,
+.corner-hint-br::after {
+  content: '';
+  position: absolute;
+  border-color: rgba(201,160,48,0.45);
+  border-style: solid;
+  transition: opacity 0.3s ease;
+}
+.corner-hint-br::before {
+  bottom: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  border-width: 0 2px 2px 0;
+  border-bottom-right-radius: 4px;
+}
+.corner-hint-br::after {
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-width: 2px 0 0 2px;
+  border-top-left-radius: 2px;
+  opacity: 0.3;
+}
+.corner-hint-br.hidden {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* ── Nav toggle first-time attention ring ── */
+#nav-toggle.has-attention {
+  animation: navAttention 2s ease-in-out 3;
+}
+@keyframes navAttention {
+  0%, 100% { box-shadow: 0 4px 20px rgba(0,0,0,.55), 0 0 16px rgba(201,160,48,.20); }
+  50% { box-shadow: 0 4px 24px rgba(0,0,0,.6), 0 0 28px rgba(201,160,48,.45), 0 0 48px rgba(201,160,48,.15); }
+}
+
 /* ── Nav panel ── */
 #nav-panel {
   position: fixed; top: 0; right: -340px; bottom: 0;
@@ -1473,6 +1548,8 @@
 @media (max-width:480px) {
   #nav-panel { width:290px; }
   #nav-toggle { bottom:max(16px, calc(16px + env(safe-area-inset-bottom, 0px))); right:14px; width:46px; height:46px; font-size:1.2rem; }
+  .corner-hint-br { bottom:max(10px, calc(10px + env(safe-area-inset-bottom, 0px))); right:8px; width:56px; height:56px; }
+  .corner-hint-br::before { width:20px; height:20px; }
 }
     `;
     document.head.appendChild(s);
