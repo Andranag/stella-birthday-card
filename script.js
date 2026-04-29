@@ -42,6 +42,47 @@
     node.addEventListener('animationend', () => { node.style.animation = ''; }, { once: true });
   }
 
+  // Utility: Get current slide index
+  function getCurrentSlideIndex() {
+    return isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+  }
+
+  // Utility: Check if element is in viewport
+  function isInViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
+  // Utility: Debounce function for performance
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  // Utility: Throttle function for performance
+  function throttle(func, limit) {
+    let inThrottle;
+    return function(...args) {
+      if (!inThrottle) {
+        func.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    };
+  }
+
   /* ── Init ──────────────────────────────────────────────────── */
   document.addEventListener('DOMContentLoaded', () => {
     slides = Array.from(document.querySelectorAll('.slide.gift-article'));
@@ -60,6 +101,7 @@
     setupHelpModal();
     buildNavPanel();
     setupToastContainer();
+    setupSwipeHints();
 
     // Start at cover
     curSpread = 0; curSlide = 0;
@@ -745,6 +787,9 @@
           <li><kbd>End</kbd> Go to last slide</li>
           <li><kbd>G</kbd> Jump to slide</li>
           <li><kbd>N</kbd> Toggle navigation panel</li>
+          <li><kbd>Space</kbd> Play/pause audio</li>
+          <li><kbd>M</kbd> Mute/unmute audio</li>
+          <li><kbd>S</kbd> Toggle spoiler</li>
           <li><kbd>?</kbd> <kbd>/</kbd> Show this help</li>
           <li><kbd>Esc</kbd> Close modals</li>
         </ul>
@@ -809,6 +854,33 @@
     }, 3000);
   }
 
+  /* ── Swipe Hints (Mobile) ─────────────────────────────────────── */
+  function setupSwipeHints() {
+    if (!isMobile()) return;
+    
+    const hint = mk('div', { class: 'swipe-hint' });
+    hint.innerHTML = `
+      <div class="swipe-hint-left">Prev</div>
+      <div class="swipe-hint-right">Next</div>
+    `;
+    document.body.appendChild(hint);
+    
+    // Hide hints after user navigates
+    let hasNavigated = false;
+    const hideHints = () => {
+      if (!hasNavigated) {
+        hint.classList.add('hidden');
+        hasNavigated = true;
+      }
+    };
+    
+    document.getElementById('prev-page')?.addEventListener('click', hideHints);
+    document.getElementById('next-page')?.addEventListener('click', hideHints);
+    
+    // Also hide on swipe
+    document.addEventListener('swipe', hideHints);
+  }
+
   /* ── Nav Panel ─────────────────────────────────────────────── */
   function buildNavPanel() {
     const overlay = mk('div', { id: 'nav-overlay' });
@@ -827,6 +899,19 @@
     header.innerHTML = `<span class="np-title">✦ Story Navigation ✦</span><button id="nav-close" class="np-close" aria-label="Close">✕</button>`;
     panel.appendChild(header);
     header.querySelector('#nav-close').addEventListener('click', closeNavPanel);
+
+    // Focus trap: keep Tab cycling within panel while open
+    panel.addEventListener('keydown', e => {
+      if (e.key !== 'Tab') return;
+      const focusable = panel.querySelectorAll('button, input');
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+      }
+    });
 
     // Chapters
     const chapSec = mk('section', { class: 'np-section' });
@@ -872,14 +957,33 @@
     panel.appendChild(allSec);
     document.body.appendChild(panel);
 
-    // Live search
-    searchInput.addEventListener('input', () => {
+    // Live search with debouncing
+    const debouncedSearch = debounce(() => {
       const q = searchInput.value.trim().toLowerCase();
+      let matchCount = 0;
+      
       slideList.querySelectorAll('.np-slide-item').forEach((li, i) => {
         const lbl = li.querySelector('.np-slide-label')?.textContent.toLowerCase() || '';
-        li.hidden = q ? !(lbl.includes(q) || String(i).includes(q)) : false;
+        const matches = q ? (lbl.includes(q) || String(i).includes(q)) : true;
+        li.hidden = !matches;
+        if (matches && q) matchCount++;
       });
-    });
+      
+      // Update result count
+      const resultCount = panel.querySelector('.search-result-count');
+      if (resultCount) {
+        resultCount.textContent = q ? `${matchCount} result${matchCount !== 1 ? 's' : ''}` : '';
+      }
+    }, 200);
+    
+    searchInput.addEventListener('input', debouncedSearch);
+    
+    // Add result count display
+    const searchSecHeader = searchSec.querySelector('.np-section-title');
+    if (searchSecHeader) {
+      const resultCount = mk('span', { class: 'search-result-count' });
+      searchSecHeader.appendChild(resultCount);
+    }
   }
 
   function toggleNavPanel() {
@@ -894,6 +998,12 @@
     const icon = document.querySelector('#nav-toggle .nav-toggle-icon');
     if (icon) icon.textContent = '✕';
     syncNavPanel();
+    
+    // Focus first interactive element in panel
+    const firstFocusable = document.querySelector('#nav-panel button, #nav-panel input');
+    if (firstFocusable) {
+      requestAnimationFrame(() => firstFocusable.focus());
+    }
   }
   function closeNavPanel() {
     document.getElementById('nav-panel')?.classList.remove('open');
@@ -903,6 +1013,9 @@
     if (navToggle) { navToggle.setAttribute('aria-expanded', 'false'); navToggle.setAttribute('aria-label', 'Open navigation'); }
     const icon = document.querySelector('#nav-toggle .nav-toggle-icon');
     if (icon) icon.textContent = '📖';
+    
+    // Return focus to toggle button
+    requestAnimationFrame(() => navToggle?.focus());
   }
 
   function syncNavPanel() {
@@ -928,6 +1041,8 @@
     document.querySelectorAll('.text-to-sound[data-sound]').forEach(btn => {
       btn.setAttribute('aria-pressed', 'false');
       let audio = null;
+      let progressEl = null;
+      
       btn.addEventListener('click', e => {
         e.stopPropagation(); // prevent cover's click-to-open
 
@@ -936,11 +1051,14 @@
           currentAudio.pause(); currentAudio.currentTime = 0;
           playingBtn?.classList.remove('playing');
           playingBtn?.setAttribute('aria-pressed', 'false');
+          const oldProgress = playingBtn?.querySelector('.audio-progress');
+          if (oldProgress) oldProgress.remove();
           currentAudio = null; playingBtn = null;
         }
 
         if (!audio) {
           audio = new Audio(btn.dataset.sound);
+          
           // Add error handling
           audio.addEventListener('error', () => {
             console.error(`Failed to load audio: ${btn.dataset.sound}`);
@@ -948,9 +1066,19 @@
             btn.setAttribute('aria-label', 'Audio failed to load');
             shakeEl(btn);
           });
+          
+          // Update progress bar
+          audio.addEventListener('timeupdate', () => {
+            if (progressEl && audio.duration) {
+              const percent = (audio.currentTime / audio.duration) * 100;
+              progressEl.style.width = `${percent}%`;
+            }
+          });
+          
           audio.addEventListener('ended', () => {
             btn.classList.remove('playing');
             btn.setAttribute('aria-pressed', 'false');
+            if (progressEl) progressEl.remove();
             if (currentAudio === audio) { currentAudio = null; playingBtn = null; }
           });
         }
@@ -961,6 +1089,12 @@
               btn.classList.add('playing');
               btn.setAttribute('aria-pressed', 'true');
               currentAudio = audio; playingBtn = btn;
+              
+              // Create progress element
+              if (!progressEl) {
+                progressEl = mk('div', { class: 'audio-progress' });
+                btn.appendChild(progressEl);
+              }
             })
             .catch(err => {
               console.error(`Failed to play audio: ${err.message}`);
@@ -972,6 +1106,7 @@
           audio.currentTime = 0;
           btn.classList.remove('playing');
           btn.setAttribute('aria-pressed', 'false');
+          if (progressEl) progressEl.remove();
           if (currentAudio === audio) { currentAudio = null; playingBtn = null; }
         }
       });
@@ -1038,6 +1173,38 @@
         case 'Home': e.preventDefault(); goTo(0); break;
         case 'End':  e.preventDefault(); goTo(slides.length - 1); break;
         case '?': case '/': if (!navOpen) toggleHelpModal(); break;
+        case ' ': case 'Space':
+          // Space to toggle audio on current slide
+          if (!modalOpen && !navOpen) {
+            e.preventDefault();
+            const currentSlide = slides[getCurrentSlideIndex()];
+            const audioBtn = currentSlide?.querySelector('.text-to-sound');
+            if (audioBtn) audioBtn.click();
+          }
+          break;
+        case 'm': case 'M':
+          // M to mute/unmute audio
+          if (!modalOpen && !navOpen) {
+            e.preventDefault();
+            if (currentAudio) {
+              currentAudio.muted = !currentAudio.muted;
+              showToast(currentAudio.muted ? 'Audio muted' : 'Audio unmuted', 'info');
+            }
+          }
+          break;
+        case 's': case 'S':
+          // S to toggle spoiler on current slide
+          if (!modalOpen && !navOpen) {
+            e.preventDefault();
+            const currentSlide = slides[getCurrentSlideIndex()];
+            const spoilerBtn = currentSlide?.querySelector('.peek-hint');
+            if (spoilerBtn) {
+              spoilerBtn.click();
+              const revealed = spoilerBtn.dataset.revealed === 'true';
+              showToast(revealed ? 'Spoiler revealed' : 'Spoiler hidden', 'info');
+            }
+          }
+          break;
       }
     });
   }
