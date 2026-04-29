@@ -408,11 +408,9 @@ body::after {
   color: transparent !important;
   text-shadow: 0 0 8px rgba(240,192,80,.85) !important;
   user-select: none;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 .peek-hint[data-revealed="false"] * {
   color: transparent !important;
-  transition: color 0.3s ease;
 }
 .peek-hint[data-revealed="false"]::after {
   content: '👆 Tap to reveal';
@@ -432,28 +430,16 @@ body::after {
 }
 
 .peek-hint[data-revealed="true"] {
-  color: var(--i0) !important;
+  color: #08021A !important;
+  background: rgba(240,192,80,0.9) !important;
   text-shadow: none !important;
-  animation: spoilerReveal 0.4s ease-out;
-}
-
-@keyframes spoilerReveal {
-  0% {
-    color: transparent;
-    text-shadow: 0 0 8px rgba(240,192,80,.85);
-  }
-  50% {
-    color: rgba(251,244,224,0.5);
-    text-shadow: 0 0 4px rgba(240,192,80,.5);
-  }
-  100% {
-    color: var(--i0);
-    text-shadow: none;
-  }
+  border: 1px solid rgba(201,160,48,0.5) !important;
+  border-radius: 4px;
+  padding: 8px 12px;
 }
 
 .peek-hint[data-revealed="true"] * {
-  color: inherit !important;
+  color: #08021A !important;
 }
 
 /* ── Slide Counter ───────────────────────────────────────────── */
