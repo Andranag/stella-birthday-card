@@ -1,752 +1,864 @@
-/* ============================================================
-   ✨ Stella's Birthday Story — Script
-   ============================================================ */
+/* ================================================================
+   DISNEY FAIRYTALE STORYBOOK  —  script.js
+   Two-page spread · Disney book cover · Enchanted night sky
+   ================================================================ */
 
 (function () {
   'use strict';
 
-  // ── Elements ────────────────────────────────────────────────
-  const slides        = Array.from(document.querySelectorAll('.slide'));
-  const container     = document.getElementById('swipe-container');
-  const progressFill  = document.getElementById('progress-fill');
-  const indicator     = document.getElementById('top-indicator');
-  const prevBtn       = document.getElementById('prev-page');
-  const nextBtn       = document.getElementById('next-page');
-  const jumpModal     = document.getElementById('jump-modal');
-  const jumpInput     = document.getElementById('jump-input');
-  const jumpTotal     = document.getElementById('jump-total');
-  const jumpConfirm   = document.getElementById('jump-confirm');
-  const jumpCancel    = document.getElementById('jump-cancel');
-  const compassBtn    = document.getElementById('compass-trigger');
-  const compass       = document.getElementById('context-compass');
-  const tipsBar       = document.getElementById('tips-bar');
+  /* ── State ─────────────────────────────────────────────────── */
+  let slides      = [];   // all .slide.gift-article elements
+  let spreads     = [];   // [[cover], [s1,s2], [s3,s4], ...]
+  let curSpread   = 0;    // desktop: current spread index
+  let curSlide    = 0;    // mobile:  current slide index (0 = cover)
+  let currentAudio = null;
+  let playingBtn   = null;
 
-  // ── State ────────────────────────────────────────────────────
-  const total       = slides.length;
-  let current       = 0;
-  let animating     = false;
-  let activeAudio   = null;
-  let activeAudioBtn= null;
-  let tipIndex      = 0;
+  /* ── Chapter config ────────────────────────────────────────── */
+  const CHAPTERS = [
+    { id: 'header',                 icon: '🏰', label: 'Cover'      },
+    { id: 'sad-section-start',      icon: '💧', label: 'Hard Times' },
+    { id: 'dance-section-start',    icon: '💃', label: 'The Dance'  },
+    { id: 'careless-section-start', icon: '🌙', label: 'His Place'  },
+    { id: 'final-slide',            icon: '🎊', label: 'The End'    },
+  ];
 
-  // ── Intentional Element Ordering System ─────────────────────────
-  function setupBookLayouts() {
-    const slides = document.querySelectorAll('.gift-article');
-    
-    slides.forEach((slide, index) => {
-      // Skip header slide
-      if (slide.id === 'header') return;
-      
-      // Remove existing layout classes
-      slide.classList.remove('layout-left', 'layout-right', 'layout-center', 'layout-top', 'layout-bottom');
-      
-      // Check for special slides
-      const h2Element = slide.querySelector('h2');
-      const isSlide95 = h2Element && h2Element.textContent.includes('His first message?');
-      
-      if (isSlide95) {
-        console.log('Detected slide 95 - applying special order');
-        // Special order for slide 95: h2 → video → spoiler → audio
-        slide.classList.add('layout-consistent', 'slide-95-special');
-        reorderElements(slide, ['h2', '.gift-img', '.peek-hint', '.text-to-sound']);
-      } else {
-        // Apply flexible pattern: h2 → video → p → audio → spoiler
-        slide.classList.add('layout-consistent');
-        reorderElements(slide, ['h2', '.gift-img', 'p', '.text-to-sound', '.peek-hint']);
-      }
-    });
+  /* ── Helpers ───────────────────────────────────────────────── */
+  const isMobile = () => window.innerWidth < 640;
+
+  function mk(tag, attrs = {}) {
+    const n = document.createElement(tag);
+    Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v));
+    return n;
   }
 
-  // Helper function to reorder elements
-  function reorderElements(slide, order) {
-    const container = slide;
-    const elements = [];
-    
-    // Collect elements in the desired order
-    order.forEach(selector => {
-      if (selector === 'h2') {
-        // Get all h2 elements (including those with buttons inside)
-        const h2Elements = slide.querySelectorAll('h2');
-        h2Elements.forEach(h2 => elements.push(h2));
-      } else if (selector === '.text-to-sound') {
-        // Get audio buttons that are NOT inside h2 elements
-        const audioButtons = slide.querySelectorAll('.text-to-sound:not(h2 .text-to-sound)');
-        audioButtons.forEach(btn => elements.push(btn));
-      } else if (selector === '.peek-hint') {
-        // Get spoiler buttons that are NOT inside h2 elements
-        const spoilerButtons = slide.querySelectorAll('.peek-hint:not(h2 .peek-hint)');
-        spoilerButtons.forEach(btn => elements.push(btn));
-      } else {
-        const element = slide.querySelector(selector);
-        if (element) elements.push(element);
-      }
-    });
-    
-    // Re-append elements in new order
-    elements.forEach(element => {
-      container.appendChild(element);
-    });
+  function shakeEl(node) {
+    if (!node) return;
+    node.style.animation = 'none';
+    void node.offsetHeight;
+    node.style.animation = 'sbShake 0.35s ease';
+    node.addEventListener('animationend', () => { node.style.animation = ''; }, { once: true });
   }
 
-  // ── Initialise ───────────────────────────────────────────────
-  function init() {
-    setupBookLayouts();
-    buildStarfield();
-    hideAllSlides();
-    populateJumpTotal();
-    setupSlideNavigation();
-    setupSoundButtons();
-    setupPeekHints();
+  /* ── Init ──────────────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', () => {
+    slides = Array.from(document.querySelectorAll('.slide.gift-article'));
+    if (!slides.length) return;
+
+    buildSpreads();
+    injectDynamicStyles();
+    buildBookDOM();
+    setupSpoilers();
+    setupAudio();
+    setupSwipe();
+    setupKeyboard();
+    setupNavButtons();
     setupJumpModal();
-    setupCompass();
-    setupTips();
-    updateHUD();
-    goTo(0, true);
-  }
+    buildNavPanel();
 
-  // ── Starfield Canvas ─────────────────────────────────────────
-  function buildStarfield() {
-    const canvas = document.createElement('canvas');
-    canvas.id = 'starfield';
-    document.body.insertBefore(canvas, document.body.firstChild);
+    // Start at cover
+    curSpread = 0; curSlide = 0;
+    render(false);
+  });
 
-    const ctx = canvas.getContext('2d');
-
-    const resize = () => {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize, { passive: true });
-
-    // White star specs
-    const stars = Array.from({ length: 220 }, () => ({
-      x: Math.random(), y: Math.random(),
-      r: Math.random() * 1.3 + 0.15,
-      a: Math.random() * 0.8 + 0.1,
-      speed: Math.random() * 0.6 + 0.1,
-      phase: Math.random() * Math.PI * 2
-    }));
-
-    // Gold dust specs
-    const dust = Array.from({ length: 28 }, () => ({
-      x: Math.random(), y: Math.random(),
-      r: Math.random() * 1.6 + 0.4,
-      a: Math.random() * 0.4 + 0.05,
-      speed: Math.random() * 0.25 + 0.05,
-      phase: Math.random() * Math.PI * 2
-    }));
-
-    let t = 0;
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      t += 0.004;
-
-      stars.forEach(s => {
-        const alpha = s.a * (0.45 + 0.55 * Math.sin(t * s.speed + s.phase));
-        ctx.beginPath();
-        ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${alpha.toFixed(3)})`;
-        ctx.fill();
-      });
-
-      dust.forEach(s => {
-        const alpha = s.a * (0.35 + 0.65 * Math.sin(t * s.speed + s.phase));
-        ctx.beginPath();
-        ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(245,197,24,${alpha.toFixed(3)})`;
-        ctx.fill();
-      });
-
-      requestAnimationFrame(draw);
-    };
-    draw();
-  }
-
-  // ── Slide System ─────────────────────────────────────────────
-  function hideAllSlides() {
-    slides.forEach(s => {
-      s.style.display     = 'none';
-      s.style.opacity     = '0';
-      s.style.transform   = 'translateX(0)';
-      s.style.transition  = 'none';
-      s.style.pointerEvents = 'none';
-      s.classList.remove('cover', 'left-page', 'right-page', 'hidden');
-    });
-    if (jumpTotal) jumpTotal.textContent = total;
-  }
-
-  function populateJumpTotal() {
-    if (jumpTotal) jumpTotal.textContent = total;
-  }
-
-  /** Stop all audio playback */
-  function stopAllAudio() {
-    // Stop the active audio from text-to-sound buttons
-    if (activeAudio) {
-      activeAudio.pause();
-      activeAudio.currentTime = 0;
-      activeAudioBtn?.classList.remove('playing');
-      activeAudio = null;
-      activeAudioBtn = null;
+  /* ── Build spreads ─────────────────────────────────────────── */
+  function buildSpreads() {
+    spreads = [];
+    spreads.push([slides[0]]); // spread 0 = cover
+    const rest = slides.slice(1);
+    for (let i = 0; i < rest.length; i += 2) {
+      const pair = [rest[i]];
+      if (rest[i + 1]) pair.push(rest[i + 1]);
+      spreads.push(pair);
     }
-    
-    // Stop all audio elements
-    const allAudio = document.querySelectorAll('audio');
-    allAudio.forEach(audio => {
-      audio.pause();
-      audio.currentTime = 0;
-    });
-    
-    // Stop all HTML5 audio/video elements that might be playing audio
-    const allMedia = document.querySelectorAll('video, audio');
-    allMedia.forEach(media => {
-      media.pause();
-      media.currentTime = 0;
-    });
   }
 
-  /** Go to slide index. instant = no animation (for first load) */
-  function goTo(index, instant = false) {
-    if (animating && !instant) return;
-    if (index < 0 || index >= total) return;
-    if (index === current && !instant) return;
+  function slideIndexToSpread(si) {
+    return si === 0 ? 0 : Math.ceil(si / 2);
+  }
 
-    current = index;
-    animating = true;
+  function spreadToFirstSlide(sp) {
+    return sp === 0 ? 0 : (sp - 1) * 2 + 1;
+  }
 
-    // Stop all audio except background audio when changing slides
-    if (activeAudio) {
-      activeAudio.pause();
-      activeAudio.currentTime = 0;
-      activeAudio = null;
-      activeAudioBtn = null;
+  /* ── Render (router) ───────────────────────────────────────── */
+  function render(animate = true) {
+    if (isMobile()) renderMobile(animate);
+    else            renderDesktop(animate);
+    updateProgress();
+    updateCounter();
+    updateNavButtons();
+    syncNavPanel();
+  }
+
+  /* Mobile: single page in right slot */
+  function renderMobile() {
+    returnAllToContainer();
+    const coverView  = document.getElementById('cover-view');
+    const spreadView = document.getElementById('spread-view');
+
+    if (curSlide === 0) {
+      coverView.classList.add('active');
+      spreadView.classList.remove('active');
+      return;
     }
-    
-    // Remove playing class from all sound buttons
-    document.querySelectorAll('.text-to-sound.playing').forEach(btn => {
-      btn.classList.remove('playing');
-    });
 
-    // Hide only currently visible slides
-    const visibleSlides = document.querySelectorAll('.slide[style*="display: flex"]');
-    visibleSlides.forEach(slide => {
-      slide.style.display = 'none';
-      slide.style.opacity = '0';
-      slide.style.pointerEvents = 'none';
-    });
+    coverView.classList.remove('active');
+    spreadView.classList.add('active');
 
-    // Mobile responsive: check screen width
-    const isMobile = window.innerWidth <= 768;
-    
-    // Show slides based on book layout
-    if (index === 0) {
-      // Cover page - show original slide 0 content (Happy Birthday, Babe)
-      if (slides[0]) {
-        slides[0].style.display = 'flex';
-        slides[0].style.opacity = '1';
-        slides[0].style.pointerEvents = 'all';
-        if (isMobile) {
-          slides[0].style.setProperty('width', '90vw', 'important');
-          slides[0].style.setProperty('left', '5vw', 'important');
-        } else {
-          slides[0].style.setProperty('width', '68vw', 'important');
-          slides[0].style.setProperty('left', '16vw', 'important');
-        }
-        slides[0].style.setProperty('top', '5vh', 'important');
-        slides[0].style.setProperty('position', 'absolute', 'important');
-      }
-    } else if (isMobile) {
-      // Mobile: show single slide at current index (sequential navigation)
-      if (slides[index]) {
-        slides[index].style.display = 'flex';
-        slides[index].style.opacity = '1';
-        slides[index].style.pointerEvents = 'all';
-        slides[index].style.setProperty('width', '90vw', 'important');
-        slides[index].style.setProperty('left', '5vw', 'important');
-        slides[index].style.setProperty('top', '5vh', 'important');
-        slides[index].style.setProperty('position', 'absolute', 'important');
-        slides[index].style.setProperty('z-index', '1', 'important');
-      }
+    const rightSlot = document.getElementById('right-slot');
+    const slide = slides[curSlide];
+    if (slide) {
+      slide.classList.add('active', 'in-page');
+      rightSlot.appendChild(slide);
+      playVideos(slide);
+    }
+
+    const numEl = document.querySelector('.right-num');
+    if (numEl) numEl.textContent = `p. ${curSlide}`;
+  }
+
+  /* Desktop: two-page spread */
+  function renderDesktop() {
+    returnAllToContainer();
+    const coverView  = document.getElementById('cover-view');
+    const spreadView = document.getElementById('spread-view');
+
+    if (curSpread === 0) {
+      coverView.classList.add('active');
+      spreadView.classList.remove('active');
+      return;
+    }
+
+    coverView.classList.remove('active');
+    spreadView.classList.add('active');
+
+    const spread    = spreads[curSpread];
+    const leftSlot  = document.getElementById('left-slot');
+    const rightSlot = document.getElementById('right-slot');
+
+    if (spread[0]) {
+      spread[0].classList.add('active', 'in-page');
+      leftSlot.appendChild(spread[0]);
+      playVideos(spread[0]);
+    }
+
+    if (spread[1]) {
+      spread[1].classList.add('active', 'in-page');
+      rightSlot.appendChild(spread[1]);
+      playVideos(spread[1]);
     } else {
-      // Desktop: Book spread - odd page left, even page right (starting from slide 1)
-      const leftPage = index % 2 === 1 ? index : index - 1;
-      const rightPage = leftPage + 1;
-      
-      // Left page (odd number) - match cover page width
-      if (slides[leftPage]) {
-        slides[leftPage].style.display = 'flex';
-        slides[leftPage].style.opacity = '1';
-        slides[leftPage].style.pointerEvents = 'all';
-        slides[leftPage].style.setProperty('width', '34vw', 'important');
-        slides[leftPage].style.setProperty('left', '16vw', 'important');
-        slides[leftPage].style.setProperty('top', '5vh', 'important');
-        slides[leftPage].style.setProperty('position', 'absolute', 'important');
-        slides[leftPage].style.setProperty('z-index', '1', 'important');
-      }
-      
-      // Right page (even number) - match cover page width
-      if (slides[rightPage]) {
-        slides[rightPage].style.display = 'flex';
-        slides[rightPage].style.opacity = '1';
-        slides[rightPage].style.pointerEvents = 'all';
-        slides[rightPage].style.setProperty('width', '34vw', 'important');
-        slides[rightPage].style.setProperty('left', '50vw', 'important');
-        slides[rightPage].style.setProperty('top', '5vh', 'important');
-        slides[rightPage].style.setProperty('position', 'absolute', 'important');
-        slides[rightPage].style.setProperty('z-index', '2', 'important');
-      }
+      rightSlot.innerHTML = '<div class="empty-page-ornament">✦</div>';
     }
 
-    // Update HUD
-    updateHUD();
-    
-    // Reset animation flag
-    setTimeout(() => {
-      // Check if we're in the sad section (from "life was not exactly fair" to "phoenix reborn")
-      const sadSectionStart = document.getElementById('sad-section-start');
-      const sadSectionEnd = document.getElementById('sad-section-end');
-      
-      if (sadSectionStart && sadSectionEnd) {
-        const startIndex = Array.from(slides).indexOf(sadSectionStart);
-        const endIndex = Array.from(slides).indexOf(sadSectionEnd);
-        
-        if (current >= startIndex && current <= endIndex) {
-          // Only play if not already playing
-          if (!backgroundAudio || backgroundAudio.paused) {
-            playBackgroundAudio('assets/music/sad carol.mp3', 0.25, true);
-          }
-        } else {
-          // Check if we're in the dance section
-          const danceSectionStart = document.getElementById('dance-section-start');
-          const danceSectionEnd = document.getElementById('dance-section-end');
-          
-          if (danceSectionStart && danceSectionEnd) {
-            const danceStartIndex = Array.from(slides).indexOf(danceSectionStart);
-            const danceEndIndex = Array.from(slides).indexOf(danceSectionEnd);
-            
-            if (current >= danceStartIndex && current <= danceEndIndex) {
-              // Only play if not already playing
-              if (!backgroundAudio || backgroundAudio.paused) {
-                playBackgroundAudio('assets/music/put your head on my shoulder.mp3', 0.4, true);
-              }
-            } else {
-              // Check if we're in the careless whisper section
-              const carelessSectionStart = document.getElementById('careless-section-start');
-              const carelessSectionEnd = document.getElementById('careless-section-end');
-              
-              if (carelessSectionStart && carelessSectionEnd) {
-                const carelessStartIndex = Array.from(slides).indexOf(carelessSectionStart);
-                const carelessEndIndex = Array.from(slides).indexOf(carelessSectionEnd);
-                
-                if (current >= carelessStartIndex && current <= carelessEndIndex) {
-                  // Only play if not already playing
-                  if (!backgroundAudio || backgroundAudio.paused) {
-                    playBackgroundAudio('assets/music/careless whisper.mp3', 0.35, true);
-                  }
-                } else {
-                  // Stop background audio when leaving the careless section
-                  stopBackgroundAudio();
-                }
-              } else {
-                // Stop background audio when leaving the dance section (and not entering careless section)
-                stopBackgroundAudio();
-              }
-            }
-          } else {
-            // Check if we're in the careless whisper section (when leaving sad section)
-            const carelessSectionStart = document.getElementById('careless-section-start');
-            const carelessSectionEnd = document.getElementById('careless-section-end');
-            
-            if (carelessSectionStart && carelessSectionEnd) {
-              const carelessStartIndex = Array.from(slides).indexOf(carelessSectionStart);
-              const carelessEndIndex = Array.from(slides).indexOf(carelessSectionEnd);
-              
-              if (current >= carelessStartIndex && current <= carelessEndIndex) {
-                // Only play if not already playing
-                if (!backgroundAudio || backgroundAudio.paused) {
-                  playBackgroundAudio('assets/music/careless whisper.mp3', 0.35, true);
-                }
-              } else {
-                // Stop background audio when leaving the careless section
-                stopBackgroundAudio();
-              }
-            } else {
-              // Stop background audio when leaving the sad section (and not entering dance or careless section)
-              stopBackgroundAudio();
-            }
-          }
-        }
-      } else {
-        // Check if we're in the dance section (when not in sad section)
-        const danceSectionStart = document.getElementById('dance-section-start');
-        const danceSectionEnd = document.getElementById('dance-section-end');
-        
-        if (danceSectionStart && danceSectionEnd) {
-          const danceStartIndex = Array.from(slides).indexOf(danceSectionStart);
-          const danceEndIndex = Array.from(slides).indexOf(danceSectionEnd);
-          
-          if (current >= danceStartIndex && current <= danceEndIndex) {
-            // Only play if not already playing
-            if (!backgroundAudio || backgroundAudio.paused) {
-              playBackgroundAudio('assets/music/put your head on my shoulder.mp3', 0.4, true);
-            }
-          } else {
-            // Check if we're in the careless whisper section (when leaving dance section)
-            const carelessSectionStart = document.getElementById('careless-section-start');
-            const carelessSectionEnd = document.getElementById('careless-section-end');
-            
-            if (carelessSectionStart && carelessSectionEnd) {
-              const carelessStartIndex = Array.from(slides).indexOf(carelessSectionStart);
-              const carelessEndIndex = Array.from(slides).indexOf(carelessSectionEnd);
-              
-              if (current >= carelessStartIndex && current <= carelessEndIndex) {
-                // Only play if not already playing
-                if (!backgroundAudio || backgroundAudio.paused) {
-                  playBackgroundAudio('assets/music/careless whisper.mp3', 0.35, true);
-                }
-              } else {
-                // Stop background audio when leaving the careless section
-                stopBackgroundAudio();
-              }
-            } else {
-              // Stop background audio when leaving the dance section (and not entering careless section)
-              stopBackgroundAudio();
-            }
-          }
-        } else {
-          // Check if we're in the careless whisper section (when not in sad or dance section)
-          const carelessSectionStart = document.getElementById('careless-section-start');
-          const carelessSectionEnd = document.getElementById('careless-section-end');
-          
-          if (carelessSectionStart && carelessSectionEnd) {
-            const carelessStartIndex = Array.from(slides).indexOf(carelessSectionStart);
-            const carelessEndIndex = Array.from(slides).indexOf(carelessSectionEnd);
-            
-            if (current >= carelessStartIndex && current <= carelessEndIndex) {
-              // Only play if not already playing
-              if (!backgroundAudio || backgroundAudio.paused) {
-                playBackgroundAudio('assets/music/careless whisper.mp3', 0.35, true);
-              }
-            } else {
-              // Stop background audio when leaving the careless section
-              stopBackgroundAudio();
-            }
-          }
-        }
-      }
-      
-      animating = false;
-    }, instant ? 0 : 100);
+    const leftNum  = document.querySelector('.left-num');
+    const rightNum = document.querySelector('.right-num');
+    if (leftNum)  leftNum.textContent  = `p. ${(curSpread - 1) * 2 + 1}`;
+    if (rightNum) rightNum.textContent = spread[1] ? `p. ${(curSpread - 1) * 2 + 2}` : '';
+
+    document.getElementById('page-left').scrollTop  = 0;
+    document.getElementById('page-right').scrollTop = 0;
   }
 
-  function updateHUD() {
-    // Progress
-    if (progressFill) {
-      progressFill.style.width = `${((current + 1) / total) * 100}%`;
-    }
-    // Indicator
-    if (indicator) {
-      indicator.textContent = `${current + 1}  /  ${total}`;
-    }
-    // Arrows
-    if (prevBtn) prevBtn.style.opacity = current > 0         ? '1' : '0.18';
-    if (nextBtn) nextBtn.style.opacity = current < total - 1 ? '1' : '0.18';
-  }
-
-  // Background audio for sad section
-  let backgroundAudio = null;
-
-  // Play background audio
-  function playBackgroundAudio(src, volume = 0.3, loop = true) {
-    // Check if background audio is already playing the same source
-    if (backgroundAudio && !backgroundAudio.paused && backgroundAudio.src.includes(src)) {
-      return; // Already playing, don't restart
-    }
-    
-    if (backgroundAudio) {
-      backgroundAudio.pause();
-      backgroundAudio.currentTime = 0;
-    }
-    
-    backgroundAudio = new Audio(src);
-    
-    // Apply universal volume normalization to background audio
-    const normalizedVolume = Math.min(Math.max(volume, 0.2), 0.4); // Clamp between 0.2 and 0.4
-    backgroundAudio.volume = normalizedVolume;
-    backgroundAudio.loop = loop;
-    
-    // Add audio normalization to prevent extreme volume differences
-    backgroundAudio.addEventListener('loadedmetadata', () => {
-      // Ensure background audio never exceeds safe limits
-      if (backgroundAudio.volume > 0.4) backgroundAudio.volume = 0.4;
-      if (backgroundAudio.volume < 0.2) backgroundAudio.volume = 0.2;
-    }, { once: true });
-    
-    backgroundAudio.play();
-  }
-
-  // Stop background audio
-  function stopBackgroundAudio() {
-    if (backgroundAudio) {
-      backgroundAudio.pause();
-      backgroundAudio.currentTime = 0;
-      backgroundAudio = null;
-    }
-  }
-
-  // ── Navigation ───────────────────────────────────────────────
-  function setupSlideNavigation() {
-    const isMobile = window.innerWidth <= 768;
-    const step = isMobile ? 1 : 2;
-    
-    prevBtn?.addEventListener('click', () => goTo(current - step));
-    nextBtn?.addEventListener('click', () => goTo(current + step));
-
-    // Keyboard
-    document.addEventListener('keydown', e => {
-      if (jumpModal && jumpModal.style.display !== 'none') return;
-      const isMobile = window.innerWidth <= 768;
-      const step = isMobile ? 1 : 2;
-      switch (e.key) {
-        case 'ArrowRight': case 'ArrowDown': case ' ':
-          e.preventDefault(); goTo(current + step); break;
-        case 'ArrowLeft': case 'ArrowUp':
-          e.preventDefault(); goTo(current - step); break;
-        case 'g': case 'G':
-          openJump(); break;
-        case 'Escape':
-          closeJump(); break;
-      }
-    });
-
-    // Wheel
+  /* Move all in-page slides back to #swipe-container */
+  function returnAllToContainer() {
     const container = document.getElementById('swipe-container');
-    if (container) {
-      container.addEventListener('wheel', e => {
-        e.preventDefault();
-        const isMobile = window.innerWidth <= 768;
-        const step = isMobile ? 1 : 2;
-        
-        if (e.deltaY > 0) {
-          // Scrolling down - go to next
-          goTo(current + step);
-        } else if (e.deltaY < 0) {
-          // Scrolling up - go to previous
-          goTo(current - step);
-        }
-      }, { passive: false });
-    } 
-
-    // Touch swipe
-    let tx = 0, ty = 0;
-    container?.addEventListener('touchstart', e => {
-      tx = e.touches[0].clientX;
-      ty = e.touches[0].clientY;
-    }, { passive: true });
-
-    container?.addEventListener('touchend', e => {
-      const dx = e.changedTouches[0].clientX - tx;
-      const dy = e.changedTouches[0].clientY - ty;
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 44) {
-        dx < 0 ? goTo(current + 1) : goTo(current - 1);
-      }
-    }, { passive: true });
+    if (!container) return;
+    document.querySelectorAll('.slide.in-page').forEach(s => {
+      s.classList.remove('active', 'in-page');
+      container.appendChild(s);
+      s.querySelectorAll('video').forEach(v => v.pause());
+    });
+    // Clear any empty-page ornament
+    const rs = document.getElementById('right-slot');
+    if (rs) rs.querySelector('.empty-page-ornament')?.remove();
   }
 
-  // ── Sound Buttons ─────────────────────────────────────────────
-  function setupSoundButtons() {
-    document.querySelectorAll('.text-to-sound').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        const src = btn.dataset.sound;
-        if (!src) return;
-
-        // Stop previous audio if playing
-        if (activeAudio) {
-          activeAudio.pause();
-          activeAudio.currentTime = 0;
-          activeAudioBtn?.classList.remove('playing');
-        }
-
-        // Simple audio playback for local files
-        const audio = new Audio(src);
-        
-        // Force immediate volume control
-        const forceVolume = (audioSrc) => {
-          // Aggressively reduce known loud files
-          if (audioSrc.toLowerCase().includes('you found me')) {
-            return 0.15; // Very low for "you found me"
-          } else if (audioSrc.toLowerCase().includes('inspector gadget')) {
-            return 0.2;
-          } else if (audioSrc.toLowerCase().includes('one piece intro')) {
-            return 0.2;
-          } else if (audioSrc.toLowerCase().includes('pokemon theme')) {
-            return 0.2;
-          } else if (audioSrc.toLowerCase().includes('all I know is')) {
-            return 0.6; // Boost quiet files
-          } else if (audioSrc.toLowerCase().includes('hercules amazing')) {
-            return 0.6;
-          } else {
-            return 0.4; // Conservative default
-          }
-        };
-        
-        // Apply forced volume immediately and repeatedly
-        const targetVolume = forceVolume(src);
-        audio.volume = targetVolume;
-        
-        // Force volume to stay low with multiple checks
-        const enforceVolume = () => {
-          audio.volume = targetVolume;
-          if (audio.volume > targetVolume) {
-            audio.volume = targetVolume;
-          }
-        };
-        
-        // Enforce volume at multiple points
-        enforceVolume();
-        setTimeout(enforceVolume, 100);
-        setTimeout(enforceVolume, 500);
-        
-        audio.addEventListener('loadedmetadata', enforceVolume);
-        audio.addEventListener('canplay', enforceVolume);
-        
-        audio.play();
-
-        audio.addEventListener('ended', () => {
-          btn.classList.remove('playing');
-          activeAudio = null;
-          activeAudioBtn = null;
-        });
-
-        activeAudio = audio;
-        activeAudioBtn = btn;
-        btn.classList.add('playing');
-      });
+  function playVideos(slide) {
+    slide.querySelectorAll('video').forEach(v => {
+      v.currentTime = 0;
+      v.play().catch(() => {});
     });
   }
 
-  // ── Peek Hints ────────────────────────────────────────────────
-  function setupPeekHints() {
-    document.querySelectorAll('.peek-hint:not(.simple-question)').forEach(btn => {
-      // Only initialize if not already done
-      if (!btn.dataset.originalContent) {
-        // Store original content and hide it initially
-        const originalContent = btn.innerHTML;
-        btn.dataset.originalContent = originalContent;
-        btn.innerHTML = '<em>🔮 Tap to reveal spoiler...</em>';
-        btn.style.opacity = '0.7';
-        btn.style.fontStyle = 'italic';
+  /* ── Navigation ────────────────────────────────────────────── */
+  function next() {
+    if (isMobile()) {
+      if (curSlide < slides.length - 1) { curSlide++; render(); }
+    } else {
+      if (curSpread < spreads.length - 1) {
+        curSpread++;
+        curSlide = spreadToFirstSlide(curSpread);
+        render();
       }
-      
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        if (btn.classList.contains('revealed')) return; // one-way reveal
-        btn.classList.add('revealed');
-        btn.innerHTML = btn.dataset.originalContent;
-        btn.style.opacity = '1';
-        btn.style.fontStyle = 'normal';
-        spawnSparkles(btn, 5);
-      });
-    });
-  }
-
-  // ── Sparkle Effect ────────────────────────────────────────────
-  const SPARKS = ['✦', '★', '✨', '💫', '⭐', '✧', '❋'];
-
-  function spawnSparkles(element, count = 5) {
-    const rect = element.getBoundingClientRect();
-    const cx   = rect.left + rect.width  / 2;
-    const cy   = rect.top  + rect.height / 2;
-
-    for (let i = 0; i < count; i++) {
-      setTimeout(() => {
-        const el = document.createElement('span');
-        el.className   = 'sparkle-particle';
-        el.textContent = SPARKS[Math.floor(Math.random() * SPARKS.length)];
-        el.style.cssText = [
-          `left: ${cx + (Math.random() - 0.5) * 90}px`,
-          `top:  ${cy + (Math.random() - 0.5) * 50}px`,
-          `font-size: ${10 + Math.random() * 16}px`,
-          'animation-duration: ' + (0.7 + Math.random() * 0.5) + 's'
-        ].join(';');
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 1200);
-      }, i * 90);
     }
   }
 
-  // ── Jump Modal ────────────────────────────────────────────────
-  function openJump() {
-    if (!jumpModal) return;
-    jumpModal.style.display = 'flex';
-    if (jumpInput) { jumpInput.value = ''; jumpInput.focus(); }
+  function prev() {
+    if (isMobile()) {
+      if (curSlide > 0) { curSlide--; render(); }
+    } else {
+      if (curSpread > 0) {
+        curSpread--;
+        curSlide = spreadToFirstSlide(curSpread);
+        render();
+      }
+    }
   }
 
-  function closeJump() {
-    if (jumpModal) jumpModal.style.display = 'none';
+  function goTo(slideIndex) {
+    if (slideIndex < 0 || slideIndex >= slides.length) return;
+    if (isMobile()) {
+      curSlide = slideIndex;
+    } else {
+      curSpread = slideIndexToSpread(slideIndex);
+      curSlide  = slideIndex;
+    }
+    render();
   }
 
-  function confirmJump() {
-    const n = parseInt(jumpInput?.value, 10);
-    if (!isNaN(n) && n >= 1 && n <= total) { goTo(n - 1); closeJump(); }
+  /* ── Progress & Counter ────────────────────────────────────── */
+  function updateProgress() {
+    const fill  = document.getElementById('progress-fill');
+    if (!fill) return;
+    const total = slides.length - 1;
+    const idx   = isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+    fill.style.width = (total > 0 ? (idx / total) * 100 : 100) + '%';
   }
 
+  function updateCounter() {
+    const el = document.getElementById('top-indicator');
+    if (!el) return;
+    if (isMobile()) {
+      el.textContent = curSlide === 0 ? 'Cover' : `${curSlide} / ${slides.length - 1}`;
+    } else {
+      if (curSpread === 0) {
+        el.textContent = 'Cover';
+      } else {
+        const sp    = spreads[curSpread];
+        const left  = (curSpread - 1) * 2 + 1;
+        const right = sp[1] ? (curSpread - 1) * 2 + 2 : null;
+        el.textContent = right ? `${left}–${right} / ${slides.length - 1}` : `${left} / ${slides.length - 1}`;
+      }
+    }
+  }
+
+  function setupNavButtons() {
+    document.getElementById('prev-page')?.addEventListener('click', prev);
+    document.getElementById('next-page')?.addEventListener('click', next);
+  }
+
+  function updateNavButtons() {
+    const prevBtn = document.getElementById('prev-page');
+    const nextBtn = document.getElementById('next-page');
+    const atStart = isMobile() ? curSlide === 0                    : curSpread === 0;
+    const atEnd   = isMobile() ? curSlide >= slides.length - 1     : curSpread >= spreads.length - 1;
+    if (prevBtn) prevBtn.disabled = atStart;
+    if (nextBtn) nextBtn.disabled = atEnd;
+  }
+
+  /* ── Build Book DOM ────────────────────────────────────────── */
+  function buildBookDOM() {
+    // Hide original container
+    const story = document.getElementById('story');
+    if (story) story.style.display = 'none';
+
+    const frame = mk('div', { id: 'book-frame' });
+
+    /* ---- Cover ---- */
+    const coverView = mk('div', { id: 'cover-view' });
+    const cover     = mk('div', { id: 'book-cover' });
+    cover.innerHTML = buildCoverHTML();
+    coverView.appendChild(cover);
+    frame.appendChild(coverView);
+
+    // Move the audio button from #header into the cover's music area
+    const headerSlide = document.getElementById('header');
+    if (headerSlide) {
+      const audioBtn   = headerSlide.querySelector('.text-to-sound');
+      const musicArea  = cover.querySelector('.cover-music-area');
+      if (audioBtn && musicArea) musicArea.appendChild(audioBtn);
+    }
+
+    // Click anywhere on cover = open first spread
+    cover.addEventListener('click', e => {
+      if (!e.target.closest('.text-to-sound')) next();
+    });
+
+    /* ---- Open book spread ---- */
+    const spreadView = mk('div', { id: 'spread-view' });
+    const openBook   = mk('div', { id: 'open-book' });
+
+    // Left page
+    const pageLeft = mk('div', { id: 'page-left',  class: 'book-page page-left'  });
+    const leftSlot = mk('div', { id: 'left-slot',  class: 'page-slot' });
+    const leftNum  = mk('div', { class: 'page-num left-num' });
+    pageLeft.appendChild(leftSlot);
+    pageLeft.appendChild(leftNum);
+
+    // Spine
+    const spine = mk('div', { class: 'book-spine' });
+    spine.innerHTML = '<div class="spine-ornament">Stella · A Disney Fairytale</div>';
+
+    // Right page
+    const pageRight = mk('div', { id: 'page-right', class: 'book-page page-right' });
+    const rightSlot = mk('div', { id: 'right-slot', class: 'page-slot' });
+    const rightNum  = mk('div', { class: 'page-num right-num' });
+    pageRight.appendChild(rightSlot);
+    pageRight.appendChild(rightNum);
+
+    openBook.appendChild(pageLeft);
+    openBook.appendChild(spine);
+    openBook.appendChild(pageRight);
+    spreadView.appendChild(openBook);
+    frame.appendChild(spreadView);
+
+    document.body.appendChild(frame);
+  }
+
+  /* ── Cover HTML ────────────────────────────────────────────── */
+  function buildCoverHTML() {
+    return `
+      <div class="cover-frame-outer"></div>
+      <div class="cover-frame-inner"></div>
+      <div class="cover-corner tl">❧</div>
+      <div class="cover-corner tr">❧</div>
+      <div class="cover-corner bl">❧</div>
+      <div class="cover-corner br">❧</div>
+      <div class="cover-star-field" aria-hidden="true">${generateCoverStars(30)}</div>
+      <div class="cover-body">
+        <div class="cover-eyebrow">Once upon a time…</div>
+        <div class="cover-divider"></div>
+        <div class="cover-title-main">Happy 25th Birthday</div>
+        <div class="cover-name">Stella</div>
+        <div class="cover-divider"></div>
+        <div class="cover-subtitle">✦ A Disney Fairytale ✦</div>
+        <div class="cover-music-area"></div>
+      </div>
+      <div class="cover-castle-wrap" aria-hidden="true">${buildCastleSVG()}</div>
+      <div class="cover-open-hint">✦ open the book ✦</div>
+    `;
+  }
+
+  function generateCoverStars(n) {
+    let html = '';
+    for (let i = 0; i < n; i++) {
+      const x = (Math.random() * 80 + 5).toFixed(1);
+      const y = (Math.random() * 72 + 4).toFixed(1);
+      const s = (Math.random() * 0.45 + 0.22).toFixed(2);
+      const d = (Math.random() * 3.5).toFixed(1);
+      html += `<span class="c-star" style="left:${x}%;top:${y}%;width:${s}em;height:${s}em;animation-delay:${d}s"></span>`;
+    }
+    return html;
+  }
+
+  function buildCastleSVG() {
+    /* Disney-style multi-tower castle silhouette */
+    return `<svg viewBox="0 0 280 120" xmlns="http://www.w3.org/2000/svg" fill="rgba(201,160,48,0.32)">
+      <!-- Far-left tower -->
+      <rect x="10" y="82" width="22" height="38"/>
+      <rect x="8"  y="74" width="5"  height="9"/>
+      <rect x="15" y="74" width="5"  height="9"/>
+      <rect x="22" y="74" width="5"  height="9"/>
+      <polygon points="21,50 10,82 32,82"/>
+      <!-- Left-mid tower -->
+      <rect x="40" y="65" width="28" height="55"/>
+      <rect x="38" y="57" width="5"  height="9"/>
+      <rect x="45" y="57" width="5"  height="9"/>
+      <rect x="52" y="57" width="5"  height="9"/>
+      <rect x="59" y="57" width="5"  height="9"/>
+      <polygon points="54,30 40,65 68,65"/>
+      <!-- Left connecting wall -->
+      <rect x="68" y="88" width="22" height="32"/>
+      <!-- Left-inner tower -->
+      <rect x="90" y="52" width="32" height="68"/>
+      <rect x="88" y="43" width="5"  height="10"/>
+      <rect x="95" y="43" width="5"  height="10"/>
+      <rect x="102" y="43" width="5" height="10"/>
+      <rect x="109" y="43" width="5" height="10"/>
+      <rect x="116" y="43" width="5" height="10"/>
+      <polygon points="106,13 90,52 122,52"/>
+      <!-- Centre main tower (tallest) -->
+      <rect x="126" y="33" width="28" height="87"/>
+      <rect x="124" y="23" width="5"  height="11"/>
+      <rect x="131" y="23" width="5"  height="11"/>
+      <rect x="138" y="23" width="5"  height="11"/>
+      <rect x="145" y="23" width="5"  height="11"/>
+      <polygon points="140,0 126,33 154,33"/>
+      <!-- Right-inner tower -->
+      <rect x="158" y="52" width="32" height="68"/>
+      <rect x="158" y="43" width="5"  height="10"/>
+      <rect x="165" y="43" width="5"  height="10"/>
+      <rect x="172" y="43" width="5"  height="10"/>
+      <rect x="179" y="43" width="5"  height="10"/>
+      <rect x="186" y="43" width="5"  height="10"/>
+      <polygon points="174,13 158,52 190,52"/>
+      <!-- Right connecting wall -->
+      <rect x="190" y="88" width="20" height="32"/>
+      <!-- Right-mid tower -->
+      <rect x="212" y="65" width="28" height="55"/>
+      <rect x="212" y="57" width="5"  height="9"/>
+      <rect x="219" y="57" width="5"  height="9"/>
+      <rect x="226" y="57" width="5"  height="9"/>
+      <rect x="233" y="57" width="5"  height="9"/>
+      <polygon points="226,30 212,65 240,65"/>
+      <!-- Far-right tower -->
+      <rect x="248" y="82" width="22" height="38"/>
+      <rect x="248" y="74" width="5"  height="9"/>
+      <rect x="255" y="74" width="5"  height="9"/>
+      <rect x="262" y="74" width="5"  height="9"/>
+      <polygon points="259,50 248,82 270,82"/>
+      <!-- Gate arch -->
+      <path d="M133 120 L133 94 Q140 78 147 94 L147 120 Z"/>
+      <!-- Windows -->
+      <ellipse cx="140" cy="48" rx="4"   ry="5"   fill="rgba(0,0,0,0.22)"/>
+      <ellipse cx="106" cy="65" rx="3"   ry="4"   fill="rgba(0,0,0,0.20)"/>
+      <ellipse cx="174" cy="65" rx="3"   ry="4"   fill="rgba(0,0,0,0.20)"/>
+      <ellipse cx="54"  cy="78" rx="2.5" ry="3.5" fill="rgba(0,0,0,0.18)"/>
+      <ellipse cx="226" cy="78" rx="2.5" ry="3.5" fill="rgba(0,0,0,0.18)"/>
+      <ellipse cx="21"  cy="92" rx="2"   ry="3"   fill="rgba(0,0,0,0.15)"/>
+      <ellipse cx="259" cy="92" rx="2"   ry="3"   fill="rgba(0,0,0,0.15)"/>
+      <!-- Tiny flag pennants on spires -->
+      <polygon points="140,0 146,4 140,8"  fill="rgba(201,160,48,0.55)"/>
+      <polygon points="106,13 112,17 106,21" fill="rgba(201,160,48,0.40)"/>
+      <polygon points="174,13 180,17 174,21" fill="rgba(201,160,48,0.40)"/>
+    </svg>`;
+  }
+
+  /* ── Jump Modal ────────────────────────────────────────────── */
   function setupJumpModal() {
-    jumpConfirm?.addEventListener('click', confirmJump);
-    jumpCancel?.addEventListener('click',  closeJump);
-    jumpInput?.addEventListener('keydown', e => {
-      if (e.key === 'Enter')  confirmJump();
-      if (e.key === 'Escape') closeJump();
+    const modal   = document.getElementById('jump-modal');
+    const input   = document.getElementById('jump-input');
+    const confirm = document.getElementById('jump-confirm');
+    const cancel  = document.getElementById('jump-cancel');
+    const counter = document.getElementById('top-indicator');
+
+    // Handle the double-quoted id typo in HTML: id=""jump-total""
+    const tot = document.querySelector('[id*="jump-total"]');
+    if (tot) tot.textContent = slides.length - 1;
+
+    if (counter) {
+      counter.style.pointerEvents = 'auto';
+      counter.style.cursor = 'pointer';
+      counter.title = 'Click to jump to slide (G)';
+      counter.addEventListener('click', openJumpModal);
+    }
+
+    confirm?.addEventListener('click', () => {
+      const val = parseInt(input?.value, 10);
+      if (!isNaN(val) && val >= 1 && val <= slides.length - 1) {
+        goTo(val); // val is 1-indexed: slide #1 = slides[1]
+        closeJumpModal();
+      } else {
+        shakeEl(input);
+      }
     });
-    jumpModal?.addEventListener('click', e => {
-      if (e.target === jumpModal) closeJump();
+
+    cancel?.addEventListener('click', closeJumpModal);
+    modal?.addEventListener('click', e => { if (e.target === modal) closeJumpModal(); });
+    input?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') confirm?.click();
+      if (e.key === 'Escape') closeJumpModal();
     });
   }
 
-  // ── Context Compass ───────────────────────────────────────────
-  function setupCompass() {
-    compassBtn?.addEventListener('click', e => {
-      e.stopPropagation();
-      compass?.classList.toggle('open');
+  function openJumpModal() {
+    const modal = document.getElementById('jump-modal');
+    const input = document.getElementById('jump-input');
+    if (modal) {
+      modal.style.display = 'flex';
+      input && (input.value = '');
+      requestAnimationFrame(() => input?.focus());
+    }
+  }
+
+  function closeJumpModal() {
+    const m = document.getElementById('jump-modal');
+    if (m) m.style.display = 'none';
+  }
+
+  /* ── Nav Panel ─────────────────────────────────────────────── */
+  function buildNavPanel() {
+    const overlay = mk('div', { id: 'nav-overlay' });
+    overlay.addEventListener('click', closeNavPanel);
+    document.body.appendChild(overlay);
+
+    const toggle = mk('button', { id: 'nav-toggle', 'aria-label': 'Open navigation', title: 'Navigation (N)' });
+    toggle.innerHTML = '<span class="nav-toggle-icon">📖</span>';
+    toggle.addEventListener('click', toggleNavPanel);
+    document.body.appendChild(toggle);
+
+    const panel = mk('aside', { id: 'nav-panel', 'aria-hidden': 'true' });
+
+    // Header
+    const header = mk('div', { class: 'np-header' });
+    header.innerHTML = `<span class="np-title">✦ Story Navigation ✦</span><button id="nav-close" class="np-close" aria-label="Close">✕</button>`;
+    panel.appendChild(header);
+    header.querySelector('#nav-close').addEventListener('click', closeNavPanel);
+
+    // Chapters
+    const chapSec = mk('section', { class: 'np-section' });
+    chapSec.innerHTML = '<h4 class="np-section-title">⚡ Jump to Chapter</h4>';
+    const chapList = mk('ul', { class: 'np-chapter-list' });
+    CHAPTERS.forEach(ch => {
+      const el = document.getElementById(ch.id);
+      const si = el ? slides.indexOf(el) : -1;
+      if (si === -1) return;
+      const li  = mk('li');
+      const btn = mk('button', { class: 'np-chapter-btn', 'data-si': si });
+      btn.innerHTML = `${ch.icon} ${ch.label}<span class="np-chapter-num">${si === 0 ? 'Cover' : '#' + si}</span>`;
+      btn.addEventListener('click', () => { goTo(si); closeNavPanel(); });
+      li.appendChild(btn); chapList.appendChild(li);
+    });
+    chapSec.appendChild(chapList);
+    panel.appendChild(chapSec);
+
+    // Search
+    const searchSec = mk('section', { class: 'np-section' });
+    searchSec.innerHTML = '<h4 class="np-section-title">🔍 Search Slides</h4>';
+    const searchInput = mk('input', { type: 'search', id: 'np-search', class: 'np-search', placeholder: 'Type heading or slide #…', autocomplete: 'off' });
+    searchSec.appendChild(searchInput);
+    panel.appendChild(searchSec);
+
+    // All slides
+    const allSec = mk('section', { class: 'np-section np-slides-section' });
+    allSec.innerHTML = `<h4 class="np-section-title">📄 All Slides <span class="np-total">${slides.length - 1} pages</span></h4>`;
+    const slideList = mk('ul', { class: 'np-slide-list', id: 'np-slide-list' });
+
+    slides.forEach((slide, i) => {
+      const h    = slide.querySelector('h1, h2');
+      const raw  = h ? h.textContent.trim().replace(/\s+/g, ' ') : '';
+      const lbl  = raw.slice(0, 55) + (raw.length > 55 ? '…' : '');
+      const li   = mk('li', { class: 'np-slide-item' });
+      const btn  = mk('button', { class: 'np-slide-btn', 'data-si': i });
+      btn.innerHTML = `<span class="np-slide-num">${i === 0 ? '🏰' : i}</span><span class="np-slide-label">${lbl || '…'}</span>`;
+      btn.addEventListener('click', () => { goTo(i); closeNavPanel(); });
+      li.appendChild(btn); slideList.appendChild(li);
     });
 
-    document.querySelectorAll('.compass-sections li').forEach(li => {
-      li.addEventListener('click', () => {
-        const n = parseInt(li.dataset.slide, 10);
-        if (!isNaN(n)) { goTo(n - 1); compass?.classList.remove('open'); }
+    allSec.appendChild(slideList);
+    panel.appendChild(allSec);
+    document.body.appendChild(panel);
+
+    // Live search
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      slideList.querySelectorAll('.np-slide-item').forEach((li, i) => {
+        const lbl = li.querySelector('.np-slide-label')?.textContent.toLowerCase() || '';
+        li.hidden = q ? !(lbl.includes(q) || String(i).includes(q)) : false;
       });
     });
+  }
 
-    document.addEventListener('click', e => {
-      if (!compass?.contains(e.target) && e.target !== compassBtn) {
-        compass?.classList.remove('open');
+  function toggleNavPanel() {
+    document.getElementById('nav-panel')?.classList.contains('open') ? closeNavPanel() : openNavPanel();
+  }
+  function openNavPanel() {
+    document.getElementById('nav-panel')?.classList.add('open');
+    document.getElementById('nav-overlay')?.classList.add('visible');
+    document.getElementById('nav-panel')?.setAttribute('aria-hidden', 'false');
+    const icon = document.querySelector('#nav-toggle .nav-toggle-icon');
+    if (icon) icon.textContent = '✕';
+    syncNavPanel();
+  }
+  function closeNavPanel() {
+    document.getElementById('nav-panel')?.classList.remove('open');
+    document.getElementById('nav-overlay')?.classList.remove('visible');
+    document.getElementById('nav-panel')?.setAttribute('aria-hidden', 'true');
+    const icon = document.querySelector('#nav-toggle .nav-toggle-icon');
+    if (icon) icon.textContent = '📖';
+  }
+
+  function syncNavPanel() {
+    const currentSi = isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+    document.querySelectorAll('.np-slide-btn').forEach(btn => {
+      const si = parseInt(btn.dataset.si, 10);
+      let active = false;
+      if (isMobile()) {
+        active = si === curSlide;
+      } else {
+        const sp = spreads[curSpread];
+        active = si === currentSi || (sp && sp.includes(slides[si]));
+      }
+      btn.classList.toggle('active', active);
+    });
+    if (document.getElementById('nav-panel')?.classList.contains('open')) {
+      document.querySelector('.np-slide-btn.active')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }
+
+  /* ── Audio ─────────────────────────────────────────────────── */
+  function setupAudio() {
+    document.querySelectorAll('.text-to-sound[data-sound]').forEach(btn => {
+      let audio = null;
+      btn.addEventListener('click', e => {
+        e.stopPropagation(); // prevent cover's click-to-open
+
+        // Stop whichever was playing
+        if (currentAudio && playingBtn !== btn) {
+          currentAudio.pause(); currentAudio.currentTime = 0;
+          playingBtn?.classList.remove('playing');
+          currentAudio = null; playingBtn = null;
+        }
+
+        if (!audio) {
+          audio = new Audio(btn.dataset.sound);
+          audio.addEventListener('ended', () => {
+            btn.classList.remove('playing');
+            if (currentAudio === audio) { currentAudio = null; playingBtn = null; }
+          });
+        }
+
+        if (btn.classList.contains('playing')) {
+          audio.pause(); audio.currentTime = 0; btn.classList.remove('playing');
+          currentAudio = null; playingBtn = null;
+        } else {
+          audio.play()
+            .then(() => { btn.classList.add('playing'); currentAudio = audio; playingBtn = btn; })
+            .catch(() => {});
+        }
+      });
+    });
+  }
+
+  /* ── Spoilers ───────────────────────────────────────────────── */
+  function setupSpoilers() {
+    document.querySelectorAll('.peek-hint').forEach(btn => {
+      btn.dataset.revealed = 'false';
+      btn.addEventListener('click', () => {
+        btn.dataset.revealed = btn.dataset.revealed === 'true' ? 'false' : 'true';
+      });
+    });
+  }
+
+  /* ── Swipe ─────────────────────────────────────────────────── */
+  function setupSwipe() {
+    let x0 = 0, y0 = 0, t0 = 0;
+    const root = document.body;
+    root.addEventListener('touchstart', e => {
+      x0 = e.touches[0].clientX;
+      y0 = e.touches[0].clientY;
+      t0 = Date.now();
+    }, { passive: true });
+    root.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - x0;
+      const dy = e.changedTouches[0].clientY - y0;
+      const dt = Date.now() - t0;
+      if (dt < 420 && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+        dx < 0 ? next() : prev();
+      }
+    }, { passive: true });
+  }
+
+  /* ── Keyboard ───────────────────────────────────────────────── */
+  function setupKeyboard() {
+    document.addEventListener('keydown', e => {
+      const typing    = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);
+      const modalOpen = document.getElementById('jump-modal')?.style.display !== 'none';
+      const navOpen   = document.getElementById('nav-panel')?.classList.contains('open');
+      if (typing) return;
+      switch (e.key) {
+        case 'ArrowRight': case 'ArrowDown':
+          if (!modalOpen) { e.preventDefault(); next(); } break;
+        case 'ArrowLeft': case 'ArrowUp':
+          if (!modalOpen) { e.preventDefault(); prev(); } break;
+        case 'Escape':
+          modalOpen ? closeJumpModal() : navOpen ? closeNavPanel() : null; break;
+        case 'g': case 'G': if (!navOpen) openJumpModal(); break;
+        case 'n': case 'N': toggleNavPanel(); break;
+        case 'Home': e.preventDefault(); goTo(0); break;
+        case 'End':  e.preventDefault(); goTo(slides.length - 1); break;
       }
     });
   }
 
-  // ── Rotating Tips ─────────────────────────────────────────────
-  function setupTips() {
-    if (!tipsBar) return;
-    const tips = Array.from(tipsBar.querySelectorAll('span'));
-    if (!tips.length) return;
+  /* ── Dynamic styles (injected to avoid extra HTTP request) ─── */
+  function injectDynamicStyles() {
+    const s = document.createElement('style');
+    s.textContent = `
+/* ── Shake animation ── */
+@keyframes sbShake {
+  0%,100%{ transform: translateX(0); }
+  20%    { transform: translateX(-7px); }
+  40%    { transform: translateX(7px); }
+  60%    { transform: translateX(-5px); }
+  80%    { transform: translateX(5px); }
+}
 
-    tips.forEach((s, i) => s.classList.toggle('tip-active', i === 0));
+/* ── Spoilers ── */
+.peek-hint[data-revealed="false"] {
+  color: transparent !important;
+  text-shadow: 0 0 8px rgba(240,192,80,.85) !important;
+  user-select: none;
+}
+.peek-hint[data-revealed="false"] * {
+  color: transparent !important;
+}
+.peek-hint[data-revealed="false"]::after {
+  content: '✨ spoiler — tap to reveal ✨';
+  display: block;
+  font-size: .72rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1.8px;
+  color: #F0C050 !important; text-shadow: none !important;
+}
+.peek-hint[data-revealed="true"] {
+  animation: spoilerReveal .3s ease both;
+}
+@keyframes spoilerReveal {
+  from { opacity: .4; transform: scale(.97); }
+  to   { opacity: 1;  transform: scale(1);   }
+}
 
-    setInterval(() => {
-      tips[tipIndex].classList.remove('tip-active');
-      tipIndex = (tipIndex + 1) % tips.length;
-      // Brief pause then activate
-      setTimeout(() => tips[tipIndex].classList.add('tip-active'), 200);
-    }, 9000);
-  }
+/* ── Playing audio ── */
+.text-to-sound.playing {
+  background: linear-gradient(180deg,#FFF3D0 0%,#F5D878 40%,#E8B830 100%) !important;
+  border-color: #A07010 !important;
+  box-shadow: 0 2px 0 #6A4800, 0 4px 16px rgba(201,160,48,.5), 0 0 20px rgba(255,200,40,.35), inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+.text-to-sound.playing::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: inherit;
+  background: repeating-linear-gradient(90deg,rgba(255,200,40,0) 0px,rgba(255,200,40,.18) 2px,rgba(255,200,40,0) 4px);
+  background-size: 8px 100%;
+  animation: soundWave .6s linear infinite;
+  pointer-events: none;
+}
+@keyframes soundWave { to { background-position: 8px 0; } }
 
-  // ── Boot ──────────────────────────────────────────────────────
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
+/* ── Nav overlay ── */
+#nav-overlay {
+  display: none; position: fixed; inset: 0; z-index: 900;
+  background: rgba(4,1,16,.55); backdrop-filter: blur(4px);
+  opacity: 0; transition: opacity .3s ease;
+}
+#nav-overlay.visible { display: block; opacity: 1; }
+
+/* ── Nav toggle button ── */
+#nav-toggle {
+  position: fixed; bottom: 24px; right: 18px; z-index: 1100;
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 2px solid rgba(201,160,48,.55); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.35rem; line-height: 1;
+  background: linear-gradient(145deg, #1E0848, #2D1060);
+  color: #F0C050;
+  box-shadow: 0 4px 20px rgba(0,0,0,.55), 0 0 16px rgba(201,160,48,.20);
+  transition: transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s ease;
+  backdrop-filter: blur(8px);
+}
+#nav-toggle:hover { transform: scale(1.1) rotate(-5deg); border-color: rgba(201,160,48,.85); }
+#nav-toggle:active { transform: scale(.94); }
+
+/* ── Nav panel ── */
+#nav-panel {
+  position: fixed; top: 0; right: -340px; bottom: 0;
+  width: 320px; max-width: 88vw; z-index: 1000;
+  display: flex; flex-direction: column; overflow: hidden;
+  background:
+    repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(140,95,40,.05) 28px,rgba(140,95,40,.05) 29px),
+    radial-gradient(ellipse at 10% 5%,rgba(200,155,70,.18) 0%,transparent 50%),
+    linear-gradient(165deg,#FAF0D8,#F2E4BC 55%,#EBD5A0);
+  border-left: 4px solid #E5CFA0;
+  outline: 2px solid rgba(201,160,48,.38); outline-offset: -10px;
+  box-shadow: -8px 0 60px rgba(0,0,0,.55);
+  transition: right .38s cubic-bezier(.22,.85,.32,1);
+}
+#nav-panel.open { right: 0; }
+#nav-panel::after {
+  content: '← → keys · G to jump · N for nav';
+  position: sticky; bottom: 0; display: block;
+  padding: 8px 12px;
+  font-family: 'Nunito',sans-serif; font-size: .6rem; font-weight: 700;
+  letter-spacing: .5px; color: rgba(90,48,8,.42); text-align: center;
+  background: linear-gradient(0deg,rgba(245,230,185,.98) 60%,transparent);
+  pointer-events: none;
+}
+
+.np-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 1.5px solid rgba(201,160,48,.38);
+  background: linear-gradient(180deg,rgba(255,255,255,.25),transparent);
+  flex-shrink: 0;
+}
+.np-title { font-family:'Marck Script',cursive; font-size:1.2rem; color:#5A3008; }
+.np-close {
+  width:30px; height:30px; border-radius:50%;
+  border:1.5px solid rgba(201,160,48,.38);
+  background:rgba(255,255,255,.38); color:#5A3008;
+  font-size:.85rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .18s ease;
+}
+.np-close:hover { background:rgba(255,255,255,.7); }
+
+#nav-panel > section:last-child { flex:1; min-height:0; display:flex; flex-direction:column; }
+
+.np-section { padding:14px 16px; border-bottom:1px dashed rgba(201,160,48,.28); flex-shrink:0; }
+.np-slides-section { flex:1; min-height:0; display:flex; flex-direction:column; border-bottom:none; }
+
+.np-section-title {
+  font-family:'Nunito',sans-serif; font-size:.66rem; font-weight:800;
+  letter-spacing:2.5px; text-transform:uppercase; color:rgba(90,48,8,.62);
+  margin-bottom:10px;
+}
+.np-total { font-weight:600; font-size:.64rem; color:rgba(90,48,8,.42); letter-spacing:1px; text-transform:none; margin-left:6px; }
+
+.np-chapter-list { list-style:none; display:flex; flex-direction:column; gap:5px; }
+.np-chapter-btn {
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  font-family:'Nunito',sans-serif; font-size:.88rem; font-weight:700; color:#3A1F0D;
+  background:linear-gradient(135deg,rgba(255,255,255,.5),rgba(245,225,170,.42));
+  border:1.5px solid rgba(201,160,48,.32); border-radius:8px;
+  padding:8px 12px; cursor:pointer; text-align:left;
+  transition:all .18s ease;
+}
+.np-chapter-btn:hover { background:linear-gradient(135deg,rgba(255,255,255,.75),rgba(245,220,150,.7)); border-color:rgba(201,160,48,.65); transform:translateX(3px); }
+.np-chapter-num { font-size:.7rem; font-weight:800; color:rgba(90,48,8,.48); flex-shrink:0; margin-left:8px; }
+
+.np-search {
+  display:block; width:100%; padding:9px 12px;
+  font-family:'Nunito',sans-serif; font-size:.88rem; font-weight:600; color:#3A1F0D;
+  background:rgba(255,255,255,.55);
+  border:1.5px solid rgba(201,160,48,.38); border-radius:8px;
+  outline:none; transition:border-color .2s,box-shadow .2s;
+}
+.np-search:focus { border-color:rgba(201,160,48,.75); box-shadow:0 0 0 3px rgba(201,160,48,.18); }
+.np-search::placeholder { color:rgba(90,48,8,.38); }
+
+.np-slide-list {
+  list-style:none; flex:1; overflow-y:auto; padding:4px 0 80px;
+  scrollbar-width:thin; scrollbar-color:rgba(201,160,48,.38) transparent;
+}
+.np-slide-list::-webkit-scrollbar { width:4px; }
+.np-slide-list::-webkit-scrollbar-thumb { background:rgba(201,160,48,.38); border-radius:4px; }
+.np-slide-item[hidden] { display:none; }
+
+.np-slide-btn {
+  width:100%; display:flex; align-items:flex-start; gap:10px;
+  padding:7px 14px 7px 10px; background:transparent; border:none;
+  border-radius:6px; cursor:pointer; text-align:left;
+  transition:background .15s ease;
+}
+.np-slide-btn:hover { background:rgba(201,160,48,.12); }
+.np-slide-btn.active {
+  background:linear-gradient(135deg,rgba(201,160,48,.22),rgba(245,220,150,.25));
+  border-left:3px solid rgba(201,160,48,.72); padding-left:7px;
+}
+.np-slide-num {
+  flex-shrink:0; font-family:'Nunito',sans-serif; font-size:.7rem; font-weight:800;
+  color:rgba(90,48,8,.42); line-height:1.6; min-width:28px; text-align:right;
+}
+.np-slide-btn.active .np-slide-num { color:rgba(90,48,8,.72); }
+.np-slide-label { font-family:'Nunito',sans-serif; font-size:.82rem; font-weight:600; color:#4A2A14; line-height:1.4; }
+.np-slide-btn.active .np-slide-label { font-weight:700; color:#2E1408; }
+
+@media (max-width:480px) {
+  #nav-panel { width:290px; }
+  #nav-toggle { bottom:16px; right:14px; width:46px; height:46px; font-size:1.2rem; }
+}
+    `;
+    document.head.appendChild(s);
   }
 
 })();
