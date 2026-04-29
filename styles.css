@@ -579,15 +579,40 @@ body::after {
   aspect-ratio: auto !important;
   max-width: none !important;
   position: relative !important;
-  overflow: visible !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  overflow: hidden !important;
+  border-radius: 8px !important;
+  box-shadow:
+    0 0 0 4px var(--p0),
+    0 0 0 6px var(--g2),
+    0 0 0 8px var(--p2),
+    0 0 0 10px rgba(201,160,48,.35),
+    0 6px 20px rgba(0,0,0,.30),
+    0 12px 40px rgba(0,0,0,.22) !important;
 }
 
-/* Remove decorative pseudo-elements for in-page slides */
-.slide.gift-article.in-page .gift-img::before,
+/* Restore decorative pseudo-elements for in-page slides */
+.slide.gift-article.in-page .gift-img::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 1 !important;
+  border-radius: 8px !important;
+  pointer-events: none !important;
+  background: linear-gradient(130deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.04) 40%, transparent 70%) !important;
+}
+
 .slide.gift-article.in-page .gift-img::after {
-  display: none !important;
+  content: '' !important;
+  position: absolute !important;
+  inset: -1px !important;
+  border-radius: 8px !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  background:
+    linear-gradient(to bottom right, rgba(201,160,48,.22) 0%, transparent 30%) top left  /20px 20px no-repeat,
+    linear-gradient(to bottom left,  rgba(201,160,48,.22) 0%, transparent 30%) top right /20px 20px no-repeat,
+    linear-gradient(to top right,    rgba(201,160,48,.22) 0%, transparent 30%) bottom left /20px 20px no-repeat,
+    linear-gradient(to top left,     rgba(201,160,48,.22) 0%, transparent 30%) bottom right/20px 20px no-repeat !important;
 }
 
 /* Ensure videos fit without clipping */
@@ -600,7 +625,7 @@ body::after {
   margin: 0 !important;
   padding: 0 !important;
   object-fit: contain !important;
-  border-radius: 0 !important;
+  border-radius: 6px !important;
 }
 
 /* Scale buttons inside pages */
