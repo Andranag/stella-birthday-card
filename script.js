@@ -886,7 +886,7 @@
 
 /* ── Nav toggle button ── */
 #nav-toggle {
-  position: fixed; bottom: 24px; right: 18px; z-index: 1100;
+  position: fixed; bottom: max(24px, calc(24px + env(safe-area-inset-bottom, 0px))); right: 18px; z-index: 1100;
   width: 52px; height: 52px; border-radius: 50%;
   border: 2px solid rgba(201,160,48,.55); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
@@ -1006,7 +1006,7 @@
 
 @media (max-width:480px) {
   #nav-panel { width:290px; }
-  #nav-toggle { bottom:16px; right:14px; width:46px; height:46px; font-size:1.2rem; }
+  #nav-toggle { bottom:max(16px, calc(16px + env(safe-area-inset-bottom, 0px))); right:14px; width:46px; height:46px; font-size:1.2rem; }
 }
     `;
     document.head.appendChild(s);

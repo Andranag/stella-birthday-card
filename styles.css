@@ -336,6 +336,12 @@ body::after {
   font-size: .78rem !important;
   padding: 7px 16px !important;
   box-shadow: 0 2px 0 rgba(0,0,0,.5), 0 4px 12px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08) !important;
+  /* Prevent text overflow on small covers */
+  white-space: normal !important;
+  min-width: 0 !important;
+  max-width: calc(100% - 8px) !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
 }
 #book-cover .text-to-sound strong,
 #book-cover .text-to-sound em { color: rgba(255,220,100,.85) !important; }
@@ -397,15 +403,16 @@ body::after {
 .page-right { transform-origin: 0% 50%; }
 
 /* ── Page exit clone overlay ──
-   A cloned copy of the old page sits on top and sweeps across,
-   revealing the new page underneath. */
+   Cloned page pivots at the spine axis, sweeping across to reveal
+   the new spread underneath. backface-visibility: hidden means
+   the clone vanishes cleanly at the 90° edge-on point. */
 .page-exit-clone {
   position: absolute;
   z-index: 50;
   pointer-events: none;
   overflow: hidden;
   border-radius: 0 3px 3px 0; /* right page default */
-  backface-visibility: visible; /* default: stay visible during turn (desktop) */
+  backface-visibility: hidden;
   background:
     repeating-linear-gradient(0deg,
       transparent, transparent 27px,
@@ -417,57 +424,58 @@ body::after {
 }
 .page-exit-clone.exit-forward {
   transform-origin: 0% 50%;   /* right page pivots from spine (left edge) */
-  animation: pageExitForward 0.9s cubic-bezier(.25,.82,.30,1) forwards;
+  animation: pageExitForward 0.65s cubic-bezier(.42,0,.58,1) forwards;
 }
 .page-exit-clone.exit-backward {
   transform-origin: 100% 50%; /* left page pivots from spine (right edge) */
-  animation: pageExitBackward 0.9s cubic-bezier(.25,.82,.30,1) forwards;
+  border-radius: 3px 0 0 3px;
+  animation: pageExitBackward 0.65s cubic-bezier(.42,0,.58,1) forwards;
 }
 
-/* Right page lifts and sweeps across to the far left — stays visible throughout */
+/* Right page pivots at the spine, sweeping across the left page until edge-on.
+   perspective() is applied directly so the 3D depth works even when a parent
+   has filter (which would otherwise force a flat stacking context). */
 @keyframes pageExitForward {
-  0%   { transform: translateX(0)      rotateY(0deg)  rotateX(0deg)  scale(1);    opacity: 1;    filter: brightness(1);    }
-  20%  { transform: translateX(-18%)   rotateY(-22deg) rotateX(-6deg) scale(0.98); opacity: 0.90; filter: brightness(0.90); }
-  40%  { transform: translateX(-65%)   rotateY(-38deg) rotateX(-10deg) scale(0.94); opacity: 0.78; filter: brightness(0.82); } /* crossing middle */
-  60%  { transform: translateX(-130%)  rotateY(-48deg) rotateX(-12deg) scale(0.88); opacity: 0.55; filter: brightness(0.72); } /* past left page */
-  80%  { transform: translateX(-200%)  rotateY(-55deg) rotateX(-14deg) scale(0.84); opacity: 0.22; filter: brightness(0.55); }
-  100% { transform: translateX(-280%)  rotateY(-60deg) rotateX(-15deg) scale(0.80); opacity: 0;    filter: brightness(0.40); }
+  0%   { transform: perspective(1600px) rotateY(0deg)   rotateX(0deg);    filter: brightness(1);    opacity: 1;   }
+  22%  { transform: perspective(1600px) rotateY(-26deg)  rotateX(-5deg);  filter: brightness(0.91); opacity: 1;   }
+  50%  { transform: perspective(1600px) rotateY(-62deg)  rotateX(-13deg); filter: brightness(0.76); opacity: 0.9; }
+  78%  { transform: perspective(1600px) rotateY(-82deg)  rotateX(-8deg);  filter: brightness(0.60); opacity: 0.4; }
+  100% { transform: perspective(1600px) rotateY(-90deg)  rotateX(-4deg);  filter: brightness(0.50); opacity: 0;   }
 }
 
-/* Left page lifts and sweeps across to the far right — stays visible throughout */
+/* Mirror of forward — left page pivots rightward at its spine edge */
 @keyframes pageExitBackward {
-  0%   { transform: translateX(0)      rotateY(0deg)   rotateX(0deg)  scale(1);    opacity: 1;    filter: brightness(1);    }
-  20%  { transform: translateX(18%)   rotateY(22deg)  rotateX(-6deg) scale(0.98); opacity: 0.90; filter: brightness(0.90); }
-  40%  { transform: translateX(65%)   rotateY(38deg)  rotateX(-10deg) scale(0.94); opacity: 0.78; filter: brightness(0.82); }
-  60%  { transform: translateX(130%)  rotateY(48deg)  rotateX(-12deg) scale(0.88); opacity: 0.55; filter: brightness(0.72); }
-  80%  { transform: translateX(200%)  rotateY(55deg)  rotateX(-14deg) scale(0.84); opacity: 0.22; filter: brightness(0.55); }
-  100% { transform: translateX(280%)  rotateY(60deg)  rotateX(-15deg) scale(0.80); opacity: 0;    filter: brightness(0.40); }
+  0%   { transform: perspective(1600px) rotateY(0deg)   rotateX(0deg);   filter: brightness(1);    opacity: 1;   }
+  22%  { transform: perspective(1600px) rotateY(26deg)  rotateX(-5deg);  filter: brightness(0.91); opacity: 1;   }
+  50%  { transform: perspective(1600px) rotateY(62deg)  rotateX(-13deg); filter: brightness(0.76); opacity: 0.9; }
+  78%  { transform: perspective(1600px) rotateY(82deg)  rotateX(-8deg);  filter: brightness(0.60); opacity: 0.4; }
+  100% { transform: perspective(1600px) rotateY(90deg)  rotateX(-4deg);  filter: brightness(0.50); opacity: 0;   }
 }
 
-/* Mobile exit — dramatic page flip over and behind */
+/* Mobile exit — page flips over and behind in a single dramatic arc */
 .page-exit-clone.mobile-exit-forward {
   transform-origin: 0% 50%;
-  backface-visibility: hidden; /* vanishes as it passes vertical = goes behind */
-  animation: pageExitMobileForward 0.75s cubic-bezier(.25,.82,.30,1) forwards;
+  backface-visibility: hidden;
+  animation: pageExitMobileForward 0.65s cubic-bezier(.42,0,.58,1) forwards;
 }
 .page-exit-clone.mobile-exit-backward {
   transform-origin: 100% 50%;
   backface-visibility: hidden;
-  animation: pageExitMobileBackward 0.75s cubic-bezier(.25,.82,.30,1) forwards;
+  animation: pageExitMobileBackward 0.65s cubic-bezier(.42,0,.58,1) forwards;
 }
 @keyframes pageExitMobileForward {
-  0%   { transform: rotateY(0deg)  rotateX(0deg)  translateY(0)     translateX(0)     scale(1);    opacity: 1;    filter: brightness(1);    }
-  30%  { transform: rotateY(-55deg) rotateX(-18deg) translateY(-35px) translateX(-18%)  scale(0.98); opacity: 0.82; filter: brightness(0.92); }
-  55%  { transform: rotateY(-110deg) rotateX(-22deg) translateY(-55px) translateX(-50%)  scale(0.95); opacity: 0.45; filter: brightness(0.82); }
-  80%  { transform: rotateY(-150deg) rotateX(-16deg) translateY(-45px) translateX(-85%)  scale(0.94); opacity: 0.12; filter: brightness(0.72); }
-  100% { transform: rotateY(-170deg) rotateX(-8deg)  translateY(-25px) translateX(-115%) scale(0.93); opacity: 0;    filter: brightness(0.65); }
+  0%   { transform: perspective(900px) rotateY(0deg)    rotateX(0deg);   filter: brightness(1);    opacity: 1;   }
+  25%  { transform: perspective(900px) rotateY(-30deg)  rotateX(-8deg);  filter: brightness(0.88); opacity: 1;   }
+  55%  { transform: perspective(900px) rotateY(-70deg)  rotateX(-16deg); filter: brightness(0.72); opacity: 0.8; }
+  80%  { transform: perspective(900px) rotateY(-84deg)  rotateX(-8deg);  filter: brightness(0.58); opacity: 0.3; }
+  100% { transform: perspective(900px) rotateY(-90deg)  rotateX(-3deg);  filter: brightness(0.50); opacity: 0;   }
 }
 @keyframes pageExitMobileBackward {
-  0%   { transform: rotateY(0deg)   rotateX(0deg)  translateY(0)     translateX(0)     scale(1);    opacity: 1;    filter: brightness(1);    }
-  30%  { transform: rotateY(55deg)  rotateX(-18deg) translateY(-35px) translateX(18%)   scale(0.98); opacity: 0.82; filter: brightness(0.92); }
-  55%  { transform: rotateY(110deg)  rotateX(-22deg) translateY(-55px) translateX(50%)   scale(0.95); opacity: 0.45; filter: brightness(0.82); }
-  80%  { transform: rotateY(150deg)  rotateX(-16deg) translateY(-45px) translateX(85%)   scale(0.94); opacity: 0.12; filter: brightness(0.72); }
-  100% { transform: rotateY(170deg)  rotateX(-8deg)  translateY(-25px) translateX(115%)  scale(0.93); opacity: 0;    filter: brightness(0.65); }
+  0%   { transform: perspective(900px) rotateY(0deg)   rotateX(0deg);   filter: brightness(1);    opacity: 1;   }
+  25%  { transform: perspective(900px) rotateY(30deg)  rotateX(-8deg);  filter: brightness(0.88); opacity: 1;   }
+  55%  { transform: perspective(900px) rotateY(70deg)  rotateX(-16deg); filter: brightness(0.72); opacity: 0.8; }
+  80%  { transform: perspective(900px) rotateY(84deg)  rotateX(-8deg);  filter: brightness(0.58); opacity: 0.3; }
+  100% { transform: perspective(900px) rotateY(90deg)  rotateX(-3deg);  filter: brightness(0.50); opacity: 0;   }
 }
 
 /* ── Book Pages ──────────────────────────────────────────────── */
@@ -507,7 +515,7 @@ body::after {
   content: '';
   position: absolute; bottom: 0; right: 0; width: 50px; height: 50px;
   background: radial-gradient(circle at 100% 100%, rgba(0,0,0,.12) 0%, transparent 65%);
-  pointer-events: none; z-index: 4; border-radius: 0;
+  pointer-events: none; z-index: 4;
 }
 
 /* Right page */
@@ -727,6 +735,18 @@ body::after {
   margin: 6px auto 16px auto !important;
 }
 
+/* Prevent text, headings, and buttons from being flex-shrunk below their
+   natural content height. When flex squeezes a button past its min-height,
+   overflow:hidden on the button clips the wrapped text at the bottom.
+   Videos (.gift-img) are left out intentionally — they can yield height. */
+.slide.gift-article.in-page h1,
+.slide.gift-article.in-page h2,
+.slide.gift-article.in-page p,
+.slide.gift-article.in-page .text-to-sound,
+.slide.gift-article.in-page .peek-hint {
+  flex-shrink: 0;
+}
+
 /* Thinner h2 divider inside pages */
 .slide.gift-article.in-page h2::after { width: 42%; margin: 8px auto 0; }
 
@@ -762,6 +782,16 @@ p {
 }
 em { font-style: italic; color: #8B4500; font-weight: 700; }
 strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
+
+/* Decorative star-field ASCII art paragraph */
+.star-field-art {
+  max-height: 120px;
+  overflow: hidden;
+  font-size: 0.7em;
+  line-height: 1.2;
+  opacity: 0.8;
+  margin-top: 8px;
+}
 .text-to-sound strong { color: #6B1205; letter-spacing: 0.02em; }
 
 /* ================================================================
@@ -996,7 +1026,7 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     font-size: .78rem !important;
     padding: 9px 12px !important;
     white-space: normal !important;
-    min-width: 270px !important;
+    min-width: 0 !important;
     max-width: 100% !important;
     min-height: 44px !important;
     word-wrap: break-word;
@@ -1010,8 +1040,37 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   .slide p  { font-size: .88rem !important; }
 }
 
+/* ── Medium screens: narrow two-page spread (640–800px) ────────── */
+/* The two-page book (min 600px) plus the default 140px side padding exceeds
+   640–700px viewports, pushing the nav arrows behind the book. Shrink the
+   padding and unlock the min-width so the book fills the available space. */
+@media (min-width: 640px) and (max-width: 800px) {
+  #book-frame { padding-left: 20px; padding-right: 20px; }
+  #open-book  { width: calc(100vw - 40px); }
+
+  /* Prevent buttons overflowing the narrow page columns */
+  .slide.gift-article.in-page .text-to-sound,
+  .slide.gift-article.in-page .peek-hint {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
+
+/* ── Large screens: keep nav arrows next to the book ───────────── */
+/* Beyond ~1200px the book is centered and capped at 1100px wide.
+   Without adjustment the arrows stay glued to the screen edges,
+   leaving a large gap. calc(50vw − 604px) places each arrow flush
+   against the book edge (550px half-width + 46px arrow + 8px gap). */
+@media (min-width: 1200px) {
+  #prev-page { left:  max(6px, calc(50vw - 604px)); }
+  #next-page { right: max(6px, calc(50vw - 604px)); }
+}
+
 /* Focus ring */
 button:focus-visible { outline: 3px solid var(--g1); outline-offset: 3px; }
+
+/* Focus ring for the cover div (role="button", set via JS) */
+#book-cover:focus-visible { outline: 3px solid var(--g1); outline-offset: 4px; }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
