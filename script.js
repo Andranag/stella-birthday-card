@@ -13,6 +13,7 @@
   let curSlide    = 0;    // mobile:  current slide index (0 = cover)
   let currentAudio = null;
   let playingBtn   = null;
+  let navDirection = 'forward';
 
   /* ── Chapter config ────────────────────────────────────────── */
   const CHAPTERS = [
@@ -92,7 +93,7 @@
   }
 
   /* Mobile: single page in right slot */
-  function renderMobile() {
+  function renderMobile(animate = true) {
     returnAllToContainer();
     const coverView  = document.getElementById('cover-view');
     const spreadView = document.getElementById('spread-view');
@@ -106,6 +107,9 @@
     coverView.classList.remove('active');
     spreadView.classList.add('active');
 
+    const pageRight = document.getElementById('page-right');
+    pageRight?.classList.remove('mobile-forward', 'mobile-backward');
+
     const rightSlot = document.getElementById('right-slot');
     const slide = slides[curSlide];
     if (slide) {
@@ -115,12 +119,21 @@
       playVideos(slide);
     }
 
+    if (animate && curSlide > 0) {
+      requestAnimationFrame(() => {
+        pageRight?.classList.add(navDirection === 'forward' ? 'mobile-forward' : 'mobile-backward');
+      });
+      setTimeout(() => {
+        pageRight?.classList.remove('mobile-forward', 'mobile-backward');
+      }, 600);
+    }
+
     const numEl = document.querySelector('.right-num');
     if (numEl) numEl.textContent = `p. ${curSlide}`;
   }
 
   /* Desktop: two-page spread */
-  function renderDesktop() {
+  function renderDesktop(animate = true) {
     returnAllToContainer();
     const coverView  = document.getElementById('cover-view');
     const spreadView = document.getElementById('spread-view');
@@ -133,6 +146,11 @@
 
     coverView.classList.remove('active');
     spreadView.classList.add('active');
+
+    const pageLeft  = document.getElementById('page-left');
+    const pageRight = document.getElementById('page-right');
+    pageLeft?.classList.remove('turning-backward');
+    pageRight?.classList.remove('turning-forward');
 
     const spread    = spreads[curSpread];
     const leftSlot  = document.getElementById('left-slot');
@@ -152,6 +170,20 @@
       playVideos(spread[1]);
     } else {
       rightSlot.innerHTML = '<div class="empty-page-ornament">✦</div>';
+    }
+
+    if (animate && curSpread > 0) {
+      requestAnimationFrame(() => {
+        if (navDirection === 'forward') {
+          pageRight?.classList.add('turning-forward');
+        } else {
+          pageLeft?.classList.add('turning-backward');
+        }
+      });
+      setTimeout(() => {
+        pageLeft?.classList.remove('turning-backward');
+        pageRight?.classList.remove('turning-forward');
+      }, 900);
     }
 
     const leftNum  = document.querySelector('.left-num');
@@ -219,6 +251,7 @@
 
   function next() {
     stopCurrentAudio();
+    navDirection = 'forward';
     if (isMobile()) {
       if (curSlide < slides.length - 1) { curSlide++; render(); }
     } else {
@@ -232,6 +265,7 @@
 
   function prev() {
     stopCurrentAudio();
+    navDirection = 'backward';
     if (isMobile()) {
       if (curSlide > 0) { curSlide--; render(); }
     } else {
@@ -245,7 +279,10 @@
 
   function goTo(slideIndex) {
     if (slideIndex < 0 || slideIndex >= slides.length) return;
+    const currentIdx = isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+    if (slideIndex === currentIdx) return;
     stopCurrentAudio();
+    navDirection = slideIndex > currentIdx ? 'forward' : 'backward';
     if (isMobile()) {
       curSlide = slideIndex;
     } else {
