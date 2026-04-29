@@ -170,16 +170,16 @@
     const video = slide.querySelector('.gift-img');
     const p = slide.querySelector('p');
     // Only standalone audio (direct child of slide, not inside h2)
-    const standaloneAudio = slide.querySelector(':scope > .text-to-sound');
-    const spoiler = slide.querySelector('.peek-hint');
+    const standaloneAudios = Array.from(slide.querySelectorAll(':scope > .text-to-sound'));
+    const spoilers = Array.from(slide.querySelectorAll(':scope > .peek-hint'));
 
     // Build ordered array
     const ordered = [];
     if (h2) ordered.push(h2);           // h2 with nested audio stays at top
     if (video) ordered.push(video);     // video second
     if (p) ordered.push(p);             // paragraph third
-    if (standaloneAudio) ordered.push(standaloneAudio); // standalone audio fourth
-    if (spoiler) ordered.push(spoiler); // spoiler last
+    standaloneAudios.forEach(btn => ordered.push(btn)); // all standalone audio fourth
+    spoilers.forEach(btn => ordered.push(btn));         // all spoilers last
 
     // Re-append in order
     ordered.forEach(el => slide.appendChild(el));

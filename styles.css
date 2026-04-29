@@ -773,6 +773,8 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   box-shadow: 0 2px 0 rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
   transition: transform .18s ease, box-shadow .18s ease;
   min-height: 3.5em;
+  white-space: nowrap;
+  min-width: 300px;
 }
 .peek-hint::before {
   content: ''; position: absolute; inset: 0;
