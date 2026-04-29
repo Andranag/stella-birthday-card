@@ -632,9 +632,12 @@ body::after {
 
 /* Scale buttons inside pages */
 .slide.gift-article.in-page .text-to-sound {
-  font-size: .86rem !important;
-  padding: 7px 16px 7px 12px !important;
+  font-size: .90rem !important;
+  padding: 9px 20px 9px 16px !important;
   border-radius: 30px !important;
+  min-height: 3em !important;
+  min-width: 220px !important;
+  white-space: nowrap !important;
   max-width: 100% !important;
   margin: 4px auto !important;
 }
@@ -730,9 +733,12 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   color: var(--i0); line-height: 1.55; text-align: center;
   background: linear-gradient(180deg, #FEFBEE 0%, #F8EDCC 30%, #F0D99A 70%, #E8CB80 100%);
   border: 2px solid var(--g2); border-radius: 40px;
-  padding: 9px 22px 9px 18px;
+  padding: 11px 28px 11px 22px;
   margin: 4px auto; max-width: 100%;
   cursor: pointer; position: relative; overflow: hidden;
+  min-height: 3.2em;
+  min-width: 260px;
+  white-space: nowrap;
   box-shadow:
     0 2px 0 var(--g3),
     0 3px 10px rgba(0,0,0,.18),
@@ -758,7 +764,7 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   transform: translateY(1px);
   box-shadow: 0 1px 0 var(--g3), 0 1px 4px rgba(0,0,0,.12);
 }
-.text-to-sound > em:first-child { font-style:normal; font-size:1.15em; }
+.text-to-sound > em:first-of-type { font-size:1.15em; }
 
 /* ── peek-hint / spoiler ── */
 .peek-hint {
