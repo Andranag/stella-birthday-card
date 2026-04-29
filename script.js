@@ -125,7 +125,7 @@
         requestAnimationFrame(() => {
           clone.classList.add(isForward ? 'mobile-exit-forward' : 'mobile-exit-backward');
         });
-        setTimeout(() => clone.remove(), 1250);
+        clone.addEventListener('animationend', () => clone.remove(), { once: true });
       }
     }
 
@@ -181,7 +181,7 @@
         requestAnimationFrame(() => {
           clone.classList.add(isForward ? 'exit-forward' : 'exit-backward');
         });
-        setTimeout(() => clone.remove(), 1400);
+        clone.addEventListener('animationend', () => clone.remove(), { once: true });
       }
     }
 

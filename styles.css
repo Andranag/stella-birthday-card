@@ -397,7 +397,7 @@ body::after {
 .page-right { transform-origin: 0% 50%; }
 
 /* ── Page exit clone overlay ──
-   A cloned copy of the old page sits on top and flips away,
+   A cloned copy of the old page sits on top and sweeps across,
    revealing the new page underneath. */
 .page-exit-clone {
   position: absolute;
@@ -405,6 +405,7 @@ body::after {
   pointer-events: none;
   overflow: hidden;
   border-radius: 0 3px 3px 0; /* right page default */
+  backface-visibility: visible !important; /* ensure page stays visible during turn */
   background:
     repeating-linear-gradient(0deg,
       transparent, transparent 27px,
@@ -416,25 +417,31 @@ body::after {
 }
 .page-exit-clone.exit-forward {
   transform-origin: 0% 50%;   /* right page pivots from spine (left edge) */
-  animation: pageExitForward 0.9s cubic-bezier(.25,.82,.30,1) forwards;
+  animation: pageExitForward 1.35s cubic-bezier(.25,.82,.30,1) forwards;
 }
 .page-exit-clone.exit-backward {
   transform-origin: 100% 50%; /* left page pivots from spine (right edge) */
-  animation: pageExitBackward 0.9s cubic-bezier(.25,.82,.30,1) forwards;
+  animation: pageExitBackward 1.35s cubic-bezier(.25,.82,.30,1) forwards;
 }
 
-/* Right page lifts up and flips over to the left */
+/* Right page lifts and sweeps across to the far left — stays visible throughout */
 @keyframes pageExitForward {
-  0%   { transform: rotateY(0deg)  rotateX(0deg)  translateY(0)    translateX(0);     opacity: 1;    filter: brightness(1);    }
-  30%  { transform: rotateY(-32deg) rotateX(-11deg) translateY(-36px) translateX(-18px); opacity: 0.88; filter: brightness(0.90); }
-  100% { transform: rotateY(-76deg) rotateX(-22deg) translateY(-72px) translateX(-48px); opacity: 0.45; filter: brightness(0.55); }
+  0%   { transform: translateX(0)      rotateY(0deg)  rotateX(0deg)  scale(1);    opacity: 1;    filter: brightness(1);    }
+  20%  { transform: translateX(-18%)   rotateY(-22deg) rotateX(-6deg) scale(0.98); opacity: 0.90; filter: brightness(0.90); }
+  40%  { transform: translateX(-65%)   rotateY(-38deg) rotateX(-10deg) scale(0.94); opacity: 0.78; filter: brightness(0.82); } /* crossing middle */
+  60%  { transform: translateX(-130%)  rotateY(-48deg) rotateX(-12deg) scale(0.88); opacity: 0.55; filter: brightness(0.72); } /* past left page */
+  80%  { transform: translateX(-200%)  rotateY(-55deg) rotateX(-14deg) scale(0.84); opacity: 0.22; filter: brightness(0.55); }
+  100% { transform: translateX(-280%)  rotateY(-60deg) rotateX(-15deg) scale(0.80); opacity: 0;    filter: brightness(0.40); }
 }
 
-/* Left page lifts up and flips over to the right */
+/* Left page lifts and sweeps across to the far right — stays visible throughout */
 @keyframes pageExitBackward {
-  0%   { transform: rotateY(0deg)   rotateX(0deg)  translateY(0)    translateX(0);     opacity: 1;    filter: brightness(1);    }
-  30%  { transform: rotateY(32deg)  rotateX(-11deg) translateY(-36px) translateX(18px); opacity: 0.88; filter: brightness(0.90); }
-  100% { transform: rotateY(76deg)  rotateX(-22deg) translateY(-72px) translateX(48px); opacity: 0.45; filter: brightness(0.55); }
+  0%   { transform: translateX(0)      rotateY(0deg)   rotateX(0deg)  scale(1);    opacity: 1;    filter: brightness(1);    }
+  20%  { transform: translateX(18%)   rotateY(22deg)  rotateX(-6deg) scale(0.98); opacity: 0.90; filter: brightness(0.90); }
+  40%  { transform: translateX(65%)   rotateY(38deg)  rotateX(-10deg) scale(0.94); opacity: 0.78; filter: brightness(0.82); }
+  60%  { transform: translateX(130%)  rotateY(48deg)  rotateX(-12deg) scale(0.88); opacity: 0.55; filter: brightness(0.72); }
+  80%  { transform: translateX(200%)  rotateY(55deg)  rotateX(-14deg) scale(0.84); opacity: 0.22; filter: brightness(0.55); }
+  100% { transform: translateX(280%)  rotateY(60deg)  rotateX(-15deg) scale(0.80); opacity: 0;    filter: brightness(0.40); }
 }
 
 /* Mobile exit */
@@ -447,12 +454,18 @@ body::after {
   animation: pageExitMobileBackward 1.2s cubic-bezier(.25,.82,.30,1) forwards;
 }
 @keyframes pageExitMobileForward {
-  0%   { transform: rotateY(0deg)  translateY(0);     opacity: 1; }
-  100% { transform: rotateY(-65deg) translateY(-48px) translateX(-28px); opacity: 0.40; }
+  0%   { transform: translateX(0)     rotateY(0deg)  scale(1);    opacity: 1; }
+  25%  { transform: translateX(-25%)  rotateY(-28deg) scale(0.96); opacity: 0.85; }
+  50%  { transform: translateX(-90%)  rotateY(-48deg) scale(0.90); opacity: 0.60; }
+  75%  { transform: translateX(-170%) rotateY(-58deg) scale(0.84); opacity: 0.22; }
+  100% { transform: translateX(-250%) rotateY(-62deg) scale(0.78); opacity: 0; }
 }
 @keyframes pageExitMobileBackward {
-  0%   { transform: rotateY(0deg)   translateY(0);     opacity: 1; }
-  100% { transform: rotateY(65deg)  translateY(-48px) translateX(28px); opacity: 0.40; }
+  0%   { transform: translateX(0)     rotateY(0deg)   scale(1);    opacity: 1; }
+  25%  { transform: translateX(25%)  rotateY(28deg)  scale(0.96); opacity: 0.85; }
+  50%  { transform: translateX(90%)  rotateY(48deg)  scale(0.90); opacity: 0.60; }
+  75%  { transform: translateX(170%) rotateY(58deg)  scale(0.84); opacity: 0.22; }
+  100% { transform: translateX(250%) rotateY(62deg)  scale(0.78); opacity: 0; }
 }
 
 /* ── Book Pages ──────────────────────────────────────────────── */
