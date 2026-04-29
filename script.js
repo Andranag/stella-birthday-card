@@ -323,6 +323,17 @@
       if (!e.target.closest('.text-to-sound')) next();
     });
 
+    // Keyboard accessibility for cover
+    cover.setAttribute('tabindex', '0');
+    cover.setAttribute('role', 'button');
+    cover.setAttribute('aria-label', 'Open the book');
+    cover.addEventListener('keydown', e => {
+      if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.text-to-sound')) {
+        e.preventDefault();
+        next();
+      }
+    });
+
     /* ---- Open book spread ---- */
     const spreadView = mk('div', { id: 'spread-view' });
     const openBook   = mk('div', { id: 'open-book' });
@@ -357,12 +368,12 @@
   /* ── Cover HTML ────────────────────────────────────────────── */
   function buildCoverHTML() {
     return `
-      <div class="cover-frame-outer"></div>
-      <div class="cover-frame-inner"></div>
-      <div class="cover-corner tl">❧</div>
-      <div class="cover-corner tr">❧</div>
-      <div class="cover-corner bl">❧</div>
-      <div class="cover-corner br">❧</div>
+      <div class="cover-frame-outer" aria-hidden="true"></div>
+      <div class="cover-frame-inner" aria-hidden="true"></div>
+      <div class="cover-corner tl" aria-hidden="true">❧</div>
+      <div class="cover-corner tr" aria-hidden="true">❧</div>
+      <div class="cover-corner bl" aria-hidden="true">❧</div>
+      <div class="cover-corner br" aria-hidden="true">❧</div>
       <div class="cover-star-field" aria-hidden="true">${generateCoverStars(30)}</div>
       <div class="cover-body">
         <div class="cover-eyebrow">Once upon a time…</div>
@@ -374,7 +385,7 @@
         <div class="cover-music-area"></div>
       </div>
       <div class="cover-castle-wrap" aria-hidden="true">${buildCastleSVG()}</div>
-      <div class="cover-open-hint">✦ open the book ✦</div>
+      <div class="cover-open-hint" aria-hidden="true">✦ open the book ✦</div>
     `;
   }
 
@@ -498,6 +509,19 @@
       if (e.key === 'Enter') confirm?.click();
       if (e.key === 'Escape') closeJumpModal();
     });
+
+    // Focus trap: keep Tab cycling within modal while open
+    modal?.addEventListener('keydown', e => {
+      if (e.key !== 'Tab') return;
+      const focusable = [input, cancel, confirm].filter(Boolean);
+      const first = focusable[0];
+      const last  = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+      }
+    });
   }
 
   function openJumpModal() {
@@ -521,7 +545,7 @@
     overlay.addEventListener('click', closeNavPanel);
     document.body.appendChild(overlay);
 
-    const toggle = mk('button', { id: 'nav-toggle', 'aria-label': 'Open navigation', title: 'Navigation (N)' });
+    const toggle = mk('button', { id: 'nav-toggle', 'aria-label': 'Open navigation', 'aria-expanded': 'false', title: 'Navigation (N)' });
     toggle.innerHTML = '<span class="nav-toggle-icon">📖</span>';
     toggle.addEventListener('click', toggleNavPanel);
     document.body.appendChild(toggle);
@@ -595,6 +619,8 @@
     document.getElementById('nav-panel')?.classList.add('open');
     document.getElementById('nav-overlay')?.classList.add('visible');
     document.getElementById('nav-panel')?.setAttribute('aria-hidden', 'false');
+    const navToggle = document.getElementById('nav-toggle');
+    if (navToggle) { navToggle.setAttribute('aria-expanded', 'true'); navToggle.setAttribute('aria-label', 'Close navigation'); }
     const icon = document.querySelector('#nav-toggle .nav-toggle-icon');
     if (icon) icon.textContent = '✕';
     syncNavPanel();
@@ -603,6 +629,8 @@
     document.getElementById('nav-panel')?.classList.remove('open');
     document.getElementById('nav-overlay')?.classList.remove('visible');
     document.getElementById('nav-panel')?.setAttribute('aria-hidden', 'true');
+    const navToggle = document.getElementById('nav-toggle');
+    if (navToggle) { navToggle.setAttribute('aria-expanded', 'false'); navToggle.setAttribute('aria-label', 'Open navigation'); }
     const icon = document.querySelector('#nav-toggle .nav-toggle-icon');
     if (icon) icon.textContent = '📖';
   }
@@ -628,6 +656,7 @@
   /* ── Audio ─────────────────────────────────────────────────── */
   function setupAudio() {
     document.querySelectorAll('.text-to-sound[data-sound]').forEach(btn => {
+      btn.setAttribute('aria-pressed', 'false');
       let audio = null;
       btn.addEventListener('click', e => {
         e.stopPropagation(); // prevent cover's click-to-open
@@ -636,6 +665,7 @@
         if (currentAudio && playingBtn !== btn) {
           currentAudio.pause(); currentAudio.currentTime = 0;
           playingBtn?.classList.remove('playing');
+          playingBtn?.setAttribute('aria-pressed', 'false');
           currentAudio = null; playingBtn = null;
         }
 
@@ -643,16 +673,23 @@
           audio = new Audio(btn.dataset.sound);
           audio.addEventListener('ended', () => {
             btn.classList.remove('playing');
+            btn.setAttribute('aria-pressed', 'false');
             if (currentAudio === audio) { currentAudio = null; playingBtn = null; }
           });
         }
 
         if (btn.classList.contains('playing')) {
-          audio.pause(); audio.currentTime = 0; btn.classList.remove('playing');
+          audio.pause(); audio.currentTime = 0;
+          btn.classList.remove('playing');
+          btn.setAttribute('aria-pressed', 'false');
           currentAudio = null; playingBtn = null;
         } else {
           audio.play()
-            .then(() => { btn.classList.add('playing'); currentAudio = audio; playingBtn = btn; })
+            .then(() => {
+              btn.classList.add('playing');
+              btn.setAttribute('aria-pressed', 'true');
+              currentAudio = audio; playingBtn = btn;
+            })
             .catch(() => {});
         }
       });
@@ -663,8 +700,11 @@
   function setupSpoilers() {
     document.querySelectorAll('.peek-hint').forEach(btn => {
       btn.dataset.revealed = 'false';
+      btn.setAttribute('aria-expanded', 'false');
       btn.addEventListener('click', () => {
-        btn.dataset.revealed = btn.dataset.revealed === 'true' ? 'false' : 'true';
+        const revealed = btn.dataset.revealed === 'true' ? 'false' : 'true';
+        btn.dataset.revealed = revealed;
+        btn.setAttribute('aria-expanded', revealed);
       });
     });
   }
@@ -743,10 +783,13 @@
 }
 .peek-hint[data-revealed="false"]::after {
   content: '✨ spoiler — tap to reveal ✨';
-  display: block;
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
   font-size: .72rem; font-weight: 800;
   text-transform: uppercase; letter-spacing: 1.8px;
   color: #F0C050 !important; text-shadow: none !important;
+  background: linear-gradient(145deg, #2A0E50 0%, #3E1A6A 40%, #2A0E50 100%);
+  border-radius: inherit;
 }
 .peek-hint[data-revealed="true"] {
   animation: spoilerReveal .3s ease both;

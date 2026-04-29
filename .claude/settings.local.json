@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(node \"c:/Users/andra/Desktop/dev/stella-birthday-card/patch-a11y.js\")",
+      "Bash(node \"c:/Users/andra/Desktop/dev/stella-birthday-card/patch-type.js\")"
+    ]
+  }
+}

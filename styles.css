@@ -454,9 +454,9 @@ body::after {
 .page-slot {
   width: 100%;
   height: 100%;
-  padding: 22px 18px 48px;
+  padding: 28px 24px 52px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 7px;
+  gap: 18px;
   box-sizing: border-box;
 }
 
@@ -543,7 +543,7 @@ body::after {
   flex-direction: column   !important;
   align-items:  center     !important;
   justify-content: center  !important;
-  gap:          6px        !important;
+  gap:          18px       !important;
   animation:    none       !important;
   margin:       0          !important;
 }
@@ -561,11 +561,13 @@ body::after {
   font-size: clamp(.9rem, 2.3vw, 1.45rem) !important;
 }
 .slide.gift-article.in-page h2 {
-  font-size: clamp(.88rem, 2.1vw, 1.30rem) !important;
+  font-size: clamp(1.05rem, 2.5vw, 1.55rem) !important;
+  line-height: 1.52 !important;
 }
 .slide.gift-article.in-page p {
-  font-size: .80rem !important;
-  line-height: 1.55 !important;
+  font-size: .93rem !important;
+  line-height: 1.72 !important;
+  letter-spacing: 0.012em !important;
 }
 
 /* Scale videos/images inside pages */
@@ -630,21 +632,22 @@ body::after {
 
 /* Scale buttons inside pages */
 .slide.gift-article.in-page .text-to-sound {
-  font-size: .75rem !important;
-  padding: 6px 14px 6px 11px !important;
+  font-size: .86rem !important;
+  padding: 7px 16px 7px 12px !important;
   border-radius: 30px !important;
   max-width: 100% !important;
-  margin: 3px auto !important;
+  margin: 4px auto !important;
 }
 .slide.gift-article.in-page .peek-hint {
-  font-size: .72rem !important;
-  padding: 6px 12px !important;
+  font-size: .90rem !important;
+  line-height: 1.55 !important;
+  padding: 8px 16px !important;
   max-width: 100% !important;
-  margin: 3px auto !important;
+  margin: 4px auto !important;
 }
 
 /* Thinner h2 divider inside pages */
-.slide.gift-article.in-page h2::after { width: 42%; margin: 5px auto 0; }
+.slide.gift-article.in-page h2::after { width: 42%; margin: 8px auto 0; }
 
 /* ================================================================
    TYPOGRAPHY  (standalone / cover contexts)
@@ -676,8 +679,9 @@ p {
   font-size: 1rem; font-weight: 600;
   color: var(--i1); line-height: 1.65; text-align: center;
 }
-em { font-style: italic; color: var(--g3); }
-strong { font-weight: 800; color: var(--i0); }
+em { font-style: italic; color: #8B4500; font-weight: 700; }
+strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
+.text-to-sound strong { color: #6B1205; letter-spacing: 0.02em; }
 
 /* ================================================================
    GIFT IMAGE / VIDEO
@@ -720,10 +724,10 @@ strong { font-weight: 800; color: var(--i0); }
    ================================================================ */
 /* ── text-to-sound ── */
 .text-to-sound {
-  display: inline-flex; align-items: flex-start; gap: 9px;
+  display: inline-block;
   font-family: 'Nunito', sans-serif;
   font-size: .95rem; font-weight: 700;
-  color: var(--i0); line-height: 1.55; text-align: left;
+  color: var(--i0); line-height: 1.55; text-align: center;
   background: linear-gradient(180deg, #FEFBEE 0%, #F8EDCC 30%, #F0D99A 70%, #E8CB80 100%);
   border: 2px solid var(--g2); border-radius: 40px;
   padding: 9px 22px 9px 18px;
@@ -754,25 +758,36 @@ strong { font-weight: 800; color: var(--i0); }
   transform: translateY(1px);
   box-shadow: 0 1px 0 var(--g3), 0 1px 4px rgba(0,0,0,.12);
 }
-.text-to-sound > em:first-child { font-style:normal; font-size:1.15em; flex-shrink:0; margin-top:1px; }
+.text-to-sound > em:first-child { font-style:normal; font-size:1.15em; }
 
 /* ── peek-hint / spoiler ── */
 .peek-hint {
   display: inline-block;
   font-family: 'Nunito', sans-serif;
   font-size: .875rem; font-weight: 700; line-height: 1.5;
-  color: #F0E0C0; text-align: center; max-width: 100%;
+  color: #FFF8E7; text-align: center; max-width: 100%;
   background: linear-gradient(145deg, #2A0E50 0%, #3E1A6A 40%, #2A0E50 100%);
   border: 1.5px solid rgba(201,160,48,.55); border-radius: 8px;
   padding: 9px 18px 10px; margin: 4px auto;
   cursor: pointer; position: relative; overflow: hidden;
   box-shadow: 0 2px 0 rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
   transition: transform .18s ease, box-shadow .18s ease;
+  min-height: 3.5em;
 }
 .peek-hint::before {
   content: ''; position: absolute; inset: 0;
   background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,160,48,.18) 0%, transparent 70%);
   pointer-events: none;
+}
+.peek-hint strong {
+  color: #FFD700;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0,0,0,.4);
+}
+.peek-hint em {
+  color: #FF6B9D;
+  font-style: italic;
+  text-shadow: 0 1px 2px rgba(0,0,0,.4);
 }
 .peek-hint:hover {
   background: linear-gradient(145deg, #38186A 0%, #502480 40%, #38186A 100%);
