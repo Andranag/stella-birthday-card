@@ -454,7 +454,7 @@ body::after {
 .page-slot {
   width: 100%;
   padding: 22px 18px 48px;
-  display: flex; flex-direction: column; align-items: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 7px; min-height: 100%;
 }
 

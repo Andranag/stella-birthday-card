@@ -109,6 +109,7 @@
     const rightSlot = document.getElementById('right-slot');
     const slide = slides[curSlide];
     if (slide) {
+      reorderSlideElements(slide);
       slide.classList.add('active', 'in-page');
       rightSlot.appendChild(slide);
       playVideos(slide);
@@ -138,12 +139,14 @@
     const rightSlot = document.getElementById('right-slot');
 
     if (spread[0]) {
+      reorderSlideElements(spread[0]);
       spread[0].classList.add('active', 'in-page');
       leftSlot.appendChild(spread[0]);
       playVideos(spread[0]);
     }
 
     if (spread[1]) {
+      reorderSlideElements(spread[1]);
       spread[1].classList.add('active', 'in-page');
       rightSlot.appendChild(spread[1]);
       playVideos(spread[1]);
@@ -158,6 +161,28 @@
 
     document.getElementById('page-left').scrollTop  = 0;
     document.getElementById('page-right').scrollTop = 0;
+  }
+
+  /* Reorder elements within a slide: h2 → video → p → audio → spoiler */
+  function reorderSlideElements(slide) {
+    // Get elements - audio inside h2 stays there (part of title)
+    const h2 = slide.querySelector('h2');
+    const video = slide.querySelector('.gift-img');
+    const p = slide.querySelector('p');
+    // Only standalone audio (direct child of slide, not inside h2)
+    const standaloneAudio = slide.querySelector(':scope > .text-to-sound');
+    const spoiler = slide.querySelector('.peek-hint');
+
+    // Build ordered array
+    const ordered = [];
+    if (h2) ordered.push(h2);           // h2 with nested audio stays at top
+    if (video) ordered.push(video);     // video second
+    if (p) ordered.push(p);             // paragraph third
+    if (standaloneAudio) ordered.push(standaloneAudio); // standalone audio fourth
+    if (spoiler) ordered.push(spoiler); // spoiler last
+
+    // Re-append in order
+    ordered.forEach(el => slide.appendChild(el));
   }
 
   /* Move all in-page slides back to #swipe-container */
