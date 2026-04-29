@@ -375,9 +375,8 @@ body::after {
 
 #open-book {
   display: flex;
-  width:  clamp(520px, 84vw, 980px);
-  height: auto;
-  min-height: clamp(340px, 74vh, 610px);
+  width: clamp(600px, 88vw, 1100px);
+  height: clamp(500px, 85vh, 750px);
   position: relative;
   /* Book-level shadow — drop-shadow preserves transparent spine gaps */
   filter:
@@ -395,6 +394,7 @@ body::after {
 /* ── Book Pages ──────────────────────────────────────────────── */
 .book-page {
   flex: 1;
+  height: 100%;
   position: relative;
   overflow: hidden;
 
@@ -453,9 +453,11 @@ body::after {
 /* Slide content slot inside page */
 .page-slot {
   width: 100%;
+  height: 100%;
   padding: 22px 18px 48px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 7px; min-height: 100%;
+  gap: 7px;
+  box-sizing: border-box;
 }
 
 /* Page number — sticky to bottom */
@@ -528,9 +530,9 @@ body::after {
   position:     relative   !important;
   inset:        auto       !important;
   width:        100%       !important;
-  height:       auto       !important;
-  max-height:   none       !important;
-  overflow:     visible    !important;
+  height:       100%       !important;
+  max-height:   100%       !important;
+  overflow:     hidden     !important;
   background:   transparent !important;
   border:       none       !important;
   box-shadow:   none       !important;
@@ -540,6 +542,7 @@ body::after {
   display:      flex       !important;
   flex-direction: column   !important;
   align-items:  center     !important;
+  justify-content: center  !important;
   gap:          6px        !important;
   animation:    none       !important;
   margin:       0          !important;
@@ -567,13 +570,37 @@ body::after {
 
 /* Scale videos/images inside pages */
 .slide.gift-article.in-page .gift-img {
-  max-width: 100% !important;
   margin: 5px auto !important;
-  box-shadow:
-    0 0 0 2px var(--p0),
-    0 0 0 4px var(--g2),
-    0 0 0 5px var(--p2),
-    0 4px 14px rgba(0,0,0,.24) !important;
+  display: inline-block !important;
+  width: fit-content !important;
+  height: fit-content !important;
+  padding: 0 !important;
+  background: linear-gradient(165deg, #FBF4DC 0%, #F5E7C2 55%, #EDD6A4 100%) !important;
+  aspect-ratio: auto !important;
+  max-width: none !important;
+  position: relative !important;
+  overflow: visible !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Remove decorative pseudo-elements for in-page slides */
+.slide.gift-article.in-page .gift-img::before,
+.slide.gift-article.in-page .gift-img::after {
+  display: none !important;
+}
+
+/* Ensure videos fit without clipping */
+.slide.gift-article.in-page .gift-video {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 70vh !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+  border-radius: 0 !important;
 }
 
 /* Scale buttons inside pages */
