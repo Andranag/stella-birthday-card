@@ -418,7 +418,9 @@
     return currentIdx >= startIdx && currentIdx <= endIdx;
   }
 
-  function next() {
+  function next(fromLock = false) {
+    const onCover = isMobile() ? curSlide === 0 : curSpread === 0;
+    if (onCover && !fromLock) return;
     stopCurrentAudio();
     navDirection = 'forward';
     if (isMobile()) {
@@ -526,6 +528,10 @@
     const atEnd   = isMobile() ? curSlide >= slides.length - 1     : curSpread >= spreads.length - 1;
     if (prevBtn) prevBtn.disabled = atStart;
     if (nextBtn) nextBtn.disabled = atEnd;
+    document.body.classList.toggle('on-cover', atStart);
+    if (atStart) {
+      document.querySelector('.cover-lock-wrap')?.classList.remove('unlocking');
+    }
   }
 
   /* ── Build Book DOM ────────────────────────────────────────── */
@@ -551,21 +557,27 @@
       if (audioBtn && musicArea) musicArea.appendChild(audioBtn);
     }
 
-    // Click anywhere on cover = open first spread
-    cover.addEventListener('click', e => {
-      if (!e.target.closest('.text-to-sound')) next();
-    });
+    // Lock mechanic: only the lock unlocks the book
+    function unlockBook(lockWrap) {
+      if (lockWrap.classList.contains('unlocking')) return;
+      lockWrap.classList.add('unlocking');
+      setTimeout(() => next(true), 1050);
+    }
 
-    // Keyboard accessibility for cover
-    cover.setAttribute('tabindex', '0');
-    cover.setAttribute('role', 'button');
-    cover.setAttribute('aria-label', 'Open the book');
-    cover.addEventListener('keydown', e => {
-      if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.text-to-sound')) {
-        e.preventDefault();
-        next();
-      }
-    });
+    const lockWrap = cover.querySelector('.cover-lock-wrap');
+    if (lockWrap) {
+      lockWrap.addEventListener('click', e => {
+        e.stopPropagation();
+        unlockBook(lockWrap);
+      });
+      lockWrap.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          e.stopPropagation();
+          unlockBook(lockWrap);
+        }
+      });
+    }
 
     /* ---- Open book spread ---- */
     const spreadView = mk('div', { id: 'spread-view' });
@@ -619,6 +631,59 @@
       </div>
       <div class="cover-castle-wrap" aria-hidden="true">${buildCastleSVG()}</div>
       <div class="cover-open-hint" aria-hidden="true">✦ open the book ✦</div>
+      <div class="cover-lock-wrap" role="button" tabindex="0" aria-label="Unlock the book" title="Open the book">
+        <svg class="cover-lock-icon" viewBox="0 0 44 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" overflow="visible">
+          <defs>
+            <linearGradient id="claspMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="rgba(245,205,75,.96)"/>
+              <stop offset="45%"  stop-color="rgba(201,160,48,.92)"/>
+              <stop offset="100%" stop-color="rgba(125,95,22,.88)"/>
+            </linearGradient>
+            <linearGradient id="haspMetal" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="rgba(230,190,60,.95)"/>
+              <stop offset="50%"  stop-color="rgba(185,145,38,.88)"/>
+              <stop offset="100%" stop-color="rgba(145,110,28,.90)"/>
+            </linearGradient>
+          </defs>
+          <!-- Hasp arm: extends left over cover face, pivots at right end on unlock -->
+          <g class="lock-shackle">
+            <rect x="-26" y="32" width="32" height="12" rx="3.5"
+                  fill="url(#haspMetal)" stroke="rgba(255,220,80,.58)" stroke-width="1"/>
+            <ellipse cx="-20" cy="38" rx="7" ry="5.5"
+                     fill="url(#haspMetal)" stroke="rgba(255,220,80,.58)" stroke-width="1"/>
+            <ellipse cx="-20" cy="38" rx="2.8" ry="2.2" fill="rgba(0,0,0,.32)"/>
+          </g>
+          <!-- Plate drop shadow -->
+          <rect x="5" y="5" width="36" height="72" rx="5.5" fill="rgba(0,0,0,.42)"/>
+          <!-- Main clasp plate -->
+          <rect x="3" y="3" width="36" height="72" rx="5.5"
+                fill="url(#claspMetal)" stroke="rgba(255,225,90,.70)" stroke-width="1.2"/>
+          <!-- Inner engraved border -->
+          <rect x="7" y="7" width="28" height="64" rx="3.5"
+                fill="none" stroke="rgba(255,215,70,.25)" stroke-width=".9"/>
+          <!-- Corner rivets -->
+          <circle cx="11" cy="12" r="2.5" fill="rgba(255,240,130,.65)" stroke="rgba(130,100,24,.55)" stroke-width=".8"/>
+          <circle cx="33" cy="12" r="2.5" fill="rgba(255,240,130,.65)" stroke="rgba(130,100,24,.55)" stroke-width=".8"/>
+          <circle cx="11" cy="68" r="2.5" fill="rgba(255,240,130,.65)" stroke="rgba(130,100,24,.55)" stroke-width=".8"/>
+          <circle cx="33" cy="68" r="2.5" fill="rgba(255,240,130,.65)" stroke="rgba(130,100,24,.55)" stroke-width=".8"/>
+          <!-- Scroll ornaments -->
+          <path d="M14 21 Q22 16 30 21" fill="none" stroke="rgba(255,215,70,.50)" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M14 57 Q22 62 30 57" fill="none" stroke="rgba(255,215,70,.50)" stroke-width="1.4" stroke-linecap="round"/>
+          <!-- Keyhole escutcheon ring -->
+          <circle cx="22" cy="39" r="8.5" fill="rgba(0,0,0,.18)" stroke="rgba(255,215,70,.42)" stroke-width="1.2"/>
+          <!-- Keyhole -->
+          <circle cx="22" cy="37" r="5" fill="rgba(14,8,32,.90)"/>
+          <path d="M19.2 41 H24.8 L23.5 48 Q22 50 20.5 48 Z" fill="rgba(14,8,32,.90)"/>
+        </svg>
+        <!-- Key: tip at top, ring at bottom — rises up into keyhole on unlock -->
+        <svg class="cover-key-icon" viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <line x1="10" y1="2"  x2="10" y2="26" stroke="rgba(201,160,48,.88)" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="10" y1="7"  x2="15" y2="7"  stroke="rgba(201,160,48,.88)" stroke-width="2"   stroke-linecap="round"/>
+          <line x1="10" y1="13" x2="14" y2="13" stroke="rgba(201,160,48,.88)" stroke-width="2"   stroke-linecap="round"/>
+          <circle cx="10" cy="33" r="6"   fill="none"                stroke="rgba(201,160,48,.88)" stroke-width="2.2"/>
+          <circle cx="10" cy="33" r="2.4" fill="rgba(201,160,48,.55)"/>
+        </svg>
+      </div>
     `;
   }
 
@@ -760,6 +825,7 @@
   }
 
   function openJumpModal() {
+    if (document.body.classList.contains('on-cover')) return;
     const modal = document.getElementById('jump-modal');
     const input = document.getElementById('jump-input');
     if (modal) {

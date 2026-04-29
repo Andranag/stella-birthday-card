@@ -493,6 +493,13 @@ body::after {
 #prev-page:active, #next-page:active { transform: translateY(-50%) scale(.95); transition-duration: .08s; }
 #prev-page:disabled, #next-page:disabled { opacity: .18; pointer-events: none; }
 
+/* Hide arrows entirely while on the cover (lock mechanic handles navigation) */
+body.on-cover #prev-page,
+body.on-cover #next-page {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 /* Improve arrow visibility on hover */
 #prev-page:not(:disabled):hover,
 #next-page:not(:disabled):hover {
@@ -673,7 +680,7 @@ body::after {
   position: relative;
   width:  clamp(250px, 36vw, 390px);
   height: clamp(340px, 70vh, 550px);
-  cursor: pointer;
+  cursor: default;
 
   /* Rich jewel-tone cloth cover */
   background:
@@ -843,6 +850,91 @@ body::after {
   animation: hintBreathe 2.5s ease-in-out infinite;
 }
 @keyframes hintBreathe { 0%,100%{opacity:.25;} 50%{opacity:.65;} }
+
+/* ── Cover clasp mechanic ────────────────────────────────────── */
+.cover-lock-wrap {
+  position: absolute;
+  right: -16px; top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+/* Clasp plate — overflow:visible lets the hasp arm extend left over cover */
+.cover-lock-icon {
+  width: 44px; height: 80px;
+  overflow: visible;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.52)) drop-shadow(0 0 4px rgba(201,160,48,.28));
+  transition: filter .3s ease;
+  display: block;
+}
+
+.cover-lock-wrap:hover .cover-lock-icon,
+.cover-lock-wrap:focus-visible .cover-lock-icon {
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,.65)) drop-shadow(0 0 16px rgba(201,160,48,.88));
+}
+
+/* Hasp arm pivots at its right end (where it meets the plate body) */
+.lock-shackle {
+  transform-box: fill-box;
+  transform-origin: 100% 50%;
+}
+
+/* Key sits below the clasp; tip points UP toward keyhole — rises on hover */
+.cover-key-icon {
+  width: 26px; height: 54px;
+  opacity: 0;
+  transform: translateY(14px);
+  filter: drop-shadow(0 0 4px rgba(201,160,48,.35));
+  transition: opacity .4s ease, transform .4s ease;
+  display: block;
+}
+
+.cover-lock-wrap:hover .cover-key-icon,
+.cover-lock-wrap:focus-visible .cover-key-icon {
+  opacity: .72;
+  transform: translateY(0);
+}
+
+/* Unlock animation sequence */
+.cover-lock-wrap.unlocking .cover-key-icon {
+  opacity: 1;
+  transform: translateY(0);
+  animation: keyInsertAndTurn .72s cubic-bezier(.42,0,.58,1) forwards;
+}
+
+.cover-lock-wrap.unlocking .lock-shackle {
+  animation: haspSwingOpen .35s ease .65s forwards;
+}
+
+.cover-lock-wrap.unlocking .cover-lock-icon {
+  animation: lockFadeOut .45s ease .92s forwards;
+}
+
+/* Key rises (-Y) into keyhole (tip at top), then rotates clockwise to unlock */
+@keyframes keyInsertAndTurn {
+  0%   { transform: translateY(0)     rotate(0deg);  opacity: 1;   }
+  40%  { transform: translateY(-62px) rotate(0deg);  opacity: 1;   }
+  100% { transform: translateY(-62px) rotate(90deg); opacity: .38; }
+}
+
+/* Hasp arm swings up and away, releasing the cover */
+@keyframes haspSwingOpen {
+  0%   { transform: rotate(0deg);   }
+  65%  { transform: rotate(-76deg); }
+  100% { transform: rotate(-70deg); }
+}
+
+@keyframes lockFadeOut {
+  0%   { opacity: 1;  transform: scale(1);   }
+  100% { opacity: 0;  transform: scale(.60); }
+}
 
 /* ================================================================
    OPEN BOOK  —  Two-page spread
