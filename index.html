@@ -15,17 +15,20 @@
 </head>
 
 <body>
+  <a href="#story" class="skip-link">Skip to content</a>
   <!-- Progress bar at very top -->
-  <div id="progress-bar">
+  <div id="progress-bar" role="progressbar" aria-label="Story progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
     <div id="progress-fill"></div>
   </div>
+  <!-- Live region for screen reader announcements -->
+  <div id="sr-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
 
-  <main id="story">
+  <main id="story" role="main" aria-label="Birthday story">
     <div id="swipe-container">
-      <article class="slide gift-article" id="header">
+      <article class="slide gift-article" id="header" role="article">
         <h1>
-          <button class="text-to-sound" data-sound="assets/music/louis armstrong.mp3">
-            <em>🎵 I want to wish you a happy birthday.<br>May all your dreams come true. 🎈</em>
+          <button class="text-to-sound" data-sound="assets/music/louis armstrong.mp3" aria-label="Play birthday wish music">
+            <em>🎵 I want to wish you a happy birthday. May all your dreams come true. 🎈</em>
           </button>
         </h1>
       </article>
@@ -37,7 +40,7 @@
           </video>
         </div>
         <h2>
-          <button class="text-to-sound" data-sound="assets/music/congratulations.mp3">
+          <button class="text-to-sound" data-sound="assets/music/congratulations.mp3" aria-label="Play congratulations sound">
             <em>🎵</em> <strong>Congratulations...</strong>
           </button>
         </h2>
@@ -51,7 +54,7 @@
           </video>
         </div>
         <h2>...on yet another...</h2>
-        <button class="text-to-sound" data-sound="assets/music/correct-sound-effect.mp3">
+        <button class="text-to-sound" data-sound="assets/music/correct-sound-effect.mp3" aria-label="Play success sound">
           <em>🔊</em> <strong>successful...</strong> <em>🎯</em>
         </button>
       </article>
@@ -63,21 +66,21 @@
           </video>
         </div>
         <h2>
-          <button class="text-to-sound" data-sound="assets/music/trip around the sun.mp3">
+          <button class="text-to-sound" data-sound="assets/music/trip around the sun.mp3" aria-label="Play trip around the sun music">
             <em>🎵</em> <strong>...trip around the sun.</strong> <em>🌞</em>
           </button>
         </h2>
       </article>
 
       <article class="slide gift-article">
-        <div class="gift-img wide-video" aria-label="Snowhite at her house with the seven dwarves dancing around happily animation">
+        <div class="gift-img wide-video" aria-label="Snow White at her house with the seven dwarves dancing around happily animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/snowhite dancing.mp4" type="video/mp4" />
           </video>
         </div>
         <h2>For honestly...</h2>
         <p><strong>that</strong> alone is already <strong>something</strong> worth...</p>
-        <button class="text-to-sound" data-sound="assets/music/confetti-sound-effect.mp3">
+        <button class="text-to-sound" data-sound="assets/music/confetti-sound-effect.mp3" aria-label="Play celebration sound">
           <em>🔊</em> <strong>celebrating.</strong> <em>🥳</em>
         </button>
       </article>
@@ -90,7 +93,7 @@
           </video>
         </div>
         <h2>
-          <button class="text-to-sound" data-sound="assets/music/michael jackson -  do you remember.mp3">
+          <button class="text-to-sound" data-sound="assets/music/michael jackson -  do you remember.mp3" aria-label="Play do you remember music">
             <em>🎵</em> <strong>Do you remember...</strong>
           </button>
         </h2>
@@ -106,7 +109,7 @@
         </div>
         <h2>...when you...</h2>
         <p><strong>encouraged</strong> me to...</p>
-        <button class="text-to-sound" data-sound="assets/music/aladdin%20i%20can%20show%20you%20the%20world.mp3">
+        <button class="text-to-sound" data-sound="assets/music/aladdin%20i%20can%20show%20you%20the%20world.mp3" aria-label="Play show you my world music">
           <em>🎵</em> <strong>show you my world?</strong> <em>🌍</em>
         </button>       
       </article>
@@ -119,8 +122,8 @@
           </video>
         </div>
         <h2>Technically...</h2>
-        <p>you had said:</p>
-        <button class="text-to-sound" data-sound="assets/music/let me in.mp3">
+        <p>you said:</p>
+        <button class="text-to-sound" data-sound="assets/music/let me in.mp3" aria-label="Play let me into your world music">
           <em>🎵 <strong>"Let me in</strong>to your world."</em>
         </button>    
       </article>
@@ -135,7 +138,11 @@
         <h2>To which...</h2>
         <p>I'm thinking:</p>
         <button class="text-to-sound" data-sound="assets/music/tomato tomatoe.mp3">
-          <em>🎵</em> <strong>"Tomatoe, tomato."</strong>
+          <em>🎵</em> <em>"To<strong>may</strong>to, to<strong>mah</strong>to"</em>
+        </button>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          <em>Newsflash:</em><br>
+          Funny enough — we already <strong>called the whole thing off.</strong>
         </button>
       </article>
 
@@ -151,7 +158,7 @@
         <button class="text-to-sound" data-sound="assets/music/reap what you sow.mp3">
           <em>🗣️</em> <em>"You reap what you sow."</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           For you <strong>asked</strong> — and I <strong>delivered.</strong>
         </button>
       </article>
@@ -196,7 +203,7 @@
         <button class="text-to-sound" data-sound="assets/music/good-bad-ugly-sound-effect.mp3">
           <em>🎵</em> <strong>good, bad</strong> — maybe even <strong>ugly.</strong> <em>🦅🌵🦢</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Can you <strong>handle</strong> it?
         </button>
       </article>
@@ -213,7 +220,7 @@
         <button class="text-to-sound" data-sound="assets/music/one piece intro.mp3">
           <em>🎵</em> or rather — <strong>"One Piece"</strong> of it. <em>🧩</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           I <strong>trust</strong> it'll be worth your <strong>time.</strong>
         </button>
       </article>
@@ -230,7 +237,7 @@
           </button>
         </h2>
         <p>Inviting <strong>you</strong> in.</p>     
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Or at least that <strong>was</strong> my <strong>intention.</strong>
         </button>
       </article>
@@ -246,14 +253,14 @@
         <button class="text-to-sound" data-sound="assets/music/people change.mp3">
           <em>🗣️</em> <strong>change.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           But that does <strong>not</strong> mean I'll <strong>quit</strong> trying.
         </button>
       </article>
 
       <article class="slide gift-article">
         <div class="gift-img"
-          aria-label="Aladdin and Yasmine huging gently each other animation">
+          aria-label="Aladdin and Yasmine hugging gently each other animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/aladdin yasmine cute.mp4" type="video/mp4" />
           </video>
@@ -265,7 +272,7 @@
         <button class="text-to-sound" data-sound="assets/music/imma change your life.mp3">
           <em>🎵</em> <strong>I would've changed your life.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           And by <em>change</em> — I mean <strong>inspire.</strong> <em>✨</em>
         </button>
       </article>
@@ -282,7 +289,7 @@
         <button class="text-to-sound" data-sound="assets/music/michael jackson - you rock my world.mp3">
           <em>🎵</em> <strong>the way you "rock-ed" mine!</strong> <em>🤘</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Pun intended.</em><br>💡 <strong>Hint:</strong> The actor's <strong>nickname.</strong>
         </button>
       </article>
@@ -296,13 +303,13 @@
         <h2>Got that?</h2>
         <p>His name is <strong>Dwayne Johnson.</strong></p>
         <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
-          <em>🔊</em> a.k.a the <strong>"Rock."</strong>
+          <em>🔊</em> a.k.a. the <strong>"Rock."</strong>
         </button>
       </article>
 
       <article class="slide gift-article">
         <div class="gift-img"
-          aria-label="Yasmine next to her tigher looking each other confused animation">
+          aria-label="Yasmine next to her tiger looking each other confused animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/yasmine tiger.mp4" type="video/mp4" />
           </video>
@@ -312,7 +319,7 @@
         <button class="text-to-sound" data-sound="assets/music/yasmine what.mp3">
           <em>🗣️</em> <em>"What?"</em><em>🤦‍♀️</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Newsflash:</em> Not anymore.
         </button>
       </article>
@@ -329,8 +336,8 @@
         <button class="text-to-sound" data-sound="assets/music/yasmine just leave me alone.mp3">
           <em>🗣️</em> <em>"Just leave me alone."</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
-          <em>Newsflash:</em><br>That <strong>message</strong> has been received <strong>loud and clear.</strong>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          <em>Newsflash:</em><br>That <strong>"message"</strong> has been received <strong>loud and clear.</strong>
         </button>
       </article>
 
@@ -344,7 +351,9 @@
         <h2>To which...</h2>
         <p>my response is:</p>
         <button class="text-to-sound" data-sound="assets/music/well alright ok you win.mp3">
-          <em>🎵</em> <strong>Well, alright. OK. You win.<br>What can I do? <em>🤷🏻</em><br>It's just got to be that way.</strong>
+          <em>🎵</em> <strong>Well, alright. OK. You win.<br>
+            What can I do? <em>🤷🏻</em><br>
+            It's just got to be that way.</strong>
         </button>
       </article>
 
@@ -358,7 +367,7 @@
         <h2>Although...</h2>
         <p>whether I <strong>make</strong> them — is <strong>not...</strong></p>
         <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
-          <em>🔊</em> <strong>up</strong> to you.
+          <em>🔊</em> <strong>"up"</strong> to you.
         </button>
       </article>
 
@@ -373,14 +382,14 @@
         <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
           <em>🔊</em> <strong>"bear"</strong> with me. <em>🧸</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Newsflash:</em> Not anymore.
         </button>
       </article>
 
       <article class="slide gift-article">
         <div class="gift-img"
-          aria-label="A random boy on his dinosaur on a typical day shrugging his solder in a facial expression 'woops' animation">
+          aria-label="A random boy on his dinosaur on a typical day shrugging his shoulder in a facial expression 'woops' animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/woops.mp4" type="video/mp4" />
           </video>
@@ -422,7 +431,7 @@
         <button class="text-to-sound" data-sound="assets/music/winter is coming.mp3">
           <em>🗣️ winter is coming. 🥶</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>☢️</em> <strong>Proceed at your <em>own</em> risk.</strong> <em>☠️</em>
         </button>
       </article>
@@ -438,7 +447,7 @@
             <em>🗣️ But the good news is:<br>👍 Guess who's got two thumbs and... 👍</em>
           </button>
         </h2>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           You can exclude the <strong>banging you tonight</strong> part. <em>🤣</em>
         </button>
       </article>
@@ -464,7 +473,7 @@
             <source src="assets/videos/triplets.mp4" type="video/mp4" />
           </video>
         </div>
-        <h2>...in which day...</h2>
+        <h2>...on that day...</h2>
         <button class="text-to-sound" data-sound="assets/music/michael jackson - you are not alone.mp3">
           <em>🎵</em> <strong>they were not alone...</strong>
         </button>
@@ -496,7 +505,7 @@
         <button class="text-to-sound" data-sound="assets/music/Lady Antebellum - it's a quarter.mp3">
           <em>🎵</em> <strong>quarter</strong> of a century ago.
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Or <em>more</em> — for the sake of <strong>future-proofing</strong> this.
         </button>
       </article>
@@ -527,7 +536,7 @@
         <button class="text-to-sound" data-sound="assets/music/taylor swift - me.mp3">
           <em>🎵</em> <strong>me — hee hee.</strong> 🫠</em>
         </button>            
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           All jokes aside — I <strong>still am.</strong>
         </button>        
       </article>
@@ -543,7 +552,7 @@
             <em>🔊</em> You <strong>guessed</strong> it! 
           </button>
         </h2>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           That <strong>someone</strong> is <em>you.</em>
         </button>
       </article>
@@ -560,7 +569,7 @@
          </button>
         </h2>
         <p><strong>this</strong> one matters the <strong>most.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           By <em>this</em> — I'm referring to <strong>May 3rd.</strong>
         </button>
       </article>
@@ -576,14 +585,14 @@
         <button class="text-to-sound" data-sound="assets/music/fireworks.mp3">
           <em>🔊</em> <strong>birthday.</strong> <em>🎊</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Or <em>was</em> — for the sake of <strong>future-proofing</strong> this.
         </button>
       </article>
 
       <article class="slide gift-article">
         <div class="gift-img wide-video"
-          aria-label="Scene from the 'Seinfield' series picturing the co-star crossing his hands in a way to signal NOTHING animation">
+          aria-label="Scene from the 'Seinfeld' series picturing the co-star crossing his hands in a way to signal NOTHING animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/seinfield nothing.mp4" type="video/mp4" />
           </video>
@@ -592,14 +601,14 @@
         <button class="text-to-sound" data-sound="assets/music/bruno mars - lazy song.mp3">
           <em>🎵</em> <strong>nothing...</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Just kidding.</em>
         </button>
       </article>
 
       <article class="slide gift-article">
         <div class="gift-img wide-video"
-          aria-label="Mickey Mouse looking himself in the mirror while the mirro image is winking back at him animation">
+          aria-label="Mickey Mouse looking at himself in the mirror while the mirror image is winking back at him animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/mickey winking.mp4" type="video/mp4" />
           </video>
@@ -624,7 +633,7 @@
           <button class="text-to-sound" data-sound="assets/music/bruno mars - just the way you are.mp3">
             <em>🎵</em> <strong>just the way you are.</strong>
           </button>        
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           At least to <strong>my</strong> eyes. <em>👀</em>
         </button>        
       </article>
@@ -657,7 +666,7 @@
           times more.
         </h2>
         <p>Or as <strong>many</strong> as it would've <strong>taken.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Or until you'd <strong>realize</strong> it yourself.
         </button>
       </article>
@@ -675,7 +684,7 @@
 
       <article class="slide gift-article">
         <div class="gift-img"
-          aria-label="Young girl holding her hands together tight and prays for what her heart desires the MOST -assumingly- animation">
+          aria-label="Young girl holding her hands together tight and prays for what her heart desires the MOST -presumably- animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/praying.mp4" type="video/mp4" />
           </video>
@@ -754,7 +763,7 @@
 
       <article class="slide gift-article">
         <div class="gift-img"
-          aria-label="The Beast from 'the Beaty & the Beast' about to make a surprise to Belle animation">
+          aria-label="The Beast from 'the Beauty & the Beast' about to make a surprise to Belle animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/beauty%20and%20the%20beast%20surprise.mp4" type="video/mp4" />
           </video>
@@ -765,14 +774,14 @@
         </button>
         </h2>
         <p>one — for <strong>your</strong> eyes <strong>only.</strong> <em>👀</em></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Just kidding.</em><br>
           You can show it to <strong>anyone</strong> your heart desires.
         </button>
       </article>
 
       <article class="slide gift-article">
-        <div class="gift-img" aria-label="The beast from Beaty & the Beast reading a book animation">
+        <div class="gift-img" aria-label="The beast from Beauty & the Beast reading a book animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/the%20beast%20reading%20a%20book.mp4" type="video/mp4" />
           </video>
@@ -782,7 +791,7 @@
       </article>
 
       <article class="slide gift-article">
-        <div class="gift-img" aria-label="Buzz Lightyear giving a mischievous look on Woddy's girlfriend for catching him before falling down most likely animation">
+        <div class="gift-img" aria-label="Buzz Lightyear giving a mischievous look on Woody's girlfriend for catching him before falling down most likely animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/buzz lightyear mischievous.mp4" type="video/mp4" />
           </video>
@@ -822,7 +831,7 @@
         <button class="text-to-sound" data-sound="assets/music/drumroll-sound-effect.mp3">
           <em>🔊</em> <strong>drumroll</strong> <em>🥁</em>
         </button>
-        <div class="gift-img" aria-label="Couple girl scouts around a campfire intensly waiting for something begging for it to come saying 'Tell us! Tell us!' animation">
+        <div class="gift-img" aria-label="Couple girl scouts around a campfire intensely waiting for something begging for it to come saying 'Tell us! Tell us!' animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/tell us.mp4" type="video/mp4" />
           </video>
@@ -835,10 +844,10 @@
             <em>🔊</em> You <strong>guessed</strong> it! 
           </button>
         </h2>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <strong>You</strong> and <strong>me.</strong> <em>👩‍❤️‍💋‍👨</em>
       </button>
-        <div class="gift-img" aria-label="Tarzan & Jand touching palms in the rain animation">
+        <div class="gift-img" aria-label="Tarzan & Jane touching palms in the rain animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/tarzan%20jane.mp4" type="video/mp4" />
           </video>
@@ -851,11 +860,11 @@
           <em>🎵</em> <strong>wager</strong> just about <strong>anything...</strong> <em>🎲💰</em>
         </button>
         <p></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Newsflash:</em><br>I'd <strong>happily</strong> place that bet <strong>again.</strong>
         </button>
         <div class="gift-img wide-video"
-          aria-label="Cat wearing sunglasses in a cazing playing poker and betting all in animation">
+          aria-label="Cat wearing sunglasses in a casino playing poker and betting all in animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/cat cazino all in.mp4" type="video/mp4" />
           </video>
@@ -867,7 +876,7 @@
         <button class="text-to-sound" data-sound="assets/music/passenger.mp3">
           <em>🎵</em> <em>end</em> of it...
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Newsflash:</em><br>Our <strong>fairytale gone bad</strong> already. <em>💔</em>
         </button>
         <div class="gift-img wide-video"
@@ -895,9 +904,9 @@
         <h2>For in...</h2>
         <p><em>ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ</em></p>
         <button class="text-to-sound" data-sound="assets/music/in case you didn't know.mp3">
-          <em>🎵</em> <strong>case you didn't know — I'm crazy 'bout ya.</strong>
+          <em>🎵</em> <strong>in case you didn't know — I'm crazy 'bout ya.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           The tense is <strong>irrelevant.</strong>
         </button>            
         <div class="gift-img" aria-label="Bugs bunny being in love animation">
@@ -944,7 +953,7 @@
             </strong>
           </button>
         </h2>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Newsflash:</em><br>
           I guess that's <strong>out</strong> of the <strong>picture</strong> now.
         </button>
@@ -961,7 +970,7 @@
         <button class="text-to-sound" data-sound="assets/music/wait for it.mp3">
          <em>🗣️ "It's gonna be LEGEN... — wait for it..."</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Looking back — probably <strong>not.</strong>
         </button>
         <div class="gift-img" aria-label="Hercules giving Megara a flower and a kiss at her cheek animation">
@@ -986,7 +995,7 @@
         <button class="text-to-sound" data-sound="assets/music/pour-sound-effect.mp3">
           <em>🔊</em> <strong>pour</strong> yourself a <strong>drink?</strong> 🍹
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           For this is gonna <strong>take</strong> a while.
         </button>
         <div class="gift-img" aria-label="Mulan pouring tea or... trying to as she misses the cup animation">
@@ -1001,7 +1010,7 @@
         <button class="text-to-sound" data-sound="assets/music/happy birthday pixar.mp3">
           <em>🎵</em> <strong>enjoy.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Let me know your <strong>thoughts</strong> on this.
         </button>
         <div class="gift-img" aria-label="Ember from the Disney movie 'Elemental' at the movies eating popcorn animation">
@@ -1072,7 +1081,7 @@
       <article class="slide gift-article">
         <h2>And as it <strong>turned out...</strong></h2>
         <p>she had a <strong>soft spot</strong> for a very specific <strong>type</strong> of man.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
             The <strong>dark</strong>-skinned color <strong>type.</strong>
         </button>
         <div class="gift-img"
@@ -1099,7 +1108,7 @@
         <button class="text-to-sound" data-sound="assets/music/tarzan jungle yell.mp3">
           <em>🔊</em> <strong>boy.</strong>
         </button>
-        <div class="gift-img" aria-label="Tarzan transitioning from a young age to being an adult in miliseconds animation">
+        <div class="gift-img" aria-label="Tarzan transitioning from a young age to being an adult in milliseconds animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/tarzan from kid to adult.mp4" type="video/mp4" />
           </video>
@@ -1112,7 +1121,7 @@
         <button class="text-to-sound" data-sound="assets/music/handsome.mp3">
           <em>🎵</em> <strong>handsome</strong> fella.
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Not to mention — <strong>modest.</strong>
         </button>
         <div class="gift-img" aria-label="Aladdin being shy animation">
@@ -1150,7 +1159,7 @@
       <article class="slide gift-article">
         <h2>A <strong>heart</strong> of...</h2>
         <p><strong>gold.</strong></p>
-        <div class="gift-img" aria-label="Skroutz McDuck swiming in his pool of golden coins animation">
+        <div class="gift-img" aria-label="Scrooge McDuck swimming in his pool of golden coins animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/skroutz McDuck.mp4" type="video/mp4" />
           </video>
@@ -1170,7 +1179,7 @@
             <source src="assets/videos/prince eric stars.mp4" type="video/mp4" />
           </video>
         </div>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Without even <strong>trying.</strong>
         </button>        
       </article>
@@ -1194,7 +1203,7 @@
         <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
           <em>🔊</em> <strong>feet.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           For <strong>mermaids</strong> have <em>🧜‍♀️</em> — <strong>not</strong> <em>🦶</em>.
         </button>
         <div class="gift-img"
@@ -1208,7 +1217,7 @@
       <article class="slide gift-article">
         <h2>Without even...</h2>
         <p><strong>realizing</strong> it. <em>😇</em></p>
-        <div class="gift-img" aria-label="Sylverster pointing to a halo that's on his head animation">
+        <div class="gift-img" aria-label="Sylvester pointing to a halo that's on his head animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/sylverster halo.mp4" type="video/mp4" />
           </video>
@@ -1244,9 +1253,9 @@
         <h2>She'd been...</h2>
         <p><strong>captivated</strong> by...</p>
         <button class="text-to-sound" data-sound="assets/music/gaston byceps.mp3">
-          <em>🎵 him having byceps to spare. 💪</em> 
+          <em>🎵</em> him having biceps to spare. 💪</em> 
         </button>
-        <div class="gift-img" aria-label="Gaston from 'the Beauty & the Beast' flexing his byceps animation">
+        <div class="gift-img" aria-label="Gaston from 'the Beauty & the Beast' flexing his biceps animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/gaston byceps.mp4" type="video/mp4" />
           </video>
@@ -1287,7 +1296,7 @@
             <img src="assets/images/hula-stitch.jpg" alt="🌺" style="width:1.2em;height:1.2em;vertical-align:middle;border-radius:3px;display:inline-block;">
           </button>
         <div class="gift-img"
-          aria-label="Donal Duck wearing haystack around his waist trying to look Hawanese and dancing animation">
+          aria-label="Donald Duck wearing haystack around his waist trying to look Hawaiian and dancing animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/donald duck dancing.mp4" type="video/mp4" />
           </video>
@@ -1325,7 +1334,7 @@
         <h2>And...</h2>
         <p>the way he <strong>tapped</strong> his...</p>
         <button class="text-to-sound" data-sound="assets/music/happy feet.mp3">
-          <em>🎵</em> <strong>happy feet?</strong> <em>👣</em>
+          <em>🎵 "happy feet?" 👣</em>
         </button>
         <div class="gift-img" aria-label="Mumble from 'Happy Feet' doing his thing dancing tap animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -1392,7 +1401,7 @@
         <button class="text-to-sound" data-sound="assets/music/mickey piano.mp3">
           <em>🎵</em> <strong>piano.</strong> <em>🎹</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Which she did <strong>not</strong> know at the time<br>but still — worth <strong>mentioning.</strong>
         </button>
         <div class="gift-img" aria-label="Mickey Mouse playing the piano animation">
@@ -1420,7 +1429,7 @@
         </div>
         <h2>Curious <strong>enough</strong> at least...</h2>
         <p>to take <strong>off</strong> her <strong>headphones.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Which <em>fyi</em> she almost <strong>never</strong> does.
         </button>
       </article>
@@ -1467,7 +1476,7 @@
         <button class="text-to-sound" data-sound="assets/music/instagram-follow-sound-effect.mp3">
           <em>🔊</em> and then she simply hit <strong>Follow.</strong> 
         </button>        
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Which is what <strong>any</strong> person in <strong>today's</strong> world would do.
         </button>
       </article>
@@ -1478,7 +1487,7 @@
         <button class="text-to-sound" data-sound="assets/music/mystery-sound-effect.mp3">
           <em>🔊</em> That remains <strong>yet</strong> one of life's greatest <strong>mysteries.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           But what <strong>matters</strong> is — she <em>did.</em>
         </button>
         <div class="gift-img" aria-label="Mickey mouse having question mark over his head animation">
@@ -1516,7 +1525,7 @@
         <button class="text-to-sound" data-sound="assets/music/woman-growling-sound-effect.mp3">
           <em>🔊</em> For it got her <strong>pissed off</strong> at him.<em>😠</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           And <strong>rightfully</strong> so.
         </button>
         <div class="gift-img" aria-label="Tinkerbell angry animation">
@@ -1545,9 +1554,9 @@
           <button class="text-to-sound" data-sound="assets/music/I would be lying if i said that.mp3">
             <em>🎵</em> <strong>He'd be lying if he said that he...</strong> <em>🤥</em>
           </button>
-        <div class="gift-img" aria-label="Pinokio's nose growing bigger from lying animation">
+        <div class="gift-img" aria-label="Pinocchio's nose growing bigger from lying animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
-            <source src="assets/videos/pinokio lying.mp4" type="video/mp4" />
+            <source src="assets/videos/pinocchio lying.mp4" type="video/mp4" />
           </video>
         </div>
       </article>
@@ -1610,8 +1619,8 @@
          <button class="text-to-sound" data-sound="assets/music/huh-sound-effect.mp3">
           <em>🔊</em> could <strong>not</strong> explain.
         </button>
-        <button class="peek-hint" data-label="spoiler">
-          But had instantly <strong>felt.</strong>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          But he had instantly <strong>felt.</strong>
         </button>
         <div class="gift-img"
           aria-label="Beast from the Disney movie 'the Beauty & the Beast' being surprised animation">
@@ -1624,7 +1633,7 @@
       <article class="slide gift-article">
         <h2>He then <strong>noticed</strong> something <strong>else.</strong></h2>
         <p>She was a dancer like <strong>him.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Stalker alert:</em><br>
           He'd already <strong>seen</strong> videos of her on her <strong>Instagram.</strong>
         </button>
@@ -1659,7 +1668,7 @@
           for <strong>she's having such a good time.</strong>
         </button>
         <div class="gift-img"
-          aria-label="Queen from the Disney movie 'the Snowhite' sitting at her thrown wearing her crown and her expensive robe animation">
+          aria-label="Queen from the Disney movie 'the Snow White' sitting at her throne wearing her crown and her expensive robe animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/snowhite queen.mp4" type="video/mp4" />
           </video>
@@ -1672,7 +1681,7 @@
         <button class="text-to-sound" data-sound="assets/music/unstoppable.mp3">
           <em>🎵</em> <strong>She's unstoppable today.</strong> <em>🛑</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           And <strong>every</strong> other day.
         </button>
         <div class="gift-img" aria-label="Leonardo di Caprio being fearless and unstoppable animation">
@@ -1765,7 +1774,7 @@
       <article class="slide gift-article">
         <h2>But little did they know...</h2>
         <p>how <strong>destiny</strong> still held up its sleeve a couple...</p>
-        <button class="text-to-sound" data-sound="assets/music/beast surprise.mp3">
+        <button class="text-to-sound" data-sound="assets/music/surprise-sound-effect.mp3">
           <em>🔊</em>  <strong>surprises...</strong>  <em>🎁</em>
         </button>
         <div class="gift-img" aria-label="Simba from 'the Lion King' movie looking surprised animation">
@@ -1792,7 +1801,7 @@
         <button class="text-to-sound" data-sound="assets/music/to be continued.mp3">
           <em>🎵</em> Far from <strong>finished.</strong> <em>🤫</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Newsflash:</em><br>
           Or <strong>not</strong> — depends how you <strong>look</strong> at it.
         </button>
@@ -2022,7 +2031,7 @@
         <button class="text-to-sound" data-sound="assets/music/ordinary.mp3">
           <em>🎵</em> <strong>the ordinary.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Unlike <strong>any</strong> other.
         </button>        
         <div class="gift-img" aria-label="Winnie the Pooh crosses a lake as he jumps from rock to rock animation">
@@ -2035,7 +2044,7 @@
       <article class="slide gift-article">
         <h2>The <strong>girl</strong> was...</h2>
         <p>somewhere <strong>reading</strong> a book.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           For <strong>med</strong> school was keeping her <strong>busy.</strong>
         </button>
         <div class="gift-img"
@@ -2099,8 +2108,8 @@
       <article class="slide gift-article">
         <h2>For lately...</h2>
         <p>she'd been <strong>watching</strong> his every story.</p>
-        <button class="peek-hint" data-label="spoiler">
-          More <strong>often</strong> than she'd <em>ever</em> like to <strong>admit.</strong>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          More <strong>often</strong> than she'd <em>ever</em> liked to <strong>admit.</strong>
         </button>
         <div class="gift-img"
           aria-label="Ariel from 'The Little Mermaid' with an expression in her eyes as if she's about to fall in love animation">
@@ -2113,7 +2122,7 @@
       <article class="slide gift-article">
         <h2>She'd been...</h2>
         <p>browsing his <strong>Instagram.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           At least they had <strong>that</strong> in common. <em>🫣</em>
         </button>
         <div class="gift-img" aria-label="Just a magnifying glass over a blue eye that darts left and right searching for something animation">
@@ -2169,7 +2178,7 @@
         <button class="text-to-sound" data-sound="assets/music/woman-excited-sound-effect.mp3">
           <em>🔊</em> Something like <strong>this</strong> — maybe? <em>🤩</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>No</em> question mark <strong>this</strong> time — for he'd taken his <strong>lesson.</strong>
         </button>
         <div class="gift-img"
@@ -2186,10 +2195,10 @@
         <button class="text-to-sound" data-sound="assets/music/woman-thinking-sound-effect.mp3">
           <em>🔊</em> <em>this.</em>🤔
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Again — <strong>rightfully</strong> so.
         </button>
-        <div class="gift-img" aria-label="Queen Grimhilde from the Snowhite transformed to an old lady animation">
+        <div class="gift-img" aria-label="Queen Grimhilde from the Snow White transformed to an old lady animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/queen grimhilde.mp4" type="video/mp4" />
           </video>
@@ -2202,7 +2211,7 @@
         <button class="text-to-sound" data-sound="assets/music/who gives a shit.mp3">
           <em>🗣️ Who gives a shit? 💩</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           To be fair — it's <strong>his</strong> side of the story.
         </button>
         <div class="gift-img" aria-label="Leonardo di Caprio giving zero fucks animation">
@@ -2235,7 +2244,7 @@
           </button>
         </h2>
         <p>She was simply curious as to <strong>why now.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           He's the <strong>one</strong> who'll be in trouble in the <strong>end.</strong>
         </button>
         <div class="gift-img" aria-label="Alice in Wonderland being her curious self getting into trouble animation">
@@ -2252,7 +2261,7 @@
           </button>
         </h2>
         <p>better to do.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Or <strong>all</strong> of the above.
         </button>
         <div class="gift-img"
@@ -2308,7 +2317,7 @@
       <article class="slide gift-article">
         <h2>For his <strong>leap of faith...</strong></h2>
         <p><strong>to infinity and beyond</strong> had served him well <strong>this</strong> time.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Or so he <strong>believed.</strong>
         </button>        
         <div class="gift-img"
@@ -2336,7 +2345,7 @@
         <button class="text-to-sound" data-sound="assets/music/she hulk.mp3">
           <em>🗣️ Is there anything worse than dating in your 30's?</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>The short answer?</em> — <strong>Yes.</strong><br>
           Dating in your <strong>40's, 50's</strong> and so on...
         </button>
@@ -2376,7 +2385,7 @@
         <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
           <em>🔊</em> <strong>"pirate."</strong>
         </button>        
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Although the moustache here is <strong>spot on.</strong>
         </button>
         <div class="gift-img" aria-label="Captain Hook from Peter pan playing the piano animation">
@@ -2392,7 +2401,7 @@
         <button class="text-to-sound" data-sound="assets/music/payphone.mp3">
           <em>🎵</em>  <strong>call.</strong> <em>🤙</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           For he wanted to <strong>confirm</strong> their date.
         </button>
         <div class="gift-img"
@@ -2512,7 +2521,7 @@
           </button><br>
         </h2>
         <p>about what <strong>outfit</strong> he was going to wear.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           For he wanted to <strong>impress</strong> her.
         </button>
         <div class="gift-img"
@@ -2529,7 +2538,7 @@
         <button class="text-to-sound" data-sound="assets/music/bruno mars - lazy song.mp3">
           <em>🎵</em> <strong>nothing.</strong> 
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Except his <strong>underwear.</strong>
         </button>
         <div class="gift-img"
@@ -2564,7 +2573,7 @@
         <button class="text-to-sound" data-sound="assets/music/i'm late.mp3">
           <em>🗣️ he'd be late for a very important date.</em>
         </button>        
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           And <strong>that</strong> was simply <strong>not</strong> an option he could <strong>afford.</strong>
         </button>
         <div class="gift-img" aria-label="Bunny from 'Alice in Wonderland' hurrying up not to be late animation">
@@ -2577,7 +2586,7 @@
       <article class="slide gift-article">
         <h2>For he did <strong>not...</strong> </h2>
         <p>want her <strong>waiting</strong> on him.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <strong>Not</strong> then — <strong>not</strong> <em>ever.</em>
         </button>
         <div class="gift-img" aria-label="Alice in Wonderland waiting animation">
@@ -2635,8 +2644,8 @@
 
       <article class="slide gift-article">
         <h2>As soon as he got <strong>ready...</strong></h2>
-        <p>he looked himself in the <strong>mirror...</strong></p>
-        <div class="gift-img" aria-label="Protagonist from the Disney movie 'Soul' looks himself in the mirror animation">
+        <p>he looked at himself in the <strong>mirror...</strong></p>
+        <div class="gift-img" aria-label="Protagonist from the Disney movie 'Soul' looks at himself in the mirror animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/soul mirror.mp4" type="video/mp4" />
           </video>
@@ -2649,7 +2658,7 @@
           <em>You got this, buddy!</em>
         </h2>
         <p><em>For who is there as beautiful as me?<br>Why — only she!</em></p>
-        <div class="gift-img" aria-label="Gaston from the Beauty & the Beast looking himself in the mirror animation">
+        <div class="gift-img" aria-label="Gaston from the Beauty & the Beast looking at himself in the mirror animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/gaston mirror.mp4" type="video/mp4" />
           </video>
@@ -2682,7 +2691,7 @@
             <em>🎵</em> <strong>Whistling</strong> to himself...
           </button>
         </h2>
-        <p>the <strong>whole</strong> way there.</p>
+        <p>the <strong>whole</strong> way.</p>
         <div class="gift-img" aria-label="Mickey Mouse taking a stroll and whistling happily animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/mickey mouse whistling happily.mp4" type="video/mp4" />
@@ -2713,7 +2722,7 @@
       <article class="slide gift-article">
         <h2>Whether she...</h2>
         <p><strong>panicked</strong> like <strong>he</strong> had.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Even if just for a <strong>tiny</strong> bit.
         </button>
         <div class="gift-img" aria-label="Mulan panicking animation">
@@ -2757,7 +2766,7 @@
       <article class="slide gift-article">
         <h2>What he did <strong>not</strong> know was that he...</h2>
         <p>was about to be <strong>blown out</strong> of his world.</p>
-        <div class="gift-img" aria-label="Simpson boy gets blown away assumingly from a blow dryer in front of him animation">
+        <div class="gift-img" aria-label="Simpson boy gets blown away presumably from a blow dryer in front of him animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/blown away.mp4" type="video/mp4" />
           </video>
@@ -2766,7 +2775,7 @@
 
       <!-- <article class="slide gift-article">
         <h2>Ans so was she.</h2>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Or rather — that's what he <strong>convinced</strong> himself would <strong>happen.</strong>
         </button>
         <div class="gift-img" aria-label="Hulk blows she-Hulk away animation">
@@ -2779,7 +2788,7 @@
       <article class="slide gift-article">
         <h2>For she had worn...</h2>
         <p>her <strong>dark</strong> top alongside her <strong>dark</strong>-leather skirt.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Or so he <strong>thought.</strong>
         </button>
         <div class="gift-img" aria-label="Catwoman halloween outfit animation">
@@ -2795,7 +2804,7 @@
           <em>🔊</em> the <strong>skirt</strong> was actually made of <strong>wool.</strong>🧶
         </button>
         <p></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Newsflash:</em><br>
           <strong>That</strong> information was <strong>not</strong> just handed over to him. 😵
         </button>
@@ -2988,7 +2997,7 @@
           he did <strong>not</strong> do such thing —<br>
           for it would've been way too <strong>inappropriate.</strong>
         </p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           But he <strong>did</strong> think about it.
         </button>
         <div class="gift-img" aria-label="Emperor being defensive over a simple fist bump animation">
@@ -3001,7 +3010,7 @@
       <article class="slide gift-article">
         <h2>And let's <strong>not</strong> forget...</h2>
         <p>he already had a history of <strong>pissing her off.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           He was <strong>not</strong> aware of that <strong>yet.</strong><br>
           But one can <strong>never</strong> be too sure about <strong>these</strong> things. 😬
         </button>
@@ -3029,7 +3038,7 @@
       <article class="slide gift-article">
         <h2>At least <strong>not...</strong></h2>
         <p>this early on — or <strong>ever</strong> really.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           He'd later <strong>discover</strong> she'd been taking <strong>martial arts</strong> classes as a kid!
         </button>
         <div class="gift-img"
@@ -3047,7 +3056,7 @@
           </button>
         </h2>
         <p>he spotted her in the <strong>crowd.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           From quite a <strong>distance</strong> — no less.
         </button>
         <div class="gift-img" aria-label="Metro leaving the station animation">
@@ -3169,7 +3178,7 @@
       <article class="slide gift-article">
         <h2><em>😝</em> <strong>Fun fact:</strong> <em>🤓</em></h2>
         <p>He recognized her by her <strong>boots.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Which he'd seen in her <strong>Instagram</strong> photos.
         </button>
         <div class="gift-img" aria-label="Woody from 'Toy Story' having his boot painted up looking fresh animation">
@@ -3192,7 +3201,7 @@
       <article class="slide gift-article">
         <h2>It must've been something past <strong>ten...</strong></h2>
         <p>and <strong>all</strong> the bars were <strong>packed.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           It was a <strong>Friday</strong> night — no less.
         </button>
         <div class="gift-img" aria-label="Peter Pan and his gang taking off from the London clock tower animation">
@@ -3298,10 +3307,13 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>Usually...</h2>
-        <p>these <strong>three</strong> things alone helped growing his <strong>confidence.</strong></p>
+        <h2>
+            Usually...<br>
+            these <strong>three</strong> things alone...
+        </h2>
+        <p>helped grow his <strong>confidence.</strong></p>
         <div class="gift-img"
-          aria-label="Lighting McQueen looking more confident than ever animation">
+          aria-label="Lightning McQueen looking more confident than ever animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/mcQueen confident.mp4" type="video/mp4" />
           </video>
@@ -3359,8 +3371,8 @@
           </button>
         </h2>
         <p>at <strong>any</strong> given moment.</p>
-        <button class="peek-hint" data-label="spoiler">
-          <strong>Admittedly</strong> — the <strong>stakes</strong> were a bit <strong>high.</strong>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          <strong>Admittedly</strong> — the stakes were a bit <strong>high.</strong>
         </button>
         <div class="gift-img" aria-label="Just a scale being tipped over by a finger animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -3391,8 +3403,11 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>But to <strong>him?</strong></h2>
-        <p>It felt more like <strong>balancing</strong>...<br>one <em>too</em> many things <strong>all at once.</strong></p>
+        <h2>
+            But to <strong>him?</strong><br>
+            It felt more like <strong>balancing...</strong><br>
+        </h2>
+        <p>one <strong>too</strong> many things <strong>all at once.</strong></p>
         <div class="gift-img"
           aria-label="Avatar the last airbender being in his 'avatar state' controlling all four elements animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -3419,7 +3434,7 @@
         </div>
         <h2>For this was his first...</h2>
         <p><strong>real</strong> date in a <strong>while.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>Real</em> meaning — he <strong>genuinely</strong> cared about <strong>how</strong> it'd turn out.
         </button>
       </article>
@@ -3430,8 +3445,8 @@
             <source src="assets/videos/donald%20duck%20refusing.mp4" type="video/mp4" />
           </video>
         </div>
-        <h2>Every attempt he made...</h2>
-        <p>to <strong>impress</strong> her — felt like hitting a <strong>wall.</strong></p>
+        <h2>However — <strong>any</strong> attempt he made to...</h2>
+        <p><strong>impress</strong> her — felt like hitting a <strong>wall.</strong></p>
       </article>
 
       <article class="slide gift-article">
@@ -3440,12 +3455,13 @@
             <source src="assets/videos/hades%20cooling%20down.mp4" type="video/mp4" />
           </video>
         </div>
-        <h2>
+        <h2>As...<br>
           <button class="text-to-sound" data-sound="assets/music/hades-cool.mp3">
-            <em>🗣️</em> As <strong>infuriating</strong> as that might've been...
-          </button>
+            <em>🗣️</em> <strong>infuriating...</strong>
+          </button><br>
+          as that might've been...
         </h2>
-        <p>he could <strong>not</strong> afford letting it <strong>get in his way</strong> of...</p>
+        <p>he could <strong>not</strong> afford letting it get in <strong>his way...</strong></p>
       </article>
 
       <article class="slide gift-article">
@@ -3454,8 +3470,11 @@
             <source src="assets/videos/kristoff.mp4" type="video/mp4" />
           </video>
         </div>
-        <h2>...getting to know <strong>her</strong> better.</h2>
-        <p>So he had to keep his <strong>cool...</strong></p>
+        <h2>...of <strong>getting to know</strong> her better.</h2>
+        <p>So he had to keep his...</p>
+        <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
+          <em>🔊</em> <strong>"cool."</strong>
+        </button>
       </article>
 
       <article class="slide gift-article">
@@ -3464,7 +3483,11 @@
             <source src="assets/videos/inside out emotions.mp4" type="video/mp4" />
           </video>
         </div>
-        <h2>...and stay <strong>true</strong> to his emotions.</h2>
+        <h2>...and stay...</h2>
+        <p><strong>true</strong> to his...</p>
+        <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
+          <em>🔊</em> <strong>"emotions."</strong>
+        </button>
       </article>
 
       <article class="slide gift-article">
@@ -3474,7 +3497,10 @@
           </video>
         </div>
         <h2>Admittedly...</h2>
-        <p>he got rather <strong>stressed.</strong></p>
+        <p>he got rather...</p>
+        <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
+          <em>🔊</em> <strong>"stressed."</strong>
+        </button>
       </article>
 
       <article class="slide gift-article">
@@ -3484,7 +3510,12 @@
             <source src="assets/videos/inside out sadness.mp4" type="video/mp4" />
           </video>
         </div>
-        <h2>But as disheartening as that was...</h2>
+        <h2>But as...<br>
+        <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
+          <em>🔊</em> <strong>"disheartening..."</strong>
+        </button>        
+        </h2>
+        <p>as that might've been...</p>
       </article>
 
       <article class="slide gift-article">
@@ -3495,7 +3526,7 @@
         </div>
         <h2>...he managed to...</h2>
         <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
-          <strong>"pull himself together."</strong>
+          <em>🔊</em> <strong>"pull himself together."</strong>
         </button>
       </article>
 
@@ -3506,8 +3537,10 @@
             <source src="assets/videos/mickey persistence.mp4" type="video/mp4" />
           </video>
         </div>
-        <h2>It took him...</h2>
-        <p>sheer <strong>persistence...</strong></p>
+        <h2>It took him <strong>sheer...</strong></h2>
+        <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
+          <em>🔊</em> <strong>"persistence."</strong>
+        </button>        
       </article>
 
       <article class="slide gift-article">
@@ -3521,7 +3554,7 @@
           <button class="text-to-sound" data-sound="assets/music/woman-sexy-laugh-sound-effect.mp3">
             <em>🔊</em> <strong>laugh.</strong> <em>😆</em>
           </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           And hopefully <strong>not</strong> for the last time.
         </button>
       </article>
@@ -3533,7 +3566,7 @@
             <source src="assets/videos/shaman king blush.mp4" type="video/mp4" />
           </video>
         </div>
-        <h2>Her face...</h2>
+        <h2>Her <strong>face...</strong></h2>
         <p>turned all <strong>red.</strong></p>
       </article>
 
@@ -3543,18 +3576,19 @@
             <source src="assets/videos/princess anna happy.mp4" type="video/mp4" />
           </video>
         </div>
-        <h2>Her eyes?</h2>
+        <h2>Her <strong>eyes?</strong></h2>
         <p>They were darting <strong>left and right.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           As for <strong>how</strong> he managed that — that's a story for <strong>another</strong> time.
         </button>
       </article>
 
       <article class="slide gift-article">
-        <h2>
+        <h2>And it was in...<br>
           <button class="text-to-sound" data-sound="assets/music/here i come.mp3">
-            <em>🗣️</em> And it was in <strong>that</strong> moment...
-          </button>
+            <em>🗣️</em>  <strong>that...</strong>
+          </button><br>
+          moment...
         </h2>
         <p>he'd <strong>realized...</strong></p>
         <div class="gift-img" aria-label="Leonardo di Caprio jumping up from his armchair pointing ahead animation">
@@ -3565,12 +3599,13 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>
-          ...his heart was...<br>
-          <em>ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ</em>
+        <h2>...his heart was...<br>
+          <button class="text-to-sound" data-sound="assets/music/heartbeat-sound-effect.mp3">
+            <em>🔊</em> in the right <strong>place.</strong> <em>💓</em>
+          </button>          
         </h2>
-        <p>in the right <strong>place.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <p><em>ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ</em></p>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <strong>All</strong> jokes aside.
         </button>
         <div class="gift-img" aria-label="Donald duck holding his heart as it pounds loudly animation">
@@ -3583,7 +3618,7 @@
       <article class="slide gift-article">
         <h2>For <strong>in</strong> that moment...</h2>
         <p>he <strong>decided...</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           A <strong>horrible</strong> decision — really.
         </button>
         <div class="gift-img"
@@ -3601,7 +3636,7 @@
           </button>
         </h2>
         <p>in the <strong>entirety</strong> of <em>Disney's</em> world...</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           or <strong>any</strong> other world — no less.
         </button>
         <div class="gift-img"
@@ -3614,7 +3649,7 @@
 
       <article class="slide gift-article">
         <h2><strong>...mattered...</strong></h2>
-        <p>more to <strong>him...</strong></p>
+        <p>more to <strong>him</strong> than...</p>
         <div class="gift-img"
           aria-label="Raffiki from the Disney movie 'Lion King' smacking Simba's head over trying to teach him a valuable lesson about how the past can hurt animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -3624,9 +3659,9 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>...than seeing her face...</h2>
-        <p><strong>light</strong> up like <strong>that</strong> again.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <h2>...seeing her face <strong>light up...</strong></h2>
+        <p>like <strong>that</strong> again.</p>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           That moment was <strong>priceless.</strong>
         </button>
         <div class="gift-img" aria-label="Princess Anna from 'Frozen' having her face lit up animation">
@@ -3637,8 +3672,8 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>As they talked — she mentioned...</h2>
-        <p>she was a <strong>heels</strong> dancer.👠</p>
+        <h2>As they talked...</h2>
+        <p>she mentioned she danced <strong>heels.</strong> <em>👠</em></p>
         <div class="gift-img" aria-label="'Cinderella' having her heel worn by someone else animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/cinderella heel.mp4" type="video/mp4" />
@@ -3647,8 +3682,8 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>He already knew that — but so <strong>what?</strong></h2>
-        <p>He was still absolutely <strong>fascinated.</strong> <em>🤪</em></p>
+        <h2>He already knew that...</h2>
+        <p>but so <strong>what?</strong> — he was still absolutely <strong>fascinated.</strong> <em>🤪</em></p>
         <div class="gift-img"
           aria-label="Some guy from 'Cinderella' getting all fascinated from finding her after matching with her heel animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -3658,10 +3693,10 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>She mentioned she loved drawing...</h2>
+        <h2>She mentioned she loved <strong>drawing...</strong></h2>
         <p>mostly <strong>abstract</strong> things.</p>
-        <button class="peek-hint" data-label="spoiler">
-          From her <strong>early</strong> days — no less.
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          From her <strong>young</strong> days — no less.
         </button>
         <div class="gift-img" aria-label="Nick wylde sketch animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -3676,7 +3711,7 @@
         <button class="text-to-sound" data-sound="assets/music/zero to hero.mp3">
           <em>🎵</em> <strong>singing</strong> and <strong>dancing.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Until <strong>not</strong> that long ago.
         </button>
         <div class="gift-img" aria-label="Singing choir ladies from 'Hercules' animation">
@@ -3687,8 +3722,11 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>Meanwhile — he was <strong>thinking:</strong></h2>
-        <p><em>What a talented young lady.</em></p>
+        <h2>Meanwhile...</h2>
+        <p>
+          he was thinking:<br>
+          <em>What a talented young lady.</em>
+        </p>
         <div class="gift-img" aria-label="Squirrel in awe animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/squirrel.mp4" type="video/mp4" />
@@ -3698,7 +3736,7 @@
 
       <article class="slide gift-article">
         <h2>He was wondering...</h2>
-        <p><em> what other talents has she <strong>not</strong> mentioned yet? 😏</em></p>
+        <p><em>What other talents has she <strong>not</strong> mentioned yet? 😏</em></p>
         <div class="gift-img" aria-label="Daffy Duck having a clearly mischievous look on his face as if he's up to no good animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/daffy duck mischievous look.mp4" type="video/mp4" />
@@ -3707,9 +3745,9 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>Every so often — she nervously...</h2>
-        <p><strong>tucked</strong> her hair behind her ear...</p>
-        <button class="peek-hint" data-label="spoiler">
+        <h2>Every so often...</h2>
+        <p>she nervously <strong>tucked</strong> her hair behind her ear...</p>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <strong>Revealing</strong> glimpses of her <strong>neck</strong> and <strong>shoulders.</strong>
         </button>
         <div class="gift-img" aria-label="Ariel from the Little Mermaid nervously tucks her hair to the side animation">
@@ -3720,8 +3758,8 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>...making it <strong>increasingly</strong> difficult for...</h2>
-        <p>him to <strong>follow</strong> the conversation.</p>
+        <h2>...making it <strong>increasingly</strong> difficult...</h2>
+        <p>for him to <strong>follow</strong> the conversation.</p>
         <div class="gift-img" aria-label="Aladdin staring at the void probably daydreaming of Jasmine animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/aladdin stare.mp4" type="video/mp4" />
@@ -3744,10 +3782,7 @@
 
       <article class="slide gift-article">
         <h2><em>Or kiss you now? 😗</em></h2>
-        <button class="peek-hint" data-label="spoiler">
-          <em>Unironically:</em><br>
-          His puppy eyes had <strong>never</strong> failed him before.
-        </button>
+        <p>To which her answer <strong>stunned</strong> him.</p>
         <div class="gift-img"
           aria-label="Lady and the Tramp iconic pasta into kissing scene animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -3757,26 +3792,25 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>Her being a...<br>
-          <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
-            <em>🔊</em> <strong>"lady"</strong> and all...
-          </button>
-        </h2>
-        <p>that was <strong>not</strong> something she'd <strong>usually</strong> do.</p>
-        <button class="peek-hint" data-label="spoiler">
-          On a <strong>first</strong> she wouldn't even <strong>consider</strong> it.
+        <h2>Kissing was <strong>not...</strong></h2>
+        <p>something she'd normally do on a <strong>first</strong> date.</p>
+        <button class="text-to-sound" data-sound="assets/music/aristocats -  because i'm a lady that's why.mp3">
+          <em>🗣️</em> <em>"Because I'm a lady — that's why"</em>
+        </button>   
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          <strong>Not</strong> her exact <strong>phrasing</strong> — but close <strong>enough.</strong>
         </button>
         <div class="gift-img"
           aria-label="Three cats -one female in the middle and two male- where the female says 'I'm a lady' animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
-            <source src="assets/videos/aristocats lady.mp4" type="video/mp4" />
+            <source src="assets/videos/aristocats lady(1).mp4" type="video/mp4" />
           </video>
         </div>
       </article>
 
       <article class="slide gift-article">
-        <h2>He <strong>respectfully</strong> and...</h2>
-        <p>patiently chose to <strong>wait</strong> for when she'd <strong>feel</strong> ready.</p>
+        <h2>He then <strong>respectfully</strong> decided to...</h2>
+        <p>patiently <strong>wait</strong> for when she'd <strong>feel</strong> ready.</p>
         <div class="gift-img" aria-label="Some owl walking in circles waiting impatiently animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/owl.mp4" type="video/mp4" />
@@ -3807,7 +3841,7 @@
           a thought or two might've crossed her mind:<br>
           <em>His jokes could use some work. 🥶</em>
         </p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <strong>But nobody's perfect, right?</strong>
         </button>
         <div class="gift-img" aria-label="Mulan being cold shivering from the low water temperature animation">
@@ -3820,7 +3854,7 @@
       <article class="slide gift-article">
         <h2>As the new week began...</h2>
         <p>they went out for a <strong>second</strong> time.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           This is <strong>Zoro.</strong> Luffy's right hand man — <strong>second</strong> only to Luffy.
         </button>
         <div class="gift-img" aria-label="Zoro -Straw hat crew member- and Luffy's right-hand or else No.2 animation">
@@ -3841,8 +3875,12 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>He'd brought her a little surprise.</h2>
-        <button class="peek-hint" data-label="spoiler">
+        <h2>He'd brought her...</h2>
+        <p>a little...</p>
+        <button class="text-to-sound" data-sound="assets/music/beast surprise.mp3">
+          <em>🔊</em>  <strong>surprise.</strong>  <em>🎁</em>
+        </button>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           A <strong>cookie.</strong>
         </button>
         <div class="gift-img" aria-label="Just some random guy with cookies floating all around him animation">
@@ -3853,9 +3891,9 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>...which he...</h2>
-        <p><strong>not</strong> effortlessly resisted eating it.</p>
-        <div class="gift-img" aria-label="Boss baby makes a dog spit a cookie out of his mouth because assumingly it was baby boss's animation">
+        <h2>...which he <strong>not...</strong></h2>
+        <p>effortlessly <strong>resisted</strong> eating it.</p>
+        <div class="gift-img" aria-label="Boss baby makes a dog spit a cookie out of his mouth because presumably it was baby boss's animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/boss baby cookie.mp4" type="video/mp4" />
           </video>
@@ -3888,9 +3926,16 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>...he was <strong>growing</strong> on her.</h2>
-        <button class="peek-hint" data-label="spoiler">
-          From what an <strong>active listener</strong> she'd proven out to be.
+        <h2>
+          ...he was...<br>
+          <button class="text-to-sound" data-sound="assets/music/bruno mars - feels just a little big bigger now.mp3">
+          <em>🎵</em>  <strong>"growing"</strong> on her.
+          </button>
+        </h2>
+        <p>From what an <strong>active listener</strong> she'd proven out to be.</p>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          <strong>That's</strong> the reason I was <strong>laughing</strong><br>
+          all by myself the other day in the <strong>kitchen.</strong>
         </button>
         <div class="gift-img"
           aria-label="Some beasty creature from some Disney moving going 'I grow stronger' animation">
@@ -3901,8 +3946,8 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>She was starting to seem...</h2>
-        <p><strong>genuinely</strong> more interested in <strong>him.</strong></p>
+        <h2>She was starting to...</h2>
+        <p>seem <strong>genuinely</strong> more interested in <strong>him.</strong></p>
         <div class="gift-img" aria-label="Megara from 'Hercules' showing increasing interest to him animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/megara interested.mp4" type="video/mp4" />
@@ -3911,8 +3956,11 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>For she had even started <strong>flattering</strong> him...</h2>
-        <p>for his elegant choice of <strong>clothes.</strong></p>
+        <h2>For she had even...</h2>
+        <p>started <strong>flattering</strong> him.</p>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          For his <em>elegant choice of clothes</em> — <strong>her</strong> words.
+        </button>        
         <div class="gift-img" aria-label="Spiderman inside an elevator while a random civilian compliments his spider outfit thinking he wasn't the real deal animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/spiderman.mp4" type="video/mp4" />
@@ -3923,7 +3971,7 @@
       <article class="slide gift-article">
         <h2>Even <strong>encouraging</strong> him...</h2>
         <p>to <strong>let</strong> her into <strong>his</strong> world.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <strong>That</strong>'s what sparked all of <strong>this.</strong>
         </button>
         <div class="gift-img" aria-label="Ariel from 'the Little Mermaid' biting her upper lip animation">
@@ -3940,7 +3988,7 @@
           </button>
         </h2>
         <p>For to <strong>him</strong> — this was clearly the <strong>greenest flag.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           In the <strong>history</strong> of green flags.
         </button>
         <div class="gift-img" aria-label="Mickey clapping his hands animation">
@@ -3961,16 +4009,13 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>She was hesitant.</h2>
-        <p>
-          She was <em>not</em> feeling <strong>comfortable</strong> enough <em>yet</em><br>
-          as she was <strong>convinced</strong> that...
-        </p>
+        <h2>She was hesitant — for she was <strong>not</strong>...</h2>
+        <p>feeling comfortable <strong>enough</strong> — convinced that...</p>
         <button class="text-to-sound" data-sound="assets/music/looking at her.mp3">
-          <em>🎵</em> <em>ALL</em> <strong>eyes</strong> would be on <strong>them.</strong>
+          <em>🎵</em> <strong>the whole place would look at them.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
-          She was <em>not</em> wrong.
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          She was <strong>not</strong> wrong.
         </button>
         <div class="gift-img" aria-label="Skunk from some Disney movie getting all red and blushy animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -3980,8 +4025,8 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>So he respected that...</h2>
-        <p>and <strong>reached</strong> for a <em>hug</em> instead.</p>
+        <h2>So he respected that and...</h2>
+        <p>reached for a <strong>hug</strong> instead.</p>
         <div class="gift-img" aria-label="Stitch from 'Lilo and Stitch' hugs Lilo animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/stitch hugs lilo.mp4" type="video/mp4" />
@@ -3991,7 +4036,7 @@
 
       <article class="slide gift-article">
         <h2>As her hands touched the...</h2>
-        <p><strong>back</strong> of his <strong>neck</strong> —<br>he got <strong>goosebumps</strong> <em>all</em> over.</p>
+        <p><strong>back</strong> of his neck — he got <strong>goosebumps</strong> all over.</p>
         <div class="gift-img" aria-label="Yasmine caressing Aladdin with love animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/aladdin yasmine hug.mp4" type="video/mp4" />
@@ -4000,7 +4045,8 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>So he held her tight...</h2>
+        <h2>So he then...</h2>
+        <p>held her <strong>tight</strong> in his arms...</p>
         <div class="gift-img" aria-label="Simba from the Lion King hugging Nala animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/lion king hug.mp4" type="video/mp4" />
@@ -4009,7 +4055,8 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>...appreciating every second.</h2>
+        <h2>...appreciating...</h2>
+        <p>every second of that <strong>moment.</strong></p>
         <div class="gift-img" aria-label="Fox couple hugging each other in the forest animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/foxes.mp4" type="video/mp4" />
@@ -4018,11 +4065,15 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>
-          <button class="text-to-sound" data-sound="assets/music/queen mama.mp3">
-            <em>🎵</em> It was getting <strong>late</strong> — so they <strong>had to go.</strong>
+        <h2>It was getting...<br>
+          <button class="text-to-sound" data-sound="assets/music/queen - too late.mp3">
+            <em>🎵</em> <strong>too late...</strong>
           </button>
         </h2>
+        <p>So they had to go.</p>
+          <button class="text-to-sound" data-sound="assets/music/queen - i've got to go.mp3">
+            <em>🎵</em> <strong>They had to go.</strong>
+          </button>        
         <div class="gift-img" aria-label="Clock saying 'Look at the time, it's late' animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/clock late.mp4" type="video/mp4" />
@@ -4031,8 +4082,12 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>They were the last ones to leave the bar.</h2>
-        <div class="gift-img" aria-label="In that order Donald, Goofy, Mickey are tip-toeing to assumingly escape from a sneaky situation animation">
+        <h2>They were the...</h2>
+        <p>last ones to...</p>
+          <button class="text-to-sound" data-sound="assets/music/pink panther.mp3">
+            <em>🎵</em> <strong>leave</strong> the bar.
+          </button>
+        <div class="gift-img" aria-label="In that order Donald, Goofy, Mickey are tip-toeing to presumably escape from a sneaky situation animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/mickey donald goofy tip-toeing.mp4" type="video/mp4" />
           </video>
@@ -4040,9 +4095,13 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>As he drove her home, he said:</h2>
-        <p><strong>It's still too early to call it a night.<br>Why don't you show me around your neighbourhood?</strong></p>
-        <div class="gift-img" aria-label="Lighting McQueen from Cars on high velocity animation">
+        <h2>As they reached her place...</h2>
+        <p>
+          he said:<br>
+          <em>It's still too early to call it a night.<br>
+          Why don't you show me around your neighbourhood?</em>
+        </p>
+        <div class="gift-img" aria-label="Lightning McQueen from Cars on high velocity animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/mcQueen.mp4" type="video/mp4" />
           </video>
@@ -4051,11 +4110,11 @@
 
       <article class="slide gift-article">
         <h2>To which her eyes <strong>lit up</strong> immediately.</h2>
-        <p><em>"Are you asking to go for a walk?"</em>  — she said<br>before he'd even <strong>finished asking.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
-          She was <strong>not</strong> expecting that from him.
+        <p><em>"Are you asking to go for a walk?"</em> — she said<br>before he'd even <strong>finished asking.</strong></p>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          She was <strong>not</strong> expecting that from <strong>him.</strong>
         </button>
-        <div class="gift-img" aria-label="Snowhite being excited animation">
+        <div class="gift-img" aria-label="Snow White being excited animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/snowhite.mp4" type="video/mp4" />
           </video>
@@ -4063,12 +4122,12 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>During the walk she shared to him...</h2>
-        <p>how she was <strong>galeophobic...</strong></p>
-        <button class="peek-hint" data-label="spoiler">
-          Or more commonly known as <strong>fear of sharks.</strong>
+        <h2>During the walk she <strong>confided</strong> in him...</h2>
+        <p>her biggest <strong>fear</strong> — she was <strong>galeophobic</strong>.</p>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          Or more commonly known as <strong>fear of sharks</strong>.
         </button>
-        <div class="gift-img" aria-label="Ariel 'the Littme Mermaid' saves his fish friend from a shark attack animation">
+        <div class="gift-img" aria-label="Ariel 'the Little Mermaid' saves his fish friend from a shark attack animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/ariel shark.mp4" type="video/mp4" />
           </video>
@@ -4076,7 +4135,8 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>...and how people made <strong>fun</strong> of that.</h2>
+        <h2>And people...</h2>
+        <p>were making fun of <strong>that.</strong></p>
         <div class="gift-img" aria-label="Donald Duck laughing and pointing animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/donald duck laughs.mp4" type="video/mp4" />
@@ -4085,8 +4145,8 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>She'd also mentioned...</h2>
-        <p>her <strong>habit</strong> of speaking or eating <strong>slowly...</strong></p>
+        <h2>She'd also mentioned her <strong>habit...</strong></h2>
+        <p>of speaking or eating <strong>slowly</strong></p>
         <div class="gift-img"
           aria-label="Scene from 'Zootopia' movie taking place at a bank featuring a sloth employee being slow animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -4096,8 +4156,12 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>...to which her own sisters...</h2>
-        <p><strong>criticized</strong> her about it.</p>  
+        <h2>Which her...</h2>
+        <p>own sisters <strong>criticized.</strong></p>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          <strong>Memory</strong> a bit <strong>fuzzy</strong> on this one.<br>
+          Could be <strong>false</strong> information.
+        </button>
         <div class="gift-img"
           aria-label="Cinderella's step sisters judging and looking down on her animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -4108,8 +4172,8 @@
 
       <article class="slide gift-article">
         <h2>As they wandered...</h2>
-        <p>they ended up at a nearby <strong>park...</strong></p>
-        <div class="gift-img" aria-label="A park with a bench, a dog ownder reading a book and her dog -scene from the movie '101 Dalmatian dogs' animation">
+        <p>they ended up at a <strong>park</strong> nearby.</p>
+        <div class="gift-img" aria-label="A park with a bench, a dog owner reading a book and her dog -scene from the movie '101 Dalmatian dogs' animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/101 bench.mp4" type="video/mp4" />
           </video>
@@ -4127,10 +4191,10 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>He insisted she sit on his lap and she...</h2>
-        <p>was <strong>pulling away</strong> every time he'd reach for her <strong>lips.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
-          She had <em>way</em> too much fun <strong>teasing</strong>.
+        <h2>He insisted she sit on his <strong>lap</strong> and...</h2>
+        <p>she was <strong>pulling away</strong> every time he'd reach for her <strong>lips.</strong></p>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          She had way too much fun <strong>teasing</strong> him.
         </button>
         <div class="gift-img" aria-label="Roger rabbit teasing some man with her beauty animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -4140,13 +4204,13 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>Only after he...</h2>
+        <h2>Only after he'd...</h2>
         <p>pressed his lips to her <strong>neck...</strong></p>
         <button class="text-to-sound" data-sound="assets/music/pasta-sound-effect.mp3">
           <em>🎵</em> <strong>stirring</strong> her just enough...
         </button>
-        <button class="peek-hint" data-label="spoiler">
-          <em>FYI:</em> That's the sound of <strong>pasta.</strong>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          <em>FYI:</em> That's the sound of <strong>pasta.</strong> <em>🤣</em>
         </button>
         <div class="gift-img" aria-label="Some neck kissing action animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -4166,7 +4230,7 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>And they finally...</h2>
+        <h2>And they'd finally...</h2>
         <p>shared their first <strong>kiss.</strong></p>
         <div class="gift-img" aria-label="Aladdin kissing Yasmine animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -4177,7 +4241,7 @@
 
       <article class="slide gift-article">
         <h2>As they kissed...</h2>
-        <p>he could <em>not</em> stop himself from <strong>smiling.</strong></p>
+        <p>he was unable to stop <strong>smiling.</strong></p>
         <div class="gift-img" aria-label="Rapunzel kissing Flynn Rider animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/rapunzel kiss.mp4" type="video/mp4" />
@@ -4186,15 +4250,15 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>For he could <em>not</em> remember...</h2>
+        <h2>For he could <strong>not</strong> remember...</h2>
         <p>
-          when was the <strong>last</strong> time he'd<br>
-          waited <em>this</em> long before <strong>kissing</strong> someone.
+          when was the last time he'd<br>
+          waited <strong>this</strong> long before <strong>kissing</strong> someone.
         </p>
-        <button class="peek-hint" data-label="spoiler">
-          A girl he liked <em>this</em> much — <strong>no less.</strong>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          A girl he liked <strong>this</strong> much — no less.
         </button>
-        <div class="gift-img" aria-label="Ariel from the Little Mermain kissing Prince Eric animation">
+        <div class="gift-img" aria-label="Ariel from the Little Mermaid kissing Prince Eric animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/ariel kiss.mp4" type="video/mp4" />
           </video>
@@ -4202,11 +4266,12 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>Not to mention the idea of their first kiss...</h2>
+        <h2>Not to mention how...</h2>
+        <p>the idea of their first kiss...</p>
         <button class="text-to-sound" data-sound="assets/music/jerry lee lewis i'm real nervous.mp3">
           <em>🎵</em> was making him genuinely <strong>nervous.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           For he'd really <strong>hoped</strong> it'd go <strong>well.</strong>
         </button>
         <div class="gift-img" aria-label="Mickey Mouse feeling nervous animation">
@@ -4220,10 +4285,11 @@
         <h2>As it turned out...</h2>
         <p>he <strong>checked</strong> another <strong>box:</strong></p>
         <button class="text-to-sound" data-sound="assets/music/jerry lee lewis feels good.mp3">
-          <em>🎵 ✅</em> <strong>feels good</strong> kissing her.
+          <em>🎵</em> kissing her <strong>feels good.</strong> <em>✅</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
-          Except <em>one</em> thing:<br>his <strong>mustache</strong> was getting in <strong>his way.</strong>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          Except <strong>one</strong> thing:<br>
+          his <strong>mustache</strong> was getting in the way.
         </button>
         <div class="gift-img" aria-label="Mickey & Minnie Mouse kissing animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -4233,7 +4299,8 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>And it came so naturally.</h2>
+        <h2>And it came...</h2>
+        <p>so <strong>naturally.</strong> — no less.</p>
         <div class="gift-img" id="gift-img-kiss6" aria-label="Bunny couple kissing in the forest animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/bunnies kiss.mp4" type="video/mp4" />
@@ -4246,7 +4313,7 @@
         <button class="text-to-sound" data-sound="assets/music/again and again and..again!.mp3">
           <strong>again and again and... again!</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <strong>again and again and... again!</strong>
         </button>
         <div class="gift-img" id="gift-img-kiss7"
@@ -4259,7 +4326,10 @@
 
       <article class="slide gift-article">
         <h2>Eventually — they called it a night...</h2>
-        <p>and each went to their <strong>own</strong> bed thinking:<br><strong>Not bad for a second date!</strong></p>
+        <p>
+          and each went to their <strong>own</strong> bed thinking:<br>
+          <em>Not bad for a second date!</em>
+        </p>
         <div class="gift-img" aria-label="Ariel getting ready for bed animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/ariel sleep.mp4" type="video/mp4" />
@@ -4268,7 +4338,7 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>Not bad at all!</h2>
+        <h2><em>Not bad at all.</em></h2>
         <div class="gift-img" aria-label="Winnie the Pooh getting ready to sleep animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/winnie bedtime.mp4" type="video/mp4" />
@@ -4279,11 +4349,12 @@
       <article class="slide gift-article">
         <h2>Later that same week...</h2>
         <p>
-          he was getting <strong>impatient</strong> —<br>
-          for he wanted to <strong>see</strong> her <strong>again.</strong>
+          he was getting <strong>impatient.</strong><br>
+          For he wanted to <strong>see</strong> her <strong>again.</strong>
         </p>
-        <button class="peek-hint" data-label="spoiler">
-          <strong>Again</strong> meaning — <strong>sooner</strong> than<br>their already <strong>planned</strong> next date.
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          <em>Again</em> meaning — <strong>sooner</strong> than<br>
+          their already <strong>planned</strong> next date.
         </button>
         <div class="gift-img" aria-label="Featuring a young black cat with a halo above its head animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
@@ -4293,10 +4364,11 @@
       </article>
 
       <article class="slide gift-article">
-        <h2>So he asked if she'd be open to...</h2>
-        <p><strong>seeing</strong> <em>him</em> — even for just a short <strong>walk.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
-          Setting <strong>aside</strong> his fear of<br>coming across as <strong>too strong.</strong>
+        <h2>So he asked if she'd be <strong>open</strong> to...</h2>
+        <p><strong>seeing</strong> him — even for <strong>just a little bit.</strong></p>
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
+          Setting <strong>aside</strong> his fear of<br>
+          coming across as <strong>too strong.</strong>
         </button>
         <div class="gift-img"
           aria-label="Widely known scene from puss in boots making cat eyes in order to get things his way">
@@ -4309,7 +4381,7 @@
       <article class="slide gift-article">
         <h2>Hoping she'd make it through her shift...</h2>
         <p>and want to <strong>see</strong> <em>him</em> just as much.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           She <em>did.</em>
         </button>
         <div class="gift-img" aria-label="Scene from Princess and the frog featuring Tiana at work">
@@ -4322,7 +4394,7 @@
       <article class="slide gift-article">
         <h2>He wasted no time...</h2>
         <p>and went by <em>her</em> place.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>🏎️</em> He was there in <strong>less</strong> than <em>ten</em> minutes.
         </button>
         <div class="gift-img" aria-label="McQueen from the Disney movie 'Cars' going high speed on a desert landscape animation">
@@ -4335,7 +4407,7 @@
       <article class="slide gift-article">
         <h2>On that day she talked about...</h2>
         <p>how <em>she</em> and her <strong>sisters</strong> took <strong>ballet classes</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           From a <strong>young</strong> age — no less.
         </button>
         <div class="gift-img" aria-label="Tinnkerbell from Peter Pan standing at her height animation">
@@ -4382,7 +4454,7 @@
       <article class="slide gift-article">
         <h2>Later that week...</h2>
         <p>their <strong>third date</strong> arrived.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           This is <strong>Sanji</strong> — whose name in<br><em>⛩️</em> <strong>japanese</strong> translates to:<br><strong>third</strong> son.
         </button>
         <div class="gift-img" aria-label="Sanji from One Piece anime show lying down facing up with hearts for eyes while Chopper (the cre's doctor) is blowing a towel towards his face to cool him down animation">
@@ -4397,12 +4469,12 @@
         <button class="text-to-sound" data-sound="assets/music/joke-sound-effect.mp3">
           <em>🔊 one</em> <strong>"pulling the strings"</strong> this time.
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           As for <strong>where</strong> they'd <em>go</em> to.
         </button>
-        <div class="gift-img" aria-label="Jepeto pulling Pinokio's strings making him walk around animation">
+        <div class="gift-img" aria-label="Geppetto pulling Pinocchio's strings making him walk around animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
-            <source src="assets/videos/pinokio jepeto.mp4" type="video/mp4" />
+            <source src="assets/videos/pinocchio jepeto.mp4" type="video/mp4" />
           </video>
         </div>
       </article>
@@ -4470,7 +4542,7 @@
         <button class="text-to-sound" data-sound="assets/music/dramatic-sound-effect.mp3">
           <em>🔊</em> <strong>trouble.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           For <em>that</em> phrase would <strong>haunt</strong> him.<br>
           <strong>Reference</strong> to slide <strong>#149.</strong>
         </button>
@@ -4484,7 +4556,7 @@
       <article class="slide gift-article" id="dance-section-start">
         <h2>Out came his hand — again.</h2>
         <p>Asking her for a <strong>dance.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
            Clearly <strong>not</strong> taking the <strong>hint.</strong>
         </button>
         <div class="gift-img" aria-label="Aladdin's hand reaching out for Yasmine animation">
@@ -4497,7 +4569,7 @@
       <article class="slide gift-article">
         <h2>Only <strong>this</strong> time was different.</h2>
         <p>For she had <strong>not</strong> hesitated.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
            To be <strong>fair</strong> — she <strong>did</strong> hesitate a little.
         </button>
         <div class="gift-img" aria-label="Aladdin's hand reaching out for Yasmine's animation">
@@ -4535,7 +4607,7 @@
         <button class="text-to-sound" data-sound="assets/music/tutti frutti west.mp3">
           <em>🎵</em> <strong>to the west.</strong>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
            being completely in <strong>sync.</strong>
         </button>        
         <div class="gift-img" aria-label="Scene from Aristocats featuring couple cats dancing around">
@@ -4548,7 +4620,7 @@
       <article class="slide gift-article" id="dance-section-end">
         <h2>As they danced...</h2>
         <p>he <strong>squeezed</strong> her up against his <strong>chest.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
            <strong>Appreciating</strong> every single <strong>moment.</strong>
         </button>
         <div class="gift-img" aria-label="Beauty & the Beast dancing around animation">
@@ -4561,7 +4633,7 @@
       <article class="slide gift-article">
         <h2>That boost of confidence was about to pay off.</h2>
         <p>For <em>this</em> would be the <strong>night!</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
            They'd <strong>end up</strong> at <em>his</em> place.
         </button>
         <div class="gift-img" aria-label="Mr. incredible being confident animation">
@@ -4683,7 +4755,7 @@
           the <strong>drinks</strong> they had were on <em>her.</em><br>
           For he hadn't any <strong>money</strong> on <em>him.</em>
         </p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           That's <em>not</em> true — but it made you <strong>laugh.</strong>
         </button>
         <div class="gift-img" aria-label="Donald duck being out of money animation">
@@ -4761,7 +4833,7 @@
       <!-- <article class="slide gift-article">
         <h2>Proving to him...</h2>
         <p>yet <strong>again</strong> — how <strong>different</strong> she was.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <strong>Compared</strong> to <em>any</em> other girl he'd <strong>met.</strong>
         </button>
         <div class="gift-img"
@@ -4785,7 +4857,7 @@
       <article class="slide gift-article">
         <h2>...he poured them sparkling wine...</h2>
         <p>and as they <strong>raised</strong> their glasses — he said:<br><strong>Bottoms up!</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           He'd also put together a <strong>platter of snacks.</strong>
         </button>
         <div class="gift-img"
@@ -4835,7 +4907,7 @@
       <article class="slide gift-article">
         <h2>...natural and completely without <em>shame.</em></h2>
         <p>He <strong>admired</strong> that about her.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           She was quite the <em>sight.</em>
         </button>
         <div class="gift-img" aria-label="Chel from El Dorado movie being hiding her naked body animation">
@@ -4859,7 +4931,7 @@
       <article class="slide gift-article">
         <h2>...about to do — glitter was a fire hazard.</h2>
         <p>And as the saying goes:<br><strong>"where there's fire, there's...</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <strong>drum roll</strong> <em>🥁</em>
         </button>
         <div class="gift-img" aria-label="Hades on fire out of his unstable anger emotion animation">
@@ -4883,7 +4955,7 @@
       <article class="slide gift-article">
         <h2>Pure bliss — as their bodies...</h2>
         <p>came <strong>together</strong> for the <strong>first</strong> time.</p>
-        <div class="gift-img" aria-label="Lighting McQueen from Cars rising up above smoke animation">
+        <div class="gift-img" aria-label="Lightning McQueen from Cars rising up above smoke animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/mcQueen smoke.mp4" type="video/mp4" />
           </video>
@@ -4893,7 +4965,7 @@
       <article class="slide gift-article">
         <h2>Round and round they rolled...</h2>
         <p><em>not</em> standing <strong>still</strong> for more than <strong>five seconds.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Making a <strong>total mess</strong> of the bedsheets.
         </button>
         <div class="gift-img"
@@ -4907,7 +4979,7 @@
       <article class="slide gift-article">
         <h2>He wanted to eat her so badly...</h2>
         <p>but that <strong>card</strong> was simply <em>not</em> <strong>on the table.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>not</em> on <em>that</em> night at least.
         </button>
         <div class="gift-img" aria-label="Winnie from Winnie the Pooh eating honney straight out of a jar animation">
@@ -4932,7 +5004,7 @@
         <p>
           For this is a <strong>story</strong> about <strong>falling</strong> <em>in</em> love.
         </p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <em>not</em> about <strong>making</strong> love.
         </button>
         <div class="gift-img" aria-label="Woody from Toy Story rolling his eyes mischievously animation">
@@ -4958,7 +5030,7 @@
         <button class="text-to-sound" data-sound="assets/music/yawn-sound-effect.mp3">
           <em>🔊</em> and he <strong>woke up.</strong> <em>🥱</em>
         </button>
-        <div class="gift-img" aria-label="One of the seven dwarves from the movie 'Snowhite' is stretching himself after seemingly just having woken up animation">
+        <div class="gift-img" aria-label="One of the seven dwarves from the movie 'Snow White' is stretching himself after seemingly just having woken up animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/snowhite dwarf waking up.mp4" type="video/mp4" />
           </video>
@@ -4968,9 +5040,9 @@
       <article class="slide gift-article">
         <h2>His first thoughts?</h2>
         <p><em>I haven't felt this alive in I don't know how long.</em></p>
-        <div class="gift-img" aria-label="Pinokio magically coming to life animation">
+        <div class="gift-img" aria-label="Pinocchio magically coming to life animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
-            <source src="assets/videos/pinokio alive.mp4" type="video/mp4" />
+            <source src="assets/videos/pinocchio alive.mp4" type="video/mp4" />
           </video>
         </div>
       </article>
@@ -4998,7 +5070,7 @@
       <article class="slide gift-article">
         <h2>To which — she replied:</h2>
         <p><em>Why don't we stay in bed and cuddle?</em></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           She needn't tell him <strong>twice.</strong>
         </button>
         <div class="gift-img" aria-label="Eve and Wall-e hugging animation">
@@ -5011,11 +5083,11 @@
       <article class="slide gift-article">
         <h2>After cuddling enough...</h2>
         <p>he went to the <strong>kitchen</strong> to make them <strong>breakfast.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           For their last night's <strong>activities</strong><br>had left them both running on <strong>empty.</strong> <em>🪫</em>
         </button>
         <div class="gift-img"
-          aria-label="Donald Duck getting a kiss from Daizy then making a marathon around their home animation">
+          aria-label="Donald Duck getting a kiss from Daisy then making a marathon around their home animation">
           <video class="gift-video" autoplay muted loop playsinline preload="metadata">
             <source src="assets/videos/donald duck off he goes.mp4" type="video/mp4" />
           </video>
@@ -5067,7 +5139,7 @@
         <button class="text-to-sound" data-sound="assets/music/maroon 5 - yes please.mp3">
           <em>🎵 "Yes, please."</em>
         </button>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
          One <strong>tablespoon.</strong>
         </button>
         <div class="gift-img" aria-label="Nala from the Disney movie 'The Lion King' with a facial expression all over saying 'Please' animation">
@@ -5131,7 +5203,7 @@
       <article class="slide gift-article">
         <h2>Or rather.</h2>
         <p><strong>So</strong> it begins.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Or so I <strong>wished</strong> it would.
         </button>
         <div class="gift-img" aria-label="Lord of the rings King saying 'So it begins.' animation">
@@ -5234,7 +5306,7 @@
           where you might feel <strong>disconnected</strong> and think:<br>
           <em>You're getting way ahead of yourself.</em>
         </p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Which I have to admit:<br>
           <strong>I most certainly am.</strong>
         </button>
@@ -5248,7 +5320,7 @@
       <article class="slide gift-article">
         <h2>And you might want to take things slower.</h2>
         <p>Which would be totally <strong>fine.</strong></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           For after all — this is who you <strong>are.</strong>
         </button>
         <div class="gift-img" aria-label="Sloth from the Disney movie 'Zootopia' as it's getting ready to laugh animation">
@@ -5261,7 +5333,7 @@
       <article class="slide gift-article">
         <h2>But if you ask me — I'd say:</h2>
         <p><em>You worry too much.</em></p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Why yes — I dared.
         </button>
         <div class="gift-img"
@@ -5284,7 +5356,7 @@
 
       <article class="slide gift-article">
         <h2><em>What's your deepest fear?</em></h2>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           Besides <strong>sharks.</strong><br>
           Reference also to the film: <em>Coach Carter</em>
         </button>
@@ -5355,7 +5427,7 @@
       <article class="slide gift-article">
         <h2>....which I'm...</h2>
         <p>certain you have <strong>plenty</strong> of.</p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           <strong>Not</strong> by force. <strong>Naturally.</strong>
         </button>        
         <div class="gift-img" aria-label="Mickey and Minnie Mouse making out animation">
@@ -5384,7 +5456,7 @@
           I'd be willing to make it my personal <strong>mission</strong><br>
           to keep <strong>all</strong> of your needs <strong>met.</strong>
         </p>
-        <button class="peek-hint" data-label="spoiler">
+        <button class="peek-hint" data-label="spoiler" aria-label="Show spoiler">
           In <strong>realistic</strong> terms — of course.
         </button>
         <div class="gift-img" aria-label="Aladdin throwing an apple elegantly to Yasmine animation">

@@ -42,9 +42,118 @@
     0 30px 70px rgba(0,0,0,0.40);
 }
 
+/* ── Skip Link (Accessibility) ───────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--g1);
+  color: var(--i0);
+  padding: 8px 16px;
+  z-index: 100;
+  transition: top 0.3s;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* ── Screen Reader Only (Accessibility) ─────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ── Reset ───────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; }
+
+/* ── Focus Styles (Accessibility) ───────────────────────────── */
+:focus-visible {
+  outline: 3px solid var(--g1);
+  outline-offset: 2px;
+}
+button:focus-visible {
+  outline: 3px solid var(--g1);
+  outline-offset: 2px;
+}
+
+/* ── Reduced Motion (Accessibility) ────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .skip-link {
+    transition: none;
+  }
+  
+  #book-cover {
+    animation: none;
+  }
+  
+  .gift-video {
+    animation: none;
+  }
+}
+
+/* ── High Contrast Mode (Accessibility) ────────────────────── */
+@media (prefers-contrast: high) {
+  :root {
+    --p0: #FFFFFF;
+    --p1: #F0F0F0;
+    --p2: #E0E0E0;
+    --p3: #D0D0D0;
+    --pe: #A0A0A0;
+    --g0: #FFD700;
+    --g1: #FFA500;
+    --g2: #FF8C00;
+    --g3: #B8860B;
+    --i0: #000000;
+    --i1: #1A1A1A;
+    --i2: #333333;
+  }
+  
+  .gift-img {
+    border: 2px solid var(--i0);
+  }
+  
+  button {
+    border: 2px solid var(--i0);
+  }
+  
+  button:focus-visible {
+    outline: 3px solid #0000FF;
+    outline-offset: 2px;
+  }
+}
+
+/* ── Touch Target Sizes (Accessibility) ─────────────────────── */
+@media (pointer: coarse) {
+  button,
+  .peek-hint,
+  .text-to-sound {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px;
+  }
+  
+  #nav-toggle {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
 
 /* ── Body: Enchanted Night Sky ───────────────────────────────── */
 body {

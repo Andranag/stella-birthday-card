@@ -50,12 +50,14 @@
     buildSpreads();
     injectDynamicStyles();
     buildBookDOM();
+    setupAriaLabels();
     setupSpoilers();
     setupAudio();
     setupSwipe();
     setupKeyboard();
     setupNavButtons();
     setupJumpModal();
+    setupHelpModal();
     buildNavPanel();
 
     // Start at cover
@@ -75,6 +77,44 @@
     }
   }
 
+  /* ── Auto-generate ARIA labels ─────────────────────────────── */
+  function setupAriaLabels() {
+    // Add role="article" to all slide elements for semantic structure
+    document.querySelectorAll('.slide.gift-article:not([role])').forEach(slide => {
+      slide.setAttribute('role', 'article');
+      
+      // Add aria-labelledby to associate slide with its heading
+      const heading = slide.querySelector('h1, h2');
+      if (heading && !heading.id) {
+        const headingId = `slide-heading-${Math.random().toString(36).substr(2, 9)}`;
+        heading.id = headingId;
+        slide.setAttribute('aria-labelledby', headingId);
+      }
+    });
+
+    // Add aria-labels to text-to-sound buttons that don't have them
+    document.querySelectorAll('.text-to-sound:not([aria-label])').forEach(btn => {
+      const sound = btn.getAttribute('data-sound');
+      if (sound) {
+        const fileName = sound.split('/').pop().replace('.mp3', '').replace('.ogg', '');
+        btn.setAttribute('aria-label', `Play ${fileName}`);
+      }
+    });
+
+    // Add aria-labels to peek-hint buttons that don't have them
+    document.querySelectorAll('.peek-hint:not([aria-label])').forEach(btn => {
+      btn.setAttribute('aria-label', 'Show spoiler');
+    });
+
+    // Ensure videos have proper accessibility attributes
+    document.querySelectorAll('video.gift-video').forEach(video => {
+      if (!video.hasAttribute('aria-hidden')) {
+        // Videos are decorative/animated, already described by parent aria-label
+        video.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+
   function slideIndexToSpread(si) {
     return si === 0 ? 0 : Math.ceil(si / 2);
   }
@@ -91,6 +131,8 @@
     updateCounter();
     updateNavButtons();
     syncNavPanel();
+    announceSlide();
+    updateAriaCurrent();
     
     // Manage sad section background audio
     if (isInSadSection()) {
@@ -350,10 +392,37 @@
   /* ── Progress & Counter ────────────────────────────────────── */
   function updateProgress() {
     const fill  = document.getElementById('progress-fill');
-    if (!fill) return;
+    const bar   = document.getElementById('progress-bar');
+    if (!fill || !bar) return;
     const total = slides.length - 1;
     const idx   = isMobile() ? curSlide : spreadToFirstSlide(curSpread);
-    fill.style.width = (total > 0 ? (idx / total) * 100 : 100) + '%';
+    const percent = total > 0 ? (idx / total) * 100 : 100;
+    fill.style.width = percent + '%';
+    bar.setAttribute('aria-valuenow', Math.round(percent));
+  }
+
+  function announceSlide() {
+    const announcer = document.getElementById('sr-announcer');
+    if (!announcer) return;
+    const total = slides.length - 1;
+    const idx = isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+    const message = idx === 0 ? 'Cover page' : `Slide ${idx} of ${total}`;
+    announcer.textContent = message;
+  }
+
+  function updateAriaCurrent() {
+    // Remove aria-current from all slides
+    slides.forEach(slide => slide.removeAttribute('aria-current'));
+    
+    // Add aria-current to active slide(s)
+    if (isMobile()) {
+      const activeSlide = slides[curSlide];
+      if (activeSlide) activeSlide.setAttribute('aria-current', 'page');
+    } else {
+      const spread = spreads[curSpread];
+      if (spread[0]) spread[0].setAttribute('aria-current', 'page');
+      if (spread[1]) spread[1].setAttribute('aria-current', 'page');
+    }
   }
 
   function updateCounter() {
@@ -631,6 +700,55 @@
     if (m) m.style.display = 'none';
   }
 
+  /* ── Help Modal ─────────────────────────────────────────────── */
+  function setupHelpModal() {
+    const modal = mk('div', { id: 'help-modal', 'aria-hidden': 'true', role: 'dialog', 'aria-labelledby': 'help-title' });
+    modal.innerHTML = `
+      <div class="help-content">
+        <h2 id="help-title">⌨️ Keyboard Shortcuts</h2>
+        <ul class="help-list">
+          <li><kbd>←</kbd> <kbd>→</kbd> Navigate slides</li>
+          <li><kbd>↑</kbd> <kbd>↓</kbd> Navigate slides</li>
+          <li><kbd>Home</kbd> Go to first slide</li>
+          <li><kbd>End</kbd> Go to last slide</li>
+          <li><kbd>G</kbd> Jump to slide</li>
+          <li><kbd>N</kbd> Toggle navigation panel</li>
+          <li><kbd>?</kbd> <kbd>/</kbd> Show this help</li>
+          <li><kbd>Esc</kbd> Close modals</li>
+        </ul>
+        <button id="help-close" class="help-close" aria-label="Close help">✕</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    
+    const close = document.getElementById('help-close');
+    close?.addEventListener('click', closeHelpModal);
+    modal?.addEventListener('click', e => { if (e.target === modal) closeHelpModal(); });
+  }
+
+  function toggleHelpModal() {
+    const modal = document.getElementById('help-modal');
+    if (modal?.style.display === 'flex') {
+      closeHelpModal();
+    } else {
+      openHelpModal();
+    }
+  }
+
+  function openHelpModal() {
+    const modal = document.getElementById('help-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      const close = document.getElementById('help-close');
+      requestAnimationFrame(() => close?.focus());
+    }
+  }
+
+  function closeHelpModal() {
+    const m = document.getElementById('help-modal');
+    if (m) m.style.display = 'none';
+  }
+
   /* ── Nav Panel ─────────────────────────────────────────────── */
   function buildNavPanel() {
     const overlay = mk('div', { id: 'nav-overlay' });
@@ -792,11 +910,11 @@
   function setupSpoilers() {
     document.querySelectorAll('.peek-hint').forEach(btn => {
       btn.dataset.revealed = 'false';
-      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-pressed', 'false');
       btn.addEventListener('click', () => {
         const revealed = btn.dataset.revealed === 'true' ? 'false' : 'true';
         btn.dataset.revealed = revealed;
-        btn.setAttribute('aria-expanded', revealed);
+        btn.setAttribute('aria-pressed', revealed);
       });
     });
   }
@@ -842,11 +960,12 @@
         case 'ArrowLeft': case 'ArrowUp':
           if (!modalOpen) { e.preventDefault(); prev(); } break;
         case 'Escape':
-          modalOpen ? closeJumpModal() : navOpen ? closeNavPanel() : null; break;
+          modalOpen ? closeJumpModal() : navOpen ? closeNavPanel() : closeHelpModal(); break;
         case 'g': case 'G': if (!navOpen) openJumpModal(); break;
         case 'n': case 'N': toggleNavPanel(); break;
         case 'Home': e.preventDefault(); goTo(0); break;
         case 'End':  e.preventDefault(); goTo(slides.length - 1); break;
+        case '?': case '/': if (!navOpen) toggleHelpModal(); break;
       }
     });
   }
@@ -862,6 +981,82 @@
   40%    { transform: translateX(7px); }
   60%    { transform: translateX(-5px); }
   80%    { transform: translateX(5px); }
+}
+
+/* ── Help Modal ── */
+#help-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 2, 26, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+.help-content {
+  background: linear-gradient(165deg, #180640 0%, #100328 50%, #080118 100%);
+  border: 2px solid rgba(201,160,48,0.52);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  position: relative;
+}
+#help-title {
+  color: #FFE888;
+  font-family: 'Marck Script', cursive;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.help-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.help-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  color: #FBF4E0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(201,160,48,0.15);
+}
+.help-list li:last-child {
+  border-bottom: none;
+}
+.help-list kbd {
+  background: rgba(201,160,48,0.2);
+  border: 1px solid rgba(201,160,48,0.4);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #FFE888;
+  margin-right: 0.25rem;
+}
+.help-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: rgba(201,160,48,0.7);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.help-close:hover {
+  color: #FFE888;
+}
+.help-close:focus-visible {
+  outline: 2px solid #FFE888;
+  outline-offset: 2px;
 }
 
 /* ── Spoilers ── */
