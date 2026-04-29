@@ -404,10 +404,15 @@ body::after {
 }
 
 /* ── Spoilers ── */
+.peek-hint {
+  position: relative;
+}
+
 .peek-hint[data-revealed="false"] {
   color: transparent !important;
   text-shadow: 0 0 8px rgba(240,192,80,.85) !important;
   user-select: none;
+  padding-bottom: 22px;
 }
 .peek-hint[data-revealed="false"] * {
   color: transparent !important;
@@ -415,13 +420,16 @@ body::after {
 .peek-hint[data-revealed="false"]::after {
   content: '👆 Tap to reveal';
   position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.75rem;
-  color: rgba(201,160,48,0.7);
-  white-space: nowrap;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  text-align: center;
+  font-size: 0.6rem;
+  color: rgba(201,160,48,0.8);
   animation: hintPulse 2s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+  line-height: 1.2;
 }
 
 @keyframes hintPulse {
@@ -430,16 +438,8 @@ body::after {
 }
 
 .peek-hint[data-revealed="true"] {
-  color: #08021A !important;
-  background: rgba(240,192,80,0.9) !important;
+  color: var(--p0) !important;
   text-shadow: none !important;
-  border: 1px solid rgba(201,160,48,0.5) !important;
-  border-radius: 4px;
-  padding: 8px 12px;
-}
-
-.peek-hint[data-revealed="true"] * {
-  color: #08021A !important;
 }
 
 /* ── Slide Counter ───────────────────────────────────────────── */
