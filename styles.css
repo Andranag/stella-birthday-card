@@ -155,6 +155,85 @@ button:focus-visible {
   }
 }
 
+/* ── Loading Spinner ───────────────────────────────────────── */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(201,160,48,0.3);
+  border-radius: 50%;
+  border-top-color: var(--g1);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 2, 26, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* ── Button Hover States ─────────────────────────────────────── */
+button:hover {
+  transform: translateY(-1px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.text-to-sound:hover {
+  background: rgba(201,160,48,0.1);
+  border-radius: 4px;
+}
+
+.peek-hint:hover {
+  background: rgba(201,160,48,0.15);
+  border-radius: 4px;
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* ── Audio Error State ───────────────────────────────────────── */
+.audio-error {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(255, 0, 0, 0.1) !important;
+  border: 1px solid rgba(255, 0, 0, 0.3) !important;
+}
+
+.audio-error::after {
+  content: '⚠️';
+  margin-left: 8px;
+}
+
+/* ── Video Error State ───────────────────────────────────────── */
+.video-error,
+.gift-img.video-error {
+  position: relative;
+  background: rgba(255, 0, 0, 0.05);
+  border: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+.gift-img.video-error::after {
+  content: '⚠️ Video unavailable';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 2, 26, 0.8);
+  color: rgba(255, 100, 100, 0.8);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 /* ── Body: Enchanted Night Sky ───────────────────────────────── */
 body {
   font-family: 'Nunito', sans-serif;
@@ -162,6 +241,12 @@ body {
   color: var(--i0);
   min-height: 100vh;
   overflow: hidden;
+  font-size: clamp(14px, 1.2vw, 18px);
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 /* Layered sky gradient */
@@ -269,7 +354,8 @@ body::after {
     transform   .2s cubic-bezier(.34,1.56,.64,1),
     box-shadow  .2s ease,
     color       .2s ease,
-    border-color .2s ease;
+    border-color .2s ease,
+    opacity     .2s ease;
 }
 #prev-page { left: 6px; border-radius: 0 8px 8px 0; border-left: none; }
 #next-page { right: 6px; border-radius: 8px 0 0 8px; border-right: none; }
@@ -280,6 +366,85 @@ body::after {
 }
 #prev-page:active, #next-page:active { transform: translateY(-50%) scale(.95); transition-duration: .08s; }
 #prev-page:disabled, #next-page:disabled { opacity: .18; pointer-events: none; }
+
+/* Improve arrow visibility on hover */
+#prev-page:not(:disabled):hover,
+#next-page:not(:disabled):hover {
+  opacity: 1;
+}
+
+/* Add subtle pulse animation to arrows on first load */
+@keyframes arrowPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+#prev-page:not(:disabled),
+#next-page:not(:disabled) {
+  animation: arrowPulse 2s ease-in-out 3;
+}
+
+/* ── Toast Notifications ─────────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  background: linear-gradient(160deg, rgba(30,12,70,.95), rgba(14,6,40,.98));
+  border: 1px solid rgba(201,160,48,.4);
+  border-radius: 8px;
+  padding: 12px 20px;
+  color: var(--p0);
+  font-size: 0.9rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: toastSlideIn 0.3s ease-out, toastFadeOut 0.3s ease-in 2.7s forwards;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast.success {
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+.toast.error {
+  border-color: rgba(244, 67, 54, 0.5);
+}
+
+.toast.info {
+  border-color: rgba(33, 150, 243, 0.5);
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toastFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
 
 /* Hide original story container — JS also sets display:none */
 #story { display: none !important; }
@@ -758,6 +923,20 @@ body::after {
   margin:       0          !important;
 }
 
+/* Responsive typography for slides */
+.slide.gift-article h1 {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.slide.gift-article h2 {
+  font-size: clamp(1.1rem, 2vw, 1.75rem);
+}
+
+.slide.gift-article p {
+  font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+  line-height: 1.6;
+}
+
 /* Remove corner ornaments inside pages */
 .slide.gift-article.in-page::before,
 .slide.gift-article.in-page::after { display: none !important; }
@@ -1092,6 +1271,51 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   #open-book {
     width:  min(350px, 92vw);
     height: min(500px, 80vh);
+  }
+
+  /* Improve touch targets on mobile */
+  .text-to-sound,
+  .peek-hint {
+    padding: 10px 14px;
+    margin: 4px 0;
+  }
+
+  /* Scale down headings on small screens */
+  .slide.gift-article h1 {
+    font-size: 1.5rem;
+  }
+
+  .slide.gift-article h2 {
+    font-size: 1.25rem;
+  }
+
+  .slide.gift-article p {
+    font-size: 0.95rem;
+  }
+
+  /* Adjust video sizes for mobile */
+  .gift-img {
+    max-height: 200px;
+  }
+
+  .gift-img.wide-video {
+    max-height: 180px;
+  }
+
+  /* Adjust progress bar for mobile */
+  #progress-bar {
+    height: 4px;
+  }
+
+  /* Hide decorative elements on very small screens */
+  @media (max-width: 380px) {
+    .slide.gift-article h1 {
+      font-size: 1.25rem;
+    }
+    
+    .slide.gift-article h2 {
+      font-size: 1.1rem;
+    }
   }
 
   /* Hide spine and left page */

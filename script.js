@@ -59,6 +59,7 @@
     setupJumpModal();
     setupHelpModal();
     buildNavPanel();
+    setupToastContainer();
 
     // Start at cover
     curSpread = 0; curSlide = 0;
@@ -106,11 +107,15 @@
       btn.setAttribute('aria-label', 'Show spoiler');
     });
 
-    // Ensure videos have proper accessibility attributes
+    // Ensure videos have proper accessibility attributes and lazy loading
     document.querySelectorAll('video.gift-video').forEach(video => {
       if (!video.hasAttribute('aria-hidden')) {
         // Videos are decorative/animated, already described by parent aria-label
         video.setAttribute('aria-hidden', 'true');
+      }
+      // Add lazy loading for performance
+      if (!video.hasAttribute('loading')) {
+        video.setAttribute('loading', 'lazy');
       }
     });
   }
@@ -307,7 +312,32 @@
   function playVideos(slide) {
     slide.querySelectorAll('video').forEach(v => {
       v.currentTime = 0;
-      v.play().catch(() => {});
+      
+      // Add error handling for videos
+      v.addEventListener('error', () => {
+        console.error(`Failed to load video: ${v.querySelector('source')?.src}`);
+        v.classList.add('video-error');
+        const parent = v.closest('.gift-img');
+        if (parent) {
+          parent.classList.add('video-error');
+        }
+      });
+      
+      // Only play if video is in viewport
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            v.play().catch(err => {
+              console.error(`Failed to play video: ${err.message}`);
+              v.classList.add('video-error');
+            });
+          } else {
+            v.pause();
+          }
+        });
+      }, { threshold: 0.5 });
+      
+      observer.observe(v);
     });
   }
 
@@ -659,8 +689,10 @@
       if (!isNaN(val) && val >= 1 && val <= slides.length - 1) {
         goTo(val); // val is 1-indexed: slide #1 = slides[1]
         closeJumpModal();
+        showToast(`Jumped to slide ${val}`, 'success');
       } else {
         shakeEl(input);
+        showToast('Invalid slide number', 'error');
       }
     });
 
@@ -747,6 +779,34 @@
   function closeHelpModal() {
     const m = document.getElementById('help-modal');
     if (m) m.style.display = 'none';
+  }
+
+  /* ── Toast Notifications ─────────────────────────────────────── */
+  function setupToastContainer() {
+    const container = mk('div', { class: 'toast-container' });
+    document.body.appendChild(container);
+  }
+
+  function showToast(message, type = 'info') {
+    const container = document.querySelector('.toast-container');
+    if (!container) return;
+
+    const toast = mk('div', { class: `toast ${type}` });
+    
+    let icon = '';
+    switch (type) {
+      case 'success': icon = '✓'; break;
+      case 'error': icon = '✕'; break;
+      case 'info': icon = 'ℹ'; break;
+    }
+    
+    toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+    container.appendChild(toast);
+
+    // Remove toast after animation completes
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
   }
 
   /* ── Nav Panel ─────────────────────────────────────────────── */
@@ -881,6 +941,13 @@
 
         if (!audio) {
           audio = new Audio(btn.dataset.sound);
+          // Add error handling
+          audio.addEventListener('error', () => {
+            console.error(`Failed to load audio: ${btn.dataset.sound}`);
+            btn.classList.add('audio-error');
+            btn.setAttribute('aria-label', 'Audio failed to load');
+            shakeEl(btn);
+          });
           audio.addEventListener('ended', () => {
             btn.classList.remove('playing');
             btn.setAttribute('aria-pressed', 'false');
@@ -888,19 +955,24 @@
           });
         }
 
-        if (btn.classList.contains('playing')) {
-          audio.pause(); audio.currentTime = 0;
-          btn.classList.remove('playing');
-          btn.setAttribute('aria-pressed', 'false');
-          currentAudio = null; playingBtn = null;
-        } else {
+        if (audio.paused) {
           audio.play()
             .then(() => {
               btn.classList.add('playing');
               btn.setAttribute('aria-pressed', 'true');
               currentAudio = audio; playingBtn = btn;
             })
-            .catch(() => {});
+            .catch(err => {
+              console.error(`Failed to play audio: ${err.message}`);
+              btn.classList.add('audio-error');
+              shakeEl(btn);
+            });
+        } else {
+          audio.pause();
+          audio.currentTime = 0;
+          btn.classList.remove('playing');
+          btn.setAttribute('aria-pressed', 'false');
+          if (currentAudio === audio) { currentAudio = null; playingBtn = null; }
         }
       });
     });
