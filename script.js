@@ -182,7 +182,18 @@
   }
 
   /* ── Navigation ────────────────────────────────────────────── */
+  function stopCurrentAudio() {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      playingBtn?.classList.remove('playing');
+      currentAudio = null;
+      playingBtn = null;
+    }
+  }
+
   function next() {
+    stopCurrentAudio();
     if (isMobile()) {
       if (curSlide < slides.length - 1) { curSlide++; render(); }
     } else {
@@ -195,6 +206,7 @@
   }
 
   function prev() {
+    stopCurrentAudio();
     if (isMobile()) {
       if (curSlide > 0) { curSlide--; render(); }
     } else {
@@ -208,6 +220,7 @@
 
   function goTo(slideIndex) {
     if (slideIndex < 0 || slideIndex >= slides.length) return;
+    stopCurrentAudio();
     if (isMobile()) {
       curSlide = slideIndex;
     } else {
@@ -631,7 +644,7 @@
     });
   }
 
-  /* ── Swipe ─────────────────────────────────────────────────── */
+  /* ── Swipe & Wheel ─────────────────────────────────────────── */
   function setupSwipe() {
     let x0 = 0, y0 = 0, t0 = 0;
     const root = document.body;
@@ -648,6 +661,15 @@
         dx < 0 ? next() : prev();
       }
     }, { passive: true });
+
+    // Wheel scroll navigates slides
+    let wheelTimeout = null;
+    root.addEventListener('wheel', e => {
+      e.preventDefault();
+      if (wheelTimeout) return;
+      wheelTimeout = setTimeout(() => { wheelTimeout = null; }, 400);
+      e.deltaY > 0 ? next() : prev();
+    }, { passive: false });
   }
 
   /* ── Keyboard ───────────────────────────────────────────────── */

@@ -376,7 +376,8 @@ body::after {
 #open-book {
   display: flex;
   width:  clamp(520px, 84vw, 980px);
-  height: clamp(340px, 74vh, 610px);
+  height: auto;
+  min-height: clamp(340px, 74vh, 610px);
   position: relative;
   /* Book-level shadow — drop-shadow preserves transparent spine gaps */
   filter:
@@ -393,11 +394,9 @@ body::after {
 
 /* ── Book Pages ──────────────────────────────────────────────── */
 .book-page {
-  flex: 1; height: 100%;
+  flex: 1;
   position: relative;
-  overflow-y: auto; overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(201,160,48,.30) transparent;
+  overflow: hidden;
 
   background:
     /* Ruled-line texture */
@@ -412,9 +411,6 @@ body::after {
     linear-gradient(165deg, #FBF4DC 0%, #F5E7C2 55%, #EDD6A4 100%);
 }
 
-.book-page::-webkit-scrollbar      { width: 4px; }
-.book-page::-webkit-scrollbar-track{ background: transparent; }
-.book-page::-webkit-scrollbar-thumb{ background: rgba(201,160,48,.30); border-radius: 4px; }
 
 /* Left page */
 .page-left {
