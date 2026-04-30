@@ -22,7 +22,7 @@
     sad:   { audio: null, src: 'assets/music/sad carol.mp3',                        vol: 0.30 },
     dance: { audio: null, src: 'assets/music/put your head on my shoulder.mp3',     vol: 0.35 },
   };
-  let _pageSoundCtx   = null;
+  let _pageTurnAudio  = null;
   let _ambientStarted = false;
 
   function hasUnlockedStory() {
@@ -134,6 +134,14 @@
     if (!hasUnlockedStory()) document.body.classList.add('story-locked');
     else document.body.classList.remove('story-locked');
 
+    // Pause / resume background tracks when the tab is hidden or shown
+    document.addEventListener('visibilitychange', () => {
+      Object.values(_bgTracks).forEach(t => {
+        if (!t.audio) return;
+        document.hidden ? t.audio.pause() : t.audio.play().catch(() => {});
+      });
+    });
+
     // Start at cover
     curSpread = 0; curSlide = 0;
     render(false);
@@ -214,10 +222,7 @@
     updateAriaCurrent();
 
     // Manage section background audio
-    isInSadSection()   ? startBgTrack('sad')   : stopBgTrack('sad');
-    /* uncomment to re-enable dance bg music:
-    isInDanceSection() ? startBgTrack('dance') : stopBgTrack('dance');
-    */
+    isInSadSection() ? startBgTrack('sad') : stopBgTrack('sad');
   }
 
   /* Mobile: single page in right slot */
@@ -308,6 +313,18 @@
         openBook.appendChild(clone);
         requestAnimationFrame(() => {
           clone.classList.add(isForward ? 'exit-forward' : 'exit-backward');
+
+          // Stationary page flex — mimics spine compression during the turn
+          const stationaryId = isForward ? 'page-left' : 'page-right';
+          const stationary   = document.getElementById(stationaryId);
+          if (stationary) {
+            stationary.classList.remove('page-spine-flex', 'flex-left', 'flex-right');
+            void stationary.offsetWidth; // restart animation if already playing
+            stationary.classList.add('page-spine-flex', isForward ? 'flex-left' : 'flex-right');
+            stationary.addEventListener('animationend',
+              () => stationary.classList.remove('page-spine-flex', 'flex-left', 'flex-right'),
+              { once: true });
+          }
         });
         clone.addEventListener('animationend', () => clone.remove(), { once: true });
       }
@@ -441,36 +458,14 @@
     return getCurrentSlideIndex() >= startIdx && getCurrentSlideIndex() <= endIdx;
   }
 
-  function isInDanceSection() {
-    const startIdx = slides.findIndex(s => s.id === 'dance-section-start');
-    const endIdx   = slides.findIndex(s => s.id === 'dance-section-end');
-    if (startIdx === -1 || endIdx === -1) return false;
-    const currentIdx = getCurrentSlideIndex();
-    return currentIdx >= startIdx && currentIdx <= endIdx;
-  }
-
   function playPageTurnSound() {
     try {
-      if (!_pageSoundCtx) _pageSoundCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const ctx = _pageSoundCtx;
-      if (ctx.state === 'suspended') ctx.resume();
-      const duration   = 0.12;
-      const frameCount = Math.floor(ctx.sampleRate * duration);
-      const buf        = ctx.createBuffer(1, frameCount, ctx.sampleRate);
-      const data       = buf.getChannelData(0);
-      for (let i = 0; i < frameCount; i++) data[i] = Math.random() * 2 - 1;
-      const src = ctx.createBufferSource();
-      src.buffer = buf;
-      // Narrow bandpass centred at 1200 Hz — paper-fibre rustle range, no thud
-      const bp = ctx.createBiquadFilter();
-      bp.type = 'bandpass'; bp.frequency.value = 1200; bp.Q.value = 1.8;
-      const gain = ctx.createGain();
-      const t = ctx.currentTime;
-      gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(0.07, t + 0.006); // feather-light
-      gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
-      src.connect(bp); bp.connect(gain); gain.connect(ctx.destination);
-      src.start();
+      if (!_pageTurnAudio) {
+        _pageTurnAudio = new Audio('assets/music/page-turn-sound-effect.mp3');
+        _pageTurnAudio.volume = 0.35;
+      }
+      _pageTurnAudio.currentTime = 0;
+      _pageTurnAudio.play().catch(() => {});
     } catch (_) {}
   }
 
@@ -787,11 +782,12 @@
   function generateCoverStars(n) {
     let html = '';
     for (let i = 0; i < n; i++) {
-      const x = (Math.random() * 80 + 5).toFixed(1);
-      const y = (Math.random() * 72 + 4).toFixed(1);
-      const s = (Math.random() * 0.45 + 0.22).toFixed(2);
-      const d = (Math.random() * 3.5).toFixed(1);
-      html += `<span class="c-star" style="left:${x}%;top:${y}%;width:${s}em;height:${s}em;animation-delay:${d}s"></span>`;
+      const x   = (Math.random() * 80 + 5).toFixed(1);
+      const y   = (Math.random() * 72 + 4).toFixed(1);
+      const s   = (Math.random() * 0.45 + 0.22).toFixed(2);
+      const del = (Math.random() * 4).toFixed(2);
+      const dur = (Math.random() * 2.5 + 1.8).toFixed(2); // 1.8–4.3s: each star its own rhythm
+      html += `<span class="c-star" style="left:${x}%;top:${y}%;width:${s}em;height:${s}em;animation-delay:${del}s;animation-duration:${dur}s"></span>`;
     }
     return html;
   }
@@ -886,6 +882,15 @@
       counter.title = 'Click to jump to slide (G)';
       counter.addEventListener('click', openJumpModal);
     }
+
+    // Page-number labels at the bottom of each page also open the modal
+    document.querySelectorAll('.left-num, .right-num').forEach(el => {
+      el.title = 'Click to jump to page (G)';
+      el.setAttribute('role', 'button');
+      el.setAttribute('tabindex', '0');
+      el.addEventListener('click', openJumpModal);
+      el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openJumpModal(); } });
+    });
 
     confirm?.addEventListener('click', () => {
       const val = parseInt(input?.value, 10);

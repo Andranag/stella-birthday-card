@@ -1238,6 +1238,18 @@ body.on-cover #discovery-arrows { opacity: 0; }
   100% { transform: perspective(1600px) rotateY(-90deg)  rotateX(-4deg);  filter: brightness(0.50); opacity: 0;   }
 }
 
+/* Stationary page squeezes slightly toward the spine while a flip happens */
+@keyframes pageSpineFlex {
+  0%   { transform: scaleX(1.000); }
+  28%  { transform: scaleX(0.983); }
+  100% { transform: scaleX(1.000); }
+}
+.page-spine-flex {
+  animation: pageSpineFlex 0.65s cubic-bezier(.42,0,.58,1) forwards !important;
+}
+.page-spine-flex.flex-left  { transform-origin: 100% 50%; }
+.page-spine-flex.flex-right { transform-origin:   0% 50%; }
+
 /* Mirror of forward — left page pivots rightward at its spine edge */
 @keyframes pageExitBackward {
   0%   { transform: perspective(1600px) rotateY(0deg)   rotateX(0deg);   filter: brightness(1);    opacity: 1;   }
@@ -1384,8 +1396,11 @@ body.on-cover #discovery-arrows { opacity: 0; }
   font-size: .78rem; color: rgba(90,48,8,.42);
   padding: 6px 0 4px; width: 100%; text-align: center;
   background: linear-gradient(0deg, rgba(244,231,194,.98) 55%, transparent);
-  pointer-events: none; z-index: 6;
+  z-index: 6;
+  cursor: pointer;
+  transition: color .2s ease;
 }
+.page-num:hover { color: rgba(90,48,8,.75); }
 .left-num  { text-align: left;  padding-left: 16px; }
 .right-num { text-align: right; padding-right: 16px; }
 
