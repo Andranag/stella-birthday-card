@@ -6,8 +6,9 @@
 (function () {
   'use strict';
 
-  const BOOKMARK_KEY = 'stella_bday_bookmark';
-  const TIPS_KEY     = 'stella_bday_tips_v2';
+  const BOOKMARK_KEY    = 'stella_bday_bookmark';
+  const TIPS_KEY        = 'stella_bday_tips_v2';
+  const UNLOCKED_KEY    = 'stella_bday_unlocked';
 
   /* ── State ─────────────────────────────────────────────────── */
   let slides      = [];   // all .slide.gift-article elements
@@ -19,6 +20,16 @@
   let navDirection = 'forward';
   let sadSectionAudio = null;  // background audio for sad section
   let danceSectionAudio = null; // background audio for dance section
+
+  function hasUnlockedStory() {
+    return localStorage.getItem(UNLOCKED_KEY) === '1';
+  }
+
+  function markUnlocked() {
+    if (hasUnlockedStory()) return;
+    localStorage.setItem(UNLOCKED_KEY, '1');
+    document.body.classList.remove('story-locked');
+  }
 
   /* ── Chapter config ────────────────────────────────────────── */
   const CHAPTERS = [
@@ -110,6 +121,9 @@
     setupTipsBar();
     setupHelpFab();
 
+    if (!hasUnlockedStory()) document.body.classList.add('story-locked');
+    else document.body.classList.remove('story-locked');
+
     // Start at cover
     curSpread = 0; curSlide = 0;
     render(false);
@@ -188,7 +202,7 @@
     syncNavPanel();
     announceSlide();
     updateAriaCurrent();
-    
+
     // Manage section background audio
     if (isInSadSection()) {
       startSadSectionAudio();
@@ -454,7 +468,7 @@
 
   function next(fromLock = false) {
     const onCover = isMobile() ? curSlide === 0 : curSpread === 0;
-    if (onCover && !fromLock) return;
+    if (onCover && !fromLock && !hasUnlockedStory()) return;
     stopCurrentAudio();
     navDirection = 'forward';
     if (isMobile()) {
@@ -591,15 +605,23 @@
       if (audioBtn && musicArea) musicArea.appendChild(audioBtn);
     }
 
+    const lockWrap = cover.querySelector('.cover-lock-wrap');
+
+    // Already unlocked — remove the lock entirely
+    if (lockWrap && hasUnlockedStory()) {
+      lockWrap.remove();
+    }
+
     // Lock mechanic: only the lock unlocks the book
     function unlockBook(lockWrap) {
       if (lockWrap.classList.contains('unlocking')) return;
       lockWrap.classList.add('unlocking');
+      markUnlocked();
+      setTimeout(() => lockWrap?.remove(), 1150);
       setTimeout(() => next(true), 1050);
     }
 
-    const lockWrap = cover.querySelector('.cover-lock-wrap');
-    if (lockWrap) {
+    if (lockWrap && !hasUnlockedStory()) {
       lockWrap.addEventListener('click', e => {
         e.stopPropagation();
         unlockBook(lockWrap);
@@ -858,7 +880,7 @@
   }
 
   function openJumpModal() {
-    if (document.body.classList.contains('on-cover')) return;
+    if (document.body.classList.contains('on-cover') || document.body.classList.contains('story-locked')) return;
     const modal = document.getElementById('jump-modal');
     const input = document.getElementById('jump-input');
     if (modal) {
@@ -904,6 +926,7 @@
   }
 
   function toggleHelpModal() {
+    if (document.body.classList.contains('story-locked')) return;
     const modal = document.getElementById('help-modal');
     if (modal?.style.display === 'flex') {
       closeHelpModal();
@@ -1173,6 +1196,7 @@
   }
 
   function toggleNavPanel() {
+    if (document.body.classList.contains('story-locked')) return;
     document.getElementById('nav-panel')?.classList.contains('open') ? closeNavPanel() : openNavPanel();
   }
   function openNavPanel() {
@@ -1356,15 +1380,18 @@
           if (!modalOpen) { e.preventDefault(); prev(); } break;
         case 'Escape':
           modalOpen ? closeJumpModal() : navOpen ? closeNavPanel() : closeHelpModal(); break;
-        case 'g': case 'G': if (!navOpen) openJumpModal(); break;
+        case 'g': case 'G': if (!navOpen && !document.body.classList.contains('story-locked')) openJumpModal(); break;
         case 'n': case 'N':
+          if (document.body.classList.contains('story-locked')) break;
           toggleNavPanel();
           document.getElementById('nav-toggle')?.classList.remove('has-attention');
           document.querySelector('.corner-hint-br')?.classList.add('hidden');
           break;
         case 'Home': e.preventDefault(); goTo(0); break;
-        case 'End':  e.preventDefault(); goTo(slides.length - 1); break;
-        case '?': case '/': if (!navOpen) toggleHelpModal(); break;
+        case 'End':
+          if (document.body.classList.contains('story-locked')) break;
+          e.preventDefault(); goTo(slides.length - 1); break;
+        case '?': case '/': if (!navOpen && !document.body.classList.contains('story-locked')) toggleHelpModal(); break;
         case ' ': case 'Space':
           // Space to toggle audio on current slide
           if (!modalOpen && !navOpen) {

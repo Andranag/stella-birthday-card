@@ -629,6 +629,15 @@ body.on-cover #bookmark-btn { opacity: 0; pointer-events: none; }
 }
 .bookmark-dismiss:hover { color: var(--p0); }
 
+/* ── Locked story: hide advanced navigation ──────────────────── */
+body.story-locked #nav-toggle,
+body.story-locked #help-fab,
+body.story-locked #tips-bar,
+body.story-locked #discovery-arrows,
+body.story-locked .corner-hint-br {
+  display: none !important;
+}
+
 /* ── Tips Bar ────────────────────────────────────────────────── */
 #tips-bar {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 900;
