@@ -238,6 +238,9 @@
       return;
     }
 
+    const incomingSlide = slides[curSlide];
+    const useFade = incomingSlide?.dataset.transition === 'fade';
+
     /* Animate exit of current page before swapping */
     if (animate) {
       const isForward = navDirection === 'forward';
@@ -257,7 +260,7 @@
         clone.style.height   = rect.height + 'px';
         openBook.appendChild(clone);
         requestAnimationFrame(() => {
-          clone.classList.add(isForward ? 'mobile-exit-forward' : 'mobile-exit-backward');
+          clone.classList.add(useFade ? 'exit-fade-out' : (isForward ? 'mobile-exit-forward' : 'mobile-exit-backward'));
         });
         clone.addEventListener('animationend', () => clone.remove(), { once: true });
       }
@@ -273,7 +276,12 @@
       reorderSlideElements(slide);
       slide.classList.add('active', 'in-page');
       rightSlot.appendChild(slide);
+      if (useFade) {
+        rightSlot.classList.add('page-fade-in');
+        rightSlot.addEventListener('animationend', () => rightSlot.classList.remove('page-fade-in'), { once: true });
+      }
       playVideos(slide);
+      scheduleAutoAdvance(slide);
     }
 
     const numEl = document.querySelector('.right-num');
@@ -291,6 +299,9 @@
       spreadView.classList.remove('active');
       return;
     }
+
+    const spread    = spreads[curSpread];
+    const useFade   = spread?.some(s => s?.dataset.transition === 'fade');
 
     /* Animate exit of the old page before swapping content */
     if (animate) {
@@ -313,18 +324,20 @@
         clone.style.height   = rect.height + 'px';
         openBook.appendChild(clone);
         requestAnimationFrame(() => {
-          clone.classList.add(isForward ? 'exit-forward' : 'exit-backward');
+          clone.classList.add(useFade ? 'exit-fade-out' : (isForward ? 'exit-forward' : 'exit-backward'));
 
-          // Stationary page flex — mimics spine compression during the turn
-          const stationaryId = isForward ? 'page-left' : 'page-right';
-          const stationary   = document.getElementById(stationaryId);
-          if (stationary) {
-            stationary.classList.remove('page-spine-flex', 'flex-left', 'flex-right');
-            void stationary.offsetWidth; // restart animation if already playing
-            stationary.classList.add('page-spine-flex', isForward ? 'flex-left' : 'flex-right');
-            stationary.addEventListener('animationend',
-              () => stationary.classList.remove('page-spine-flex', 'flex-left', 'flex-right'),
-              { once: true });
+          if (!useFade) {
+            // Stationary page flex — mimics spine compression during the turn
+            const stationaryId = isForward ? 'page-left' : 'page-right';
+            const stationary   = document.getElementById(stationaryId);
+            if (stationary) {
+              stationary.classList.remove('page-spine-flex', 'flex-left', 'flex-right');
+              void stationary.offsetWidth;
+              stationary.classList.add('page-spine-flex', isForward ? 'flex-left' : 'flex-right');
+              stationary.addEventListener('animationend',
+                () => stationary.classList.remove('page-spine-flex', 'flex-left', 'flex-right'),
+                { once: true });
+            }
           }
         });
         clone.addEventListener('animationend', () => clone.remove(), { once: true });
@@ -335,7 +348,6 @@
     coverView.classList.remove('active');
     spreadView.classList.add('active');
 
-    const spread    = spreads[curSpread];
     const leftSlot  = document.getElementById('left-slot');
     const rightSlot = document.getElementById('right-slot');
 
@@ -343,14 +355,24 @@
       reorderSlideElements(spread[0]);
       spread[0].classList.add('active', 'in-page');
       leftSlot.appendChild(spread[0]);
+      if (useFade) {
+        leftSlot.classList.add('page-fade-in');
+        leftSlot.addEventListener('animationend', () => leftSlot.classList.remove('page-fade-in'), { once: true });
+      }
       playVideos(spread[0]);
+      scheduleAutoAdvance(spread[0]);
     }
 
     if (spread[1]) {
       reorderSlideElements(spread[1]);
       spread[1].classList.add('active', 'in-page');
       rightSlot.appendChild(spread[1]);
+      if (useFade) {
+        rightSlot.classList.add('page-fade-in');
+        rightSlot.addEventListener('animationend', () => rightSlot.classList.remove('page-fade-in'), { once: true });
+      }
       playVideos(spread[1]);
+      if (!spread[0]) scheduleAutoAdvance(spread[1]);
     } else {
       rightSlot.innerHTML = '<div class="empty-page-ornament">✦</div>';
     }
@@ -500,9 +522,30 @@
     } catch (_) {}
   }
 
+  /* ── Auto-advance (slides with no interactive elements) ─────── */
+  let _autoAdvanceTimer = null;
+  function clearAutoAdvance() {
+    if (_autoAdvanceTimer) { clearTimeout(_autoAdvanceTimer); _autoAdvanceTimer = null; }
+    document.querySelectorAll('.auto-advance-pip').forEach(p => p.remove());
+  }
+  function scheduleAutoAdvance(slide) {
+    clearAutoAdvance();
+    if (!slide || slide.querySelector('button')) return;
+    const isLast = isMobile() ? curSlide >= slides.length - 1 : curSpread >= spreads.length - 1;
+    if (isLast) return;
+    const DELAY = 4000;
+    const pip = document.createElement('div');
+    pip.className = 'auto-advance-pip';
+    pip.style.setProperty('--pip-dur', DELAY + 'ms');
+    slide.style.position = 'relative';
+    slide.appendChild(pip);
+    _autoAdvanceTimer = setTimeout(() => { _autoAdvanceTimer = null; next(); }, DELAY);
+  }
+
   function next(fromLock = false) {
     const onCover = isMobile() ? curSlide === 0 : curSpread === 0;
     if (onCover && !fromLock && !hasUnlockedStory()) return;
+    clearAutoAdvance();
     stopCurrentAudio();
     navDirection = 'forward';
     if (isMobile()) {
@@ -518,6 +561,7 @@
   }
 
   function prev() {
+    clearAutoAdvance();
     stopCurrentAudio();
     navDirection = 'backward';
     if (isMobile()) {
@@ -608,6 +652,24 @@
 
   /* ── Floating key follows cursor on cover ──────────────────── */
   function setupCoverKeyTracker() {
+    // Append the key clone directly to <body> so position:fixed works correctly —
+    // position:fixed is broken inside CSS-transformed ancestors like #book-cover.
+    let floatingKey = document.getElementById('floating-key');
+    if (!floatingKey) {
+      floatingKey = document.createElement('div');
+      floatingKey.id = 'floating-key';
+      floatingKey.setAttribute('aria-hidden', 'true');
+      floatingKey.innerHTML =
+        '<svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">' +
+          '<line x1="10" y1="2"  x2="10" y2="26" stroke="rgba(201,160,48,.88)" stroke-width="2.2" stroke-linecap="round"/>' +
+          '<line x1="10" y1="7"  x2="15" y2="7"  stroke="rgba(201,160,48,.88)" stroke-width="2"   stroke-linecap="round"/>' +
+          '<line x1="10" y1="13" x2="14" y2="13" stroke="rgba(201,160,48,.88)" stroke-width="2"   stroke-linecap="round"/>' +
+          '<circle cx="10" cy="33" r="6"   fill="none" stroke="rgba(201,160,48,.88)" stroke-width="2.2"/>' +
+          '<circle cx="10" cy="33" r="2.4" fill="rgba(201,160,48,.55)"/>' +
+        '</svg>';
+      document.body.appendChild(floatingKey);
+    }
+
     let raf = 0, mx = window.innerWidth / 2, my = window.innerHeight / 2;
     function setPos() {
       document.documentElement.style.setProperty('--key-x', mx + 'px');
@@ -628,7 +690,6 @@
     }
     document.addEventListener('mousemove', onMove, { passive: true });
     document.addEventListener('touchmove', onTouch, { passive: true });
-    // initial placement
     setPos();
   }
 
@@ -639,7 +700,7 @@
     const atEnd   = isMobile() ? curSlide >= slides.length - 1     : curSpread >= spreads.length - 1;
     if (prevBtn) prevBtn.disabled = atStart;
     if (nextBtn) nextBtn.disabled = atEnd;
-    document.body.classList.toggle('on-cover', atStart);
+    document.body.classList.toggle('on-cover', atStart && !hasUnlockedStory());
     if (atStart) {
       document.querySelector('.cover-lock-wrap')?.classList.remove('unlocking');
     }
@@ -678,6 +739,11 @@
     // Lock mechanic: only the lock unlocks the book
     function unlockBook(lockWrap) {
       if (lockWrap.classList.contains('unlocking')) return;
+      // Swap floating clone out, restore original key so keyInsertAndTurn plays
+      const floatingKey = document.getElementById('floating-key');
+      if (floatingKey) floatingKey.style.display = 'none';
+      const origKey = lockWrap.querySelector('.cover-key-icon');
+      if (origKey) origKey.style.visibility = 'visible';
       lockWrap.classList.add('unlocking');
       markUnlocked();
       setTimeout(() => lockWrap?.remove(), 1150);

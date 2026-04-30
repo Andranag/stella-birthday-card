@@ -863,12 +863,65 @@ body.on-cover #discovery-arrows { opacity: 0; }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Section-break / chapter-divider slide ───────────────────── */
+.section-break.gift-article {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+}
+.chapter-break {
+  display: flex; align-items: center; gap: 14px;
+  width: 55%;
+}
+.chapter-break-line {
+  flex: 1; height: 1px;
+  background: rgba(var(--g2-rgb), 0.30);
+}
+.chapter-break-star {
+  color: rgba(var(--g2-rgb), 0.50);
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+}
+
+/* ── Fade page transition ────────────────────────────────────── */
+@keyframes exitFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+.exit-fade-out { animation: exitFadeOut 0.7s ease forwards; }
+
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.page-fade-in { animation: pageFadeIn 0.9s ease forwards; }
+
+/* ── Auto-advance progress pip ───────────────────────────────── */
+.auto-advance-pip {
+  position: absolute; bottom: 6px; left: 50%;
+  transform: translateX(-50%);
+  width: 36px; height: 3px;
+  background: rgba(var(--g2-rgb), 0.18);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.auto-advance-pip::after {
+  content: '';
+  display: block; height: 100%;
+  background: rgba(var(--g2-rgb), 0.55);
+  border-radius: 2px;
+  transform-origin: left;
+  animation: pipShrink var(--pip-dur, 4s) linear forwards;
+}
+@keyframes pipShrink {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
 }
 
 /* Hide original story container — JS also sets display:none */
@@ -1071,7 +1124,7 @@ body.on-cover #discovery-arrows { opacity: 0; }
 /* ── Cover clasp mechanic ────────────────────────────────────── */
 .cover-lock-wrap {
   position: absolute;
-  right: -16px; top: 50%;
+  right: -16px; top: 65%;
   transform: translateY(-50%);
   z-index: 20;
   cursor: pointer;
@@ -1114,14 +1167,23 @@ body.on-cover #discovery-arrows { opacity: 0; }
   pointer-events: none;
 }
 
-/* Floating key mode: follows cursor on cover page */
-body.on-cover .cover-key-icon {
+/* Hide original key while floating clone is tracking cursor */
+body.on-cover .cover-key-icon { visibility: hidden; }
+
+/* Floating key: lives at body level so position:fixed isn't broken by
+   CSS transform on #book-cover ancestor */
+#floating-key {
   position: fixed;
   left: var(--key-x, 50vw);
   top: var(--key-y, 50vh);
   transform: translate(-50%, -50%);
   z-index: 902;
+  pointer-events: none;
+  display: none;
+  width: 42px; height: 80px;
+  filter: drop-shadow(0 0 6px rgba(var(--g2-rgb),.55));
 }
+body.on-cover #floating-key { display: block; }
 
 .cover-lock-wrap:hover .cover-key-icon,
 .cover-lock-wrap:focus-visible .cover-key-icon {
@@ -1494,6 +1556,27 @@ body.on-cover .cover-key-icon {
   line-height: 1.6;
 }
 
+/* ── Title-card slides: single-word cinematic payoff ─────────── */
+.slide-titlecard.gift-article h2 {
+  font-size: clamp(0.95rem, 1.8vw, 1.45rem);
+  opacity: 0.72;
+}
+.slide-titlecard.gift-article p {
+  font-size: clamp(2.4rem, 7vw, 4.2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  margin-top: 0.1em;
+}
+.slide-titlecard.gift-article.in-page h2 {
+  font-size: clamp(0.85rem, 2vw, 1.2rem) !important;
+  opacity: 0.72 !important;
+}
+.slide-titlecard.gift-article.in-page p {
+  font-size: clamp(1.7rem, 4.5vw, 2.9rem) !important;
+  line-height: 1.15 !important;
+}
+
 /* Remove corner ornaments inside pages */
 .slide.gift-article.in-page::before,
 .slide.gift-article.in-page::after { display: none !important; }
@@ -1525,6 +1608,7 @@ body.on-cover .cover-key-icon {
   width: 100% !important;
   max-width: 340px !important;
   height: 255px !important;
+  min-height: 130px !important;
   max-height: 40vh !important;
   padding: 0 !important;
   background: #000 !important;
@@ -1579,9 +1663,8 @@ body.on-cover .cover-key-icon {
 }
 
 /* Prevent text, headings, and buttons from being flex-shrunk below their
-   natural content height. When flex squeezes a button past its min-height,
-   overflow:hidden on the button clips the wrapped text at the bottom.
-   Videos (.gift-img) are left out intentionally — they can yield height. */
+   natural content height. Videos (.gift-img) are left out — they yield height,
+   but are clamped by min-height so they never disappear entirely. */
 .slide.gift-article.in-page h1,
 .slide.gift-article.in-page h2,
 .slide.gift-article.in-page p,
@@ -1592,6 +1675,13 @@ body.on-cover .cover-key-icon {
 
 /* Thinner h2 divider inside pages */
 .slide.gift-article.in-page h2::after { width: 42%; margin: 8px auto 0; }
+
+/* Tighten gap when a slide has many elements so less space is wasted on whitespace */
+.slide.gift-article.in-page:has(> .text-to-sound ~ .text-to-sound),
+.slide.gift-article.in-page:has(> .peek-hint ~ .text-to-sound),
+.slide.gift-article.in-page:has(> .text-to-sound ~ .peek-hint) {
+  gap: 8px !important;
+}
 
 /* ================================================================
    TYPOGRAPHY  (standalone / cover contexts)
