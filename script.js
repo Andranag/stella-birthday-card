@@ -6,6 +6,9 @@
 (function () {
   'use strict';
 
+  const BOOKMARK_KEY = 'stella_bday_bookmark';
+  const TIPS_KEY     = 'stella_bday_tips_v2';
+
   /* ── State ─────────────────────────────────────────────────── */
   let slides      = [];   // all .slide.gift-article elements
   let spreads     = [];   // [[cover], [s1,s2], [s3,s4], ...]
@@ -102,6 +105,9 @@
     buildNavPanel();
     setupToastContainer();
     setupSwipeHints();
+    setupBookmark();
+    setupTipsBar();
+    setupHelpFab();
 
     // Start at cover
     curSpread = 0; curSlide = 0;
@@ -177,6 +183,7 @@
     updateProgress();
     updateCounter();
     updateNavButtons();
+    updateBookmarkBtn();
     syncNavPanel();
     announceSlide();
     updateAriaCurrent();
@@ -354,32 +361,27 @@
   function playVideos(slide) {
     slide.querySelectorAll('video').forEach(v => {
       v.currentTime = 0;
-      
-      // Add error handling for videos
-      v.addEventListener('error', () => {
-        console.error(`Failed to load video: ${v.querySelector('source')?.src}`);
-        v.classList.add('video-error');
-        const parent = v.closest('.gift-img');
-        if (parent) {
-          parent.classList.add('video-error');
-        }
-      });
-      
-      // Only play if video is in viewport
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            v.play().catch(err => {
-              console.error(`Failed to play video: ${err.message}`);
-              v.classList.add('video-error');
-            });
-          } else {
-            v.pause();
-          }
+
+      if (!v._observed) {
+        v._observed = true;
+
+        v.addEventListener('error', () => {
+          v.classList.add('video-error');
+          v.closest('.gift-img')?.classList.add('video-error');
         });
-      }, { threshold: 0.5 });
-      
-      observer.observe(v);
+
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              v.play().catch(() => v.classList.add('video-error'));
+            } else {
+              v.pause();
+            }
+          });
+        }, { threshold: 0.5 });
+
+        observer.observe(v);
+      }
     });
   }
 
@@ -780,8 +782,7 @@
     const cancel  = document.getElementById('jump-cancel');
     const counter = document.getElementById('top-indicator');
 
-    // Handle the double-quoted id typo in HTML: id=""jump-total""
-    const tot = document.querySelector('[id*="jump-total"]');
+    const tot = document.getElementById('jump-total');
     if (tot) tot.textContent = slides.length - 1;
 
     if (counter) {
@@ -856,6 +857,7 @@
           <li><kbd>Space</kbd> Play/pause audio</li>
           <li><kbd>M</kbd> Mute/unmute audio</li>
           <li><kbd>S</kbd> Toggle spoiler</li>
+          <li><kbd>B</kbd> Bookmark page</li>
           <li><kbd>?</kbd> <kbd>/</kbd> Show this help</li>
           <li><kbd>Esc</kbd> Close modals</li>
         </ul>
@@ -890,6 +892,88 @@
   function closeHelpModal() {
     const m = document.getElementById('help-modal');
     if (m) m.style.display = 'none';
+  }
+
+  /* ── Bookmark ───────────────────────────────────────────────── */
+  function getBookmark() {
+    const raw = localStorage.getItem(BOOKMARK_KEY);
+    if (raw === null) return null;
+    const idx = parseInt(raw, 10);
+    return (!isNaN(idx) && idx > 0 && idx < slides.length) ? idx : null;
+  }
+
+  function updateBookmarkBtn() {
+    const btn = document.getElementById('bookmark-btn');
+    if (!btn) return;
+    const saved = getBookmark();
+    const cur   = getCurrentSlideIndex();
+    const marked = saved !== null && saved === cur;
+    btn.classList.toggle('bookmarked', marked);
+    btn.setAttribute('aria-label', marked ? 'Remove bookmark' : 'Bookmark this page');
+    btn.title = marked ? 'Remove bookmark (B)' : 'Bookmark this page (B)';
+  }
+
+  function toggleBookmark() {
+    if (document.body.classList.contains('on-cover')) return;
+    const idx   = getCurrentSlideIndex();
+    const saved = getBookmark();
+    if (saved === idx) {
+      localStorage.removeItem(BOOKMARK_KEY);
+      updateBookmarkBtn();
+      showToast('Bookmark removed', 'info');
+    } else {
+      localStorage.setItem(BOOKMARK_KEY, idx);
+      updateBookmarkBtn();
+      showToast(`Bookmark saved — page ${idx}`, 'success');
+    }
+  }
+
+  function showBookmarkPrompt(idx) {
+    const container = document.querySelector('.toast-container');
+    if (!container) return;
+    const toast = mk('div', { class: 'toast bookmark-prompt', role: 'alert' });
+    toast.innerHTML = `
+      <span>🔖</span>
+      <span>Continue from page&nbsp;<strong>${idx}</strong>?</span>
+      <button class="bookmark-go">Go&nbsp;→</button>
+      <button class="bookmark-dismiss" aria-label="Dismiss">✕</button>
+    `;
+    container.appendChild(toast);
+    const timer = setTimeout(() => toast.remove(), 8000);
+    toast.querySelector('.bookmark-go').addEventListener('click', () => {
+      clearTimeout(timer); toast.remove(); goTo(idx);
+    });
+    toast.querySelector('.bookmark-dismiss').addEventListener('click', () => {
+      clearTimeout(timer); toast.remove();
+    });
+  }
+
+  function setupBookmark() {
+    const btn = document.getElementById('bookmark-btn');
+    if (!btn) return;
+    btn.addEventListener('click', toggleBookmark);
+    const saved = getBookmark();
+    if (saved !== null) setTimeout(() => showBookmarkPrompt(saved), 1200);
+  }
+
+  function setupTipsBar() {
+    if (localStorage.getItem(TIPS_KEY)) {
+      document.getElementById('tips-bar')?.remove();
+      document.getElementById('discovery-arrows')?.remove();
+      return;
+    }
+    document.getElementById('tips-dismiss')?.addEventListener('click', () => {
+      const bar    = document.getElementById('tips-bar');
+      const arrows = document.getElementById('discovery-arrows');
+      if (bar)    bar.classList.add('dismissed');
+      if (arrows) arrows.classList.add('dismissed');
+      localStorage.setItem(TIPS_KEY, '1');
+      setTimeout(() => { bar?.remove(); arrows?.remove(); }, 400);
+    });
+  }
+
+  function setupHelpFab() {
+    document.getElementById('help-fab')?.addEventListener('click', toggleHelpModal);
   }
 
   /* ── Toast Notifications ─────────────────────────────────────── */
@@ -942,9 +1026,7 @@
     
     document.getElementById('prev-page')?.addEventListener('click', hideHints);
     document.getElementById('next-page')?.addEventListener('click', hideHints);
-    
-    // Also hide on swipe
-    document.addEventListener('swipe', hideHints);
+    document.body.addEventListener('touchend', hideHints, { passive: true });
   }
 
   /* ── Nav Panel ─────────────────────────────────────────────── */
@@ -1146,9 +1228,7 @@
         if (!audio) {
           audio = new Audio(btn.dataset.sound);
           
-          // Add error handling
           audio.addEventListener('error', () => {
-            console.error(`Failed to load audio: ${btn.dataset.sound}`);
             btn.classList.add('audio-error');
             btn.setAttribute('aria-label', 'Audio failed to load');
             shakeEl(btn);
@@ -1183,8 +1263,7 @@
                 btn.appendChild(progressEl);
               }
             })
-            .catch(err => {
-              console.error(`Failed to play audio: ${err.message}`);
+            .catch(() => {
               btn.classList.add('audio-error');
               shakeEl(btn);
             });
@@ -1295,6 +1374,9 @@
               showToast(revealed ? 'Spoiler revealed' : 'Spoiler hidden', 'info');
             }
           }
+          break;
+        case 'b': case 'B':
+          if (!modalOpen && !navOpen) toggleBookmark();
           break;
       }
     });
