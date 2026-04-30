@@ -695,25 +695,32 @@ body.on-cover #tips-bar { opacity: 0; pointer-events: none; }
 
 /* ── Help FAB ────────────────────────────────────────────────── */
 #help-fab {
-  position: fixed; top: 7px; left: 16px; z-index: 901;
-  width: 44px; height: 44px; padding: 0;
+  position: fixed;
+  bottom: max(62px, calc(56px + env(safe-area-inset-bottom, 0px)));
+  right: 16px; z-index: 901;
+  width: 52px; height: 52px; padding: 0;
   background: rgba(6,2,20,.80);
   backdrop-filter: blur(10px) saturate(1.4);
   -webkit-backdrop-filter: blur(10px) saturate(1.4);
-  border: 1px solid rgba(201,160,48,.35);
+  border: 2px solid rgba(201,160,48,.55);
   border-radius: 50%;
-  color: var(--g1); font-size: 1.15rem; font-weight: 700;
+  color: var(--g1); font-size: 1.35rem; font-weight: 700;
   cursor: pointer; font-family: inherit;
   display: flex; align-items: center; justify-content: center;
-  transition: transform 0.15s ease, border-color 0.2s ease;
+  transition: transform .22s cubic-bezier(.34,1.56,.64,1), border-color .2s ease, box-shadow .22s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,.55), 0 0 16px rgba(201,160,48,.20);
   animation: fabFadeIn 0.4s ease 1s both;
 }
-#help-fab:hover { transform: scale(1.1); border-color: rgba(201,160,48,.85); }
-#help-fab:active { transform: scale(.93); }
+#help-fab:hover {
+  transform: scale(1.1) rotate(-5deg);
+  border-color: rgba(201,160,48,.85);
+  box-shadow: 0 4px 24px rgba(0,0,0,.6), 0 0 28px rgba(201,160,48,.45);
+}
+#help-fab:active { transform: scale(.94); }
 body.on-cover #help-fab { opacity: 0; pointer-events: none; }
 @keyframes fabFadeIn {
-  from { opacity: 0; transform: scale(0.6); }
-  to   { opacity: 1; transform: scale(1); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ── Discovery Arrows ────────────────────────────────────────── */
@@ -727,10 +734,11 @@ body.on-cover #discovery-arrows { opacity: 0; }
   animation: arrowFadeIn 0.5s ease 1.6s both, arrowFloat 1.8s ease-in-out 5 2.2s;
 }
 #arrow-help {
-  position: fixed; top: 54px; left: 2px; z-index: 895;
+  position: fixed; bottom: 54px; right: 2px; z-index: 895;
   width: 50px; height: 75px;
   filter: drop-shadow(0 0 6px rgba(201,160,48,.55));
   animation: arrowFadeIn 0.5s ease 2s both, arrowFloat 1.8s ease-in-out 5 2.6s;
+  transform: rotate(180deg);
 }
 @keyframes arrowFadeIn {
   from { opacity: 0; transform: translateY(6px); }

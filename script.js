@@ -18,6 +18,7 @@
   let playingBtn   = null;
   let navDirection = 'forward';
   let sadSectionAudio = null;  // background audio for sad section
+  let danceSectionAudio = null; // background audio for dance section
 
   /* ── Chapter config ────────────────────────────────────────── */
   const CHAPTERS = [
@@ -188,12 +189,19 @@
     announceSlide();
     updateAriaCurrent();
     
-    // Manage sad section background audio
+    // Manage section background audio
     if (isInSadSection()) {
       startSadSectionAudio();
     } else {
       stopSadSectionAudio();
     }
+    /* TODO: per-slide songs for dance section — uncomment for continuous bg music
+    if (isInDanceSection()) {
+      startDanceSectionAudio();
+    } else {
+      stopDanceSectionAudio();
+    }
+    */
   }
 
   /* Mobile: single page in right slot */
@@ -415,6 +423,30 @@
   function isInSadSection() {
     const startIdx = slides.findIndex(s => s.id === 'sad-section-start');
     const endIdx = slides.findIndex(s => s.id === 'sad-section-end');
+    if (startIdx === -1 || endIdx === -1) return false;
+    const currentIdx = getCurrentSlideIndex();
+    return currentIdx >= startIdx && currentIdx <= endIdx;
+  }
+
+  function stopDanceSectionAudio() {
+    if (danceSectionAudio) {
+      danceSectionAudio.pause();
+      danceSectionAudio.currentTime = 0;
+      danceSectionAudio = null;
+    }
+  }
+
+  function startDanceSectionAudio() {
+    if (danceSectionAudio) return; // already playing
+    danceSectionAudio = new Audio('assets/music/put your head on my shoulder.mp3');
+    danceSectionAudio.loop = true;
+    danceSectionAudio.volume = 0.35; // background music level
+    danceSectionAudio.play().catch(() => {});
+  }
+
+  function isInDanceSection() {
+    const startIdx = slides.findIndex(s => s.id === 'dance-section-start');
+    const endIdx   = slides.findIndex(s => s.id === 'dance-section-end');
     if (startIdx === -1 || endIdx === -1) return false;
     const currentIdx = getCurrentSlideIndex();
     return currentIdx >= startIdx && currentIdx <= endIdx;
@@ -957,19 +989,9 @@
   }
 
   function setupTipsBar() {
-    if (localStorage.getItem(TIPS_KEY)) {
-      document.getElementById('tips-bar')?.remove();
-      document.getElementById('discovery-arrows')?.remove();
-      return;
-    }
-    document.getElementById('tips-dismiss')?.addEventListener('click', () => {
-      const bar    = document.getElementById('tips-bar');
-      const arrows = document.getElementById('discovery-arrows');
-      if (bar)    bar.classList.add('dismissed');
-      if (arrows) arrows.classList.add('dismissed');
-      localStorage.setItem(TIPS_KEY, '1');
-      setTimeout(() => { bar?.remove(); arrows?.remove(); }, 400);
-    });
+    /* Tips bar is always visible — no dismiss button */
+    document.getElementById('discovery-arrows')?.classList.add('dismissed');
+    setTimeout(() => document.getElementById('discovery-arrows')?.remove(), 400);
   }
 
   function setupHelpFab() {
@@ -1525,7 +1547,7 @@
 
 /* ── Nav toggle button ── */
 #nav-toggle {
-  position: fixed; bottom: max(24px, calc(24px + env(safe-area-inset-bottom, 0px))); right: 18px; z-index: 1100;
+  position: fixed; top: 7px; left: 16px; z-index: 1100;
   width: 52px; height: 52px; border-radius: 50%;
   border: 2px solid rgba(201,160,48,.55); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
@@ -1539,11 +1561,11 @@
 #nav-toggle:hover { transform: scale(1.1) rotate(-5deg); border-color: rgba(201,160,48,.85); }
 #nav-toggle:active { transform: scale(.94); }
 
-/* ── Corner bracket hint (bottom-right) ── */
+/* ── Corner bracket hint (top-left) ── */
 .corner-hint-br {
   position: fixed;
-  bottom: max(18px, calc(18px + env(safe-area-inset-bottom, 0px)));
-  right: 12px;
+  top: 7px;
+  left: 12px;
   width: 64px;
   height: 64px;
   pointer-events: none;
@@ -1559,20 +1581,20 @@
   transition: opacity 0.3s ease;
 }
 .corner-hint-br::before {
-  bottom: 0;
-  right: 0;
-  width: 24px;
-  height: 24px;
-  border-width: 0 2px 2px 0;
-  border-bottom-right-radius: 4px;
-}
-.corner-hint-br::after {
   top: 0;
   left: 0;
+  width: 24px;
+  height: 24px;
+  border-width: 2px 0 0 2px;
+  border-top-left-radius: 4px;
+}
+.corner-hint-br::after {
+  bottom: 0;
+  right: 0;
   width: 8px;
   height: 8px;
-  border-width: 2px 0 0 2px;
-  border-top-left-radius: 2px;
+  border-width: 0 2px 2px 0;
+  border-bottom-right-radius: 2px;
   opacity: 0.3;
 }
 .corner-hint-br.hidden {
