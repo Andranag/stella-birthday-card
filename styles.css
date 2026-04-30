@@ -873,7 +873,16 @@ body.on-cover #discovery-arrows { opacity: 0; }
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 0 !important;
+  gap: 12px !important;
+}
+.section-break.gift-article h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin: 0;
+}
+.section-break.gift-article p {
+  font-size: clamp(1.1rem, 2.8vw, 1.5rem);
+  opacity: 0.75;
+  margin: 0;
 }
 .chapter-break {
   display: flex; align-items: center; gap: 14px;

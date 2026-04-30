@@ -19,8 +19,7 @@
   let playingBtn   = null;
   let navDirection = 'forward';
   const _bgTracks = {
-    sad:   { audio: null, src: 'assets/music/sad carol.mp3',                        vol: 0.30 },
-    dance: { audio: null, src: 'assets/music/put your head on my shoulder.mp3',     vol: 0.35 },
+    dance: { audio: null, src: 'assets/music/put your head on my shoulder.mp3', vol: 0.35 },
   };
   let _pageTurnAudio  = null;
   let _ambientStarted = false;
@@ -222,8 +221,6 @@
     announceSlide();
     updateAriaCurrent();
 
-    // Manage section background audio
-    isInSadSection() ? startBgTrack('sad') : stopBgTrack('sad');
   }
 
   /* Mobile: single page in right slot */
@@ -472,13 +469,6 @@
     t.audio = new Audio(t.src);
     t.audio.loop = true; t.audio.volume = t.vol;
     t.audio.play().catch(() => {});
-  }
-
-  function isInSadSection() {
-    const startIdx = slides.findIndex(s => s.id === 'sad-section-start');
-    const endIdx   = slides.findIndex(s => s.id === 'sad-section-end');
-    if (startIdx === -1 || endIdx === -1) return false;
-    return getCurrentSlideIndex() >= startIdx && getCurrentSlideIndex() <= endIdx;
   }
 
   function playPageTurnSound() {
