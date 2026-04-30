@@ -676,7 +676,6 @@ body.story-locked .corner-hint-br {
   animation: tipBarSlideUp 0.5s cubic-bezier(.34,1.56,.64,1) 0.8s both;
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
-#tips-bar.dismissed { opacity: 0; transform: translateY(100%); pointer-events: none; }
 body.on-cover #tips-bar { opacity: 0; pointer-events: none; }
 .tips-content {
   display: flex; align-items: center; gap: 12px;
@@ -697,15 +696,6 @@ body.on-cover #tips-bar { opacity: 0; pointer-events: none; }
   animation: tipArrowBounce 1s ease-in-out 4;
 }
 .tip-sep { color: rgba(var(--g2-rgb),.3); flex-shrink: 0; }
-#tips-dismiss {
-  background: none; border: 1px solid rgba(var(--g2-rgb),.28);
-  border-radius: 4px; color: rgba(255,255,255,.38);
-  font-size: 0.72rem; padding: 3px 10px; cursor: pointer;
-  font-family: inherit; margin-left: 10px; white-space: nowrap;
-  transition: color 0.15s, border-color 0.15s;
-  flex-shrink: 0;
-}
-#tips-dismiss:hover { color: var(--p0); border-color: rgba(var(--g2-rgb),.65); }
 @media (max-width: 520px) {
   .tip-label { display: none; }
   .tip-arrow-up { display: none; }
@@ -714,7 +704,6 @@ body.on-cover #tips-bar { opacity: 0; pointer-events: none; }
 }
 @media (max-width: 340px) {
   .tip-sep { display: none; }
-  #tips-dismiss { margin-left: 4px; padding: 3px 7px; }
 }
 @keyframes tipBarSlideUp {
   from { transform: translateY(100%); opacity: 0; }
@@ -729,7 +718,7 @@ body.on-cover #tips-bar { opacity: 0; pointer-events: none; }
 #help-fab {
   position: fixed;
   bottom: max(52px, calc(52px + env(safe-area-inset-bottom, 0px)));
-  left: 16px; z-index: 901;
+  right: 16px; z-index: 901;
   width: 52px; height: 52px; padding: 0;
   background: rgba(6,2,20,.80);
   backdrop-filter: blur(10px) saturate(1.4);
@@ -766,7 +755,7 @@ body.on-cover #discovery-arrows { opacity: 0; }
   animation: arrowFadeIn 0.5s ease 1.6s both, arrowFloat 1.8s ease-in-out 5 2.2s;
 }
 #arrow-help {
-  position: fixed; bottom: 62px; left: 76px; z-index: 895;
+  position: fixed; bottom: 62px; right: 76px; z-index: 895;
   width: 65px; height: 50px;
   filter: drop-shadow(0 0 6px rgba(var(--g2-rgb),.55));
   animation: arrowFadeIn 0.5s ease 2s both, arrowFloat 1.8s ease-in-out 5 2.6s;
@@ -1114,25 +1103,36 @@ body.on-cover #discovery-arrows { opacity: 0; }
   transform-origin: 100% 50%;
 }
 
-/* Key sits below the clasp; tip points UP toward keyhole — rises on hover */
+/* Key sits below the clasp; tip points UP toward keyhole */
 .cover-key-icon {
-  width: 26px; height: 54px;
-  opacity: 0;
-  transform: translateY(14px);
-  filter: drop-shadow(0 0 4px rgba(var(--g2-rgb),.35));
-  transition: opacity .4s ease, transform .4s ease;
+  width: 42px; height: 80px;
+  opacity: 1;
+  transform: translateY(0);
+  filter: drop-shadow(0 0 6px rgba(var(--g2-rgb),.55));
+  transition: opacity .4s ease, transform .4s ease, left .08s linear, top .08s linear;
   display: block;
+  pointer-events: none;
+}
+
+/* Floating key mode: follows cursor on cover page */
+body.on-cover .cover-key-icon {
+  position: fixed;
+  left: var(--key-x, 50vw);
+  top: var(--key-y, 50vh);
+  transform: translate(-50%, -50%);
+  z-index: 902;
 }
 
 .cover-lock-wrap:hover .cover-key-icon,
 .cover-lock-wrap:focus-visible .cover-key-icon {
-  opacity: .72;
-  transform: translateY(0);
+  filter: drop-shadow(0 0 10px rgba(var(--g2-rgb),.85));
 }
 
 /* Unlock animation sequence */
 .cover-lock-wrap.unlocking .cover-key-icon {
   opacity: 1;
+  position: absolute;
+  left: auto; top: auto;
   transform: translateY(0);
   animation: keyInsertAndTurn .72s cubic-bezier(.42,0,.58,1) forwards;
 }

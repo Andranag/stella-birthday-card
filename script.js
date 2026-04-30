@@ -122,6 +122,7 @@
     setupSwipe();
     setupKeyboard();
     setupNavButtons();
+    setupCoverKeyTracker();
     setupJumpModal();
     setupHelpModal();
     buildNavPanel();
@@ -603,6 +604,32 @@
   function setupNavButtons() {
     document.getElementById('prev-page')?.addEventListener('click', prev);
     document.getElementById('next-page')?.addEventListener('click', next);
+  }
+
+  /* ── Floating key follows cursor on cover ──────────────────── */
+  function setupCoverKeyTracker() {
+    let raf = 0, mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    function setPos() {
+      document.documentElement.style.setProperty('--key-x', mx + 'px');
+      document.documentElement.style.setProperty('--key-y', my + 'px');
+      raf = 0;
+    }
+    function onMove(e) {
+      mx = e.clientX;
+      my = e.clientY;
+      if (!raf) raf = requestAnimationFrame(setPos);
+    }
+    function onTouch(e) {
+      if (e.touches.length) {
+        mx = e.touches[0].clientX;
+        my = e.touches[0].clientY;
+        if (!raf) raf = requestAnimationFrame(setPos);
+      }
+    }
+    document.addEventListener('mousemove', onMove, { passive: true });
+    document.addEventListener('touchmove', onTouch, { passive: true });
+    // initial placement
+    setPos();
   }
 
   function updateNavButtons() {
@@ -1138,7 +1165,7 @@
     });
     document.body.appendChild(toggle);
 
-    // Add corner bracket hint in bottom-right
+    // Add corner bracket hint in top-left
     const cornerHint = mk('div', { class: 'corner-hint-br' });
     document.body.appendChild(cornerHint);
 
@@ -1603,6 +1630,15 @@
   box-shadow: 0 2px 0 #6A4800, 0 4px 16px rgba(201,160,48,.5), 0 0 20px rgba(255,200,40,.35), inset 0 1px 0 rgba(255,255,255,.9) !important;
 }
 .text-to-sound.playing::after {
+  content: '\u266A';
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  font-size: 1.15em;
+  color: rgba(106,72,0,.85);
+  animation: noteBounce 0.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+.text-to-sound.playing::before {
   content: '';
   position: absolute; inset: 0; border-radius: inherit;
   background: repeating-linear-gradient(90deg,rgba(255,200,40,0) 0px,rgba(255,200,40,.18) 2px,rgba(255,200,40,0) 4px);
@@ -1630,7 +1666,7 @@
   background: linear-gradient(145deg, #1E0848, #2D1060);
   color: #F0C050;
   box-shadow: 0 4px 20px rgba(0,0,0,.55), 0 0 16px rgba(201,160,48,.20);
-  transition: transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s ease;
+  transition: transform .22s cubic-bezier(.34,1.56,.64,1), border-color .2s ease, box-shadow .22s ease;
   backdrop-filter: blur(8px);
   animation: fabPopIn 0.4s cubic-bezier(.34,1.56,.64,1) 0.3s both;
 }
