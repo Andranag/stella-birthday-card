@@ -18,8 +18,12 @@
   let currentAudio = null;
   let playingBtn   = null;
   let navDirection = 'forward';
-  let sadSectionAudio = null;  // background audio for sad section
-  let danceSectionAudio = null; // background audio for dance section
+  const _bgTracks = {
+    sad:   { audio: null, src: 'assets/music/sad carol.mp3',                        vol: 0.30 },
+    dance: { audio: null, src: 'assets/music/put your head on my shoulder.mp3',     vol: 0.35 },
+  };
+  let _pageSoundCtx   = null;
+  let _ambientStarted = false;
 
   function hasUnlockedStory() {
     return localStorage.getItem(UNLOCKED_KEY) === '1';
@@ -33,11 +37,17 @@
 
   /* ── Chapter config ────────────────────────────────────────── */
   const CHAPTERS = [
-    { id: 'header',                 icon: '🏰', label: 'Cover'      },
-    { id: 'sad-section-start',      icon: '💧', label: 'Hard Times' },
-    { id: 'dance-section-start',    icon: '💃', label: 'The Dance'  },
-    { id: 'careless-section-start', icon: '🌙', label: 'His Place'  },
-    { id: 'final-slide',            icon: '🎊', label: 'The End'    },
+    { id: 'header',                 icon: '🏰', label: 'Cover'          },
+    { id: 'thumbs-intro',           icon: '👍', label: 'Two Thumbs'     },
+    { id: 'tarzan-intro',           icon: '🌿', label: 'Enter Him'      },
+    { id: 'qualities-section',      icon: '✨', label: 'His Qualities'  },
+    { id: 'sad-section-start',      icon: '💧', label: 'Hard Times'     },
+    { id: 'sad-section-end',        icon: '🔥', label: 'Rising'         },
+    { id: 'getting-ready-slide',    icon: '💄', label: 'Getting Ready'  },
+    { id: 'kiss-again-slide',       icon: '💋', label: 'The Kiss'       },
+    { id: 'dance-section-start',    icon: '💃', label: 'The Dance'      },
+    { id: 'careless-section-start', icon: '🌙', label: 'His Place'      },
+    { id: 'final-slide',            icon: '🎊', label: 'The End'        },
   ];
 
   /* ── Helpers ───────────────────────────────────────────────── */
@@ -204,17 +214,9 @@
     updateAriaCurrent();
 
     // Manage section background audio
-    if (isInSadSection()) {
-      startSadSectionAudio();
-    } else {
-      stopSadSectionAudio();
-    }
-    /* TODO: per-slide songs for dance section — uncomment for continuous bg music
-    if (isInDanceSection()) {
-      startDanceSectionAudio();
-    } else {
-      stopDanceSectionAudio();
-    }
+    isInSadSection()   ? startBgTrack('sad')   : stopBgTrack('sad');
+    /* uncomment to re-enable dance bg music:
+    isInDanceSection() ? startBgTrack('dance') : stopBgTrack('dance');
     */
   }
 
@@ -418,44 +420,25 @@
     }
   }
 
-  function stopSadSectionAudio() {
-    if (sadSectionAudio) {
-      sadSectionAudio.pause();
-      sadSectionAudio.currentTime = 0;
-      sadSectionAudio = null;
-    }
+  function stopBgTrack(key) {
+    const t = _bgTracks[key];
+    if (!t.audio) return;
+    t.audio.pause(); t.audio.currentTime = 0; t.audio = null;
   }
 
-  function startSadSectionAudio() {
-    if (sadSectionAudio) return; // already playing
-    sadSectionAudio = new Audio('assets/music/sad carol.mp3');
-    sadSectionAudio.loop = true;
-    sadSectionAudio.volume = 0.3; // low volume for background
-    sadSectionAudio.play().catch(() => {});
+  function startBgTrack(key) {
+    const t = _bgTracks[key];
+    if (t.audio) return;
+    t.audio = new Audio(t.src);
+    t.audio.loop = true; t.audio.volume = t.vol;
+    t.audio.play().catch(() => {});
   }
 
   function isInSadSection() {
     const startIdx = slides.findIndex(s => s.id === 'sad-section-start');
-    const endIdx = slides.findIndex(s => s.id === 'sad-section-end');
+    const endIdx   = slides.findIndex(s => s.id === 'sad-section-end');
     if (startIdx === -1 || endIdx === -1) return false;
-    const currentIdx = getCurrentSlideIndex();
-    return currentIdx >= startIdx && currentIdx <= endIdx;
-  }
-
-  function stopDanceSectionAudio() {
-    if (danceSectionAudio) {
-      danceSectionAudio.pause();
-      danceSectionAudio.currentTime = 0;
-      danceSectionAudio = null;
-    }
-  }
-
-  function startDanceSectionAudio() {
-    if (danceSectionAudio) return; // already playing
-    danceSectionAudio = new Audio('assets/music/put your head on my shoulder.mp3');
-    danceSectionAudio.loop = true;
-    danceSectionAudio.volume = 0.35; // background music level
-    danceSectionAudio.play().catch(() => {});
+    return getCurrentSlideIndex() >= startIdx && getCurrentSlideIndex() <= endIdx;
   }
 
   function isInDanceSection() {
@@ -466,15 +449,71 @@
     return currentIdx >= startIdx && currentIdx <= endIdx;
   }
 
+  function playPageTurnSound() {
+    try {
+      if (!_pageSoundCtx) _pageSoundCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = _pageSoundCtx;
+      if (ctx.state === 'suspended') ctx.resume();
+      const duration   = 0.12;
+      const frameCount = Math.floor(ctx.sampleRate * duration);
+      const buf        = ctx.createBuffer(1, frameCount, ctx.sampleRate);
+      const data       = buf.getChannelData(0);
+      for (let i = 0; i < frameCount; i++) data[i] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      // Narrow bandpass centred at 1200 Hz — paper-fibre rustle range, no thud
+      const bp = ctx.createBiquadFilter();
+      bp.type = 'bandpass'; bp.frequency.value = 1200; bp.Q.value = 1.8;
+      const gain = ctx.createGain();
+      const t = ctx.currentTime;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.07, t + 0.006); // feather-light
+      gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+      src.connect(bp); bp.connect(gain); gain.connect(ctx.destination);
+      src.start();
+    } catch (_) {}
+  }
+
+  function startAmbient() {
+    if (_ambientStarted) return;
+    _ambientStarted = true;
+    try {
+      const ctx        = new (window.AudioContext || window.webkitAudioContext)();
+      const seconds    = 30;
+      const buf        = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
+      const data       = buf.getChannelData(0);
+      let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+      for (let i = 0; i < data.length; i++) {
+        const w = Math.random() * 2 - 1;
+        b0 = 0.99886*b0 + w*0.0555179; b1 = 0.99332*b1 + w*0.0750759;
+        b2 = 0.96900*b2 + w*0.1538520; b3 = 0.86650*b3 + w*0.3104856;
+        b4 = 0.55000*b4 + w*0.5329522; b5 = -0.7616*b5 - w*0.0168980;
+        data[i] = (b0+b1+b2+b3+b4+b5+b6 + w*0.5362) / 9;
+        b6 = w * 0.115926;
+      }
+      const src  = ctx.createBufferSource();
+      src.buffer = buf; src.loop = true;
+      const lpf  = ctx.createBiquadFilter();
+      lpf.type            = 'lowpass';
+      lpf.frequency.value = 160;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 4);
+      src.connect(lpf); lpf.connect(gain); gain.connect(ctx.destination);
+      src.start();
+    } catch (_) {}
+  }
+
   function next(fromLock = false) {
     const onCover = isMobile() ? curSlide === 0 : curSpread === 0;
     if (onCover && !fromLock && !hasUnlockedStory()) return;
     stopCurrentAudio();
     navDirection = 'forward';
     if (isMobile()) {
-      if (curSlide < slides.length - 1) { curSlide++; render(); }
+      if (curSlide < slides.length - 1) { playPageTurnSound(); startAmbient(); curSlide++; render(); }
     } else {
       if (curSpread < spreads.length - 1) {
+        playPageTurnSound(); startAmbient();
         curSpread++;
         curSlide = spreadToFirstSlide(curSpread);
         render();
@@ -486,9 +525,10 @@
     stopCurrentAudio();
     navDirection = 'backward';
     if (isMobile()) {
-      if (curSlide > 0) { curSlide--; render(); }
+      if (curSlide > 0) { playPageTurnSound(); startAmbient(); curSlide--; render(); }
     } else {
       if (curSpread > 0) {
+        playPageTurnSound(); startAmbient();
         curSpread--;
         curSlide = spreadToFirstSlide(curSpread);
         render();
@@ -502,6 +542,7 @@
     if (slideIndex === currentIdx) return;
     stopCurrentAudio();
     navDirection = slideIndex > currentIdx ? 'forward' : 'backward';
+    playPageTurnSound(); startAmbient();
     if (isMobile()) {
       curSlide = slideIndex;
     } else {
@@ -986,15 +1027,17 @@
   function showBookmarkPrompt(idx) {
     const container = document.querySelector('.toast-container');
     if (!container) return;
+    const DURATION = 8000;
     const toast = mk('div', { class: 'toast bookmark-prompt', role: 'alert' });
     toast.innerHTML = `
       <span>🔖</span>
       <span>Continue from page&nbsp;<strong>${idx}</strong>?</span>
       <button class="bookmark-go">Go&nbsp;→</button>
       <button class="bookmark-dismiss" aria-label="Dismiss">✕</button>
+      <div class="toast-progress" style="animation-duration:${DURATION}ms"></div>
     `;
     container.appendChild(toast);
-    const timer = setTimeout(() => toast.remove(), 8000);
+    const timer = setTimeout(() => toast.remove(), DURATION);
     toast.querySelector('.bookmark-go').addEventListener('click', () => {
       clearTimeout(timer); toast.remove(); goTo(idx);
     });
@@ -1584,12 +1627,14 @@
   box-shadow: 0 4px 20px rgba(0,0,0,.55), 0 0 16px rgba(201,160,48,.20);
   transition: transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s ease;
   backdrop-filter: blur(8px);
+  animation: fabPopIn 0.4s cubic-bezier(.34,1.56,.64,1) 0.3s both;
 }
 #nav-toggle:hover { transform: scale(1.1) rotate(-5deg); border-color: rgba(201,160,48,.85); }
-#nav-toggle:active { transform: scale(.94); }
+#nav-toggle:active { transform: scale(.94); transition-duration: .08s !important; }
 
 /* ── Corner bracket hint (top-left) ── */
 .corner-hint-br {
+  display: none;
   position: fixed;
   top: 7px;
   left: 12px;
@@ -1744,9 +1789,9 @@
 
 @media (max-width:480px) {
   #nav-panel { width:290px; }
-  #nav-toggle { bottom:max(16px, calc(16px + env(safe-area-inset-bottom, 0px))); right:14px; width:46px; height:46px; font-size:1.2rem; }
-  .corner-hint-br { bottom:max(10px, calc(10px + env(safe-area-inset-bottom, 0px))); right:8px; width:56px; height:56px; }
-  .corner-hint-br::before { width:20px; height:20px; }
+  #nav-toggle { top:7px; left:14px; width:46px; height:46px; font-size:1.2rem; }
+  .corner-hint-br { display:none; }
+  #prev-page, #next-page { width:32px; height:52px; font-size:1.1rem; }
 }
     `;
     document.head.appendChild(s);
