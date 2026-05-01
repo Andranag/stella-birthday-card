@@ -7,7 +7,6 @@
   'use strict';
 
   const BOOKMARK_KEY    = 'stella_bday_bookmark';
-  const TIPS_KEY        = 'stella_bday_tips_v2';
   const UNLOCKED_KEY    = 'stella_bday_unlocked';
 
   /* ── State ─────────────────────────────────────────────────── */
@@ -85,17 +84,6 @@
     return current;
   }
 
-  // Utility: Check if element is in viewport
-  function isInViewport(element) {
-    const rect = element.getBoundingClientRect();
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-  }
-
   // Utility: Debounce function for performance
   function debounce(func, wait) {
     let timeout;
@@ -106,18 +94,6 @@
       };
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
-    };
-  }
-
-  // Utility: Throttle function for performance
-  function throttle(func, limit) {
-    let inThrottle;
-    return function(...args) {
-      if (!inThrottle) {
-        func.apply(this, args);
-        inThrottle = true;
-        setTimeout(() => inThrottle = false, limit);
-      }
     };
   }
 
@@ -143,7 +119,6 @@
     setupToastContainer();
     setupSwipeHints();
     setupBookmark();
-    setupTipsBar();
     setupHelpFab();
 
     if (!hasUnlockedStory()) document.body.classList.add('story-locked');
@@ -1136,12 +1111,6 @@
     if (saved !== null) setTimeout(() => showBookmarkPrompt(saved), 1200);
   }
 
-  function setupTipsBar() {
-    /* Tips bar is always visible — no dismiss button */
-    document.getElementById('discovery-arrows')?.classList.add('dismissed');
-    setTimeout(() => document.getElementById('discovery-arrows')?.remove(), 400);
-  }
-
   function setupHelpFab() {
     document.getElementById('help-fab')?.addEventListener('click', toggleHelpModal);
   }
@@ -1211,13 +1180,8 @@
       toggleNavPanel();
       // Remove attention animation after first interaction
       toggle.classList.remove('has-attention');
-      document.querySelector('.corner-hint-br')?.classList.add('hidden');
     });
     document.body.appendChild(toggle);
-
-    // Add corner bracket hint in top-left
-    const cornerHint = mk('div', { class: 'corner-hint-br' });
-    document.body.appendChild(cornerHint);
 
     // Add first-time attention animation
     const hasVisited = localStorage.getItem('storybook-visited');
@@ -1349,7 +1313,6 @@
     }
     const icon = document.querySelector('#nav-toggle .nav-toggle-icon');
     if (icon) icon.textContent = '✕';
-    document.querySelector('.corner-hint-br')?.classList.add('hidden');
     syncNavPanel();
     
     // Focus first interactive element in panel
@@ -1539,7 +1502,6 @@
           if (document.body.classList.contains('story-locked')) break;
           toggleNavPanel();
           document.getElementById('nav-toggle')?.classList.remove('has-attention');
-          document.querySelector('.corner-hint-br')?.classList.add('hidden');
           break;
         case 'Home': e.preventDefault(); goTo(0); break;
         case 'End':
@@ -1752,48 +1714,6 @@
 #nav-toggle:hover { transform: scale(1.1) rotate(-5deg); border-color: rgba(201,160,48,.85); }
 #nav-toggle:active { transform: scale(.94); transition-duration: .08s !important; }
 
-/* ── Corner bracket hint (top-left) ── */
-.corner-hint-br {
-  display: none;
-  position: fixed;
-  top: 7px;
-  left: 12px;
-  width: 64px;
-  height: 64px;
-  pointer-events: none;
-  z-index: 1099;
-  opacity: 0.55;
-}
-.corner-hint-br::before,
-.corner-hint-br::after {
-  content: '';
-  position: absolute;
-  border-color: rgba(201,160,48,0.45);
-  border-style: solid;
-  transition: opacity 0.3s ease;
-}
-.corner-hint-br::before {
-  top: 0;
-  left: 0;
-  width: 24px;
-  height: 24px;
-  border-width: 2px 0 0 2px;
-  border-top-left-radius: 4px;
-}
-.corner-hint-br::after {
-  bottom: 0;
-  right: 0;
-  width: 8px;
-  height: 8px;
-  border-width: 0 2px 2px 0;
-  border-bottom-right-radius: 2px;
-  opacity: 0.3;
-}
-.corner-hint-br.hidden {
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
 /* ── Nav toggle first-time attention ring ── */
 #nav-toggle.has-attention {
   animation: navAttention 2s ease-in-out 3;
@@ -1898,7 +1818,6 @@
 @media (max-width:480px) {
   #nav-panel { width:290px; }
   #nav-toggle { top:7px; left:14px; width:46px; height:46px; font-size:1.2rem; }
-  .corner-hint-br { display:none; }
   #prev-page, #next-page { width:32px; height:52px; font-size:1.1rem; }
 }
     `;
