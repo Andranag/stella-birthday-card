@@ -1,0 +1,2181 @@
+=== RHYTHM AUDIT REPORT ===
+
+Total slides: 526
+Issues found: 560
+
+--- HIGH PRIORITY (Fix First) ---
+
+[Slide 4] Slide 4 may have orphaned text outside tags
+  → "And then & the End © Andreas Anagnostou 2026. All rights res..."
+
+[Slide 8] Slide 8 may have orphaned text outside tags
+  → "Content &#x1F4DC; ..."
+
+[Slide 11] Slide 11 may have orphaned text outside tags
+  → "🎵 Congratulations...
+          
+          👏👏👏👏👏👏👏�..."
+
+[Slide 13] Slide 13 may have orphaned text outside tags
+  → "🎵 ...trip around the sun. 🌞  🎵 ...trip around the sun. 🌞..."
+
+[Slide 14] Slide 14 may have orphaned text outside tags
+  → "Honestly? — that
+          
+            🔊alone — is somet..."
+
+[Slide 20] Slide 20 may have orphaned text outside tags
+  → "you
+          basically... "hype-manned" me —..."
+
+[Slide 23] Slide 23 may have orphaned text outside tags
+  → "If... I recall right — you said: 🎵 "Let me inon your world...."
+
+[Slide 24] Slide 24 may have orphaned text outside tags
+  → "To which — I think it's safe to say: 🎵 "Tomayto, tomahto" �..."
+
+[Slide 25] Slide 25 may have orphaned text outside tags
+  → "I
+          assume... you've heard before the quote: 🗣️ "Y..."
+
+[Slide 26] Slide 26 may have orphaned text outside tags
+  → "Allow
+          me then — to ask you something in return: �..."
+
+[Slide 27] Slide 27 may have orphaned text outside tags
+  → "If
+          you do — 🎵 take my hand. 🫴🏻..."
+
+[Slide 30] Slide 30 may have orphaned text outside tags
+  → "What
+          comes next — might be a little 🎵 good, bad ..."
+
+[Slide 31] Slide 31 may have orphaned text outside tags
+  → "Either way — this is my world. 🎵 Or rather — "One Piece" of..."
+
+[Slide 32] Slide 32 may have orphaned text outside tags
+  → "And this?
+          
+            🎵 This is me — inviting ..."
+
+[Slide 33] Slide 33 may have orphaned text outside tags
+  → "I
+          
+            🗣️ may... Ahem — I may not... 🗣..."
+
+[Slide 34] Slide 34 may have orphaned text outside tags
+  → "...always... be able to 🗣️ change. But that does not mean I..."
+
+[Slide 35] Slide 35 may have orphaned text outside tags
+  → "If... only you'd... 🎵 let me share this world of mine with ..."
+
+[Slide 36] Slide 36 may have orphaned text outside tags
+  → "Had... you done that — 🎵 I would've changed your life. And ..."
+
+[Slide 37] Slide 37 may have orphaned text outside tags
+  → "For honestly — that's the 🔊 least I could do...."
+
+[Slide 38] Slide 38 may have orphaned text outside tags
+  → "I cannot
+          
+            🗣️ thank you enough for y..."
+
+[Slide 39] Slide 39 may have orphaned text outside tags
+  → "...thank you for
+          
+            🎵 the way you "ro..."
+
+[Slide 40] Slide 40 may have orphaned text outside tags
+  → "Got that? His name is Dwayne Johnson — 🔊 a.k.a. the "Rock."..."
+
+[Slide 41] Slide 41 may have orphaned text outside tags
+  → "Now — before you start the 🔊 sighing — 😮‍💨 If you remembe..."
+
+[Slide 42] Slide 42 may have orphaned text outside tags
+  → "or
+          facepalming... yourself... 🤦‍♀️..."
+
+[Slide 43] Slide 43 may have orphaned text outside tags
+  → "...fair
+          warning — for my jokes might make you go ..."
+
+[Slide 44] Slide 44 may have orphaned text outside tags
+  → "In fact — it's possible you say: 🗣️ "Just leave me alone." ..."
+
+[Slide 45] Slide 45 may have orphaned text outside tags
+  → "To which — my response is: 🎵 Well, alright...."
+
+[Slide 50] Slide 50 may have orphaned text outside tags
+  → "Although — whether I make them — is not... 🔊 "up" to you. M..."
+
+[Slide 51] Slide 51 may have orphaned text outside tags
+  → "That
+          said — you'll just have to... 🔊 "bear" with..."
+
+[Slide 61] Slide 61 may have orphaned text outside tags
+  → "...or to
+          
+            🎵 touch your... face. 🎵 ..."
+
+[Slide 62] Slide 62 may have orphaned text outside tags
+  → "Maybe... steal a 🎵 kiss? The order is not relevant...."
+
+[Slide 63] Slide 63 may have orphaned text outside tags
+  → "Or
+          even... have you tease me......"
+
+[Slide 64] Slide 64 may have orphaned text outside tags
+  → "...and
+          then... 🔊 laugh about it...."
+
+[Slide 65] Slide 65 may have orphaned text outside tags
+  → "Would
+          I like it? — 🗣️ it does not matter. Most c..."
+
+[Slide 66] Slide 66 may have orphaned text outside tags
+  → "If
+          only you'd
+          
+            🎵 given m..."
+
+[Slide 67] Slide 67 may have orphaned text outside tags
+  → "What
+          would've changed? — you may ask...."
+
+[Slide 68] Slide 68 may have orphaned text outside tags
+  → "Nothing... or anything really. Newsflash:
+          I guess..."
+
+[Slide 69] Slide 69 may have orphaned text outside tags
+  → "Honestly? I cannot answer that...."
+
+[Slide 70] Slide 70 may have orphaned text outside tags
+  → "Whether you... believe it......"
+
+[Slide 71] Slide 71 may have orphaned text outside tags
+  → "...or not —
+          
+            🗣️ it does not matter...."
+
+[Slide 72] Slide 72 may have orphaned text outside tags
+  → "Anyhow... brace yourself......"
+
+[Slide 73] Slide 73 may have orphaned text outside tags
+  → "For... 🗣️ winter is coming. 🥶 ☢️ Proceed at your own risk...."
+
+[Slide 75] Slide 75 may have orphaned text outside tags
+  → "🗣️ But the good news is:👍 Guess who's got two thumbs and....."
+
+[Slide 77] Slide 77 may have orphaned text outside tags
+  → "...on which
+          day... 🎵 they were not alone......"
+
+[Slide 78] Slide 78 may have orphaned text outside tags
+  → "...they
+          looked... as if
+          one day — they..."
+
+[Slide 79] Slide 79 may have orphaned text outside tags
+  → "And all
+          that... took place around a... 🎵 quarter..."
+
+[Slide 80] Slide 80 may have orphaned text outside tags
+  → "💡 Hint: It's someone who... 🎵 
+          when they smile ..."
+
+[Slide 81] Slide 81 may have orphaned text outside tags
+  → "And by
+          world... I mean... 🎵 me — hee hee. 🫠 All..."
+
+[Slide 82] Slide 82 may have orphaned text outside tags
+  → "🔊 You guessed it! 🔊 You guessed it! That someone is you...."
+
+[Slide 84] Slide 84 may have orphaned text outside tags
+  → "Out
+          of all the days
+          
+            🔊 i..."
+
+[Slide 85] Slide 85 may have orphaned text outside tags
+  → "For
+          today... is your... 🔊 birthday. 🎊 Or was — ..."
+
+[Slide 86] Slide 86 may have orphaned text outside tags
+  → "And
+          you deserve... 🎵 nothing... Just kidding...."
+
+[Slide 87] Slide 87 may have orphaned text outside tags
+  → "...less
+          than... 🎵 simply the best...."
+
+[Slide 90] Slide 90 may have orphaned text outside tags
+  → "All
+          jokes aside — 🗣️ all I know is:
+           ..."
+
+[Slide 91] Slide 91 may have orphaned text outside tags
+  → "😝 Fun fact: 🤓 In the movie Hercules says this very thing t..."
+
+[Slide 93] Slide 93 may have orphaned text outside tags
+  → "I'd
+          say this... to you every day...."
+
+[Slide 94] Slide 94 may have orphaned text outside tags
+  → "🔊  💯 + 1... times more if i had to... 🔊  💯 + 1......"
+
+[Slide 96] Slide 96 may have orphaned text outside tags
+  → "Or as
+          many as it would've taken. Moving on......"
+
+[Slide 97] Slide 97 may have orphaned text outside tags
+  → "I
+          might just have an idea... 💡..."
+
+[Slide 98] Slide 98 may have orphaned text outside tags
+  → "...of
+           what makes... ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩ..."
+
+[Slide 99] Slide 99 may have orphaned text outside tags
+  → "⠀⠀⠀⠀⠀.　　　　　　　　　　⠀⠀⠀✦ ⠀ ⠀　　　　　　　　　　　　　　⠀⠀⠀⠀⠀* ⠀⠀⠀.　　　　　　　　　　...."
+
+[Slide 100] Slide 100 may have orphaned text outside tags
+  → "But
+          
+            🎵 girl you know how much you l..."
+
+[Slide 101] Slide 101 may have orphaned text outside tags
+  → "🎵 ...losing yourself... in a good story. 📓 🎵 ...losing yo..."
+
+[Slide 102] Slide 102 may have orphaned text outside tags
+  → "And since... I know that, too...."
+
+[Slide 104] Slide 104 may have orphaned text outside tags
+  → "...one. For your eyes only. 👀 Just kidding.
+          You ..."
+
+[Slide 105] Slide 105 may have orphaned text outside tags
+  → "Although — something tells me — 🤔..."
+
+[Slide 106] Slide 106 may have orphaned text outside tags
+  → "this
+          particular toy... ahem — I meant... 🔊 story..."
+
+[Slide 107] Slide 107 may have orphaned text outside tags
+  → "...will be
+          quite... 🔊 different......"
+
+[Slide 108] Slide 108 may have orphaned text outside tags
+  → "...from the
+          ones... you're used to...."
+
+[Slide 109] Slide 109 may have orphaned text outside tags
+  → "For this
+          is the beginning... of a love story betw..."
+
+[Slide 110] Slide 110 may have orphaned text outside tags
+  → "🔊 You guessed it! 🔊 You guessed it! You and me. 👩‍❤️‍💋‍�..."
+
+[Slide 111] Slide 111 may have orphaned text outside tags
+  → "I'd be
+          willing to...  🎵 wager just about anythin..."
+
+[Slide 112] Slide 112 may have orphaned text outside tags
+  → "...that by
+          the... 🎵 end of it... Newsflash:Our f..."
+
+[Slide 113] Slide 113 may have orphaned text outside tags
+  → "...you'll be... head over... 🔊 "heels" for me. 👠..."
+
+[Slide 114] Slide 114 may have orphaned text outside tags
+  → "For in... ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ 🎵 case you didn't..."
+
+[Slide 115] Slide 115 may have orphaned text outside tags
+  → "And if... I were to... 🔊 guess......"
+
+[Slide 116] Slide 116 may have orphaned text outside tags
+  → "🎵 ...what you'd say... to this — it'd probably be something..."
+
+[Slide 119] Slide 119 may have orphaned text outside tags
+  → "Newsflash: I guess that's out of the picture now...."
+
+[Slide 120] Slide 120 may have orphaned text outside tags
+  → "To which... my answer would be: 🗣️ "It's gonna be LEGEN... ..."
+
+[Slide 122] Slide 122 may have orphaned text outside tags
+  → "In case you
+          haven't already... &#x1F319; find you..."
+
+[Slide 123] Slide 123 may have orphaned text outside tags
+  → "...maybe even...
+        
+          🔊 pour... yourself a ..."
+
+[Slide 124] Slide 124 may have orphaned text outside tags
+  → "With
+          that... 🎵 enjoy. FYI:
+          There's an..."
+
+[Slide 125] Slide 125 may have orphaned text outside tags
+  → "🗣️ Once upon a time... there was a girl. 🗣️ Once upon a ti..."
+
+[Slide 126] Slide 126 may have orphaned text outside tags
+  → "🎵 Let me tell you 'bout this girl I know. 🎵 Let me tell yo..."
+
+[Slide 128] Slide 128 may have orphaned text outside tags
+  → "She had this kind of
+          presence... &#x2728; that ma..."
+
+[Slide 129] Slide 129 may have orphaned text outside tags
+  → "She was... hands down — the most... 🎵 pretty woman ever wal..."
+
+[Slide 130] Slide 130 may have orphaned text outside tags
+  → "And as it
+          turned out... she had a soft spot for a..."
+
+[Slide 131] Slide 131 may have orphaned text outside tags
+  → "Which... brings us to him...."
+
+[Slide 132] Slide 132 may have orphaned text outside tags
+  → "For somewhere
+          not that far away... there was a bo..."
+
+[Slide 133] Slide 133 may have orphaned text outside tags
+  → "He was a
+         charming, confident,
+          and ridic..."
+
+[Slide 134] Slide 134 may have orphaned text outside tags
+  → "But beyond those
+          traits of his... he had some
+  ..."
+
+[Slide 135] Slide 135 may have orphaned text outside tags
+  → "He had a... &#x1F54A;&#xFE0F; kind soul...."
+
+[Slide 136] Slide 136 may have orphaned text outside tags
+  → "A heart of... &#x1F49B; gold...."
+
+[Slide 137] Slide 137 may have orphaned text outside tags
+  → "Warm eyes that... put people at ease. 😇 Without even trying..."
+
+[Slide 138] Slide 138 may have orphaned text outside tags
+  → "And the kind of
+          smile... you cannot really forget..."
+
+[Slide 139] Slide 139 may have orphaned text outside tags
+  → "Unironically... he had already swept her off her... 🔊 feet...."
+
+[Slide 140] Slide 140 may have orphaned text outside tags
+  → "Without
+          even... realizing it. 😇..."
+
+[Slide 141] Slide 141 may have orphaned text outside tags
+  → "For... 🗣️ she may have noticed things...."
+
+[Slide 142] Slide 142 may have orphaned text outside tags
+  → "🎵 
+          For there was something in him
+          tha..."
+
+[Slide 143] Slide 143 may have orphaned text outside tags
+  → "She'd been... captivated by... 🎵 him having biceps to spare..."
+
+[Slide 144] Slide 144 may have orphaned text outside tags
+  → "And she
+          was... very fond of men whose... 🎵 every..."
+
+[Slide 145] Slide 145 may have orphaned text outside tags
+  → "Not to
+          mention... his movement had such... 🎵 cha..."
+
+[Slide 146] Slide 146 may have orphaned text outside tags
+  → "...and
+          such... 🎵 finesse...."
+
+[Slide 147] Slide 147 may have orphaned text outside tags
+  → "She'd been... overwhelmed by how much... 🎵 he liked to move..."
+
+[Slide 148] Slide 148 may have orphaned text outside tags
+  → "Or by
+          how... he enjoyed... 🎵 singing...."
+
+[Slide 149] Slide 149 may have orphaned text outside tags
+  → "And... the way he tapped his... 🎵 "happy feet?" 👣..."
+
+[Slide 150] Slide 150 may have orphaned text outside tags
+  → "It had... certain qualities to it. 🎵 Jubilant was one of th..."
+
+[Slide 151] Slide 151 may have orphaned text outside tags
+  → "And the
+          precision? 🎵 So rhythmical...."
+
+[Slide 152] Slide 152 may have orphaned text outside tags
+  → "For he was
+          inspired by... none other than
+      ..."
+
+[Slide 153] Slide 153 may have orphaned text outside tags
+  → "Last but
+          not least... his dance moves were... 🎵 ..."
+
+[Slide 154] Slide 154 may have orphaned text outside tags
+  → "Interesting fact: he plays the... 🎵 piano. 🎹 Which she did..."
+
+[Slide 155] Slide 155 may have orphaned text outside tags
+  → "With such...
+          
+            🎵 depth — no less... ..."
+
+[Slide 156] Slide 156 may have orphaned text outside tags
+  → "Those
+          were... all the things that... 🔊 blew her ..."
+
+[Slide 157] Slide 157 may have orphaned text outside tags
+  → "Unironically... &#x1F50D; he got her curious...."
+
+[Slide 158] Slide 158 may have orphaned text outside tags
+  → "Curious enough
+          at least... to take off her... 🔊 ..."
+
+[Slide 159] Slide 159 may have orphaned text outside tags
+  → "So she looked
+          for... a way for them to connect — ..."
+
+[Slide 160] Slide 160 may have orphaned text outside tags
+  → "And after...
+          
+            🎵 searching far and w..."
+
+[Slide 162] Slide 162 may have orphaned text outside tags
+  → "Or more accurately,
+          she'd tracked his Instagram....."
+
+[Slide 164] Slide 164 may have orphaned text outside tags
+  → "That remains —
+          even to this day... one of life's ..."
+
+[Slide 165] Slide 165 may have orphaned text outside tags
+  → "But what matters... is — she did...."
+
+[Slide 166] Slide 166 may have orphaned text outside tags
+  → "Eventually... &#x1F440; she drew his attention...."
+
+[Slide 167] Slide 167 may have orphaned text outside tags
+  → "His first message? Yeah — not his... 🔊 brightest moment...."
+
+[Slide 168] Slide 168 may have orphaned text outside tags
+  → "In fact... it did not go well —
+          for it got her......"
+
+[Slide 169] Slide 169 may have orphaned text outside tags
+  → "Safe to assume... her mind went
+          something like: �..."
+
+[Slide 170] Slide 170 may have orphaned text outside tags
+  → "However... here's the thing. 🎵 He'd be lyingif he said that..."
+
+[Slide 171] Slide 171 may have orphaned text outside tags
+  → "...was not charmed by her. 🔊 For he was.He really was...."
+
+[Slide 172] Slide 172 may have orphaned text outside tags
+  → "And the idea... that someone as... 🎵 beautiful as she......"
+
+[Slide 173] Slide 173 may have orphaned text outside tags
+  → "...could even consider him?
+          That alone was... eno..."
+
+[Slide 174] Slide 174 may have orphaned text outside tags
+  → "For she was not... just pretty — she was... 🎵 different...."
+
+[Slide 175] Slide 175 may have orphaned text outside tags
+  → "In a way
+          he... 🔊 could not explain. But he had i..."
+
+[Slide 176] Slide 176 may have orphaned text outside tags
+  → "He then
+          noticed something... &#x1F440; She was a ..."
+
+[Slide 177] Slide 177 may have orphaned text outside tags
+  → "His immediate impression? Yeah — a real... 🎵 
+          da..."
+
+[Slide 178] Slide 178 may have orphaned text outside tags
+  → "Her being
+          a Queen and all... 👑 got him thinking:..."
+
+[Slide 179] Slide 179 may have orphaned text outside tags
+  → "It was in that moment... it'd become loud and clear
+       ..."
+
+[Slide 180] Slide 180 may have orphaned text outside tags
+  → "Back then
+          however... 🎵 
+          what could he..."
+
+[Slide 181] Slide 181 may have orphaned text outside tags
+  → "For as...
+          
+            🎵 Notre-Dame was his wit..."
+
+[Slide 182] Slide 182 may have orphaned text outside tags
+  → "For his
+          life... had first
+          to be turned..."
+
+[Slide 183] Slide 183 may have orphaned text outside tags
+  → "All jokes aside... his whole world had to be turned... 🎵 up..."
+
+[Slide 184] Slide 184 may have orphaned text outside tags
+  → "If only there
+          was someone who... could sprinkle
+..."
+
+[Slide 185] Slide 185 may have orphaned text outside tags
+  → "For only
+            by some...
+          
+            🎵..."
+
+[Slide 187] Slide 187 may have orphaned text outside tags
+  → "But little did they
+          know... how destiny still hel..."
+
+[Slide 188] Slide 188 may have orphaned text outside tags
+  → "And as for their story? 🎵 Far from finished. 🤫 Newsflash:..."
+
+[Slide 189] Slide 189 may have orphaned text outside tags
+  → "Several years
+          went by... &#x23F3; and in the mean..."
+
+[Slide 190] Slide 190 may have orphaned text outside tags
+  → "Life was not
+          exactly fair... to either of them. �..."
+
+[Slide 191] Slide 191 may have orphaned text outside tags
+  → "For it
+          did not... &#x2696;&#xFE0F; treat them the..."
+
+[Slide 192] Slide 192 may have orphaned text outside tags
+  → "They had
+          to go through... &#x2696;&#xFE0F; some l..."
+
+[Slide 193] Slide 193 may have orphaned text outside tags
+  → "...even
+          heartbreaking... experiences neither
+   ..."
+
+[Slide 194] Slide 194 may have orphaned text outside tags
+  → "One of them... &#x1F622; might've had it worse
+          th..."
+
+[Slide 195] Slide 195 may have orphaned text outside tags
+  → "Nonetheless... both came out
+          stronger. 🎵 Both ca..."
+
+[Slide 196] Slide 196 may have orphaned text outside tags
+  → "There might've been
+          times... &#x23F3; they hoped ..."
+
+[Slide 197] Slide 197 may have orphaned text outside tags
+  → "...and magically... make all their pain
+          disappear..."
+
+[Slide 198] Slide 198 may have orphaned text outside tags
+  → "Perhaps
+          they wished... they hadn't cried
+       ..."
+
+[Slide 199] Slide 199 may have orphaned text outside tags
+  → "Or maybe
+          even... they'd have cried
+          mor..."
+
+[Slide 200] Slide 200 may have orphaned text outside tags
+  → "Still... they'd been taught......"
+
+[Slide 201] Slide 201 may have orphaned text outside tags
+  → "...some not
+          so pretty but... &#x1F331; valuable l..."
+
+[Slide 202] Slide 202 may have orphaned text outside tags
+  → "Such as
+          the world is not... &#x1F30D; a place all..."
+
+[Slide 203] Slide 203 may have orphaned text outside tags
+  → "In times of
+          despair... they might've thought:
+  ..."
+
+[Slide 204] Slide 204 may have orphaned text outside tags
+  → "Then they'd
+          remind themselves... they would not b..."
+
+[Slide 205] Slide 205 may have orphaned text outside tags
+  → "Had they
+          not... &#x1F525; risen above it all...."
+
+[Slide 206] Slide 206 may have orphaned text outside tags
+  → "Or had they not
+          reinvented themselves... &#x1F331..."
+
+[Slide 207] Slide 207 may have orphaned text outside tags
+  → "Much like a
+          phoenix — rising from
+          its ..."
+
+[Slide 208] Slide 208 may have orphaned text outside tags
+  → "🗣️ Until one day... which
+          at first glance... 🗣️..."
+
+[Slide 209] Slide 209 may have orphaned text outside tags
+  → "...seemed
+          quite... 🎵 the ordinary. Unlike any ot..."
+
+[Slide 210] Slide 210 may have orphaned text outside tags
+  → "The
+          girl was... &#x1F4D6; possibly studying somew..."
+
+[Slide 211] Slide 211 may have orphaned text outside tags
+  → "Or literally
+          anywhere else... &#x1F6B6; minding
+..."
+
+[Slide 212] Slide 212 may have orphaned text outside tags
+  → "While
+          the boy... was most likely... 🔊 "home alon..."
+
+[Slide 213] Slide 213 may have orphaned text outside tags
+  → "Doing what he 
+          thought was best for him... to nav..."
+
+[Slide 214] Slide 214 may have orphaned text outside tags
+  → "Unexpectedly... he started
+          having this... 🔊 "itc..."
+
+[Slide 215] Slide 215 may have orphaned text outside tags
+  → "For
+          lately... &#x1F4D6; she'd been watching his e..."
+
+[Slide 216] Slide 216 may have orphaned text outside tags
+  → "She'd been... browsing his Instagram. At least they had that..."
+
+[Slide 217] Slide 217 may have orphaned text outside tags
+  → "Quite possibly... out of... 🗣️ boredom. 🥱..."
+
+[Slide 218] Slide 218 may have orphaned text outside tags
+  → "And then the most...
+          
+            🎵 strange thi..."
+
+[Slide 219] Slide 219 may have orphaned text outside tags
+  → "He'd happily
+          lost this round. For the winning
+  ..."
+
+[Slide 220] Slide 220 may have orphaned text outside tags
+  → "He liked to...
+          imagine what her... reaction upon ..."
+
+[Slide 221] Slide 221 may have orphaned text outside tags
+  → "Although... if he were being honest —
+          her face wa..."
+
+[Slide 222] Slide 222 may have orphaned text outside tags
+  → "He knew
+          better.... but honestly? 🗣️ Who gives a ..."
+
+[Slide 223] Slide 223 may have orphaned text outside tags
+  → "🎵 Against all odds...
+          
+          she actually w..."
+
+[Slide 224] Slide 224 may have orphaned text outside tags
+  → "Which could
+          only mean...
+          
+           ..."
+
+[Slide 225] Slide 225 may have orphaned text outside tags
+  → "Or she had...
+          
+            🎵 nothing... better ..."
+
+[Slide 226] Slide 226 may have orphaned text outside tags
+  → "Without
+          even realizing it... her direct and
+    ..."
+
+[Slide 227] Slide 227 may have orphaned text outside tags
+  → "For he'd overcome
+          any and... &#x1F4AA; all of his..."
+
+[Slide 228] Slide 228 may have orphaned text outside tags
+  → "And just like that —
+          he was beaming with...
+    ..."
+
+[Slide 230] Slide 230 may have orphaned text outside tags
+  → "For his
+          leap of faith...
+        
+          🗣️..."
+
+[Slide 231] Slide 231 may have orphaned text outside tags
+  → "It was not
+          that long ago he...
+          
+     ..."
+
+[Slide 232] Slide 232 may have orphaned text outside tags
+  → "...the
+          dating world. Which raises the question: �..."
+
+[Slide 233] Slide 233 may have orphaned text outside tags
+  → "On the
+          day of their date... &#x1F319; he went to ..."
+
+[Slide 234] Slide 234 may have orphaned text outside tags
+  → "...and... &#x1F488; got himself a haircut...."
+
+[Slide 235] Slide 235 may have orphaned text outside tags
+  → "For he did
+          not want... to look like a... 🔊 "pira..."
+
+[Slide 236] Slide 236 may have orphaned text outside tags
+  → "Around
+          lunchtime... he decided
+          to give..."
+
+[Slide 237] Slide 237 may have orphaned text outside tags
+  → "What
+          they... talked about... 🗣️ did not matter...."
+
+[Slide 238] Slide 238 may have orphaned text outside tags
+  → "That's
+          not true — for... 🎵 he knew that he wentp..."
+
+[Slide 239] Slide 239 may have orphaned text outside tags
+  → "...for the very first time. &#x23F3; ?? No matter how much t..."
+
+[Slide 240] Slide 240 may have orphaned text outside tags
+  → "To which
+          her reaction was:
+          
+         ..."
+
+[Slide 241] Slide 241 may have orphaned text outside tags
+  → "Which was
+          music to his ears. For his inner child ..."
+
+[Slide 242] Slide 242 may have orphaned text outside tags
+  → "What mattered
+          was... &#x1F4DE; that they'd actual..."
+
+[Slide 243] Slide 243 may have orphaned text outside tags
+  → "Or the...
+          
+            🔊 relief... 🔊 relief......"
+
+[Slide 245] Slide 245 may have orphaned text outside tags
+  → "A couple hours
+          before seeing her... &#x1F6C1; he ..."
+
+[Slide 246] Slide 246 may have orphaned text outside tags
+  → "He started...
+          
+            🔊  thinking... 💭 ab..."
+
+[Slide 247] Slide 247 may have orphaned text outside tags
+  → "So there
+          he was... wearing... 🎵 nothing. Except ..."
+
+[Slide 248] Slide 248 may have orphaned text outside tags
+  → "🎵 
+            He was undecided by now.
+            which..."
+
+[Slide 249] Slide 249 may have orphaned text outside tags
+  → "That's when he
+          realized... he had to hurry up —
+..."
+
+[Slide 250] Slide 250 may have orphaned text outside tags
+  → "For he
+          did not... &#x23F3; want her
+          wa..."
+
+[Slide 251] Slide 251 may have orphaned text outside tags
+  → "And after...
+          
+            🗣️ arguing... with hi..."
+
+[Slide 252] Slide 252 may have orphaned text outside tags
+  → "...he'd
+          finally... made up his
+          mind...."
+
+[Slide 253] Slide 253 may have orphaned text outside tags
+  → "He was
+          not going to... &#x1F9E0; let his overthin..."
+
+[Slide 254] Slide 254 may have orphaned text outside tags
+  → "For that
+          would... not get him
+          anywhere..."
+
+[Slide 255] Slide 255 may have orphaned text outside tags
+  → "As soon as he got ready... &#x1F440; he looked at himself in..."
+
+[Slide 256] Slide 256 may have orphaned text outside tags
+  → "...and thought out loud:
+          You got this, buddy! &#x..."
+
+[Slide 257] Slide 257 may have orphaned text outside tags
+  → "For who is there as beautiful as me?Why — only she!..."
+
+[Slide 258] Slide 258 may have orphaned text outside tags
+  → "Then... 🎵 he was on his way......"
+
+[Slide 259] Slide 259 may have orphaned text outside tags
+  → "...while his excitement
+          was... &#x1F4C8; off the ..."
+
+[Slide 260] Slide 260 may have orphaned text outside tags
+  → "🎵 Whistling to himself... the whole way. 🎵 Whistling to hi..."
+
+[Slide 261] Slide 261 may have orphaned text outside tags
+  → "While waiting for the metro... 🚇 he liked to fantasize what..."
+
+[Slide 262] Slide 262 may have orphaned text outside tags
+  → "...her getting ready... &#x1F440; looked like...."
+
+[Slide 263] Slide 263 may have orphaned text outside tags
+  → "Whether
+          she... panicked like he had. Even if just..."
+
+[Slide 264] Slide 264 may have orphaned text outside tags
+  → "Whether she'd... &#x26A0;&#xFE0F; run into any trouble......"
+
+[Slide 265] Slide 265 may have orphaned text outside tags
+  → "...or
+          whether... &#x26A0;&#xFE0F; trouble would r..."
+
+[Slide 266] Slide 266 may have orphaned text outside tags
+  → "...or
+          whether... everything was fine...."
+
+[Slide 267] Slide 267 may have orphaned text outside tags
+  → "What he did not know was that he... &#x1F30D; was about to b..."
+
+[Slide 268] Slide 268 may have orphaned text outside tags
+  → "Ans so was she. Or rather — that's what he convinced himself..."
+
+[Slide 269] Slide 269 may have orphaned text outside tags
+  → "For she had
+          worn... &#x1F9E0; her dark top
+     ..."
+
+[Slide 270] Slide 270 may have orphaned text outside tags
+  → "😝 Fun fact: 🤓  🔊 the skirt was actually made of wool.🧶 N..."
+
+[Slide 271] Slide 271 may have orphaned text outside tags
+  → "She looked
+          
+            🎵 nothing... less than...."
+
+[Slide 272] Slide 272 may have orphaned text outside tags
+  → "Especially...  🎵 with the shape of her body......"
+
+[Slide 273] Slide 273 may have orphaned text outside tags
+  → "...and
+          that... 🔊 bottom of hers? 🍑..."
+
+[Slide 274] Slide 274 may have orphaned text outside tags
+  → "Not to
+          mention... like a total badass...."
+
+[Slide 275] Slide 275 may have orphaned text outside tags
+  → "And she
+          was... very well aware of that...."
+
+[Slide 276] Slide 276 may have orphaned text outside tags
+  → "On his... ride with the metro......"
+
+[Slide 277] Slide 277 may have orphaned text outside tags
+  → "He kept... turning over the same question: 🤔 🎵 How am I go..."
+
+[Slide 278] Slide 278 may have orphaned text outside tags
+  → "Part of him imagined... how it'd be fun —
+          at leas..."
+
+[Slide 279] Slide 279 may have orphaned text outside tags
+  → "🎵 ...to just grab on her waist and... lift her up in the ai..."
+
+[Slide 280] Slide 280 may have orphaned text outside tags
+  → "Inspired
+          by... none other than the iconic... 🎵 D..."
+
+[Slide 281] Slide 281 may have orphaned text outside tags
+  → "It was
+          something he'd always wanted to do...."
+
+[Slide 282] Slide 282 may have orphaned text outside tags
+  → "Especially since... &#x1F483; both of them were dancers...."
+
+[Slide 283] Slide 283 may have orphaned text outside tags
+  → "Which could
+          go... 🗣️ extraordinarily well......"
+
+[Slide 284] Slide 284 may have orphaned text outside tags
+  → "🗣️ ...or catastrophically bad. 🗣️ ...or catastrophically b..."
+
+[Slide 285] Slide 285 may have orphaned text outside tags
+  → "Needless to say... &#x26A0;&#xFE0F; he did not do such thing..."
+
+[Slide 286] Slide 286 may have orphaned text outside tags
+  → "And let's not forget... he already had a history of
+       ..."
+
+[Slide 287] Slide 287 may have orphaned text outside tags
+  → "Be that as it
+          may... he did not want to... 🔊 "pu..."
+
+[Slide 288] Slide 288 may have orphaned text outside tags
+  → "At least not... &#x23F3; this early on — or ever really. He'..."
+
+[Slide 289] Slide 289 may have orphaned text outside tags
+  → "As he got off the...
+          
+            🔊 metro... he..."
+
+[Slide 290] Slide 290 may have orphaned text outside tags
+  → "So
+          naturally... he started walking towards her
+ ..."
+
+[Slide 291] Slide 291 may have orphaned text outside tags
+  → "He was not sure at first whether it was... actually her — bu..."
+
+[Slide 292] Slide 292 may have orphaned text outside tags
+  → "For she had
+          that... &#x1F4AA; unmistakable air of..."
+
+[Slide 293] Slide 293 may have orphaned text outside tags
+  → "The very
+          thing... that drew his... 🔊 "attention...."
+
+[Slide 294] Slide 294 may have orphaned text outside tags
+  → "At least
+          in the 🔊 "first place."  🥇..."
+
+[Slide 295] Slide 295 may have orphaned text outside tags
+  → "Not to
+          mention... how one had to be... 🎵 blind t..."
+
+[Slide 296] Slide 296 may have orphaned text outside tags
+  → "...that
+          absolutely... &#x1F488; stunning red hair..."
+
+[Slide 297] Slide 297 may have orphaned text outside tags
+  → "The moment had finally come... where their eyes met. 🗣️ Jaw..."
+
+[Slide 298] Slide 298 may have orphaned text outside tags
+  → "For at
+          least... ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ �..."
+
+[Slide 299] Slide 299 may have orphaned text outside tags
+  → "😝 Fun fact: 🤓 He recognized her by her boots. Which he'd s..."
+
+[Slide 300] Slide 300 may have orphaned text outside tags
+  → "And they
+          had... that same shade as Jafar's robe...."
+
+[Slide 301] Slide 301 may have orphaned text outside tags
+  → "It must've been something past ten... &#x1F319; and all the ..."
+
+[Slide 302] Slide 302 may have orphaned text outside tags
+  → "Eventually... &#x23F3; they sat themselves at a table...."
+
+[Slide 303] Slide 303 may have orphaned text outside tags
+  → "And there
+          he was... sitting right next to her...."
+
+[Slide 304] Slide 304 may have orphaned text outside tags
+  → "Unable to... take his eyes off her. 👀..."
+
+[Slide 305] Slide 305 may have orphaned text outside tags
+  → "He then thought
+          to himself: &#x1F9E0; This should..."
+
+[Slide 306] Slide 306 may have orphaned text outside tags
+  → "For he
+          was... 🎵 sexy — and he knew it...."
+
+[Slide 307] Slide 307 may have orphaned text outside tags
+  → "For he
+          was... &#x1F4AA; taking care of his body....."
+
+[Slide 308] Slide 308 may have orphaned text outside tags
+  → "...never... &#x1F4AA; skipping a workout...."
+
+[Slide 309] Slide 309 may have orphaned text outside tags
+  → "He'd also... &#x1F4AA; adopted healthier
+          eating h..."
+
+[Slide 310] Slide 310 may have orphaned text outside tags
+  → "And he'd always... &#x1F6CF;&#xFE0F; made sure to get
+     ..."
+
+[Slide 311] Slide 311 may have orphaned text outside tags
+  → "Usually...
+            these three things alone... &#x1F4AA..."
+
+[Slide 312] Slide 312 may have orphaned text outside tags
+  → "Well... it wasn't exactly a... 🔊 "swing in the park" either..."
+
+[Slide 313] Slide 313 may have orphaned text outside tags
+  → "For he had
+          to... 🎵 just relaxand wait for fate....."
+
+[Slide 314] Slide 314 may have orphaned text outside tags
+  → "...while
+          dealing... with the pressure of......"
+
+[Slide 315] Slide 315 may have orphaned text outside tags
+  → "...knowing
+          how... &#x26A0;&#xFE0F; any wrong word..."
+
+[Slide 316] Slide 316 may have orphaned text outside tags
+  → "...could easily...
+          
+             "tip the scales..."
+
+[Slide 317] Slide 317 may have orphaned text outside tags
+  → "Some might look at this and say: &#x1F34B; Piece of cake...."
+
+[Slide 318] Slide 318 may have orphaned text outside tags
+  → "Others even might say: &#x1F34B; Easy peasy lemon squeezy...."
+
+[Slide 319] Slide 319 may have orphaned text outside tags
+  → "But to him?
+            It felt more like balancing... &#x2..."
+
+[Slide 320] Slide 320 may have orphaned text outside tags
+  → "Almost like
+          in the film: Everything Everywhere Al..."
+
+[Slide 321] Slide 321 may have orphaned text outside tags
+  → "For this was
+          his first... &#x1F319; real date in ..."
+
+[Slide 322] Slide 322 may have orphaned text outside tags
+  → "However —
+          any attempt he made to... &#x1F9F1; imp..."
+
+[Slide 323] Slide 323 may have orphaned text outside tags
+  → "As...
+          
+            🗣️ infuriating...
+         ..."
+
+[Slide 324] Slide 324 may have orphaned text outside tags
+  → "...of getting to know her better. So he had to keep his... �..."
+
+[Slide 325] Slide 325 may have orphaned text outside tags
+  → "...and
+          stay... true to his... 🔊 "emotions."..."
+
+[Slide 326] Slide 326 may have orphaned text outside tags
+  → "Admittedly... he got rather... 🔊 "stressed."..."
+
+[Slide 327] Slide 327 may have orphaned text outside tags
+  → "But as...
+        
+          🔊 "disheartening..." as that..."
+
+[Slide 328] Slide 328 may have orphaned text outside tags
+  → "...he managed
+          to... 🔊 "pull himself together."..."
+
+[Slide 329] Slide 329 may have orphaned text outside tags
+  → "It took him sheer... 🔊 "persistence."..."
+
+[Slide 330] Slide 330 may have orphaned text outside tags
+  → "Eventually... he did manage to
+          make her... 🔊 lau..."
+
+[Slide 331] Slide 331 may have orphaned text outside tags
+  → "Her face... &#x1F525; turned all red...."
+
+[Slide 332] Slide 332 may have orphaned text outside tags
+  → "Her eyes? &#x1F4D6; They were darting left and right. As for..."
+
+[Slide 333] Slide 333 may have orphaned text outside tags
+  → "And it was in...
+          
+            🗣️  that...
+    ..."
+
+[Slide 334] Slide 334 may have orphaned text outside tags
+  → "...his heart was...
+          
+            🔊 in the right..."
+
+[Slide 335] Slide 335 may have orphaned text outside tags
+  → "For in that moment... &#x1F48E; he decided... A horrible dec..."
+
+[Slide 336] Slide 336 may have orphaned text outside tags
+  → "...that
+          
+            🎵 nothing... in the entire..."
+
+[Slide 337] Slide 337 may have orphaned text outside tags
+  → "...mattered... more to him than......"
+
+[Slide 338] Slide 338 may have orphaned text outside tags
+  → "...seeing her face light up... &#x1F48E; like that again. Th..."
+
+[Slide 339] Slide 339 may have orphaned text outside tags
+  → "As they
+          talked... she mentioned she danced heels...."
+
+[Slide 340] Slide 340 may have orphaned text outside tags
+  → "He already knew
+          that... but so what? — he was sti..."
+
+[Slide 341] Slide 341 may have orphaned text outside tags
+  → "She mentioned she loved drawing... &#x1F3A8; mostly abstract..."
+
+[Slide 342] Slide 342 may have orphaned text outside tags
+  → "Or that she'd been... in a musical theatre group... 🎵 singi..."
+
+[Slide 343] Slide 343 may have orphaned text outside tags
+  → "Meanwhile... &#x1F4DA; he was thinking:
+          What a ta..."
+
+[Slide 344] Slide 344 may have orphaned text outside tags
+  → "He was
+          wondering... What other talents has she no..."
+
+[Slide 345] Slide 345 may have orphaned text outside tags
+  → "Every so
+          often... &#x1F488; she nervously tucked ..."
+
+[Slide 346] Slide 346 may have orphaned text outside tags
+  → "...making it increasingly difficult... for him to follow the..."
+
+[Slide 347] Slide 347 may have orphaned text outside tags
+  → "Which brought up the question: 🎵 Should I wait until the en..."
+
+[Slide 348] Slide 348 may have orphaned text outside tags
+  → "Or kiss you now? 😗 To which her answer stunned him...."
+
+[Slide 349] Slide 349 may have orphaned text outside tags
+  → "Kissing was not... something she'd normally do on a first da..."
+
+[Slide 350] Slide 350 may have orphaned text outside tags
+  → "When she'd feel
+          ready enough... he'd then make hi..."
+
+[Slide 351] Slide 351 may have orphaned text outside tags
+  → "So he
+          respectfully decided to... 🎵 good things c..."
+
+[Slide 352] Slide 352 may have orphaned text outside tags
+  → "🎵 In the evening when the sun went down... he thought to hi..."
+
+[Slide 353] Slide 353 may have orphaned text outside tags
+  → "While on
+          her side... a thought or two
+          ..."
+
+[Slide 354] Slide 354 may have orphaned text outside tags
+  → "As the new week
+          began... &#x23F3; they went out f..."
+
+[Slide 355] Slide 355 may have orphaned text outside tags
+  → "He went over
+          the... &#x1F3E0; place where she was..."
+
+[Slide 356] Slide 356 may have orphaned text outside tags
+  → "He'd brought her... a little... 🔊  surprise.  🎁 A cookie...."
+
+[Slide 357] Slide 357 may have orphaned text outside tags
+  → "...which he not... effortlessly resisted eating it...."
+
+[Slide 358] Slide 358 may have orphaned text outside tags
+  → "For he
+          knew... what a... 🎵  sugartooth she was...."
+
+[Slide 359] Slide 359 may have orphaned text outside tags
+  → "Anyway... it was becoming clear to him......"
+
+[Slide 360] Slide 360 may have orphaned text outside tags
+  → "...he was...
+          
+          🎵  "growing" on her. Fr..."
+
+[Slide 361] Slide 361 may have orphaned text outside tags
+  → "She was starting
+          to... seem genuinely
+          ..."
+
+[Slide 362] Slide 362 may have orphaned text outside tags
+  → "For she
+          had... even started... 🗣️ flattering him..."
+
+[Slide 363] Slide 363 may have orphaned text outside tags
+  → "Even encouraging him... &#x1F30D; to let her into his world...."
+
+[Slide 364] Slide 364 may have orphaned text outside tags
+  → "To which — his...
+          
+          🔊  inner childwent..."
+
+[Slide 365] Slide 365 may have orphaned text outside tags
+  → "Suddenly... &#x1F483; he stretched his hand out
+          a..."
+
+[Slide 366] Slide 366 may have orphaned text outside tags
+  → "She was hesitant —
+          for she was not... feeling com..."
+
+[Slide 367] Slide 367 may have orphaned text outside tags
+  → "So he respected that
+          and... &#x1FAC2; reached for..."
+
+[Slide 368] Slide 368 may have orphaned text outside tags
+  → "As her hands touched
+          the... &#x1FAC2; back of his..."
+
+[Slide 369] Slide 369 may have orphaned text outside tags
+  → "So he
+          then... &#x1FAC2; held her tight in his arm..."
+
+[Slide 370] Slide 370 may have orphaned text outside tags
+  → "...appreciating... &#x1F48E; every second of that moment...."
+
+[Slide 371] Slide 371 may have orphaned text outside tags
+  → "It was getting...
+          
+            🎵 too late... So..."
+
+[Slide 372] Slide 372 may have orphaned text outside tags
+  → "They were
+          the... last ones to... 🎵 leave the bar..."
+
+[Slide 373] Slide 373 may have orphaned text outside tags
+  → "As they reached
+          her place... &#x1F6B6; he said:..."
+
+[Slide 374] Slide 374 may have orphaned text outside tags
+  → "It's still too early
+          to call it a night. Why don'..."
+
+[Slide 376] Slide 376 may have orphaned text outside tags
+  → ""Are you asking
+          to go for a walk?" — she said bef..."
+
+[Slide 377] Slide 377 may have orphaned text outside tags
+  → "During the walk she confided in him... &#x1F6B6;..."
+
+[Slide 378] Slide 378 may have orphaned text outside tags
+  → "Her biggest fear? &#x1F622; She was galeophobic. Or more com..."
+
+[Slide 379] Slide 379 may have orphaned text outside tags
+  → "And
+          people... were making fun of that...."
+
+[Slide 380] Slide 380 may have orphaned text outside tags
+  → "She'd also mentioned her habit... of speaking or eating slow..."
+
+[Slide 381] Slide 381 may have orphaned text outside tags
+  → "Which
+          her... &#x1F46F; own sisters criticized. Me..."
+
+[Slide 382] Slide 382 may have orphaned text outside tags
+  → "As they
+          wandered... &#x1F6B6; they ended up at a ..."
+
+[Slide 383] Slide 383 may have orphaned text outside tags
+  → "...which had
+          a bench. &#x1F4DE; And it practicall..."
+
+[Slide 384] Slide 384 may have orphaned text outside tags
+  → "He insisted she sit on his lap......"
+
+[Slide 385] Slide 385 may have orphaned text outside tags
+  → "...she was pulling away every timehe'd reach for her lips. &..."
+
+[Slide 386] Slide 386 may have orphaned text outside tags
+  → "Only after he'd... pressed his lips to her neck... 🎵 stirri..."
+
+[Slide 387] Slide 387 may have orphaned text outside tags
+  → "...did
+          she... finally give in...."
+
+[Slide 388] Slide 388 may have orphaned text outside tags
+  → "And they'd finally... &#x1F48B; shared their first kiss...."
+
+[Slide 389] Slide 389 may have orphaned text outside tags
+  → "As they
+          kissed... &#x1F48B; he was unable to stop..."
+
+[Slide 390] Slide 390 may have orphaned text outside tags
+  → "For he could not remember... &#x23F3; when was the last time..."
+
+[Slide 391] Slide 391 may have orphaned text outside tags
+  → "Not to mention
+          how... the idea of their first kis..."
+
+[Slide 392] Slide 392 may have orphaned text outside tags
+  → "As it turned
+          out... he checked another box: 🎵 ki..."
+
+[Slide 393] Slide 393 may have orphaned text outside tags
+  → "Except one thing: his mustache was getting in the way...."
+
+[Slide 394] Slide 394 may have orphaned text outside tags
+  → "And it
+          came... &#x2728; so naturally — no less...."
+
+[Slide 395] Slide 395 may have orphaned text outside tags
+  → "They kept on
+          kissing... &#x1F48B; again and again..."
+
+[Slide 396] Slide 396 may have orphaned text outside tags
+  → "And just like
+          that... they became something...."
+
+[Slide 397] Slide 397 may have orphaned text outside tags
+  → "Eventually...
+            they called it a night. &#x23F3; ..."
+
+[Slide 398] Slide 398 may have orphaned text outside tags
+  → "Not bad at all...."
+
+[Slide 399] Slide 399 may have orphaned text outside tags
+  → "Later that same
+          week... &#x23F3; he was getting i..."
+
+[Slide 400] Slide 400 may have orphaned text outside tags
+  → "So he asked if she'd be open to... &#x1F622; seeing him — ev..."
+
+[Slide 401] Slide 401 may have orphaned text outside tags
+  → "Hoping she'd make it through her shift... and want to see hi..."
+
+[Slide 402] Slide 402 may have orphaned text outside tags
+  → "He wasted no
+          time... and went by her place. 🏎️ H..."
+
+[Slide 403] Slide 403 may have orphaned text outside tags
+  → "On that day she talked
+          about... &#x1F46F; how she..."
+
+[Slide 404] Slide 404 may have orphaned text outside tags
+  → "And how the three of them
+          also had... taken a few..."
+
+[Slide 405] Slide 405 may have orphaned text outside tags
+  → "🎵 ...where she had the time of her life! 🎵 ...where she ha..."
+
+[Slide 406] Slide 406 may have orphaned text outside tags
+  → "😝 Fun fact: 🤓 The instructor called her every nameexcept h..."
+
+[Slide 407] Slide 407 may have orphaned text outside tags
+  → "Later that
+          week... their third date arrived. This..."
+
+[Slide 408] Slide 408 may have orphaned text outside tags
+  → "They'd already agreed... she'd be the one this time... 🔊 "p..."
+
+[Slide 409] Slide 409 may have orphaned text outside tags
+  → "They ended up at a cozy jazz bar
+          where he... reco..."
+
+[Slide 410] Slide 410 may have orphaned text outside tags
+  → "And little by little — they were... connecting more deeply...."
+
+[Slide 411] Slide 411 may have orphaned text outside tags
+  → "As they talked and drank — she ... &#x1F440; got that mischi..."
+
+[Slide 412] Slide 412 may have orphaned text outside tags
+  → "As if — he could... 🗣️ swear she was "up" to no good!..."
+
+[Slide 413] Slide 413 may have orphaned text outside tags
+  → "She said: 🎵 I'm just a girl!..."
+
+[Slide 414] Slide 414 may have orphaned text outside tags
+  → "And it was in that moment... he knew — he'd be
+          th..."
+
+[Slide 415] Slide 415 may have orphaned text outside tags
+  → "Out came his hand —again... &#x1F483; asking her for a dance..."
+
+[Slide 416] Slide 416 may have orphaned text outside tags
+  → "Only this time was...
+            
+              🔊 differ..."
+
+[Slide 417] Slide 417 may have orphaned text outside tags
+  → "As the saying goes: "Fortune favors the bold."..."
+
+[Slide 418] Slide 418 may have orphaned text outside tags
+  → "So they got up
+          and danced... and they swayed thei..."
+
+[Slide 419] Slide 419 may have orphaned text outside tags
+  → "And then... 🎵 to the west. being completely in sync...."
+
+[Slide 420] Slide 420 may have orphaned text outside tags
+  → "As they
+          danced... &#x1F48E; he squeezed her up
+ ..."
+
+[Slide 421] Slide 421 may have orphaned text outside tags
+  → "That boost of confidence... &#x1F4AA; was about to pay off. ..."
+
+[Slide 422] Slide 422 may have orphaned text outside tags
+  → "Him spending his entire
+          day... &#x1F3E0; tidying ..."
+
+[Slide 423] Slide 423 may have orphaned text outside tags
+  → "...doing
+          the dishes......"
+
+[Slide 424] Slide 424 may have orphaned text outside tags
+  → "...multitasking
+          and so on... would not be for not..."
+
+[Slide 425] Slide 425 may have orphaned text outside tags
+  → ""I'd better be prepared" — he thought. &#x1F9E0; His face li..."
+
+[Slide 426] Slide 426 may have orphaned text outside tags
+  → ""Better safe than sorry!" He was a firm believer in that...."
+
+[Slide 427] Slide 427 may have orphaned text outside tags
+  → "He was so proud... of what he'd done...."
+
+[Slide 428] Slide 428 may have orphaned text outside tags
+  → "As the moment
+          arrived... &#x1F440; he looked her ..."
+
+[Slide 430] Slide 430 may have orphaned text outside tags
+  → "And said: 🎵 Would you be open to the idea ofcoming over to ..."
+
+[Slide 432] Slide 432 may have orphaned text outside tags
+  → "Unlucky
+          for her... 🗣️ he'd put on his smoldering..."
+
+[Slide 433] Slide 433 may have orphaned text outside tags
+  → "Lucky
+          for him... &#x1F60A; the drinks they had we..."
+
+[Slide 434] Slide 434 may have orphaned text outside tags
+  → "Later that night — she said: &#x23F3; Don't let fear stop yo..."
+
+[Slide 435] Slide 435 may have orphaned text outside tags
+  → "She kept going: For in general...I'm a go-with-the-flow type..."
+
+[Slide 436] Slide 436 may have orphaned text outside tags
+  → "Hearing her
+          say that... 🎵 shook his nervesand ra..."
+
+[Slide 437] Slide 437 may have orphaned text outside tags
+  → ""Can it be?!" — he thought. &#x1F9E0;..."
+
+[Slide 438] Slide 438 may have orphaned text outside tags
+  → "For in his
+          past... he'd had his share of
+       ..."
+
+[Slide 439] Slide 439 may have orphaned text outside tags
+  → "More often than
+          not... he'd feel trapped —
+     ..."
+
+[Slide 440] Slide 440 may have orphaned text outside tags
+  → "Proving to him... &#x2728; yet again — how different she was..."
+
+[Slide 441] Slide 441 may have orphaned text outside tags
+  → "Anyway..
+          they arrived at his place. She made hers..."
+
+[Slide 442] Slide 442 may have orphaned text outside tags
+  → "...he poured them sparkling wine... and as they raised their..."
+
+[Slide 443] Slide 443 may have orphaned text outside tags
+  → "As they
+          settled in... they started making out...."
+
+[Slide 444] Slide 444 may have orphaned text outside tags
+  → "...and then things got
+          a little heated... &#x1F6C..."
+
+[Slide 445] Slide 445 may have orphaned text outside tags
+  → "As they got undressed —
+          he realized... &#x23F3; s..."
+
+[Slide 446] Slide 446 may have orphaned text outside tags
+  → "...natural and completely without shame. &#x2728; He admired..."
+
+[Slide 447] Slide 447 may have orphaned text outside tags
+  → "That night she'd put on a bit... &#x1F319; too much glitter ..."
+
+[Slide 448] Slide 448 may have orphaned text outside tags
+  → "...about to do — glitter was a fire hazard. And as the sayin..."
+
+[Slide 449] Slide 449 may have orphaned text outside tags
+  → "...smoke." Although theirs was a... 🔊 different kind. 😏..."
+
+[Slide 450] Slide 450 may have orphaned text outside tags
+  → "Pure bliss...
+            as their bodies came together. Wh..."
+
+[Slide 451] Slide 451 may have orphaned text outside tags
+  → "Round and round as they...
+          
+            🎵 rolle..."
+
+[Slide 453] Slide 453 may have orphaned text outside tags
+  → "For better
+          or worse... that card was simply
+    ..."
+
+[Slide 454] Slide 454 may have orphaned text outside tags
+  → "Safe to
+          say... some serious business went down...."
+
+[Slide 455] Slide 455 may have orphaned text outside tags
+  → "But...
+          that's enough detail. &#x1F4D6; For this i..."
+
+[Slide 456] Slide 456 may have orphaned text outside tags
+  → "And so this... became their first of......"
+
+[Slide 457] Slide 457 may have orphaned text outside tags
+  → "...hopefully many
+          other... &#x1F319; nights to fo..."
+
+[Slide 458] Slide 458 may have orphaned text outside tags
+  → "The next morning...
+          
+            🔊 the sun came..."
+
+[Slide 460] Slide 460 may have orphaned text outside tags
+  → "His first thoughts?
+          
+            🎵 Wow — I feel..."
+
+[Slide 461] Slide 461 may have orphaned text outside tags
+  → "In fact: He hadn't felt this... 🔊 "alive" in a while. No. T..."
+
+[Slide 462] Slide 462 may have orphaned text outside tags
+  → "Unable to... &#x1F6CF;&#xFE0F; go back to sleep......"
+
+[Slide 463] Slide 463 may have orphaned text outside tags
+  → "he turned to her and said: 'Morning. Shall we get up?..."
+
+[Slide 464] Slide 464 may have orphaned text outside tags
+  → "To which — she replied: &#x1F6CF;&#xFE0F; Why don't we stay..."
+
+[Slide 465] Slide 465 may have orphaned text outside tags
+  → "After enough
+          cuddling... he went to the kitchen
+..."
+
+[Slide 466] Slide 466 may have orphaned text outside tags
+  → "In the fridge there
+          were... &#x1F373; enough eggs..."
+
+[Slide 467] Slide 467 may have orphaned text outside tags
+  → "But first... 🎵 coffee...."
+
+[Slide 468] Slide 468 may have orphaned text outside tags
+  → "Naturally... he asked her: 🎵 "Do you take sugar with your c..."
+
+[Slide 469] Slide 469 may have orphaned text outside tags
+  → "To which... her response was: 🎵 "Yes, please." A tablespoon..."
+
+[Slide 470] Slide 470 may have orphaned text outside tags
+  → "And then... 🎵 he brought her coffeein her favorite cup...."
+
+[Slide 471] Slide 471 may have orphaned text outside tags
+  → "He could not... &#x2728; wrap his head around how... Unironi..."
+
+[Slide 473] Slide 473 may have orphaned text outside tags
+  → "🔊 ...fallen...
+          
+          so neatly into place...."
+
+[Slide 474] Slide 474 may have orphaned text outside tags
+  → "🗣️ The End. 🗣️ The End. Was it though? 🤔..."
+
+[Slide 475] Slide 475 may have orphaned text outside tags
+  → "Or rather. 🎵 So it begins. Or so I wished it would...."
+
+[Slide 476] Slide 476 may have orphaned text outside tags
+  → "Almost
+          a toast... A little kindness, raised high...."
+
+[Slide 477] Slide 477 may have orphaned text outside tags
+  → "And now... to the cheering part...."
+
+[Slide 478] Slide 478 may have orphaned text outside tags
+  → "Here's to you... enjoying more... 🎵 birthdays to come...."
+
+[Slide 479] Slide 479 may have orphaned text outside tags
+  → "🔊 ...laughing out... as loud as you possibly can. 🔊 ...lau..."
+
+[Slide 480] Slide 480 may have orphaned text outside tags
+  → "Here's to you... 🎵 experiencing this world... Or any other ..."
+
+[Slide 481] Slide 481 may have orphaned text outside tags
+  → "...travelling
+          around... 🎵 with no worries or pro..."
+
+[Slide 482] Slide 482 may have orphaned text outside tags
+  → "Here's to you...
+            holding hands... with whomever..."
+
+[Slide 483] Slide 483 may have orphaned text outside tags
+  → "...and through
+          whatever... life may throw your wa..."
+
+[Slide 484] Slide 484 may have orphaned text outside tags
+  → "Here's to you having...
+            or making... supportive..."
+
+[Slide 485] Slide 485 may have orphaned text outside tags
+  → "For my part... 🎵 I liked to think of myself as one...."
+
+[Slide 486] Slide 486 may have orphaned text outside tags
+  → "Or at least... 🎵 a wannabe. For at least as far as I was co..."
+
+[Slide 487] Slide 487 may have orphaned text outside tags
+  → "Last but not least...
+          here's to you... &#x1F331; ..."
+
+[Slide 488] Slide 488 may have orphaned text outside tags
+  → "older. Emphasis on the growing.
+          As in — personal ..."
+
+[Slide 489] Slide 489 may have orphaned text outside tags
+  → "Almost
+          the softer questions... Slower now...."
+
+[Slide 490] Slide 490 may have orphaned text outside tags
+  → "There might've
+          been moments... &#x1F48E; where yo..."
+
+[Slide 491] Slide 491 may have orphaned text outside tags
+  → "...a little
+          disconnected. And your mind
+        ..."
+
+[Slide 492] Slide 492 may have orphaned text outside tags
+  → "You're getting
+          way ahead of yourself...."
+
+[Slide 493] Slide 493 may have orphaned text outside tags
+  → "Which... any way you look at it...
+          I most certain..."
+
+[Slide 494] Slide 494 may have orphaned text outside tags
+  → "And you might've wanted...
+            to take things slowe..."
+
+[Slide 495] Slide 495 may have orphaned text outside tags
+  → "...totally
+          fine. For after all — this is who you ..."
+
+[Slide 496] Slide 496 may have orphaned text outside tags
+  → "But if you'd asked me... I'd say......"
+
+[Slide 497] Slide 497 may have orphaned text outside tags
+  → "You worry
+          too much. 🎵 Yes I said it —I said it '..."
+
+[Slide 498] Slide 498 may have orphaned text outside tags
+  → "For ask
+          yourself... this:..."
+
+[Slide 499] Slide 499 may have orphaned text outside tags
+  → "What is it... that you're
+          looking for?..."
+
+[Slide 500] Slide 500 may have orphaned text outside tags
+  → "What is your... 🗣️ deepest fear? Besides sharks.
+         ..."
+
+[Slide 501] Slide 501 may have orphaned text outside tags
+  → "What is... &#x1F319; keeping you up at night?..."
+
+[Slide 502] Slide 502 may have orphaned text outside tags
+  → "For if you'd really...
+          thought about it... &#x1F9..."
+
+[Slide 503] Slide 503 may have orphaned text outside tags
+  → "realized
+          something... we both want
+          the..."
+
+[Slide 504] Slide 504 may have orphaned text outside tags
+  → "What's that?
+          — you may ask. I think it's our duty..."
+
+[Slide 505] Slide 505 may have orphaned text outside tags
+  → "...to our wounded
+          and scared inner child......"
+
+[Slide 506] Slide 506 may have orphaned text outside tags
+  → "...to keep it
+          safe from harm's way...."
+
+[Slide 507] Slide 507 may have orphaned text outside tags
+  → "Almost
+          the ask... Small words. Big meaning...."
+
+[Slide 508] Slide 508 may have orphaned text outside tags
+  → "All I'd ever...
+          ask of you... in return......"
+
+[Slide 509] Slide 509 may have orphaned text outside tags
+  → "would be that you'd... 🎵 let me in... In other words — same..."
+
+[Slide 510] Slide 510 may have orphaned text outside tags
+  → "...on your
+          warmth... &#x2728; and on your......"
+
+[Slide 511] Slide 511 may have orphaned text outside tags
+  → "affection... which I'm certain you...
+          have plenty..."
+
+[Slide 512] Slide 512 may have orphaned text outside tags
+  → "Almost
+          a promise... Carefully...."
+
+[Slide 513] Slide 513 may have orphaned text outside tags
+  → "And if you'd ever...
+          
+            🎵 found yours..."
+
+[Slide 514] Slide 514 may have orphaned text outside tags
+  → "or support
+          of any kind... 🗣️ I'd be your guy...."
+
+[Slide 515] Slide 515 may have orphaned text outside tags
+  → "For as long
+          as... we actively would've......"
+
+[Slide 516] Slide 516 may have orphaned text outside tags
+  → "🗣️ chosen each other. 🗣️ chosen each other...."
+
+[Slide 517] Slide 517 may have orphaned text outside tags
+  → "I could've...
+          promised you this: I'd have made it..."
+
+[Slide 518] Slide 518 may have orphaned text outside tags
+  → "my personal
+          mission... to keep all
+          of ..."
+
+[Slide 519] Slide 519 may have orphaned text outside tags
+  → "met. In realistic context — of course...."
+
+[Slide 520] Slide 520 may have orphaned text outside tags
+  → "And if...
+        
+          🎵 nothing... else... 🎵 noth..."
+
+[Slide 521] Slide 521 may have orphaned text outside tags
+  → "I could've kept you
+          well fed. 😏..."
+
+[Slide 522] Slide 522 may have orphaned text outside tags
+  → "Almost
+          one last bow... Almost done...."
+
+[Slide 523] Slide 523 may have orphaned text outside tags
+  → "Stay...
+          
+            🔊  looned. 🔊  looned...."
+
+[Slide 525] Slide 525 may have orphaned text outside tags
+  → "Oh and
+            one last thing. 🎵 Happy birthday again,..."
+
+--- MEDIUM PRIORITY ---
+
+[Slide 0] Slide 0 is nearly empty (0 elements)
+  → "..."
+
+[Slide 1] Slide 1 is nearly empty (0 elements)
+  → "..."
+
+[Slide 2] Slide 2 is nearly empty (0 elements)
+  → "..."
+
+[Slide 3] Slide 3 is nearly empty (0 elements)
+  → "..."
+
+[Slide 5] Slide 5 is nearly empty (0 elements)
+  → "..."
+
+[Slide 7] Slide 7 is nearly empty (0 elements)
+  → "..."
+
+[Slide 18] Slide 18 is nearly empty (1 elements)
+  → "...back on......"
+
+[Slide 19] Slide 19 mixes "..." and "—" in same element
+  → "...our
+          second date —..."
+
+[Slide 43] Slide 43 mixes "..." and "—" in same element
+  → "...fair
+          warning — for my jokes might make you go ..."
+
+[Slide 56] Slide 56 is nearly empty (1 elements)
+  → "Seriously though —..."
+
+[Slide 71] Slide 71 mixes "..." and "—" in same element
+  → "...or not —
+          
+            🗣️ it does not matter...."
+
+[Slide 103] Slide 103 mixes "..." and "—" in same element
+  → "Then
+        
+          🎵 just the other day — I wrote do..."
+
+[Slide 155] Slide 155 mixes "..." and "—" in same element
+  → "With such...
+          
+            🎵 depth — no less... ..."
+
+[Slide 161] Slide 161 is nearly empty (1 elements)
+  → "🎵 she found him...."
+
+[Slide 164] Slide 164 mixes "..." and "—" in same element
+  → "That remains —
+          even to this day... one of life's ..."
+
+[Slide 228] Slide 228 mixes "..." and "—" in same element
+  → "And just like that —
+          he was beaming with...
+    ..."
+
+[Slide 238] Slide 238 mixes "..." and "—" in same element
+  → "That's
+          not true — for... 🎵 he knew that he wentp..."
+
+[Slide 322] Slide 322 mixes "..." and "—" in same element
+  → "However —
+          any attempt he made to... &#x1F9F1; imp..."
+
+[Slide 364] Slide 364 mixes "..." and "—" in same element
+  → "To which — his...
+          
+          🔊  inner childwent..."
+
+[Slide 366] Slide 366 mixes "..." and "—" in same element
+  → "She was hesitant —
+          for she was not... feeling com..."
+
+[Slide 398] Slide 398 is nearly empty (1 elements)
+  → "Not bad at all...."
+
+[Slide 410] Slide 410 mixes "..." and "—" in same element
+  → "And little by little — they were... connecting more deeply...."
+
+[Slide 411] Slide 411 mixes "..." and "—" in same element
+  → "As they talked and drank — she ... &#x1F440; got that mischi..."
+
+[Slide 412] Slide 412 mixes "..." and "—" in same element
+  → "As if — he could... 🗣️ swear she was "up" to no good!..."
+
+[Slide 415] Slide 415 mixes "..." and "—" in same element
+  → "Out came his hand —again... &#x1F483; asking her for a dance..."
+
+[Slide 431] Slide 431 is nearly empty (0 elements)
+  → "..."
+
+[Slide 445] Slide 445 mixes "..." and "—" in same element
+  → "As they got undressed —
+          he realized... &#x23F3; s..."
+
+[Slide 448] Slide 448 mixes "..." and "—" in same element
+  → "...about to do — glitter was a fire hazard. And as the sayin..."
+
+--- LOW PRIORITY (Optional) ---
+
+[Slide 33] Slide 33 has 3 "..." — consider varying
+  → "I
+          
+            🗣️ may... Ahem — I may not... 🗣..."
+
+[Slide 58] Slide 58 has 3 "..." — consider varying
+  → "...just
+          
+            🗣️ to "bee..." 🗣️ to "bee..."
+
+[Slide 61] Slide 61 has 3 "..." — consider varying
+  → "...or to
+          
+            🎵 touch your... face. 🎵 ..."
+
+[Slide 76] Slide 76 has 4 "..." — consider varying
+  → "🎵 ...from the day they arrived on the planet... 🦁 🎵 ...fr..."
+
+[Slide 77] Slide 77 has 3 "..." — consider varying
+  → "...on which
+          day... 🎵 they were not alone......"
+
+[Slide 78] Slide 78 has 3 "..." — consider varying
+  → "...they
+          looked... as if
+          one day — they..."
+
+[Slide 94] Slide 94 has 3 "..." — consider varying
+  → "🔊  💯 + 1... times more if i had to... 🔊  💯 + 1......"
+
+[Slide 98] Slide 98 has 4 "..." — consider varying
+  → "...of
+           what makes... ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩﮩ٨ـ❥ﮩ٨ـﮩ..."
+
+[Slide 101] Slide 101 has 4 "..." — consider varying
+  → "🎵 ...losing yourself... in a good story. 📓 🎵 ...losing yo..."
+
+[Slide 106] Slide 106 has 3 "..." — consider varying
+  → "this
+          particular toy... ahem — I meant... 🔊 story..."
+
+[Slide 107] Slide 107 has 3 "..." — consider varying
+  → "...will be
+          quite... 🔊 different......"
+
+[Slide 112] Slide 112 has 3 "..." — consider varying
+  → "...that by
+          the... 🎵 end of it... Newsflash:Our f..."
+
+[Slide 113] Slide 113 has 3 "..." — consider varying
+  → "...you'll be... head over... 🔊 "heels" for me. 👠..."
+
+[Slide 115] Slide 115 has 3 "..." — consider varying
+  → "And if... I were to... 🔊 guess......"
+
+[Slide 116] Slide 116 has 4 "..." — consider varying
+  → "🎵 ...what you'd say... to this — it'd probably be something..."
+
+[Slide 120] Slide 120 has 3 "..." — consider varying
+  → "To which... my answer would be: 🗣️ "It's gonna be LEGEN... ..."
+
+[Slide 122] Slide 122 has 3 "..." — consider varying
+  → "In case you
+          haven't already... &#x1F319; find you..."
+
+[Slide 123] Slide 123 has 4 "..." — consider varying
+  → "...maybe even...
+        
+          🔊 pour... yourself a ..."
+
+[Slide 145] Slide 145 has 3 "..." — consider varying
+  → "Not to
+          mention... his movement had such... 🎵 cha..."
+
+[Slide 155] Slide 155 has 3 "..." — consider varying
+  → "With such...
+          
+            🎵 depth — no less... ..."
+
+[Slide 160] Slide 160 has 3 "..." — consider varying
+  → "And after...
+          
+            🎵 searching far and w..."
+
+[Slide 172] Slide 172 has 3 "..." — consider varying
+  → "And the idea... that someone as... 🎵 beautiful as she......"
+
+[Slide 173] Slide 173 has 3 "..." — consider varying
+  → "...could even consider him?
+          That alone was... eno..."
+
+[Slide 185] Slide 185 has 3 "..." — consider varying
+  → "For only
+            by some...
+          
+            🎵..."
+
+[Slide 187] Slide 187 has 3 "..." — consider varying
+  → "But little did they
+          know... how destiny still hel..."
+
+[Slide 208] Slide 208 has 3 "..." — consider varying
+  → "🗣️ Until one day... which
+          at first glance... 🗣️..."
+
+[Slide 220] Slide 220 has 3 "..." — consider varying
+  → "He liked to...
+          imagine what her... reaction upon ..."
+
+[Slide 225] Slide 225 has 3 "..." — consider varying
+  → "Or she had...
+          
+            🎵 nothing... better ..."
+
+[Slide 230] Slide 230 has 3 "..." — consider varying
+  → "For his
+          leap of faith...
+        
+          🗣️..."
+
+[Slide 231] Slide 231 has 4 "..." — consider varying
+  → "It was not
+          that long ago he...
+          
+     ..."
+
+[Slide 243] Slide 243 has 3 "..." — consider varying
+  → "Or the...
+          
+            🔊 relief... 🔊 relief......"
+
+[Slide 246] Slide 246 has 3 "..." — consider varying
+  → "He started...
+          
+            🔊  thinking... 💭 ab..."
+
+[Slide 251] Slide 251 has 4 "..." — consider varying
+  → "And after...
+          
+            🗣️ arguing... with hi..."
+
+[Slide 271] Slide 271 has 3 "..." — consider varying
+  → "She looked
+          
+            🎵 nothing... less than...."
+
+[Slide 279] Slide 279 has 4 "..." — consider varying
+  → "🎵 ...to just grab on her waist and... lift her up in the ai..."
+
+[Slide 289] Slide 289 has 3 "..." — consider varying
+  → "As he got off the...
+          
+            🔊 metro... he..."
+
+[Slide 295] Slide 295 has 3 "..." — consider varying
+  → "Not to
+          mention... how one had to be... 🎵 blind t..."
+
+[Slide 314] Slide 314 has 3 "..." — consider varying
+  → "...while
+          dealing... with the pressure of......"
+
+[Slide 315] Slide 315 has 3 "..." — consider varying
+  → "...knowing
+          how... &#x26A0;&#xFE0F; any wrong word..."
+
+[Slide 316] Slide 316 has 4 "..." — consider varying
+  → "...could easily...
+          
+             "tip the scales..."
+
+[Slide 323] Slide 323 has 5 "..." — consider varying
+  → "As...
+          
+            🗣️ infuriating...
+         ..."
+
+[Slide 325] Slide 325 has 3 "..." — consider varying
+  → "...and
+          stay... true to his... 🔊 "emotions."..."
+
+[Slide 327] Slide 327 has 4 "..." — consider varying
+  → "But as...
+        
+          🔊 "disheartening..." as that..."
+
+[Slide 333] Slide 333 has 5 "..." — consider varying
+  → "And it was in...
+          
+            🗣️  that...
+    ..."
+
+[Slide 334] Slide 334 has 5 elements — consider splitting
+  → "...his heart was...
+          
+            🔊 in the right..."
+
+[Slide 336] Slide 336 has 4 "..." — consider varying
+  → "...that
+          
+            🎵 nothing... in the entire..."
+
+[Slide 337] Slide 337 has 3 "..." — consider varying
+  → "...mattered... more to him than......"
+
+[Slide 371] Slide 371 has 3 "..." — consider varying
+  → "It was getting...
+          
+            🎵 too late... So..."
+
+[Slide 386] Slide 386 has 3 "..." — consider varying
+  → "Only after he'd... pressed his lips to her neck... 🎵 stirri..."
+
+[Slide 395] Slide 395 has 3 "..." — consider varying
+  → "They kept on
+          kissing... &#x1F48B; again and again..."
+
+[Slide 418] Slide 418 has 3 "..." — consider varying
+  → "So they got up
+          and danced... and they swayed thei..."
+
+[Slide 451] Slide 451 has 3 "..." — consider varying
+  → "Round and round as they...
+          
+            🎵 rolle..."
+
+[Slide 458] Slide 458 has 3 "..." — consider varying
+  → "The next morning...
+          
+            🔊 the sun came..."
+
+[Slide 473] Slide 473 has 5 "..." — consider varying
+  → "🔊 ...fallen...
+          
+          so neatly into place...."
+
+[Slide 479] Slide 479 has 4 "..." — consider varying
+  → "🔊 ...laughing out... as loud as you possibly can. 🔊 ...lau..."
+
+[Slide 482] Slide 482 has 3 "..." — consider varying
+  → "Here's to you...
+            holding hands... with whomever..."
+
+[Slide 487] Slide 487 has 3 "..." — consider varying
+  → "Last but not least...
+          here's to you... &#x1F331; ..."
+
+[Slide 502] Slide 502 has 3 "..." — consider varying
+  → "For if you'd really...
+          thought about it... &#x1F9..."
+
+[Slide 508] Slide 508 has 3 "..." — consider varying
+  → "All I'd ever...
+          ask of you... in return......"
+
+[Slide 510] Slide 510 has 3 "..." — consider varying
+  → "...on your
+          warmth... &#x2728; and on your......"
+
+[Slide 513] Slide 513 has 4 "..." — consider varying
+  → "And if you'd ever...
+          
+            🎵 found yours..."
+
+[Slide 520] Slide 520 has 4 "..." — consider varying
+  → "And if...
+        
+          🎵 nothing... else... 🎵 noth..."
+
