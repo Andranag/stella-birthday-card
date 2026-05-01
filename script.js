@@ -278,7 +278,6 @@
         rightSlot.addEventListener('animationend', () => rightSlot.classList.remove('page-fade-in'), { once: true });
       }
       playVideos(slide);
-      scheduleAutoAdvance(slide);
     }
 
     const numEl = document.querySelector('.right-num');
@@ -357,7 +356,6 @@
         leftSlot.addEventListener('animationend', () => leftSlot.classList.remove('page-fade-in'), { once: true });
       }
       playVideos(spread[0]);
-      scheduleAutoAdvance(spread[0]);
     }
 
     if (spread[1]) {
@@ -369,7 +367,6 @@
         rightSlot.addEventListener('animationend', () => rightSlot.classList.remove('page-fade-in'), { once: true });
       }
       playVideos(spread[1]);
-      if (!spread[0]) scheduleAutoAdvance(spread[1]);
     } else {
       rightSlot.innerHTML = '<div class="empty-page-ornament">✦</div>';
     }
@@ -512,30 +509,9 @@
     } catch (_) {}
   }
 
-  /* ── Auto-advance (slides with no interactive elements) ─────── */
-  let _autoAdvanceTimer = null;
-  function clearAutoAdvance() {
-    if (_autoAdvanceTimer) { clearTimeout(_autoAdvanceTimer); _autoAdvanceTimer = null; }
-    document.querySelectorAll('.auto-advance-pip').forEach(p => p.remove());
-  }
-  function scheduleAutoAdvance(slide) {
-    clearAutoAdvance();
-    if (!slide || slide.querySelector('button')) return;
-    const isLast = isMobile() ? curSlide >= slides.length - 1 : curSpread >= spreads.length - 1;
-    if (isLast) return;
-    const DELAY = 4000;
-    const pip = document.createElement('div');
-    pip.className = 'auto-advance-pip';
-    pip.style.setProperty('--pip-dur', DELAY + 'ms');
-    slide.style.position = 'relative';
-    slide.appendChild(pip);
-    _autoAdvanceTimer = setTimeout(() => { _autoAdvanceTimer = null; next(); }, DELAY);
-  }
-
   function next(fromLock = false) {
     const onCover = isMobile() ? curSlide === 0 : curSpread === 0;
     if (onCover && !fromLock && !hasUnlockedStory()) return;
-    clearAutoAdvance();
     stopCurrentAudio();
     navDirection = 'forward';
     if (isMobile()) {
@@ -551,7 +527,6 @@
   }
 
   function prev() {
-    clearAutoAdvance();
     stopCurrentAudio();
     navDirection = 'backward';
     if (isMobile()) {
