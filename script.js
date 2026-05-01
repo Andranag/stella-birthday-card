@@ -760,13 +760,11 @@
       <div class="cover-corner br" aria-hidden="true">❧</div>
       <div class="cover-star-field" aria-hidden="true">${generateCoverStars(30)}</div>
       <div class="cover-body">
-        <div class="cover-eyebrow">Once upon a time…</div>
+        <div class="cover-name">Andreas Anagnostou</div>
         <div class="cover-divider"></div>
-        <div class="cover-title-main">Happy 25th Birthday</div>
-        <div class="cover-name">Stella</div>
+        <div class="cover-title-main">And<br>then &<br>the End</div>
         <div class="cover-divider"></div>
-        <div class="cover-subtitle">✦ A Disney Fairytale ✦</div>
-        <div class="cover-music-area"></div>
+        <div class="cover-eyebrow">A Disney Fairytale</div>
       </div>
       <div class="cover-castle-wrap" aria-hidden="true">${buildCastleSVG()}</div>
       <div class="cover-open-hint" aria-hidden="true">✦ open the book ✦</div>
