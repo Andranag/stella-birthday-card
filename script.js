@@ -34,21 +34,6 @@
     document.body.classList.remove('story-locked');
   }
 
-  /* ── Chapter config ────────────────────────────────────────── */
-  const CHAPTERS = [
-    { id: 'header',                 icon: '🏰', label: 'Cover'          },
-    { id: 'thumbs-intro',           icon: '👍', label: 'Two Thumbs'     },
-    { id: 'tarzan-intro',           icon: '🌿', label: 'Enter Him'      },
-    { id: 'qualities-section',      icon: '✨', label: 'His Qualities'  },
-    { id: 'sad-section-start',      icon: '💧', label: 'Hard Times'     },
-    { id: 'sad-section-end',        icon: '🔥', label: 'Rising'         },
-    { id: 'getting-ready-slide',    icon: '💄', label: 'Getting Ready'  },
-    { id: 'kiss-again-slide',       icon: '💋', label: 'The Kiss'       },
-    { id: 'dance-section-start',    icon: '💃', label: 'The Dance'      },
-    { id: 'careless-section-start', icon: '🌙', label: 'His Place'      },
-    { id: 'final-slide',            icon: '🎊', label: 'The End'        },
-  ];
-
   /* ── Helpers ───────────────────────────────────────────────── */
   const isMobile = () => window.innerWidth < 640;
 
@@ -382,10 +367,13 @@
 
   /* Reorder elements within a slide: h2 → video → p → audio → spoiler */
   function reorderSlideElements(slide) {
+    if (slide.classList.contains('title-page')) return;
+
     // Get elements - audio inside h2 stays there (part of title)
     const h2 = slide.querySelector('h2');
     const video = slide.querySelector('.gift-img');
-    const p = slide.querySelector('p');
+    const paragraphs = Array.from(slide.querySelectorAll(':scope > p'));
+    const logo = slide.querySelector('.storybook-logo');
     // Only standalone audio (direct child of slide, not inside h2)
     const standaloneAudios = Array.from(slide.querySelectorAll(':scope > .text-to-sound'));
     const spoilers = Array.from(slide.querySelectorAll(':scope > .peek-hint'));
@@ -394,9 +382,10 @@
     const ordered = [];
     if (h2) ordered.push(h2);           // h2 with nested audio stays at top
     if (video) ordered.push(video);     // video second
-    if (p) ordered.push(p);             // paragraph third
+    paragraphs.forEach(p => ordered.push(p)); // paragraphs third, preserving order
     standaloneAudios.forEach(btn => ordered.push(btn)); // all standalone audio fourth
     spoilers.forEach(btn => ordered.push(btn));         // all spoilers last
+    if (logo) ordered.push(logo);       // title-page logo stays last
 
     // Re-append in order
     ordered.forEach(el => slide.appendChild(el));
@@ -1228,23 +1217,6 @@
       }
     });
 
-    // Chapters
-    const chapSec = mk('section', { class: 'np-section' });
-    chapSec.innerHTML = '<h4 class="np-section-title">⚡ Jump to Chapter</h4>';
-    const chapList = mk('ul', { class: 'np-chapter-list' });
-    CHAPTERS.forEach(ch => {
-      const el = document.getElementById(ch.id);
-      const si = el ? slides.indexOf(el) : -1;
-      if (si === -1) return;
-      const li  = mk('li');
-      const btn = mk('button', { class: 'np-chapter-btn', 'data-si': si });
-      btn.innerHTML = `${ch.icon} ${ch.label}<span class="np-chapter-num">${si === 0 ? 'Cover' : '#' + si}</span>`;
-      btn.addEventListener('click', () => { goTo(si); closeNavPanel(); });
-      li.appendChild(btn); chapList.appendChild(li);
-    });
-    chapSec.appendChild(chapList);
-    panel.appendChild(chapSec);
-
     // Search
     const searchSec = mk('section', { class: 'np-section' });
     searchSec.innerHTML = '<h4 class="np-section-title">🔍 Search Slides</h4>';
@@ -1809,18 +1781,6 @@
   margin-bottom:10px;
 }
 .np-total { font-weight:600; font-size:.64rem; color:rgba(90,48,8,.42); letter-spacing:1px; text-transform:none; margin-left:6px; }
-
-.np-chapter-list { list-style:none; display:flex; flex-direction:column; gap:5px; }
-.np-chapter-btn {
-  width:100%; display:flex; align-items:center; justify-content:space-between;
-  font-family:'Nunito',sans-serif; font-size:.88rem; font-weight:700; color:#3A1F0D;
-  background:linear-gradient(135deg,rgba(255,255,255,.5),rgba(245,225,170,.42));
-  border:1.5px solid rgba(201,160,48,.32); border-radius:8px;
-  padding:8px 12px; cursor:pointer; text-align:left;
-  transition:all .18s ease;
-}
-.np-chapter-btn:hover { background:linear-gradient(135deg,rgba(255,255,255,.75),rgba(245,220,150,.7)); border-color:rgba(201,160,48,.65); transform:translateX(3px); }
-.np-chapter-num { font-size:.7rem; font-weight:800; color:rgba(90,48,8,.48); flex-shrink:0; margin-left:8px; }
 
 .np-search {
   display:block; width:100%; padding:9px 12px;

@@ -867,37 +867,6 @@ body.on-cover #discovery-arrows { opacity: 0; }
   to   { opacity: 1; }
 }
 
-/* ── Section-break / chapter-divider slide ───────────────────── */
-.section-break.gift-article {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 12px !important;
-}
-.section-break.gift-article h2 {
-  font-size: clamp(2rem, 5vw, 3rem);
-  margin: 0;
-}
-.section-break.gift-article p {
-  font-size: clamp(1.1rem, 2.8vw, 1.5rem);
-  opacity: 0.75;
-  margin: 0;
-}
-.chapter-break {
-  display: flex; align-items: center; gap: 14px;
-  width: 55%;
-}
-.chapter-break-line {
-  flex: 1; height: 1px;
-  background: rgba(var(--g2-rgb), 0.30);
-}
-.chapter-break-star {
-  color: rgba(var(--g2-rgb), 0.50);
-  font-size: 0.85rem;
-  letter-spacing: 0.25em;
-}
-
 /* ── Fade page transition ────────────────────────────────────── */
 @keyframes exitFadeOut {
   from { opacity: 1; }
@@ -1541,6 +1510,95 @@ body.on-cover #floating-key { display: block; }
 .slide.gift-article p {
   font-size: clamp(0.9rem, 1.3vw, 1.1rem);
   line-height: 1.6;
+}
+
+.slide.gift-article.tribute-page.in-page {
+  justify-content: center !important;
+  align-items: flex-end !important;
+  padding-right: clamp(22px, 6vw, 54px) !important;
+  padding-bottom: 0 !important;
+  text-align: right;
+}
+
+.slide.gift-article .storybook-logo {
+  display: block;
+  width: min(150px, 42%);
+  height: auto;
+  margin: 2px auto 0;
+  object-fit: contain;
+}
+
+.slide.gift-article.in-page .storybook-logo {
+  width: min(120px, 36%) !important;
+  max-height: 54px;
+}
+
+.slide.gift-article.title-page.in-page {
+  justify-content: space-between !important;
+  gap: 0 !important;
+  min-height: 100% !important;
+  padding: clamp(18px, 4vw, 34px) clamp(18px, 5vw, 42px) clamp(14px, 3vw, 24px) !important;
+}
+
+.slide.gift-article.title-page.in-page h1 {
+  align-self: stretch;
+  margin: 0 !important;
+  padding-top: 2px;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(.78rem, 1.6vw, 1.05rem) !important;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.slide.gift-article.title-page.in-page h2 {
+  margin: auto 0 !important;
+  max-width: 12rem;
+  font-family: 'Marck Script', cursive;
+  font-size: clamp(2.2rem, 7vw, 4.1rem) !important;
+  font-weight: 400;
+  line-height: .95 !important;
+  text-align: center;
+  transform: rotate(-9deg) skew(-3deg);
+  text-shadow:
+    .6px .6px 0 rgba(73, 39, 14, .22),
+    -.5px .7px 0 rgba(255, 255, 255, .55);
+}
+
+.slide.gift-article.title-page.in-page h2::after {
+  content: '';
+  display: block;
+  width: 82%;
+  height: 1px;
+  margin: 7px auto 0;
+  background: currentColor;
+  opacity: .32;
+  transform: rotate(2deg);
+}
+
+.slide.gift-article.title-page.in-page .title-page-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+}
+
+.slide.gift-article.title-page.in-page .title-page-footer p {
+  margin: 0 !important;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(.48rem, 1vw, .64rem) !important;
+  font-weight: 700;
+  line-height: 1.2 !important;
+  opacity: .58;
+  text-align: center;
+}
+
+.slide.gift-article.title-page.in-page .title-page-footer .storybook-logo {
+  width: min(116px, 38%) !important;
+  max-height: 46px;
+  margin: 0 auto 10px !important;
 }
 
 /* ── Title-card slides: single-word cinematic payoff ─────────── */
