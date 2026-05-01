@@ -13,6 +13,7 @@
   /* ── State ─────────────────────────────────────────────────── */
   let slides      = [];   // all .slide.gift-article elements
   let spreads     = [];   // [[cover], [s1,s2], [s3,s4], ...]
+  let chapters    = [];   // rhythm markers derived from "Almost..." pages
   let curSpread   = 0;    // desktop: current spread index
   let curSlide    = 0;    // mobile:  current slide index (0 = cover)
   let currentAudio = null;
@@ -54,6 +55,34 @@
   // Utility: Get current slide index
   function getCurrentSlideIndex() {
     return isMobile() ? curSlide : spreadToFirstSlide(curSpread);
+  }
+
+  function getSlideHeading(slide) {
+    const h = slide?.querySelector('h1, h2');
+    return h ? h.textContent.trim().replace(/\s+/g, ' ') : '';
+  }
+
+  function buildChapters() {
+    chapters = slides
+      .map((slide, index) => ({ slide, index, title: getSlideHeading(slide) }))
+      .filter(({ index, title }) => index > 0 && /^Almost\b/i.test(title) && !/^Almost like\b/i.test(title))
+      .map((chapter, idx) => ({ ...chapter, number: idx + 1 }));
+
+    chapters.forEach(({ slide, number }) => {
+      slide.classList.add('chapter-page');
+      slide.dataset.chapter = String(number);
+    });
+  }
+
+  function getCurrentChapter() {
+    const idx = isMobile()
+      ? curSlide
+      : (spreads[curSpread] || []).reduce((max, slide) => Math.max(max, slides.indexOf(slide)), getCurrentSlideIndex());
+    let current = null;
+    chapters.forEach(chapter => {
+      if (chapter.index <= idx) current = chapter;
+    });
+    return current;
   }
 
   // Utility: Check if element is in viewport
@@ -98,6 +127,7 @@
     if (!slides.length) return;
 
     buildSpreads();
+    buildChapters();
     injectDynamicStyles();
     buildBookDOM();
     setupAriaLabels();
@@ -168,10 +198,7 @@
       }
     });
 
-    // Add aria-labels to peek-hint buttons that don't have them
-    document.querySelectorAll('.peek-hint:not([aria-label])').forEach(btn => {
-      btn.setAttribute('aria-label', 'Show spoiler');
-    });
+    document.querySelectorAll('.peek-hint').forEach(btn => updateSpoilerA11y(btn, false));
 
     // Ensure videos have proper accessibility attributes and lazy loading
     document.querySelectorAll('video.gift-video').forEach(video => {
@@ -556,6 +583,8 @@
     const percent = total > 0 ? (idx / total) * 100 : 100;
     fill.style.width = percent + '%';
     bar.setAttribute('aria-valuenow', Math.round(percent));
+    document.documentElement.style.setProperty('--story-progress', percent.toFixed(2));
+    document.documentElement.style.setProperty('--story-progress-pct', `${percent}%`);
   }
 
   function announceSlide() {
@@ -585,16 +614,20 @@
   function updateCounter() {
     const el = document.getElementById('top-indicator');
     if (!el) return;
+    const chapter = getCurrentChapter();
+    const chapterHTML = chapter ? `<span class="top-chapter">${chapter.title}</span>` : '';
     if (isMobile()) {
-      el.textContent = curSlide === 0 ? 'Cover' : `${curSlide} / ${slides.length - 1}`;
+      const count = curSlide === 0 ? 'Cover' : `${curSlide} / ${slides.length - 1}`;
+      el.innerHTML = `<span class="top-count">${count}</span>${chapterHTML}`;
     } else {
       if (curSpread === 0) {
-        el.textContent = 'Cover';
+        el.innerHTML = '<span class="top-count">Cover</span>';
       } else {
         const sp    = spreads[curSpread];
         const left  = (curSpread - 1) * 2 + 1;
         const right = sp[1] ? (curSpread - 1) * 2 + 2 : null;
-        el.textContent = right ? `${left}–${right} / ${slides.length - 1}` : `${left} / ${slides.length - 1}`;
+        const count = right ? `${left}-${right} / ${slides.length - 1}` : `${left} / ${slides.length - 1}`;
+        el.innerHTML = `<span class="top-count">${count}</span>${chapterHTML}`;
       }
     }
   }
@@ -731,7 +764,7 @@
 
     // Spine
     const spine = mk('div', { class: 'book-spine' });
-    spine.innerHTML = '<div class="spine-ornament">Stella · A Disney Fairytale</div>';
+    spine.innerHTML = '<div class="spine-ornament">And then & the End</div>';
 
     // Right page
     const pageRight = mk('div', { id: 'page-right', class: 'book-page page-right' });
@@ -764,7 +797,6 @@
         <div class="cover-divider"></div>
         <div class="cover-title-main">And<br>then &<br>the End</div>
         <div class="cover-divider"></div>
-        <div class="cover-eyebrow">A Disney Fairytale</div>
       </div>
       <div class="cover-castle-wrap" aria-hidden="true">${buildCastleSVG()}</div>
       <div class="cover-open-hint" aria-hidden="true">✦ open the book ✦</div>
@@ -1222,6 +1254,30 @@
     searchSec.appendChild(searchInput);
     panel.appendChild(searchSec);
 
+    let chapterList = null;
+    if (chapters.length) {
+      const chapterSec = mk('section', { class: 'np-section np-chapters-section' });
+      chapterSec.innerHTML = `<h4 class="np-section-title">Contents <span class="np-total">${chapters.length} chapters</span></h4>`;
+      chapterList = mk('ol', { class: 'np-chapter-list', id: 'np-chapter-list' });
+
+      chapters.forEach(chapter => {
+        const li = mk('li', { class: 'np-chapter-item' });
+        const btn = mk('button', { class: 'np-chapter-btn', 'data-si': chapter.index });
+        btn.innerHTML = `
+          <span class="np-chapter-num">${chapter.number}</span>
+          <span class="np-chapter-copy">
+            <span class="np-chapter-label">${chapter.title}</span>
+            <span class="np-chapter-page">page ${chapter.index}</span>
+          </span>`;
+        btn.addEventListener('click', () => { goTo(chapter.index); closeNavPanel(); });
+        li.appendChild(btn);
+        chapterList.appendChild(li);
+      });
+
+      chapterSec.appendChild(chapterList);
+      panel.appendChild(chapterSec);
+    }
+
     // All slides
     const allSec = mk('section', { class: 'np-section np-slides-section' });
     allSec.innerHTML = `<h4 class="np-section-title">📄 All Slides <span class="np-total">${slides.length - 1} pages</span></h4>`;
@@ -1252,6 +1308,12 @@
         const matches = q ? (lbl.includes(q) || String(i).includes(q)) : true;
         li.hidden = !matches;
         if (matches && q) matchCount++;
+      });
+
+      chapterList?.querySelectorAll('.np-chapter-item').forEach(li => {
+        const lbl = li.querySelector('.np-chapter-label')?.textContent.toLowerCase() || '';
+        const page = li.querySelector('.np-chapter-btn')?.dataset.si || '';
+        li.hidden = q ? !(lbl.includes(q) || page.includes(q)) : false;
       });
       
       // Update result count
@@ -1311,6 +1373,7 @@
 
   function syncNavPanel() {
     const currentSi = getCurrentSlideIndex();
+    const currentChapter = getCurrentChapter();
     document.querySelectorAll('.np-slide-btn').forEach(btn => {
       const si = parseInt(btn.dataset.si, 10);
       let active = false;
@@ -1321,6 +1384,10 @@
         active = si === currentSi || (sp && sp.includes(slides[si]));
       }
       btn.classList.toggle('active', active);
+    });
+    document.querySelectorAll('.np-chapter-btn').forEach(btn => {
+      const si = parseInt(btn.dataset.si, 10);
+      btn.classList.toggle('active', currentChapter?.index === si);
     });
     if (document.getElementById('nav-panel')?.classList.contains('open')) {
       document.querySelector('.np-slide-btn.active')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
@@ -1406,12 +1473,23 @@
     document.querySelectorAll('.peek-hint').forEach(btn => {
       btn.dataset.revealed = 'false';
       btn.setAttribute('aria-pressed', 'false');
+      btn.setAttribute('aria-expanded', 'false');
+      updateSpoilerA11y(btn, false);
       btn.addEventListener('click', () => {
         const revealed = btn.dataset.revealed === 'true' ? 'false' : 'true';
         btn.dataset.revealed = revealed;
         btn.setAttribute('aria-pressed', revealed);
+        btn.setAttribute('aria-expanded', revealed);
+        updateSpoilerA11y(btn, revealed === 'true');
       });
     });
+  }
+
+  function updateSpoilerA11y(btn, revealed) {
+    const text = btn.textContent.trim().replace(/\s+/g, ' ');
+    btn.setAttribute('aria-label', revealed
+      ? `Spoiler revealed. ${text}. Activate to hide spoiler.`
+      : 'Spoiler hidden. Tap to reveal.');
   }
 
   /* ── Swipe & Wheel ─────────────────────────────────────────── */
