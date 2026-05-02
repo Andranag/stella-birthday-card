@@ -549,26 +549,54 @@
     slide.prepend(createWishStarField());
   }
 
+  function isButtonOnlyHeading(heading) {
+    if (!heading?.querySelector('.text-to-sound')) return false;
+    const clone = heading.cloneNode(true);
+    clone.querySelectorAll('.text-to-sound').forEach(btn => btn.remove());
+    return clone.textContent.replace(/\s+/g, '') === '';
+  }
+
+  function getSlideTitleLabel(slide) {
+    return slide.querySelector(':scope > h2, :scope > .audio-heading-label');
+  }
+
+  function normalizeButtonOnlyHeading(slide, heading) {
+    if (!isButtonOnlyHeading(heading)) return heading;
+    const buttons = Array.from(heading.querySelectorAll('.text-to-sound'));
+    const headingText = buttons.map(btn => btn.textContent.trim()).filter(Boolean).join(' ');
+    buttons.forEach(btn => {
+      btn.classList.add('audio-title-control');
+      slide.insertBefore(btn, heading);
+    });
+    const label = mk('div', { class: 'audio-heading-label' });
+    if (heading.id) label.id = heading.id;
+    label.textContent = headingText;
+    heading.replaceWith(label);
+    return label;
+  }
+
   /* Reorder elements within a slide: decorative art → h2 → video → p/list → audio → spoiler */
   function reorderSlideElements(slide) {
     if (slide.classList.contains('title-page')) return;
     ensureDecorativeArt(slide);
 
-    // Get elements - audio inside h2 stays there (part of title)
+    // Button-only headings are labels, not visual layout containers.
     const decorativeArt = Array.from(slide.querySelectorAll(':scope > .star-field-art'));
-    const h2 = slide.querySelector('h2');
+    const titleLabel = normalizeButtonOnlyHeading(slide, getSlideTitleLabel(slide));
     const video = slide.querySelector('.gift-img');
     const paragraphs = Array.from(slide.querySelectorAll(':scope > p'));
     const lists = Array.from(slide.querySelectorAll(':scope > ul, :scope > ol'));
     const logo = slide.querySelector('.storybook-logo');
     // Only standalone audio (direct child of slide, not inside h2)
-    const standaloneAudios = Array.from(slide.querySelectorAll(':scope > .text-to-sound'));
+    const titleAudios = Array.from(slide.querySelectorAll(':scope > .text-to-sound.audio-title-control'));
+    const standaloneAudios = Array.from(slide.querySelectorAll(':scope > .text-to-sound:not(.audio-title-control)'));
     const spoilers = Array.from(slide.querySelectorAll(':scope > .peek-hint'));
 
     // Build ordered array
     const ordered = [];
     decorativeArt.forEach(el => ordered.push(el));
-    if (h2) ordered.push(h2);           // h2 with nested audio stays at top
+    if (titleLabel) ordered.push(titleLabel); // visual title or hidden audio label
+    titleAudios.forEach(btn => ordered.push(btn)); // button-only title audio stays in the title area
     if (video) ordered.push(video);     // video second
     paragraphs.forEach(p => ordered.push(p)); // paragraphs third, preserving order
     lists.forEach(list => ordered.push(list)); // contents/list pages stay under their headings
@@ -711,10 +739,23 @@
       playingBtn?.classList.remove('playing');
       playingBtn?.setAttribute('aria-pressed', 'false');
       playingBtn?.querySelector('.audio-progress')?.remove();
+      setWishStarsActive(playingBtn, false);
       currentAudio = null;
       playingBtn = null;
     }
     updateAudioStopButton();
+  }
+
+  function setWishStarsActive(btn, active) {
+    const slide = btn?.closest('[data-star-slide="wish-upon"]');
+    if (!slide) return;
+    slide.classList.toggle('wish-stars-active', active);
+  }
+
+  function clearWishStarsActive() {
+    document
+      .querySelectorAll('[data-star-slide="wish-upon"].wish-stars-active')
+      .forEach(slide => slide.classList.remove('wish-stars-active'));
   }
 
   function setupAudioStopButton() {
@@ -2072,6 +2113,7 @@
           playingBtn?.setAttribute('aria-pressed', 'false');
           const oldProgress = playingBtn?.querySelector('.audio-progress');
           if (oldProgress) oldProgress.remove();
+          setWishStarsActive(playingBtn, false);
           currentAudio = null; playingBtn = null;
           updateAudioStopButton();
         }
@@ -2098,6 +2140,7 @@
             btn.setAttribute('aria-pressed', 'false');
             if (progressEl) progressEl.remove();
             progressEl = null;
+            setWishStarsActive(btn, false);
             if (currentAudio === audio) { currentAudio = null; playingBtn = null; }
             updateAudioStopButton();
           });
@@ -2109,6 +2152,8 @@
               btn.classList.add('playing');
               btn.setAttribute('aria-pressed', 'true');
               currentAudio = audio; playingBtn = btn;
+              clearWishStarsActive();
+              setWishStarsActive(btn, true);
               updateAudioStopButton();
               
               // Create progress element
@@ -2128,6 +2173,7 @@
           btn.setAttribute('aria-pressed', 'false');
           if (progressEl) progressEl.remove();
           progressEl = null;
+          setWishStarsActive(btn, false);
           if (currentAudio === audio) { currentAudio = null; playingBtn = null; }
           updateAudioStopButton();
         }

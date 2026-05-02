@@ -82,6 +82,14 @@
   border: 0;
 }
 
+.audio-heading-label {
+  display: none !important;
+}
+
+.audio-heading-label::after {
+  content: none !important;
+}
+
 /* ── Reset ───────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; }
@@ -2151,6 +2159,22 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     0 1px 0 rgba(255, 255, 255, .84),
     0 0 8px rgba(139, 47, 110, .32),
     0 0 16px rgba(255, 210, 235, .62);
+}
+
+.wish-stars-active .star-field-art {
+  opacity: 1;
+}
+
+.wish-stars-active .wish-star {
+  animation-duration: 1.25s;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, .95),
+    0 0 10px currentColor,
+    0 0 22px rgba(255, 255, 255, .82);
+}
+
+.wish-stars-active .wish-star:nth-child(4n) {
+  animation-duration: .9s;
 }
 
 @keyframes wishStarTwinkle {
