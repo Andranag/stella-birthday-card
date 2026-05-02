@@ -7,6 +7,8 @@
   'use strict';
 
   const BOOKMARK_KEY    = 'stella_bday_bookmark';
+  const LAST_READ_KEY   = 'stella_bday_last_read';
+  const READER_SCALE_KEY = 'stella_bday_reader_scale';
   const UNLOCKED_KEY    = 'stella_bday_unlocked';
 
   /* ── State ─────────────────────────────────────────────────── */
@@ -19,6 +21,7 @@
   let currentAudio = null;
   let playingBtn   = null;
   let navDirection = 'forward';
+  let suppressHashUpdate = false;
   const MOBILE_SEQUENTIAL_SKIP_SLIDES = new Set([2, 3]);
   const _bgTracks = {
     dance: { audio: null, src: 'assets/music/put your head on my shoulder.mp3', vol: 0.35 },
@@ -109,6 +112,16 @@
       .trim();
   }
 
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    }[char]));
+  }
+
   function setContentsListStart(list, start) {
     list.start = start;
     list.style.counterReset = `contents ${start - 1}`;
@@ -163,6 +176,10 @@
     return current;
   }
 
+  function getNextChapterAfter(index) {
+    return chapters.find(chapter => chapter.index > index) || null;
+  }
+
   // Utility: Debounce function for performance
   function debounce(func, wait) {
     let timeout;
@@ -187,12 +204,17 @@
     setupAriaLabels();
     setupSpoilers();
     setupAudio();
+    setupButtonEmojiAlignment();
+    setupAudioStopButton();
     setupSwipe();
+    setupReaderScale();
     setupKeyboard();
     setupNavButtons();
     setupCoverKeyTracker();
     setupJumpModal();
     setupHelpModal();
+    setupStoryInspector();
+    setupVideoLoading();
     buildNavPanel();
     setupToastContainer();
     setupSwipeHints();
@@ -210,9 +232,12 @@
       });
     });
 
-    // Start at cover
+    setupDeepLinks();
+
+    // Start at cover, or honor a page hash when the book has already been unlocked.
     curSpread = 0; curSlide = 0;
-    render(false);
+    if (hasUnlockedStory() && getHashPage() !== null) jumpFromHash({ animate: false });
+    else render(false);
 
     let wasMobile = isMobile();
     window.addEventListener('resize', debounce(() => {
@@ -286,6 +311,10 @@
 
     document.querySelectorAll('.peek-hint').forEach(btn => updateSpoilerA11y(btn, false));
 
+    document.querySelectorAll('.gift-img[aria-label]').forEach(frame => {
+      frame.dataset.errorLabel = frame.getAttribute('aria-label');
+    });
+
     // Ensure videos have proper accessibility attributes and lazy loading
     document.querySelectorAll('video.gift-video').forEach(video => {
       if (!video.hasAttribute('aria-hidden')) {
@@ -318,6 +347,10 @@
     syncNavPanel();
     announceSlide();
     updateAriaCurrent();
+    manageVideoLoadingWindow();
+    updateStoryInspector();
+    saveLastReadPosition();
+    updateDeepLink();
 
   }
 
@@ -478,11 +511,51 @@
     document.getElementById('page-right').scrollTop = 0;
   }
 
-  /* Reorder elements within a slide: h2 → video → p/list → audio → spoiler */
+  function createWishStarField() {
+    const art = mk('div', { class: 'star-field-art', 'aria-hidden': 'true' });
+    populateWishStarField(art);
+    return art;
+  }
+
+  function populateWishStarField(art) {
+    if (art.querySelector('.wish-star')) return;
+    const stars = [
+      [8, 16, 0.72, 0], [15, 34, 0.9, .35], [23, 20, 0.62, .8], [31, 42, 1.08, .15],
+      [39, 14, 0.68, .55], [47, 31, 0.84, 1.05], [55, 19, 0.58, .45], [63, 39, 0.68, .95],
+      [71, 18, 0.92, .2], [80, 33, 0.58, .7], [89, 15, 1.04, 1.2], [95, 43, 0.64, .4],
+      [12, 58, 0.8, .85], [27, 62, 0.64, .65], [43, 55, 0.72, .1], [59, 61, 0.66, 1.1],
+      [75, 54, 0.78, .3], [91, 62, 0.6, .75],
+    ];
+
+    art.textContent = '';
+    stars.forEach(([x, y, size, delay], index) => {
+      const star = mk('span', { class: 'wish-star', 'aria-hidden': 'true' });
+      star.textContent = index % 3 === 0 ? '\u2726' : '*';
+      star.style.setProperty('--x', `${x}%`);
+      star.style.setProperty('--y', `${y}%`);
+      star.style.setProperty('--s', `${size}`);
+      star.style.setProperty('--d', `${delay}s`);
+      art.appendChild(star);
+    });
+  }
+
+  function ensureDecorativeArt(slide) {
+    if (slide.dataset.starSlide !== 'wish-upon') return;
+    const art = slide.querySelector(':scope > .star-field-art');
+    if (art) {
+      populateWishStarField(art);
+      return;
+    }
+    slide.prepend(createWishStarField());
+  }
+
+  /* Reorder elements within a slide: decorative art → h2 → video → p/list → audio → spoiler */
   function reorderSlideElements(slide) {
     if (slide.classList.contains('title-page')) return;
+    ensureDecorativeArt(slide);
 
     // Get elements - audio inside h2 stays there (part of title)
+    const decorativeArt = Array.from(slide.querySelectorAll(':scope > .star-field-art'));
     const h2 = slide.querySelector('h2');
     const video = slide.querySelector('.gift-img');
     const paragraphs = Array.from(slide.querySelectorAll(':scope > p'));
@@ -494,6 +567,7 @@
 
     // Build ordered array
     const ordered = [];
+    decorativeArt.forEach(el => ordered.push(el));
     if (h2) ordered.push(h2);           // h2 with nested audio stays at top
     if (video) ordered.push(video);     // video second
     paragraphs.forEach(p => ordered.push(p)); // paragraphs third, preserving order
@@ -521,21 +595,26 @@
   }
 
   function playVideos(slide) {
+    loadSlideVideos(slide);
+
     slide.querySelectorAll('video').forEach(v => {
-      v.currentTime = 0;
+      try { v.currentTime = 0; } catch (_) {}
 
       if (!v._observed) {
         v._observed = true;
 
         v.addEventListener('error', () => {
+          const frame = v.closest('.gift-img');
           v.classList.add('video-error');
-          v.closest('.gift-img')?.classList.add('video-error');
+          frame?.classList.add('video-error');
+          if (frame && !frame.dataset.errorLabel) frame.dataset.errorLabel = 'The animation for this page could not be loaded.';
         });
 
         const observer = new IntersectionObserver(entries => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              v.play().catch(() => v.classList.add('video-error'));
+              loadVideo(v);
+              playVideoWhenReady(v);
             } else {
               v.pause();
             }
@@ -547,15 +626,146 @@
     });
   }
 
+  function playVideoWhenReady(video) {
+    if (video.readyState >= 2) {
+      video.play().catch(() => {});
+      return;
+    }
+
+    video.addEventListener('loadeddata', () => {
+      video.play().catch(() => {});
+    }, { once: true });
+  }
+
+  function setupVideoLoading() {
+    document.querySelectorAll('video.gift-video').forEach(video => {
+      video.preload = 'none';
+      video.querySelectorAll('source[src]').forEach(source => {
+        source.dataset.src = source.getAttribute('src');
+        source.removeAttribute('src');
+      });
+      video.load();
+    });
+  }
+
+  function loadVideo(video) {
+    if (!video || video.dataset.loaded === 'true') return;
+    let hasSource = false;
+    video.querySelectorAll('source[data-src]').forEach(source => {
+      source.src = source.dataset.src;
+      hasSource = true;
+    });
+    if (!hasSource) return;
+    video.dataset.loaded = 'true';
+    video.preload = 'metadata';
+    video.load();
+  }
+
+  function unloadVideo(video) {
+    if (!video || video.dataset.loaded !== 'true') return;
+    video.pause();
+    video.removeAttribute('src');
+    video.querySelectorAll('source').forEach(source => source.removeAttribute('src'));
+    video.dataset.loaded = 'false';
+    video.preload = 'none';
+    video.load();
+  }
+
+  function loadSlideVideos(slide) {
+    slide?.querySelectorAll('video.gift-video').forEach(loadVideo);
+  }
+
+  function unloadSlideVideos(slide) {
+    slide?.querySelectorAll('video.gift-video').forEach(unloadVideo);
+  }
+
+  function manageVideoLoadingWindow() {
+    if (!slides.length) return;
+
+    const activeIndices = new Set();
+    if (isMobile()) {
+      activeIndices.add(curSlide);
+      activeIndices.add(prevMobileSlideIndex(curSlide));
+      activeIndices.add(nextMobileSlideIndex(curSlide));
+    } else {
+      const first = spreadToFirstSlide(curSpread);
+      activeIndices.add(first - 2);
+      activeIndices.add(first - 1);
+      activeIndices.add(first);
+      activeIndices.add(first + 1);
+      activeIndices.add(first + 2);
+      activeIndices.add(first + 3);
+    }
+
+    slides.forEach((slide, index) => {
+      if (activeIndices.has(index)) loadSlideVideos(slide);
+      else unloadSlideVideos(slide);
+    });
+  }
+
   /* ── Navigation ────────────────────────────────────────────── */
   function stopCurrentAudio() {
     if (currentAudio) {
       currentAudio.pause();
       currentAudio.currentTime = 0;
       playingBtn?.classList.remove('playing');
+      playingBtn?.setAttribute('aria-pressed', 'false');
+      playingBtn?.querySelector('.audio-progress')?.remove();
       currentAudio = null;
       playingBtn = null;
     }
+    updateAudioStopButton();
+  }
+
+  function setupAudioStopButton() {
+    if (document.getElementById('audio-stop-btn')) return;
+    const btn = mk('button', {
+      id: 'audio-stop-btn',
+      type: 'button',
+      'aria-label': 'Stop current sound',
+      title: 'Stop sound',
+      hidden: '',
+    });
+    btn.innerHTML = '<span aria-hidden="true">■</span>';
+    btn.addEventListener('click', stopCurrentAudio);
+    document.body.appendChild(btn);
+  }
+
+  function updateAudioStopButton() {
+    const btn = document.getElementById('audio-stop-btn');
+    if (!btn) return;
+    const active = Boolean(currentAudio && playingBtn);
+    btn.hidden = !active;
+    btn.classList.toggle('visible', active);
+  }
+
+  function setupButtonEmojiAlignment() {
+    const emojiPattern = /([\u{2600}-\u{27BF}\u{1F000}-\u{1FAFF}][\u{FE0E}\u{FE0F}]?[\u{1F3FB}-\u{1F3FF}]?(?:\u{200D}[\u{2600}-\u{27BF}\u{1F000}-\u{1FAFF}][\u{FE0E}\u{FE0F}]?[\u{1F3FB}-\u{1F3FF}]?)*)/gu;
+
+    document.querySelectorAll('.text-to-sound, .peek-hint').forEach(button => {
+      const walker = document.createTreeWalker(button, NodeFilter.SHOW_TEXT);
+      const textNodes = [];
+      while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+      textNodes.forEach(node => {
+        if (!emojiPattern.test(node.nodeValue)) return;
+        emojiPattern.lastIndex = 0;
+
+        const fragment = document.createDocumentFragment();
+        let lastIndex = 0;
+        node.nodeValue.replace(emojiPattern, (match, _emoji, offset) => {
+          if (offset > lastIndex) fragment.append(document.createTextNode(node.nodeValue.slice(lastIndex, offset)));
+          const span = mk('span', { class: 'button-emoji', 'aria-hidden': 'true' });
+          span.textContent = match;
+          fragment.append(span);
+          lastIndex = offset + match.length;
+          return match;
+        });
+
+        if (lastIndex < node.nodeValue.length) fragment.append(document.createTextNode(node.nodeValue.slice(lastIndex)));
+        node.parentNode.replaceChild(fragment, node);
+      });
+    });
   }
 
   function stopBgTrack(key) {
@@ -668,6 +878,58 @@
   }
 
   /* ── Progress & Counter ────────────────────────────────────── */
+  function getHashPage() {
+    const match = (window.location.hash || '').match(/^#p=(\d+)$/i);
+    if (!match) return null;
+    const index = parseInt(match[1], 10);
+    return (!isNaN(index) && index >= 0 && index < slides.length) ? index : null;
+  }
+
+  function updateDeepLink() {
+    if (suppressHashUpdate) return;
+    const index = getCurrentSlideIndex();
+    if (index > 0) {
+      const nextHash = `#p=${index}`;
+      if (window.location.hash !== nextHash) history.replaceState(null, '', nextHash);
+    } else if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }
+
+  function jumpFromHash({ animate = false } = {}) {
+    if (!hasUnlockedStory()) return;
+    const index = getHashPage();
+    if (index === null || index === getCurrentSlideIndex()) return;
+
+    suppressHashUpdate = true;
+    stopCurrentAudio();
+    navDirection = index > getCurrentSlideIndex() ? 'forward' : 'backward';
+    if (isMobile()) curSlide = index;
+    else {
+      curSpread = slideIndexToSpread(index);
+      curSlide = index;
+    }
+    render(animate);
+    suppressHashUpdate = false;
+  }
+
+  function setupDeepLinks() {
+    window.addEventListener('hashchange', () => jumpFromHash({ animate: true }));
+  }
+
+  function copyCurrentPageLink() {
+    if (document.body.classList.contains('story-locked')) return;
+    updateDeepLink();
+    const url = window.location.href;
+    if (!navigator.clipboard?.writeText) {
+      showToast('Page link is in the address bar', 'info');
+      return;
+    }
+    navigator.clipboard.writeText(url)
+      .then(() => showToast('Page link copied', 'success'))
+      .catch(() => showToast('Page link is in the address bar', 'info'));
+  }
+
   function updateProgress() {
     const fill  = document.getElementById('progress-fill');
     const bar   = document.getElementById('progress-bar');
@@ -679,6 +941,13 @@
     bar.setAttribute('aria-valuenow', Math.round(percent));
     document.documentElement.style.setProperty('--story-progress', percent.toFixed(2));
     document.documentElement.style.setProperty('--story-progress-pct', `${percent}%`);
+
+    const chapter = getCurrentChapter();
+    const nextChapter = chapter ? getNextChapterAfter(chapter.index) : null;
+    const chapterEnd = nextChapter ? nextChapter.index : total;
+    const chapterSpan = chapter ? Math.max(1, chapterEnd - chapter.index) : 1;
+    const chapterProgress = chapter ? Math.min(100, Math.max(0, ((idx - chapter.index) / chapterSpan) * 100)) : 0;
+    document.documentElement.style.setProperty('--chapter-progress-pct', `${chapterProgress.toFixed(2)}%`);
   }
 
   function announceSlide() {
@@ -709,7 +978,9 @@
     const el = document.getElementById('top-indicator');
     if (!el) return;
     const chapter = getCurrentChapter();
-    const chapterHTML = chapter ? `<span class="top-chapter">${chapter.title}</span>` : '';
+    const chapterHTML = chapter
+      ? `<button class="top-chapter" type="button" data-chapter-index="${chapter.index}" title="Back to ${escapeHTML(chapter.title)}">${escapeHTML(chapter.title)}</button>`
+      : '';
     if (isMobile()) {
       const count = curSlide === 0 ? 'Cover' : `${curSlide} / ${slides.length - 1}`;
       el.innerHTML = `<span class="top-count">${count}</span>${chapterHTML}`;
@@ -724,6 +995,73 @@
         el.innerHTML = `<span class="top-count">${count}</span>${chapterHTML}`;
       }
     }
+  }
+
+  function setupStoryInspector() {
+    if (document.getElementById('story-inspector')) return;
+    const panel = mk('aside', {
+      id: 'story-inspector',
+      'aria-hidden': 'true',
+      hidden: '',
+    });
+    document.body.appendChild(panel);
+  }
+
+  function toggleStoryInspector() {
+    const panel = document.getElementById('story-inspector');
+    if (!panel) return;
+    const visible = panel.hidden;
+    panel.hidden = !visible;
+    panel.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    document.body.classList.toggle('inspector-open', visible);
+    updateStoryInspector();
+  }
+
+  function getSlideTextLength(slide) {
+    if (!slide) return 0;
+    const clone = slide.cloneNode(true);
+    clone.querySelectorAll('video, source, img, .storybook-logo').forEach(node => node.remove());
+    return clone.textContent.trim().replace(/\s+/g, ' ').length;
+  }
+
+  function getInspectorSlides() {
+    if (!slides.length) return [];
+    if (isMobile()) return [slides[curSlide]].filter(Boolean);
+    return (spreads[curSpread] || []).filter(Boolean);
+  }
+
+  function updateStoryInspector() {
+    const panel = document.getElementById('story-inspector');
+    if (!panel || panel.hidden) return;
+
+    const activeSlides = getInspectorSlides();
+    const currentChapter = getCurrentChapter();
+    const rows = activeSlides.map(slide => {
+      const index = slides.indexOf(slide);
+      const textLength = getSlideTextLength(slide);
+      const mediaCount = slide.querySelectorAll('video.gift-video, img').length;
+      const audioCount = slide.querySelectorAll('.text-to-sound').length;
+      const spoilerCount = slide.querySelectorAll('.peek-hint').length;
+      const flags = [];
+      if (textLength > 180) flags.push('dense');
+      if (!mediaCount && textLength > 80) flags.push('text-only');
+      if (audioCount > 1) flags.push(`${audioCount} audio`);
+
+      return `
+        <li>
+          <span class="si-page">p. ${index}</span>
+          <span class="si-title">${escapeHTML(getSlideHeading(slide) || 'Untitled')}</span>
+          <span class="si-meta">${textLength} chars · ${mediaCount} media · ${audioCount} audio · ${spoilerCount} spoilers</span>
+          ${flags.length ? `<span class="si-flags">${flags.map(escapeHTML).join(' · ')}</span>` : ''}
+        </li>`;
+    }).join('');
+
+    panel.innerHTML = `
+      <div class="si-kicker">Story Inspector</div>
+      <div class="si-chapter">${escapeHTML(currentChapter?.title || 'Before chapters')}</div>
+      <ol>${rows}</ol>
+      <div class="si-foot">I to hide</div>
+    `;
   }
 
   function setupNavButtons() {
@@ -1056,7 +1394,20 @@
       counter.style.pointerEvents = 'auto';
       counter.style.cursor = 'pointer';
       counter.title = 'Click to jump to slide (G)';
-      counter.addEventListener('click', openJumpModal);
+      counter.addEventListener('click', e => {
+        const chapterBtn = e.target.closest('.top-chapter');
+        if (chapterBtn) {
+          e.stopPropagation();
+          const index = parseInt(chapterBtn.dataset.chapterIndex, 10);
+          const returnIndex = getCurrentSlideIndex();
+          if (!isNaN(index)) {
+            goTo(index);
+            if (returnIndex !== index) showReturnPrompt(returnIndex);
+          }
+          return;
+        }
+        openJumpModal();
+      });
     }
 
     // Page-number labels at the bottom of each page also open the modal
@@ -1134,6 +1485,10 @@
           <li><kbd>M</kbd> Mute/unmute audio</li>
           <li><kbd>S</kbd> Toggle spoiler</li>
           <li><kbd>B</kbd> Bookmark page</li>
+          <li><kbd>L</kbd> Copy current page link</li>
+          <li><kbd>+</kbd> <kbd>-</kbd> Adjust text scale</li>
+          <li><kbd>0</kbd> Reset text scale</li>
+          <li><kbd>I</kbd> Toggle story inspector</li>
           <li><kbd>?</kbd> <kbd>/</kbd> Show this help</li>
           <li><kbd>Esc</kbd> Close modals</li>
         </ul>
@@ -1172,11 +1527,129 @@
   }
 
   /* ── Bookmark ───────────────────────────────────────────────── */
+  function clampReaderScale(value) {
+    return Math.min(1.16, Math.max(0.92, Number(value) || 1));
+  }
+
+  function getReaderScale() {
+    return clampReaderScale(localStorage.getItem(READER_SCALE_KEY) || 1);
+  }
+
+  function setReaderScale(value, { announce = false } = {}) {
+    const scale = clampReaderScale(value);
+    const saved = scale.toFixed(2);
+    document.documentElement.style.setProperty('--reader-scale', saved);
+    document.documentElement.style.setProperty('--reader-h1-min', `${(0.9 * scale).toFixed(3)}rem`);
+    document.documentElement.style.setProperty('--reader-h1-max', `${(1.45 * scale).toFixed(3)}rem`);
+    document.documentElement.style.setProperty('--reader-h2-min', `${(1.05 * scale).toFixed(3)}rem`);
+    document.documentElement.style.setProperty('--reader-h2-max', `${(1.55 * scale).toFixed(3)}rem`);
+    document.documentElement.style.setProperty('--reader-p-size', `${(0.93 * scale).toFixed(3)}rem`);
+    document.documentElement.style.setProperty('--reader-button-size', `${(0.90 * scale).toFixed(3)}rem`);
+    document.documentElement.style.setProperty('--reader-mobile-h2-size', `${(1.05 * scale).toFixed(3)}rem`);
+    document.documentElement.style.setProperty('--reader-mobile-p-size', `${(0.88 * scale).toFixed(3)}rem`);
+    document.documentElement.style.setProperty('--reader-mobile-button-size', `${(0.78 * scale).toFixed(3)}rem`);
+    localStorage.setItem(READER_SCALE_KEY, saved);
+    if (announce) showToast(`Text scale ${Math.round(scale * 100)}%`, 'info');
+  }
+
+  function setupReaderScale() {
+    setReaderScale(getReaderScale());
+  }
+
+  function bumpReaderScale(delta) {
+    setReaderScale(getReaderScale() + delta, { announce: true });
+  }
+
+  function resetReaderScale() {
+    setReaderScale(1, { announce: true });
+  }
+
   function getBookmark() {
+    const data = getBookmarkData();
+    return data ? data.index : null;
+  }
+
+  function getBookmarkData() {
     const raw = localStorage.getItem(BOOKMARK_KEY);
     if (raw === null) return null;
-    const idx = parseInt(raw, 10);
-    return (!isNaN(idx) && idx > 0 && idx < slides.length) ? idx : null;
+    let data = null;
+
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') data = parsed;
+    } catch (_) {
+      const idx = parseInt(raw, 10);
+      if (!isNaN(idx)) data = { index: idx };
+    }
+
+    const idx = parseInt(data?.index, 10);
+    if (isNaN(idx) || idx <= 0 || idx >= slides.length) return null;
+
+    return {
+      index: idx,
+      title: data.title || getSlideHeading(slides[idx]) || `Page ${idx}`,
+      chapter: data.chapter || getChapterForIndex(idx)?.title || '',
+      savedAt: data.savedAt || '',
+    };
+  }
+
+  function getChapterForIndex(index) {
+    let current = null;
+    chapters.forEach(chapter => {
+      if (chapter.index <= index) current = chapter;
+    });
+    return current;
+  }
+
+  function saveBookmark(index) {
+    const bookmarkChapter = getChapterForIndex(index);
+    localStorage.setItem(BOOKMARK_KEY, JSON.stringify({
+      index,
+      title: getSlideHeading(slides[index]) || `Page ${index}`,
+      chapter: bookmarkChapter?.title || '',
+      savedAt: new Date().toISOString(),
+    }));
+  }
+
+  function getResumeData(key) {
+    const raw = localStorage.getItem(key);
+    if (raw === null) return null;
+    let data = null;
+
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') data = parsed;
+    } catch (_) {
+      const idx = parseInt(raw, 10);
+      if (!isNaN(idx)) data = { index: idx };
+    }
+
+    const idx = parseInt(data?.index, 10);
+    if (isNaN(idx) || idx <= 0 || idx >= slides.length) return null;
+
+    return {
+      index: idx,
+      title: data.title || getSlideHeading(slides[idx]) || `Page ${idx}`,
+      chapter: data.chapter || getChapterForIndex(idx)?.title || '',
+      savedAt: data.savedAt || '',
+    };
+  }
+
+  function getLastReadData() {
+    return getResumeData(LAST_READ_KEY);
+  }
+
+  function saveLastReadPosition() {
+    if (!hasUnlockedStory()) return;
+    const index = getCurrentSlideIndex();
+    if (index <= 0 || index >= slides.length) return;
+    const chapter = getChapterForIndex(index);
+    localStorage.setItem(LAST_READ_KEY, JSON.stringify({
+      index,
+      title: getSlideHeading(slides[index]) || `Page ${index}`,
+      chapter: chapter?.title || '',
+      savedAt: new Date().toISOString(),
+    }));
   }
 
   function updateBookmarkBtn() {
@@ -1199,7 +1672,7 @@
       updateBookmarkBtn();
       showToast('Bookmark removed', 'info');
     } else {
-      localStorage.setItem(BOOKMARK_KEY, idx);
+      saveBookmark(idx);
       updateBookmarkBtn();
       showToast(`Bookmark saved — page ${idx}`, 'success');
     }
@@ -1208,11 +1681,18 @@
   function showBookmarkPrompt(idx) {
     const container = document.querySelector('.toast-container');
     if (!container) return;
+    const bookmark = getBookmarkData();
+    const title = bookmark?.title || getSlideHeading(slides[idx]) || `Page ${idx}`;
+    const chapter = bookmark?.chapter || getChapterForIndex(idx)?.title || '';
     const DURATION = 8000;
     const toast = mk('div', { class: 'toast bookmark-prompt', role: 'alert' });
     toast.innerHTML = `
       <span>🔖</span>
-      <span>Continue from page&nbsp;<strong>${idx}</strong>?</span>
+      <span class="bookmark-context">
+        <span>Continue from page&nbsp;<strong>${idx}</strong>?</span>
+        <span class="bookmark-title">${escapeHTML(title)}</span>
+        ${chapter ? `<span class="bookmark-chapter">${escapeHTML(chapter)}</span>` : ''}
+      </span>
       <button class="bookmark-go">Go&nbsp;→</button>
       <button class="bookmark-dismiss" aria-label="Dismiss">✕</button>
       <div class="toast-progress" style="animation-duration:${DURATION}ms"></div>
@@ -1227,12 +1707,72 @@
     });
   }
 
+  function showLastReadPrompt(data) {
+    const container = document.querySelector('.toast-container');
+    if (!container || !data) return;
+    const currentIndex = getCurrentSlideIndex();
+    const alreadyNearby = currentIndex > 0 && Math.abs(currentIndex - data.index) <= 2;
+    if (alreadyNearby) return;
+
+    const DURATION = 8000;
+    const toast = mk('div', { class: 'toast bookmark-prompt last-read-prompt', role: 'alert' });
+    toast.innerHTML = `
+      <span>↩</span>
+      <span class="bookmark-context">
+        <span>Resume from page&nbsp;<strong>${data.index}</strong>?</span>
+        <span class="bookmark-title">${escapeHTML(data.title)}</span>
+        ${data.chapter ? `<span class="bookmark-chapter">${escapeHTML(data.chapter)}</span>` : ''}
+      </span>
+      <button class="bookmark-go">Go&nbsp;→</button>
+      <button class="bookmark-dismiss" aria-label="Dismiss">✕</button>
+      <div class="toast-progress" style="animation-duration:${DURATION}ms"></div>
+    `;
+    container.appendChild(toast);
+    const timer = setTimeout(() => toast.remove(), DURATION);
+    toast.querySelector('.bookmark-go').addEventListener('click', () => {
+      clearTimeout(timer); toast.remove(); goTo(data.index);
+    });
+    toast.querySelector('.bookmark-dismiss').addEventListener('click', () => {
+      clearTimeout(timer); toast.remove();
+    });
+  }
+
+  function showReturnPrompt(index) {
+    const container = document.querySelector('.toast-container');
+    if (!container || index <= 0 || index >= slides.length) return;
+    const title = getSlideHeading(slides[index]) || `Page ${index}`;
+    const DURATION = 7000;
+    const toast = mk('div', { class: 'toast bookmark-prompt return-prompt', role: 'status' });
+    toast.innerHTML = `
+      <span>↩</span>
+      <span class="bookmark-context">
+        <span>Return to page&nbsp;<strong>${index}</strong>?</span>
+        <span class="bookmark-title">${escapeHTML(title)}</span>
+      </span>
+      <button class="bookmark-go">Back</button>
+      <button class="bookmark-dismiss" aria-label="Dismiss">✕</button>
+      <div class="toast-progress" style="animation-duration:${DURATION}ms"></div>
+    `;
+    container.appendChild(toast);
+    const timer = setTimeout(() => toast.remove(), DURATION);
+    toast.querySelector('.bookmark-go').addEventListener('click', () => {
+      clearTimeout(timer); toast.remove(); goTo(index);
+    });
+    toast.querySelector('.bookmark-dismiss').addEventListener('click', () => {
+      clearTimeout(timer); toast.remove();
+    });
+  }
+
   function setupBookmark() {
     const btn = document.getElementById('bookmark-btn');
     if (!btn) return;
     btn.addEventListener('click', toggleBookmark);
     const saved = getBookmark();
     if (saved !== null) setTimeout(() => showBookmarkPrompt(saved), 1200);
+    else if (hasUnlockedStory()) {
+      const lastRead = getLastReadData();
+      if (lastRead !== null) setTimeout(() => showLastReadPrompt(lastRead), 1200);
+    }
   }
 
   function setupHelpFab() {
@@ -1533,6 +2073,7 @@
           const oldProgress = playingBtn?.querySelector('.audio-progress');
           if (oldProgress) oldProgress.remove();
           currentAudio = null; playingBtn = null;
+          updateAudioStopButton();
         }
 
         if (!audio) {
@@ -1556,7 +2097,9 @@
             btn.classList.remove('playing');
             btn.setAttribute('aria-pressed', 'false');
             if (progressEl) progressEl.remove();
+            progressEl = null;
             if (currentAudio === audio) { currentAudio = null; playingBtn = null; }
+            updateAudioStopButton();
           });
         }
 
@@ -1566,9 +2109,10 @@
               btn.classList.add('playing');
               btn.setAttribute('aria-pressed', 'true');
               currentAudio = audio; playingBtn = btn;
+              updateAudioStopButton();
               
               // Create progress element
-              if (!progressEl) {
+              if (!progressEl || !progressEl.isConnected) {
                 progressEl = mk('div', { class: 'audio-progress' });
                 btn.appendChild(progressEl);
               }
@@ -1583,7 +2127,9 @@
           btn.classList.remove('playing');
           btn.setAttribute('aria-pressed', 'false');
           if (progressEl) progressEl.remove();
+          progressEl = null;
           if (currentAudio === audio) { currentAudio = null; playingBtn = null; }
+          updateAudioStopButton();
         }
       });
     });
@@ -1700,6 +2246,30 @@
           break;
         case 'b': case 'B':
           if (!modalOpen && !navOpen) toggleBookmark();
+          break;
+        case 'l': case 'L':
+          if (!modalOpen && !navOpen) copyCurrentPageLink();
+          break;
+        case '+': case '=':
+          if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
+            e.preventDefault();
+            bumpReaderScale(0.04);
+          }
+          break;
+        case '-': case '_':
+          if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
+            e.preventDefault();
+            bumpReaderScale(-0.04);
+          }
+          break;
+        case '0':
+          if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
+            e.preventDefault();
+            resetReaderScale();
+          }
+          break;
+        case 'i': case 'I':
+          if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) toggleStoryInspector();
           break;
       }
     });
