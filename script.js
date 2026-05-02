@@ -215,6 +215,7 @@
     setupHelpModal();
     setupStoryInspector();
     setupVideoLoading();
+    setupVideoWatchdog();
     buildNavPanel();
     setupToastContainer();
     setupSwipeHints();
@@ -230,6 +231,9 @@
         if (!t.audio) return;
         document.hidden ? t.audio.pause() : t.audio.play().catch(() => {});
       });
+
+      if (document.hidden) pauseActiveVideos();
+      else resumeActiveVideos();
     });
 
     setupDeepLinks();
@@ -381,6 +385,7 @@
         const clone    = exitPage.cloneNode(true);
         clone.removeAttribute('id');
         clone.classList.add('page-exit-clone');
+        stripCloneMedia(clone);
         clone.style.position = 'absolute';
         clone.style.top      = (rect.top  - bookRect.top)  + 'px';
         clone.style.left     = (rect.left - bookRect.left) + 'px';
@@ -444,6 +449,7 @@
         const clone    = exitPage.cloneNode(true);
         clone.removeAttribute('id');
         clone.classList.add('page-exit-clone');
+        stripCloneMedia(clone);
         clone.style.position = 'absolute';
         clone.style.top      = (rect.top  - bookRect.top)  + 'px';
         clone.style.left     = (rect.left - bookRect.left) + 'px';
@@ -622,51 +628,69 @@
     if (rs) rs.querySelector('.empty-page-ornament')?.remove();
   }
 
+  function stripCloneMedia(clone) {
+    clone.querySelectorAll('video, source').forEach(node => node.remove());
+  }
+
   function playVideos(slide) {
     loadSlideVideos(slide);
 
     slide.querySelectorAll('video').forEach(v => {
+      v.muted = true;
+      v.loop = true;
+      v.playsInline = true;
+      v.setAttribute('playsinline', '');
       try { v.currentTime = 0; } catch (_) {}
+      playVideoWhenReady(v);
 
-      if (!v._observed) {
-        v._observed = true;
-
+      if (!v._errorBound) {
+        v._errorBound = true;
         v.addEventListener('error', () => {
           const frame = v.closest('.gift-img');
           v.classList.add('video-error');
           frame?.classList.add('video-error');
           if (frame && !frame.dataset.errorLabel) frame.dataset.errorLabel = 'The animation for this page could not be loaded.';
         });
-
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              loadVideo(v);
-              playVideoWhenReady(v);
-            } else {
-              v.pause();
-            }
-          });
-        }, { threshold: 0.5 });
-
-        observer.observe(v);
       }
     });
   }
 
+  function pauseActiveVideos() {
+    document
+      .querySelectorAll('#left-slot > .slide.in-page video.gift-video, #right-slot > .slide.in-page video.gift-video')
+      .forEach(v => v.pause());
+  }
+
+  function resumeActiveVideos() {
+    document
+      .querySelectorAll('#left-slot > .slide.in-page, #right-slot > .slide.in-page')
+      .forEach(playVideos);
+  }
+
   function playVideoWhenReady(video) {
+    const play = () => video.play().catch(() => {});
+
     if (video.readyState >= 2) {
-      video.play().catch(() => {});
+      play();
       return;
     }
 
-    video.addEventListener('loadeddata', () => {
-      video.play().catch(() => {});
+    video.addEventListener('loadeddata', play, { once: true });
+    video.addEventListener('canplay', play, { once: true });
+    video.addEventListener('playing', () => {
+      video.dataset.lastTime = String(video.currentTime || 0);
+      video.dataset.lastMovingAt = String(Date.now());
     }, { once: true });
   }
 
   function setupVideoLoading() {
     document.querySelectorAll('video.gift-video').forEach(video => {
+      video.autoplay = false;
+      video.removeAttribute('autoplay');
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.setAttribute('playsinline', '');
       video.preload = 'none';
       video.querySelectorAll('source[src]').forEach(source => {
         source.dataset.src = source.getAttribute('src');
@@ -687,6 +711,7 @@
     video.dataset.loaded = 'true';
     video.preload = 'metadata';
     video.load();
+    if (!video.closest('#left-slot, #right-slot')) video.pause();
   }
 
   function unloadVideo(video) {
@@ -713,22 +738,42 @@
     const activeIndices = new Set();
     if (isMobile()) {
       activeIndices.add(curSlide);
-      activeIndices.add(prevMobileSlideIndex(curSlide));
-      activeIndices.add(nextMobileSlideIndex(curSlide));
     } else {
       const first = spreadToFirstSlide(curSpread);
-      activeIndices.add(first - 2);
-      activeIndices.add(first - 1);
       activeIndices.add(first);
       activeIndices.add(first + 1);
-      activeIndices.add(first + 2);
-      activeIndices.add(first + 3);
     }
 
     slides.forEach((slide, index) => {
       if (activeIndices.has(index)) loadSlideVideos(slide);
       else unloadSlideVideos(slide);
     });
+  }
+
+  function setupVideoWatchdog() {
+    window.setInterval(() => {
+      if (document.hidden) return;
+
+      document
+        .querySelectorAll('#left-slot > .slide.in-page video.gift-video, #right-slot > .slide.in-page video.gift-video')
+        .forEach(video => {
+          const currentTime = video.currentTime || 0;
+          const lastTime = Number(video.dataset.lastTime || -1);
+          const lastMovingAt = Number(video.dataset.lastMovingAt || Date.now());
+          const now = Date.now();
+
+          if (!video.paused && Math.abs(currentTime - lastTime) > 0.05) {
+            video.dataset.lastTime = String(currentTime);
+            video.dataset.lastMovingAt = String(now);
+            return;
+          }
+
+          if (video.paused || now - lastMovingAt > 2500) {
+            playVideoWhenReady(video);
+            video.dataset.lastMovingAt = String(now);
+          }
+        });
+    }, 1500);
   }
 
   /* ── Navigation ────────────────────────────────────────────── */
