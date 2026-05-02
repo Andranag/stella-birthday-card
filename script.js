@@ -10,7 +10,8 @@
   const UNLOCKED_KEY    = 'stella_bday_unlocked';
 
   /* ── State ─────────────────────────────────────────────────── */
-  let slides      = [];   // all .slide.gift-article elements
+  let allSlides   = [];   // every .slide.gift-article element in the document
+  let slides      = [];   // active slide set for the current viewport
   let spreads     = [];   // [[cover], [s1,s2], [s3,s4], ...]
   let chapters    = [];   // rhythm markers derived from "Almost..." pages
   let curSpread   = 0;    // desktop: current spread index
@@ -18,6 +19,7 @@
   let currentAudio = null;
   let playingBtn   = null;
   let navDirection = 'forward';
+  const MOBILE_SEQUENTIAL_SKIP_SLIDES = new Set([2, 3]);
   const _bgTracks = {
     dance: { audio: null, src: 'assets/music/put your head on my shoulder.mp3', vol: 0.35 },
   };
@@ -36,6 +38,21 @@
 
   /* ── Helpers ───────────────────────────────────────────────── */
   const isMobile = () => window.innerWidth < 640;
+
+  function getSlidesForViewport() {
+    const mobile = isMobile();
+    return allSlides.filter(slide => {
+      if (mobile) return !slide.classList.contains('desktop-only-slide');
+      return !slide.classList.contains('mobile-only-slide');
+    });
+  }
+
+  function refreshSlidesForViewport() {
+    slides = getSlidesForViewport();
+    buildSpreads();
+    buildChapters();
+    buildContentsPages();
+  }
 
   function mk(tag, attrs = {}) {
     const n = document.createElement(tag);
@@ -61,6 +78,18 @@
     return h ? h.textContent.trim().replace(/\s+/g, ' ') : '';
   }
 
+  function nextMobileSlideIndex(fromIndex) {
+    let nextIndex = Math.min(fromIndex + 1, slides.length - 1);
+    while (nextIndex < slides.length - 1 && MOBILE_SEQUENTIAL_SKIP_SLIDES.has(nextIndex)) nextIndex++;
+    return nextIndex;
+  }
+
+  function prevMobileSlideIndex(fromIndex) {
+    let prevIndex = Math.max(fromIndex - 1, 0);
+    while (prevIndex > 0 && MOBILE_SEQUENTIAL_SKIP_SLIDES.has(prevIndex)) prevIndex--;
+    return prevIndex;
+  }
+
   function buildChapters() {
     chapters = slides
       .map((slide, index) => ({ slide, index, title: getSlideHeading(slide) }))
@@ -70,6 +99,56 @@
     chapters.forEach(({ slide, number }) => {
       slide.classList.add('chapter-page');
       slide.dataset.chapter = String(number);
+    });
+  }
+
+  function formatContentsTitle(title) {
+    return title
+      .replace(/\s+/g, ' ')
+      .replace(/[.!?]+$/g, '')
+      .trim();
+  }
+
+  function setContentsListStart(list, start) {
+    list.start = start;
+    list.style.counterReset = `contents ${start - 1}`;
+  }
+
+  function fillContentsPage(slide, entries, startNumber) {
+    const list = slide.querySelector('.contents-list');
+    if (!list) return;
+    list.replaceChildren();
+    setContentsListStart(list, startNumber);
+
+    entries.forEach(({ title, page }) => {
+      const item = document.createElement('li');
+      const titleSpan = document.createElement('span');
+      const pageSpan = document.createElement('span');
+      titleSpan.textContent = title;
+      pageSpan.textContent = String(page);
+      item.append(titleSpan, pageSpan);
+      list.appendChild(item);
+    });
+  }
+
+  function buildContentsPages() {
+    const contentsPages = slides.filter(slide => slide.classList.contains('contents-page'));
+    if (!contentsPages.length) return;
+
+    const entries = chapters.map(({ title, index }) => ({
+      title: formatContentsTitle(title),
+      page: index,
+    }));
+
+    if (contentsPages.length === 1) {
+      fillContentsPage(contentsPages[0], entries, 1);
+      return;
+    }
+
+    const perPage = Math.ceil(entries.length / contentsPages.length);
+    contentsPages.forEach((slide, pageIndex) => {
+      const start = pageIndex * perPage;
+      fillContentsPage(slide, entries.slice(start, start + perPage), start + 1);
     });
   }
 
@@ -99,11 +178,10 @@
 
   /* ── Init ──────────────────────────────────────────────────── */
   document.addEventListener('DOMContentLoaded', () => {
-    slides = Array.from(document.querySelectorAll('.slide.gift-article'));
-    if (!slides.length) return;
+    allSlides = Array.from(document.querySelectorAll('.slide.gift-article'));
+    if (!allSlides.length) return;
 
-    buildSpreads();
-    buildChapters();
+    refreshSlidesForViewport();
     injectDynamicStyles();
     buildBookDOM();
     setupAriaLabels();
@@ -135,6 +213,21 @@
     // Start at cover
     curSpread = 0; curSlide = 0;
     render(false);
+
+    let wasMobile = isMobile();
+    window.addEventListener('resize', debounce(() => {
+      const nowMobile = isMobile();
+      if (nowMobile === wasMobile) return;
+      const currentSlide = wasMobile ? slides[curSlide] : slides[spreadToFirstSlide(curSpread)];
+      wasMobile = nowMobile;
+      returnAllToContainer();
+      refreshSlidesForViewport();
+      rebuildNavPanel();
+      const nextIndex = slides.indexOf(currentSlide);
+      curSlide = nextIndex >= 0 ? nextIndex : Math.min(curSlide, slides.length - 1);
+      curSpread = slideIndexToSpread(curSlide);
+      render(false);
+    }, 150));
 
     if (new URLSearchParams(window.location.search).has('visualAudit')) {
       window.__STELLA_VISUAL_AUDIT__ = {
@@ -385,7 +478,7 @@
     document.getElementById('page-right').scrollTop = 0;
   }
 
-  /* Reorder elements within a slide: h2 → video → p → audio → spoiler */
+  /* Reorder elements within a slide: h2 → video → p/list → audio → spoiler */
   function reorderSlideElements(slide) {
     if (slide.classList.contains('title-page')) return;
 
@@ -393,6 +486,7 @@
     const h2 = slide.querySelector('h2');
     const video = slide.querySelector('.gift-img');
     const paragraphs = Array.from(slide.querySelectorAll(':scope > p'));
+    const lists = Array.from(slide.querySelectorAll(':scope > ul, :scope > ol'));
     const logo = slide.querySelector('.storybook-logo');
     // Only standalone audio (direct child of slide, not inside h2)
     const standaloneAudios = Array.from(slide.querySelectorAll(':scope > .text-to-sound'));
@@ -403,6 +497,7 @@
     if (h2) ordered.push(h2);           // h2 with nested audio stays at top
     if (video) ordered.push(video);     // video second
     paragraphs.forEach(p => ordered.push(p)); // paragraphs third, preserving order
+    lists.forEach(list => ordered.push(list)); // contents/list pages stay under their headings
     standaloneAudios.forEach(btn => ordered.push(btn)); // all standalone audio fourth
     spoilers.forEach(btn => ordered.push(btn));         // all spoilers last
     if (logo) ordered.push(logo);       // title-page logo stays last
@@ -524,7 +619,10 @@
     stopCurrentAudio();
     navDirection = 'forward';
     if (isMobile()) {
-      if (curSlide < slides.length - 1) { playPageTurnSound(); startAmbient(); curSlide++; render(); }
+      if (curSlide < slides.length - 1) {
+        const nextIndex = nextMobileSlideIndex(curSlide);
+        if (nextIndex !== curSlide) { playPageTurnSound(); startAmbient(); curSlide = nextIndex; render(); }
+      }
     } else {
       if (curSpread < spreads.length - 1) {
         playPageTurnSound(); startAmbient();
@@ -539,7 +637,10 @@
     stopCurrentAudio();
     navDirection = 'backward';
     if (isMobile()) {
-      if (curSlide > 0) { playPageTurnSound(); startAmbient(); curSlide--; render(); }
+      if (curSlide > 0) {
+        const prevIndex = prevMobileSlideIndex(curSlide);
+        if (prevIndex !== curSlide) { playPageTurnSound(); startAmbient(); curSlide = prevIndex; render(); }
+      }
     } else {
       if (curSpread > 0) {
         playPageTurnSound(); startAmbient();
@@ -1319,6 +1420,11 @@
       const resultCount = mk('span', { class: 'search-result-count' });
       searchSecHeader.appendChild(resultCount);
     }
+  }
+
+  function rebuildNavPanel() {
+    ['nav-overlay', 'nav-toggle', 'nav-panel'].forEach(id => document.getElementById(id)?.remove());
+    buildNavPanel();
   }
 
   function setupNavHover(toggle, panel) {
