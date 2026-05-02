@@ -868,21 +868,62 @@ body.on-cover #help-fab { opacity: 0; pointer-events: none; }
   background: linear-gradient(90deg, transparent, rgba(var(--g2-rgb),.55), transparent);
 }
 .cover-title-main {
-  font-family: 'Pacifico', cursive;
-  font-size: clamp(1.3rem, 4vw, 2.2rem);
-  color: var(--g2); text-align: center; line-height: 1.6;
-  text-shadow: 0 0 18px rgba(255,200,60,.30), 0 2px 6px rgba(0,0,0,.65);
-  transform: rotate(-15deg);
-  display: inline-block;
-  margin: 12px auto 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: 12px auto 10px;
+  font-family: 'Marck Script', cursive;
+  font-size: clamp(2.05rem, 6.5vw, 3.8rem);
+  font-weight: 400;
+  color: var(--g2);
+  text-align: center;
+  line-height: .86;
+  transform: rotate(-9deg) skew(-3deg);
+  text-shadow:
+    0 0 18px rgba(255,200,60,.30),
+    .7px .7px 0 rgba(38, 18, 9, .58),
+    -.5px .7px 0 rgba(255, 241, 169, .20),
+    0 3px 8px rgba(0,0,0,.72);
+}
+.cover-title-main span {
+  display: block;
+}
+.cover-title-amp {
+  margin: -.04em 0 -.02em;
+  font-size: 1.12em;
+  color: var(--g0);
 }
 .cover-name {
-  font-family: 'Marck Script', cursive;
-  font-size: clamp(1.5rem, 5vw, 2.4rem);
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(.72rem, 1.9vw, 1.02rem);
+  font-weight: 800;
+  letter-spacing: .11em;
+  text-transform: uppercase;
   color: var(--g0); line-height: 1;
   text-shadow: 0 0 28px rgba(255,230,100,.40), 0 2px 10px rgba(0,0,0,.70);
   white-space: nowrap;
   margin-bottom: 8px;
+}
+.cover-storybook-logo {
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: clamp(8px, 2%, 16px);
+  z-index: 1;
+  width: min(188px, 58%);
+  max-height: 92px;
+  height: auto;
+  margin: 0;
+  object-fit: contain;
+  opacity: .84;
+  transform: translateX(-50%);
+  filter:
+    brightness(.62)
+    saturate(.78)
+    sepia(.10)
+    drop-shadow(0 2px 5px rgba(0,0,0,.62))
+    drop-shadow(0 0 10px rgba(255,210,90,.10));
 }
 /* Audio button area on cover */
 .cover-music-area {
@@ -914,7 +955,10 @@ body.on-cover #help-fab { opacity: 0; pointer-events: none; }
 .cover-castle-wrap {
   position: absolute; bottom: 28px; left: 50%;
   transform: translateX(-50%);
-  width: 82%; pointer-events: none; opacity: .32;
+  width: 82%; pointer-events: none; opacity: .58;
+  filter:
+    drop-shadow(0 0 12px rgba(255,210,90,.12))
+    drop-shadow(0 2px 4px rgba(0,0,0,.34));
 }
 .cover-castle-wrap svg { width: 100%; height: auto; }
 
@@ -1761,12 +1805,15 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
 
 /* Decorative star-field ASCII art paragraph */
 .star-field-art {
+  max-width: 100%;
   max-height: 120px;
   overflow: hidden;
   font-size: 0.7em;
   line-height: 1.2;
   opacity: 0.8;
   margin-top: 8px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .text-to-sound strong { color: #6B1205; letter-spacing: 0.02em; }
 
@@ -2012,7 +2059,7 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
 
   #open-book {
     width:  min(350px, 92vw);
-    height: min(500px, 80vh);
+    height: min(580px, 82vh);
   }
 
   /* Improve touch targets on mobile */
@@ -2035,10 +2082,20 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     font-size: 0.95rem;
   }
 
+  .slide.gift-article.active.in-page {
+    gap: 8px !important;
+  }
+
   /* Adjust video sizes for mobile */
   .gift-img,
   .slide.gift-article.in-page .gift-img {
-    height: 200px !important;
+    height: 186px !important;
+  }
+
+  .slide.gift-article.in-page .star-field-art {
+    font-size: .42rem !important;
+    line-height: 1.05 !important;
+    max-height: 74px !important;
   }
 
   /* Adjust progress bar for mobile */
@@ -2181,8 +2238,13 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     width:  min(240px, 78vw);
     height: min(330px, 64vh);
   }
-  .cover-title-main { font-size: 1rem !important; }
-  .cover-name       { font-size: 1.5rem !important; }
+  .cover-title-main { font-size: 2.05rem !important; }
+  .cover-name       { font-size: .72rem !important; }
+  .cover-storybook-logo {
+    bottom: 10px;
+    width: min(140px, 58%) !important;
+    max-height: 68px;
+  }
 
   /* Nav arrows */
   #prev-page, #next-page { width: 38px; height: 56px; font-size: 1.1rem; }

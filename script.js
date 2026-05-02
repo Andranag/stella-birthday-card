@@ -135,6 +135,24 @@
     // Start at cover
     curSpread = 0; curSlide = 0;
     render(false);
+
+    if (new URLSearchParams(window.location.search).has('visualAudit')) {
+      window.__STELLA_VISUAL_AUDIT__ = {
+        count: () => slides.length,
+        jump: index => {
+          if (index < 0 || index >= slides.length) return false;
+          stopCurrentAudio();
+          navDirection = index > getCurrentSlideIndex() ? 'forward' : 'backward';
+          if (isMobile()) curSlide = index;
+          else {
+            curSpread = slideIndexToSpread(index);
+            curSlide = index;
+          }
+          render(false);
+          return true;
+        },
+      };
+    }
   });
 
   /* ── Build spreads ─────────────────────────────────────────── */
@@ -397,7 +415,7 @@
   function returnAllToContainer() {
     const container = document.getElementById('swipe-container');
     if (!container) return;
-    document.querySelectorAll('.slide.in-page').forEach(s => {
+    document.querySelectorAll('#left-slot > .slide.in-page, #right-slot > .slide.in-page').forEach(s => {
       s.classList.remove('active', 'in-page');
       container.appendChild(s);
       s.querySelectorAll('video').forEach(v => v.pause());
@@ -770,8 +788,13 @@
       <div class="cover-body">
         <div class="cover-name">Andreas Anagnostou</div>
         <div class="cover-divider"></div>
-        <div class="cover-title-main">And<br>then &<br>the End</div>
+        <div class="cover-title-main">
+          <span>And then</span>
+          <span class="cover-title-amp">&amp;</span>
+          <span>the End</span>
+        </div>
         <div class="cover-divider"></div>
+        <img class="cover-storybook-logo" src="assets/images/walt disney logo transparent cropped.png" alt="Walt Disney logo" />
       </div>
       <div class="cover-castle-wrap" aria-hidden="true">${buildCastleSVG()}</div>
       <div class="cover-open-hint" aria-hidden="true">✦ open the book ✦</div>
@@ -846,7 +869,7 @@
 
   function buildCastleSVG() {
     /* Disney-style multi-tower castle silhouette */
-    return `<svg viewBox="0 0 280 120" xmlns="http://www.w3.org/2000/svg" fill="rgba(201,160,48,0.32)">
+    return `<svg viewBox="0 0 280 120" xmlns="http://www.w3.org/2000/svg" fill="rgba(214,173,58,0.46)">
       <!-- Far-left tower -->
       <rect x="10" y="82" width="22" height="38"/>
       <rect x="8"  y="74" width="5"  height="9"/>
@@ -901,7 +924,7 @@
       <rect x="262" y="74" width="5"  height="9"/>
       <polygon points="259,50 248,82 270,82"/>
       <!-- Gate arch -->
-      <path d="M133 120 L133 94 Q140 78 147 94 L147 120 Z"/>
+      <path d="M133 120 L133 94 Q140 78 147 94 L147 120 Z" fill="rgba(18,10,30,0.34)"/>
       <!-- Windows -->
       <ellipse cx="140" cy="48" rx="4"   ry="5"   fill="rgba(0,0,0,0.22)"/>
       <ellipse cx="106" cy="65" rx="3"   ry="4"   fill="rgba(0,0,0,0.20)"/>
@@ -911,9 +934,9 @@
       <ellipse cx="21"  cy="92" rx="2"   ry="3"   fill="rgba(0,0,0,0.15)"/>
       <ellipse cx="259" cy="92" rx="2"   ry="3"   fill="rgba(0,0,0,0.15)"/>
       <!-- Tiny flag pennants on spires -->
-      <polygon points="140,0 146,4 140,8"  fill="rgba(201,160,48,0.55)"/>
-      <polygon points="106,13 112,17 106,21" fill="rgba(201,160,48,0.40)"/>
-      <polygon points="174,13 180,17 174,21" fill="rgba(201,160,48,0.40)"/>
+      <polygon points="140,0 146,4 140,8"  fill="rgba(255,216,92,0.72)"/>
+      <polygon points="106,13 112,17 106,21" fill="rgba(255,216,92,0.56)"/>
+      <polygon points="174,13 180,17 174,21" fill="rgba(255,216,92,0.56)"/>
     </svg>`;
   }
 
@@ -1261,6 +1284,7 @@
     allSec.appendChild(slideList);
     panel.appendChild(allSec);
     document.body.appendChild(panel);
+    setupNavHover(toggle, panel);
 
     // Live search with debouncing
     const debouncedSearch = debounce(() => {
@@ -1297,11 +1321,37 @@
     }
   }
 
+  function setupNavHover(toggle, panel) {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    let closeTimer = null;
+    const cancelClose = () => {
+      clearTimeout(closeTimer);
+      closeTimer = null;
+    };
+    const scheduleClose = () => {
+      cancelClose();
+      closeTimer = setTimeout(() => {
+        if (!toggle.matches(':hover') && !panel.matches(':hover')) closeNavPanel({ focusToggle: false });
+      }, 280);
+    };
+
+    toggle.addEventListener('mouseenter', () => {
+      if (document.body.classList.contains('story-locked')) return;
+      cancelClose();
+      openNavPanel({ focusPanel: false });
+      toggle.classList.remove('has-attention');
+    });
+    toggle.addEventListener('mouseleave', scheduleClose);
+    panel.addEventListener('mouseenter', cancelClose);
+    panel.addEventListener('mouseleave', scheduleClose);
+  }
+
   function toggleNavPanel() {
     if (document.body.classList.contains('story-locked')) return;
     document.getElementById('nav-panel')?.classList.contains('open') ? closeNavPanel() : openNavPanel();
   }
-  function openNavPanel() {
+  function openNavPanel({ focusPanel = true } = {}) {
     document.getElementById('nav-panel')?.classList.add('open');
     document.getElementById('nav-overlay')?.classList.add('visible');
     document.getElementById('nav-panel')?.setAttribute('aria-hidden', 'false');
@@ -1316,12 +1366,14 @@
     syncNavPanel();
     
     // Focus first interactive element in panel
-    const firstFocusable = document.querySelector('#nav-panel button, #nav-panel input');
-    if (firstFocusable) {
-      requestAnimationFrame(() => firstFocusable.focus());
+    if (focusPanel) {
+      const firstFocusable = document.querySelector('#nav-panel button, #nav-panel input');
+      if (firstFocusable) {
+        requestAnimationFrame(() => firstFocusable.focus());
+      }
     }
   }
-  function closeNavPanel() {
+  function closeNavPanel({ focusToggle = true } = {}) {
     document.getElementById('nav-panel')?.classList.remove('open');
     document.getElementById('nav-overlay')?.classList.remove('visible');
     document.getElementById('nav-panel')?.setAttribute('aria-hidden', 'true');
@@ -1331,7 +1383,7 @@
     if (icon) icon.textContent = '📖';
     
     // Return focus to toggle button
-    requestAnimationFrame(() => navToggle?.focus());
+    if (focusToggle) requestAnimationFrame(() => navToggle?.focus());
   }
 
   function syncNavPanel() {
@@ -1725,19 +1777,19 @@
 
 /* ── Nav panel ── */
 #nav-panel {
-  position: fixed; top: 0; right: -340px; bottom: 0;
+  position: fixed; top: 0; left: -340px; bottom: 0;
   width: 320px; max-width: 88vw; z-index: 1000;
   display: flex; flex-direction: column; overflow: hidden;
   background:
     repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(140,95,40,.05) 28px,rgba(140,95,40,.05) 29px),
     radial-gradient(ellipse at 10% 5%,rgba(200,155,70,.18) 0%,transparent 50%),
     linear-gradient(165deg,#FAF0D8,#F2E4BC 55%,#EBD5A0);
-  border-left: 4px solid #E5CFA0;
+  border-right: 4px solid #E5CFA0;
   outline: 2px solid rgba(201,160,48,.38); outline-offset: -10px;
-  box-shadow: -8px 0 60px rgba(0,0,0,.55);
-  transition: right .38s cubic-bezier(.22,.85,.32,1);
+  box-shadow: 8px 0 60px rgba(0,0,0,.55);
+  transition: left .38s cubic-bezier(.22,.85,.32,1);
 }
-#nav-panel.open { right: 0; }
+#nav-panel.open { left: 0; }
 #nav-panel::after {
   content: '← → keys · G to jump · N for nav';
   position: sticky; bottom: 0; display: block;
