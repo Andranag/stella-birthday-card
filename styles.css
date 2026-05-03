@@ -2413,6 +2413,8 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
 
 .storybook-modal .modal-content {
   position: relative; width: min(360px, 90vw);
+  max-height: 80vh; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: rgba(201,160,48,.45) transparent;
   text-align: center; padding: 40px 36px 36px;
   background:
     radial-gradient(ellipse 80% 70% at 10% 10%, rgba(200,155,70,.15) 0%, transparent 60%),
@@ -2422,6 +2424,11 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   outline: 1.5px solid rgba(var(--g2-rgb),.35); outline-offset: -12px;
   box-shadow: var(--shadow-page), 0 0 60px rgba(var(--g2-rgb),.18);
   animation: modalSlideUp .3s cubic-bezier(.22,.85,.32,1) both;
+}
+.storybook-modal .modal-content::-webkit-scrollbar { width:6px; }
+.storybook-modal .modal-content::-webkit-scrollbar-thumb { background:rgba(201,160,48,.45); border-radius:6px; }
+@supports not (scrollbar-width: thin) {
+  .storybook-modal .modal-content { padding-right: 30px; }
 }
 @keyframes modalSlideUp { from{transform:translateY(24px) scale(.95);opacity:0;} to{transform:translateY(0) scale(1);opacity:1;} }
 .storybook-modal .modal-content::before { content:'❧'; position:absolute; top:12px; left:16px; font-size:1rem; color:var(--g2); opacity:.65; }
@@ -2451,6 +2458,43 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
 }
 .modal-btn.confirm:hover { transform:translateY(-3px); box-shadow:0 4px 0 var(--g3), 0 8px 20px rgba(var(--g2-rgb),.55); }
 .modal-btn.confirm:active{ transform:translateY(1px); box-shadow:0 1px 0 var(--g3); }
+
+/* ── Jump Modal Sections (Recent + Chapters) ─────────────────── */
+.jump-section { margin-top:16px; text-align:left; }
+.jump-section-title {
+  font-family:'Nunito',sans-serif; font-size:.64rem; font-weight:800;
+  letter-spacing:2px; text-transform:uppercase; color:rgba(90,48,8,.55);
+  margin-bottom:8px; padding:0 4px;
+}
+.jump-list {
+  max-height:140px; overflow-y:auto;
+  scrollbar-width:thin; scrollbar-color:rgba(201,160,48,.45) transparent;
+  padding-right:4px;
+}
+.jump-list::-webkit-scrollbar { width:4px; }
+.jump-list::-webkit-scrollbar-thumb { background:rgba(201,160,48,.45); border-radius:4px; }
+.jump-item {
+  display:flex; align-items:center; gap:10px;
+  width:100%; padding:7px 10px; margin-bottom:4px;
+  background:rgba(255,255,255,.45);
+  border:1.5px solid rgba(201,160,48,.28);
+  border-radius:8px; cursor:pointer;
+  font-family:'Nunito',sans-serif; font-size:.78rem; font-weight:700; color:#3A1F0D;
+  transition:background .15s ease, border-color .15s ease, transform .15s ease;
+}
+.jump-item:hover {
+  background:rgba(201,160,48,.12);
+  border-color:rgba(201,160,48,.55);
+  transform:translateX(2px);
+}
+.jump-item-num {
+  min-width:28px; height:28px;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(145deg,#A07018,var(--g2));
+  border-radius:50%; font-size:.65rem; font-weight:800;
+  color:#FFF5D8; flex-shrink:0;
+}
+.jump-item-label { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 /* Inline images inside buttons */
 .text-to-sound img, .peek-hint img, p img { display:inline-block; vertical-align:middle; border-radius:3px; margin:0 2px; }

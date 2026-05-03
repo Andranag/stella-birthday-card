@@ -28,6 +28,7 @@
   };
   let _pageTurnAudio  = null;
   let _ambientStarted = false;
+  let recentJumps     = [];   // [{slideIndex, title, chapter?}]
 
   function hasUnlockedStory() {
     return localStorage.getItem(UNLOCKED_KEY) === '1';
@@ -951,6 +952,7 @@
     if (slideIndex < 0 || slideIndex >= slides.length) return;
     const currentIdx = getCurrentSlideIndex();
     if (slideIndex === currentIdx) return;
+    trackRecentJump(slideIndex);
     stopCurrentAudio();
     navDirection = slideIndex > currentIdx ? 'forward' : 'backward';
     playPageTurnSound(); startAmbient();
@@ -961,6 +963,15 @@
       curSlide  = slideIndex;
     }
     render();
+  }
+
+  function trackRecentJump(slideIndex) {
+    const title = getSlideHeading(slides[slideIndex]) || `Slide ${slideIndex}`;
+    const chapter = chapters.find(c => c.index === slideIndex)?.title || null;
+    // Remove if already exists
+    recentJumps = recentJumps.filter(j => j.slideIndex !== slideIndex);
+    recentJumps.unshift({ slideIndex, title, chapter });
+    if (recentJumps.length > 5) recentJumps.pop();
   }
 
   /* ── Progress & Counter ────────────────────────────────────── */
@@ -1524,10 +1535,23 @@
       if (e.key === 'Escape') closeJumpModal();
     });
 
+    // Jump to chapter or recent item
+    modal?.addEventListener('click', e => {
+      const item = e.target.closest('.jump-item');
+      if (!item) return;
+      const slideIndex = parseInt(item.dataset.slideIndex, 10);
+      if (!isNaN(slideIndex)) {
+        goTo(slideIndex);
+        closeJumpModal();
+        showToast(`Jumped to ${item.querySelector('.jump-item-label')?.textContent || 'slide'}`, 'success');
+      }
+    });
+
     // Focus trap: keep Tab cycling within modal while open
     modal?.addEventListener('keydown', e => {
       if (e.key !== 'Tab') return;
-      const focusable = [input, cancel, confirm].filter(Boolean);
+      const items = modal.querySelectorAll('.jump-item');
+      const focusable = [input, cancel, confirm, ...items].filter(Boolean);
       const first = focusable[0];
       const last  = focusable[focusable.length - 1];
       if (e.shiftKey) {
@@ -1543,10 +1567,54 @@
     const modal = document.getElementById('jump-modal');
     const input = document.getElementById('jump-input');
     if (modal) {
+      populateJumpLists();
       modal.style.display = 'flex';
       input && (input.value = '');
       requestAnimationFrame(() => input?.focus());
     }
+  }
+
+  function populateJumpLists() {
+    const recentSection = document.getElementById('jump-recent-section');
+    const recentList = document.getElementById('jump-recent-list');
+    if (recentList && recentSection) {
+      recentList.innerHTML = '';
+      if (recentJumps.length) {
+        recentSection.style.display = '';
+        recentJumps.forEach(j => {
+          const label = j.chapter ? `${j.chapter} — ${j.title}` : j.title;
+          recentList.appendChild(mkJumpItem(j.slideIndex, label));
+        });
+      } else {
+        recentSection.style.display = 'none';
+      }
+    }
+    const chaptersSection = document.getElementById('jump-chapters-section');
+    const chaptersList = document.getElementById('jump-chapters-list');
+    if (chaptersList && chaptersSection) {
+      chaptersList.innerHTML = '';
+      if (chapters.length) {
+        chaptersSection.style.display = '';
+        chapters.forEach(c => {
+          chaptersList.appendChild(mkJumpItem(c.index, c.title));
+        });
+      } else {
+        chaptersSection.style.display = 'none';
+      }
+    }
+  }
+
+  function mkJumpItem(slideIndex, label) {
+    const el = document.createElement('button');
+    el.className = 'jump-item';
+    el.type = 'button';
+    el.setAttribute('tabindex', '0');
+    el.dataset.slideIndex = slideIndex;
+    el.innerHTML = `
+      <span class="jump-item-num">${slideIndex}</span>
+      <span class="jump-item-label">${label}</span>
+    `;
+    return el;
   }
 
   function closeJumpModal() {
@@ -1968,30 +2036,6 @@
     searchSec.appendChild(searchInput);
     panel.appendChild(searchSec);
 
-    let chapterList = null;
-    if (chapters.length) {
-      const chapterSec = mk('section', { class: 'np-section np-chapters-section' });
-      chapterSec.innerHTML = `<h4 class="np-section-title">Contents <span class="np-total">${chapters.length} chapters</span></h4>`;
-      chapterList = mk('ol', { class: 'np-chapter-list', id: 'np-chapter-list' });
-
-      chapters.forEach(chapter => {
-        const li = mk('li', { class: 'np-chapter-item' });
-        const btn = mk('button', { class: 'np-chapter-btn', 'data-si': chapter.index });
-        btn.innerHTML = `
-          <span class="np-chapter-num">${chapter.number}</span>
-          <span class="np-chapter-copy">
-            <span class="np-chapter-label">${chapter.title}</span>
-            <span class="np-chapter-page">page ${chapter.index}</span>
-          </span>`;
-        btn.addEventListener('click', () => { goTo(chapter.index); closeNavPanel(); });
-        li.appendChild(btn);
-        chapterList.appendChild(li);
-      });
-
-      chapterSec.appendChild(chapterList);
-      panel.appendChild(chapterSec);
-    }
-
     // All slides
     const allSec = mk('section', { class: 'np-section np-slides-section' });
     allSec.innerHTML = `<h4 class="np-section-title">📄 All Slides <span class="np-total">${slides.length - 1} pages</span></h4>`;
@@ -2005,13 +2049,26 @@
       const btn  = mk('button', { class: 'np-slide-btn', 'data-si': i });
       btn.innerHTML = `<span class="np-slide-num">${i === 0 ? '🏰' : i}</span><span class="np-slide-label">${lbl || '…'}</span>`;
       btn.addEventListener('click', () => { goTo(i); closeNavPanel(); });
+      // Collect all searchable text from the slide for forgiving search
+      const allText = Array.from(slide.querySelectorAll('h1, h2, p, button, [aria-label]'))
+        .map(el => el.getAttribute('aria-label') || el.textContent)
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+      li.dataset.search = allText;
       li.appendChild(btn); slideList.appendChild(li);
     });
 
     allSec.appendChild(slideList);
     panel.appendChild(allSec);
     document.body.appendChild(panel);
-    setupNavHover(toggle, panel);
+
+    // Prevent scroll/touch events in nav panel from bubbling to body (avoids background page flipping)
+    panel.addEventListener('wheel', e => e.stopPropagation(), { passive: true });
+    panel.addEventListener('touchmove', e => e.stopPropagation(), { passive: true });
+
+    // Hover behavior removed per request — nav toggle is click-only
 
     // Live search with debouncing
     const debouncedSearch = debounce(() => {
@@ -2019,18 +2076,12 @@
       let matchCount = 0;
       
       slideList.querySelectorAll('.np-slide-item').forEach((li, i) => {
-        const lbl = li.querySelector('.np-slide-label')?.textContent.toLowerCase() || '';
-        const matches = q ? (lbl.includes(q) || String(i).includes(q)) : true;
+        const searchText = li.dataset.search || '';
+        const matches = q ? (searchText.includes(q) || String(i).includes(q)) : true;
         li.hidden = !matches;
         if (matches && q) matchCount++;
       });
 
-      chapterList?.querySelectorAll('.np-chapter-item').forEach(li => {
-        const lbl = li.querySelector('.np-chapter-label')?.textContent.toLowerCase() || '';
-        const page = li.querySelector('.np-chapter-btn')?.dataset.si || '';
-        li.hidden = q ? !(lbl.includes(q) || page.includes(q)) : false;
-      });
-      
       // Update result count
       const resultCount = panel.querySelector('.search-result-count');
       if (resultCount) {
@@ -2271,6 +2322,8 @@
     // Wheel scroll navigates slides
     let wheelTimeout = null;
     root.addEventListener('wheel', e => {
+      const modalOpen = document.getElementById('jump-modal')?.style.display !== 'none';
+      if (modalOpen) return;
       e.preventDefault();
       if (wheelTimeout) return;
       wheelTimeout = setTimeout(() => { wheelTimeout = null; }, 400);
@@ -2609,10 +2662,12 @@
 
 .np-slide-list {
   list-style:none; flex:1; overflow-y:auto; padding:4px 0 80px;
-  scrollbar-width:thin; scrollbar-color:rgba(201,160,48,.38) transparent;
+  scrollbar-width:thin; scrollbar-color:rgba(201,160,48,.55) transparent;
 }
-.np-slide-list::-webkit-scrollbar { width:4px; }
-.np-slide-list::-webkit-scrollbar-thumb { background:rgba(201,160,48,.38); border-radius:4px; }
+.np-slide-list::-webkit-scrollbar { width:6px; }
+.np-slide-list::-webkit-scrollbar-track { background:transparent; }
+.np-slide-list::-webkit-scrollbar-thumb { background:rgba(201,160,48,.55); border-radius:6px; }
+.np-slide-list::-webkit-scrollbar-thumb:hover { background:rgba(201,160,48,.85); }
 .np-slide-item[hidden] { display:none; }
 
 .np-slide-btn {
