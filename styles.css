@@ -1853,7 +1853,7 @@ body.on-cover #floating-key { display: block; }
   font-size: var(--reader-p-size) !important;
   line-height: 1.72 !important;
   letter-spacing: 0.012em !important;
-  margin: 10px 0 !important;
+  margin: 4px 0 !important;
 }
 
 /* Scale videos/images inside pages */
