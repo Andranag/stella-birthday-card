@@ -1575,6 +1575,22 @@
   }
 
   function populateJumpLists() {
+    const favSection = document.getElementById('jump-favorites-section');
+    const favList = document.getElementById('jump-favorites-list');
+    if (favList && favSection) {
+      favList.innerHTML = '';
+      const favs = getFavorites().sort((a, b) => a - b);
+      if (favs.length) {
+        favSection.style.display = '';
+        favs.forEach(i => {
+          const h = slides[i]?.querySelector('h1, h2');
+          const label = h ? h.textContent.trim().replace(/\s+/g, ' ').slice(0, 55) : `Slide ${i}`;
+          favList.appendChild(mkJumpItem(i, label));
+        });
+      } else {
+        favSection.style.display = 'none';
+      }
+    }
     const recentSection = document.getElementById('jump-recent-section');
     const recentList = document.getElementById('jump-recent-list');
     if (recentList && recentSection) {
@@ -2698,4 +2714,98 @@
     document.head.appendChild(s);
   }
 
+  /* ── Celebration on final slide ──────────────────────────────── */
+  function triggerFinalSlideCelebration() {
+    if (document.getElementById('celebration-canvas')) return;
+    const canvas = document.createElement('canvas');
+    canvas.id = 'celebration-canvas';
+    canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999';
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    const particles = [];
+    const colors = ['#FFE888','#F5D878','#E8B830','#FFF3D0','#FFD700','#FF69B4','#87CEEB'];
+    for (let i = 0; i < 120; i++) {
+      particles.push({
+        x: Math.random() * w, y: Math.random() * h - h,
+        vx: (Math.random() - 0.5) * 4, vy: Math.random() * 3 + 2,
+        size: Math.random() * 6 + 2, color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.2,
+        life: 1, decay: Math.random() * 0.005 + 0.003
+      });
+    }
+    let animId;
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      let alive = 0;
+      particles.forEach(p => {
+        if (p.life <= 0) return;
+        alive++;
+        p.x += p.vx; p.y += p.vy; p.rotation += p.rotSpeed;
+        p.life -= p.decay;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+        ctx.restore();
+      });
+      if (alive > 0) animId = requestAnimationFrame(draw);
+      else { cancelAnimationFrame(animId); canvas.remove(); }
+    }
+    draw();
+    setTimeout(() => { cancelAnimationFrame(animId); canvas.remove(); }, 6000);
+  }
+
+  /* ── Favorites / Hearts ────────────────────────────────────── */
+  const FAVORITES_KEY = 'stella_bday_favorites';
+  function getFavorites() { try { return JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]'); } catch { return []; } }
+  function setFavorites(arr) { localStorage.setItem(FAVORITES_KEY, JSON.stringify(arr)); }
+  function toggleFavorite(slideIndex) {
+    const favs = getFavorites();
+    const idx = favs.indexOf(slideIndex);
+    if (idx > -1) favs.splice(idx, 1); else favs.push(slideIndex);
+    setFavorites(favs);
+    updateHeartButtons();
+  }
+  function isFavorited(slideIndex) { return getFavorites().includes(slideIndex); }
+
+  function createHeartButton(slideIndex) {
+    const btn = document.createElement('button');
+    btn.className = 'slide-heart-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Toggle favorite');
+    btn.dataset.slideIndex = slideIndex;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+    btn.addEventListener('click', e => { e.stopPropagation(); toggleFavorite(slideIndex); });
+    return btn;
+  }
+
+  function updateHeartButtons() {
+    document.querySelectorAll('.slide-heart-btn').forEach(btn => {
+      const idx = parseInt(btn.dataset.slideIndex, 10);
+      btn.classList.toggle('favorited', isFavorited(idx));
+    });
+  }
+
+  /* ── Hook render to add hearts and detect final slide ──────── */
+  const _origRender = render;
+  render = function() {
+    _origRender();
+    document.querySelectorAll('#left-slot > .slide.in-page, #right-slot > .slide.in-page').forEach(slide => {
+      if (slide.querySelector('.slide-heart-btn')) return;
+      const idx = slides.indexOf(slide);
+      if (idx < 0) return;
+      const heart = createHeartButton(idx);
+      slide.style.position = 'relative';
+      slide.appendChild(heart);
+    });
+    updateHeartButtons();
+    const currentIdx = getCurrentSlideIndex();
+    if (currentIdx === slides.length - 1 && slides.length > 1) {
+      triggerFinalSlideCelebration();
+    }
+  };
 })();

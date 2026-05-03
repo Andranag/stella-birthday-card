@@ -69,6 +69,45 @@
   top: 0;
 }
 
+/* ── Slide heart / favorite button ──────────────────────────── */
+.slide-heart-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 5;
+  background: rgba(255,255,255,0.75);
+  border: 1.5px solid rgba(201,160,48,0.45);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), background 0.2s ease, border-color 0.2s ease;
+  backdrop-filter: blur(6px);
+  opacity: 0.55;
+}
+.slide-heart-btn:hover {
+  transform: scale(1.15);
+  opacity: 1;
+  background: rgba(255,255,255,0.95);
+  border-color: rgba(201,160,48,0.75);
+}
+.slide-heart-btn svg {
+  stroke: #C27A6D;
+  transition: fill 0.25s ease, stroke 0.25s ease;
+}
+.slide-heart-btn.favorited svg {
+  fill: #E2556B;
+  stroke: #E2556B;
+}
+.slide-heart-btn.favorited {
+  opacity: 0.9;
+  border-color: rgba(226,85,107,0.5);
+}
+
 /* ── Screen Reader Only (Accessibility) ─────────────────────── */
 .sr-only {
   position: absolute;
