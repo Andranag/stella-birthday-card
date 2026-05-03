@@ -413,6 +413,11 @@
       if (useFade) {
         rightSlot.classList.add('page-fade-in');
         rightSlot.addEventListener('animationend', () => rightSlot.classList.remove('page-fade-in'), { once: true });
+      } else if (animate) {
+        rightSlot.classList.add(navDirection === 'forward' ? 'page-enter-right' : 'page-enter-left');
+        rightSlot.addEventListener('animationend', () => {
+          rightSlot.classList.remove('page-enter-right', 'page-enter-left');
+        }, { once: true });
       }
       playVideos(slide);
     }
@@ -492,6 +497,9 @@
       if (useFade) {
         leftSlot.classList.add('page-fade-in');
         leftSlot.addEventListener('animationend', () => leftSlot.classList.remove('page-fade-in'), { once: true });
+      } else if (animate) {
+        leftSlot.classList.add('page-enter-left');
+        leftSlot.addEventListener('animationend', () => leftSlot.classList.remove('page-enter-left'), { once: true });
       }
       playVideos(spread[0]);
     }
@@ -503,6 +511,9 @@
       if (useFade) {
         rightSlot.classList.add('page-fade-in');
         rightSlot.addEventListener('animationend', () => rightSlot.classList.remove('page-fade-in'), { once: true });
+      } else if (animate) {
+        rightSlot.classList.add('page-enter-right');
+        rightSlot.addEventListener('animationend', () => rightSlot.classList.remove('page-enter-right'), { once: true });
       }
       playVideos(spread[1]);
     } else {
@@ -2407,6 +2418,21 @@
         case 'b': case 'B':
           if (!modalOpen && !navOpen) toggleBookmark();
           break;
+        case 'f': case 'F':
+          if (!modalOpen && !navOpen) {
+            const curIdx = getCurrentSlideIndex();
+            if (curIdx >= 0) {
+              let targetIdx = curIdx;
+              // In desktop two-page spread, default to the right page (the current page being read)
+              if (window.innerWidth >= 768 && document.querySelector('#right-slot .slide')) {
+                targetIdx = curIdx + 1;
+                if (targetIdx >= slides.length) targetIdx = curIdx;
+              }
+              toggleFavorite(targetIdx);
+              showToast(isFavorited(targetIdx) ? 'Added to favorites' : 'Removed from favorites', 'info');
+            }
+          }
+          break;
         case 'l': case 'L':
           if (!modalOpen && !navOpen) copyCurrentPageLink();
           break;
@@ -2430,6 +2456,13 @@
           break;
         case 'i': case 'I':
           if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) toggleStoryInspector();
+          break;
+        case 'z': case 'Z':
+          if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
+            e.preventDefault();
+            document.body.classList.toggle('zen-mode');
+            showToast(document.body.classList.contains('zen-mode') ? 'Zen mode on — UI hidden' : 'Zen mode off', 'info');
+          }
           break;
       }
     });
@@ -2790,7 +2823,17 @@
     });
   }
 
-  /* ── Hook render to add hearts and detect final slide ──────── */
+  /* ── Reading milestone toasts ─────────────────────────────── */
+  let lastMilestoneChapter = null;
+  function checkMilestoneToast() {
+    const currentIdx = getCurrentSlideIndex();
+    const chapter = [...chapters].reverse().find(c => currentIdx >= c.index);
+    if (!chapter || chapter === lastMilestoneChapter) return;
+    lastMilestoneChapter = chapter;
+    showToast(`✦ Chapter ${chapter.number} · ${chapter.title}`, 'info', 3000);
+  }
+
+  /* ── Hook render to add hearts, milestone, celebration ─ */
   const _origRender = render;
   render = function() {
     _origRender();
@@ -2798,11 +2841,11 @@
       if (slide.querySelector('.slide-heart-btn')) return;
       const idx = slides.indexOf(slide);
       if (idx < 0) return;
-      const heart = createHeartButton(idx);
       slide.style.position = 'relative';
-      slide.appendChild(heart);
+      slide.appendChild(createHeartButton(idx));
     });
     updateHeartButtons();
+    checkMilestoneToast();
     const currentIdx = getCurrentSlideIndex();
     if (currentIdx === slides.length - 1 && slides.length > 1) {
       triggerFinalSlideCelebration();

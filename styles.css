@@ -830,6 +830,27 @@ body.on-cover #bookmark-btn { opacity: 0; pointer-events: none; }
 }
 .bookmark-dismiss:hover { color: var(--p0); }
 
+/* ── Zen mode: hide all UI chrome ──────────────────────────── */
+body.zen-mode #nav-toggle,
+body.zen-mode #help-fab,
+body.zen-mode #tips-bar,
+body.zen-mode #bookmark-btn,
+body.zen-mode #progress-bar,
+body.zen-mode #page-counter,
+body.zen-mode .page-corner-num,
+body.zen-mode #prev-page,
+body.zen-mode #next-page,
+body.zen-mode .slide-heart-btn,
+body.zen-mode #audio-stop-btn,
+body.zen-mode #nav-panel,
+body.zen-mode #nav-overlay,
+body.zen-mode .jump-modal,
+body.zen-mode .help-modal,
+body.zen-mode .toast,
+body.zen-mode #nav-panel { display: none !important; }
+body.zen-mode .jump-modal,
+body.zen-mode .help-modal { display: none !important; }
+
 /* ── Locked story: hide advanced navigation ──────────────────── */
 body.story-locked #nav-toggle,
 body.story-locked #help-fab,
@@ -1462,6 +1483,21 @@ body.on-cover #floating-key { display: block; }
   80%  { transform: perspective(900px) rotateY(84deg)  rotateX(-8deg);  filter: brightness(0.58); opacity: 0.3; }
   100% { transform: perspective(900px) rotateY(90deg)  rotateX(-3deg);  filter: brightness(0.50); opacity: 0;   }
 }
+
+/* ── Incoming page entrance (3D fold reveal) ─────────────────── */
+@keyframes pageEnterLeft {
+  0%   { transform: perspective(900px) rotateY(70deg) rotateX(2deg); filter: brightness(0.60); opacity: 0; }
+  45%  { transform: perspective(900px) rotateY(-8deg) rotateX(0deg); filter: brightness(1.05); opacity: 1; }
+  100% { transform: perspective(900px) rotateY(0deg)  rotateX(0deg); filter: brightness(1);    opacity: 1; }
+}
+@keyframes pageEnterRight {
+  0%   { transform: perspective(900px) rotateY(-70deg) rotateX(2deg); filter: brightness(0.60); opacity: 0; }
+  45%  { transform: perspective(900px) rotateY(8deg)  rotateX(0deg); filter: brightness(1.05); opacity: 1; }
+  100% { transform: perspective(900px) rotateY(0deg)   rotateX(0deg); filter: brightness(1);    opacity: 1; }
+}
+
+.page-enter-left  { animation: pageEnterLeft  0.55s cubic-bezier(.22,.85,.32,1) forwards; }
+.page-enter-right { animation: pageEnterRight 0.55s cubic-bezier(.22,.85,.32,1) forwards; }
 
 /* ── Book Pages ──────────────────────────────────────────────── */
 .book-page {
