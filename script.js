@@ -2482,7 +2482,8 @@
   /* ── Typewriter effect ───────────────────────────────────── */
   function runTypewriter(el, onComplete) {
     el.style.opacity = '1';
-    const full = el.innerHTML.trim();
+    if (!el.dataset.twOriginal) el.dataset.twOriginal = el.innerHTML.trim();
+    const full = el.dataset.twOriginal;
     el.innerHTML = '';
     el.classList.add('typewriter-active');
     const BASE = 75;
