@@ -223,6 +223,7 @@
     setupSwipeHints();
     setupBookmark();
     setupHelpFab();
+    setupCursorTrail();
     setupEqVisualizer();
     setupVideoFullscreen();
 
@@ -1668,7 +1669,8 @@
           <li><kbd>J</kbd> Jump to next favorite</li>
           <li><kbd>Z</kbd> Toggle zen mode</li>
           <li><kbd>B</kbd> Bookmark page &nbsp;·&nbsp; <kbd>G</kbd> Jump to any slide</li>
-          <li><kbd>X</kbd> Random page &nbsp;·&nbsp; <kbd>M</kbd> Mute / unmute sounds</li>
+          <li><kbd>I</kbd> Reading stats &nbsp;·&nbsp; <kbd>X</kbd> Random page</li>
+          <li><kbd>M</kbd> Mute / unmute sounds</li>
           <li><kbd>L</kbd> Copy page link &nbsp;·&nbsp; <kbd>R</kbd> Reset view</li>
           <li><kbd>+</kbd> <kbd>−</kbd> Scale text &nbsp;·&nbsp; <kbd>?</kbd> This help</li>
         </ul>
@@ -2469,6 +2471,9 @@
             }
           }
           break;
+        case 'i': case 'I':
+          if (!modalOpen && !navOpen) { e.preventDefault(); showReadingStats(); }
+          break;
         case 'x': case 'X':
           if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
             e.preventDefault();
@@ -2540,6 +2545,24 @@
     });
   }
 
+  /* ── Magic cursor trail ─────────────────────────────────── */
+  function setupCursorTrail() {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    const COLORS = ['#FFD700','#FFC830','#FFE880','#C9A030','#FFB830'];
+    let lastX = 0, lastY = 0, lastSpawn = 0;
+    document.addEventListener('mousemove', e => {
+      const now = Date.now();
+      const dx = e.clientX - lastX, dy = e.clientY - lastY;
+      if (now - lastSpawn < 45 || dx*dx + dy*dy < 64) return;
+      lastSpawn = now; lastX = e.clientX; lastY = e.clientY;
+      const p = document.createElement('span');
+      const size = 3.5 + Math.random() * 4;
+      p.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;width:${size}px;height:${size}px;border-radius:50%;background:${COLORS[Math.floor(Math.random()*COLORS.length)]};pointer-events:none;z-index:99999;animation:cursorSparkle ${280+Math.random()*180}ms ease-out forwards;`;
+      document.body.appendChild(p);
+      p.addEventListener('animationend', () => p.remove(), { once: true });
+    });
+  }
+
   /* ── EQ bars visualizer ─────────────────────────────────── */
   function setupEqVisualizer() {
     const observer = new MutationObserver(mutations => {
@@ -2592,6 +2615,33 @@
   line-height: 1;
 }
 .gift-img:hover::after { opacity: 1; }
+
+/* ── Reading stats grid ── */
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin: 18px 0;
+}
+.stat-item {
+  background: rgba(201,160,48,.10);
+  border: 1px solid rgba(201,160,48,.25);
+  border-radius: 8px; padding: 12px 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.stat-num {
+  font-family: 'Pacifico', cursive; font-size: 1.5rem;
+  color: var(--g2); line-height: 1;
+}
+.stat-label {
+  font-size: .68rem; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; color: rgba(255,245,180,.62);
+  text-align: center;
+}
+
+/* ── Cursor trail ── */
+@keyframes cursorSparkle {
+  0%   { opacity: .85; transform: translate(-50%,-50%) scale(1); }
+  100% { opacity: 0;   transform: translate(-50%, calc(-50% - 16px)) scale(.15); }
+}
 
 /* ── Slide entrance stagger ── */
 @keyframes slideEntrance {
@@ -2999,6 +3049,52 @@
     showToast(`✦ Chapter ${chapter.number} · ${chapter.title}`, 'info', 3000);
   }
 
+  /* ── Visited slides tracking ────────────────────────────── */
+  const VISITED_KEY = 'stella_visited';
+  const _visitedSlides = new Set(
+    JSON.parse(localStorage.getItem(VISITED_KEY) || '[]')
+  );
+  function markVisited(idx) {
+    if (idx <= 0) return;
+    _visitedSlides.add(idx);
+    localStorage.setItem(VISITED_KEY, JSON.stringify([..._visitedSlides]));
+  }
+
+  /* ── Reading stats modal ─────────────────────────────────── */
+  function showReadingStats() {
+    const existing = document.getElementById('stats-modal');
+    if (existing) { existing.remove(); return; }
+    const favs    = getFavorites();
+    const bm      = getBookmarkData();
+    const total   = slides.length - 1;
+    const visited = _visitedSlides.size;
+    const pct     = total > 0 ? Math.round((visited / total) * 100) : 0;
+    const overlay = document.createElement('div');
+    overlay.id = 'stats-modal';
+    overlay.className = 'storybook-modal';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:3100;display:flex;align-items:center;justify-content:center;background:rgba(4,1,16,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:modalFadeIn .2s ease both;';
+    overlay.innerHTML = `
+      <div class="modal-content" style="text-align:center;">
+        <div class="modal-title">\ud83d\udcd6 Reading Story</div>
+        <div class="modal-subtitle">Here's how your journey looks so far</div>
+        <div class="stats-grid">
+          <div class="stat-item"><span class="stat-num">${visited}</span><span class="stat-label">pages explored</span></div>
+          <div class="stat-item"><span class="stat-num">${pct}%</span><span class="stat-label">of the story</span></div>
+          <div class="stat-item"><span class="stat-num">${favs.length}</span><span class="stat-label">pages \u2665 hearted</span></div>
+          <div class="stat-item"><span class="stat-num">${bm ? '\ud83d\udd16' : '\u2014'}</span><span class="stat-label">${bm ? escapeHTML(bm.title) : 'no bookmark yet'}</span></div>
+        </div>
+        <div class="modal-buttons" style="margin-top:20px;">
+          <button class="modal-btn confirm" id="stats-close">Close</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    const close = () => overlay.remove();
+    document.getElementById('stats-close').addEventListener('click', close);
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+    overlay.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  }
+
   /* ── Cinematic slide entrance ──────────────────────────── */
   function animateSlideEntrance(slideEl) {
     if (!slideEl) return;
@@ -3048,6 +3144,7 @@
     updateHeartButtons();
     checkMilestoneToast();
     checkProgressMilestone();
+    markVisited(getCurrentSlideIndex());
     const currentIdx = getCurrentSlideIndex();
     if (currentIdx === slides.length - 1 && slides.length > 1) {
       triggerFinalSlideCelebration();
