@@ -39,6 +39,10 @@
     if (hasUnlockedStory()) return;
     localStorage.setItem(UNLOCKED_KEY, '1');
     document.body.classList.remove('story-locked');
+    setTimeout(() => {
+      triggerFinalSlideCelebration();
+      showToast('\u2728 Welcome! Enjoy the story \u2014', 'success');
+    }, 420);
   }
 
   /* ── Helpers ───────────────────────────────────────────────── */
@@ -2531,9 +2535,6 @@
             resetReaderScale();
           }
           break;
-        case 'i': case 'I':
-          if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) toggleStoryInspector();
-          break;
         case 'z': case 'Z':
           if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
             e.preventDefault();
@@ -2543,6 +2544,31 @@
           break;
       }
     });
+  }
+
+  /* ── Typewriter effect ───────────────────────────────────── */
+  function runTypewriter(el, onComplete) {
+    el.style.opacity = '1';
+    const full = el.innerHTML.trim();
+    el.innerHTML = '';
+    el.classList.add('typewriter-active');
+    const BASE = 75;
+    const gen = (el._twGen = (el._twGen || 0) + 1);
+    const tokens = [];
+    (full.match(/(<[^>]+>|[^<]+)/g) || []).forEach(seg => {
+      if (seg.startsWith('<')) { tokens.push({ tag: seg }); }
+      else { Array.from(seg).forEach(ch => tokens.push({ ch })); }
+    });
+    let i = 0;
+    function tick() {
+      if (el._twGen !== gen) return;
+      if (i >= tokens.length) { el.classList.remove('typewriter-active'); onComplete?.(); return; }
+      const t = tokens[i++];
+      if (t.tag) { el.innerHTML += t.tag; tick(); return; }
+      el.innerHTML += t.ch;
+      setTimeout(tick, t.ch === ' ' ? BASE * 0.35 : BASE);
+    }
+    tick();
   }
 
   /* ── Magic cursor trail ─────────────────────────────────── */
@@ -2636,6 +2662,7 @@
   text-transform: uppercase; color: rgba(255,245,180,.62);
   text-align: center;
 }
+
 
 /* ── Cursor trail ── */
 @keyframes cursorSparkle {
@@ -3100,6 +3127,7 @@
     if (!slideEl) return;
     [...slideEl.children].forEach((child, i) => {
       if (child.classList.contains('slide-heart-btn')) return;
+      if (child.classList.contains('typewriter')) { child.style.opacity = '0'; return; }
       child.style.animation = 'none';
       void child.offsetHeight;
       child.style.animation = `slideEntrance 0.5s cubic-bezier(.22,.85,.32,1) ${i * 80}ms both`;
@@ -3155,7 +3183,13 @@
       if (idx >= 0) currentShown.add(idx);
     });
     currentShown.forEach(idx => {
-      if (!_lastShownSlides.has(idx)) animateSlideEntrance(slides[idx]);
+      if (!_lastShownSlides.has(idx)) {
+        animateSlideEntrance(slides[idx]);
+        (function chainTW(els, delay) {
+          if (!els.length) return;
+          setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
+        })([...slides[idx].querySelectorAll('.typewriter')], 350);
+      }
     });
     _lastShownSlides = currentShown;
   };
