@@ -228,6 +228,7 @@
     setupHelpFab();
     setupCursorTrail();
     setupGoldDust();
+    setupMoodLighting();
     setupEqVisualizer();
     setupVideoFullscreen();
 
@@ -2503,6 +2504,35 @@
     tick();
   }
 
+  /* ── Chapter mood lighting ─────────────────────────────── */
+  const MOOD_PALETTE = [
+    'transparent',
+    'rgba(201,140,28,.07)',
+    'rgba(130,60,200,.07)',
+    'rgba(28,148,160,.07)',
+    'rgba(200,65,100,.07)',
+    'rgba(38,158,80,.07)',
+    'rgba(40,80,200,.07)',
+  ];
+  let _lastMoodNum = -1;
+  function setupMoodLighting() {
+    const el = document.createElement('div');
+    el.id = 'mood-overlay';
+    el.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:1;transition:background 3s ease;background:transparent;';
+    document.body.appendChild(el);
+  }
+  function applyChapterMood() {
+    if (!hasUnlockedStory()) return;
+    const el = document.getElementById('mood-overlay');
+    if (!el) return;
+    const ch = getCurrentChapter();
+    const num = ch ? ch.number : 0;
+    if (num === _lastMoodNum) return;
+    _lastMoodNum = num;
+    el.style.background = num === 0 ? 'transparent'
+      : MOOD_PALETTE[((num - 1) % (MOOD_PALETTE.length - 1)) + 1];
+  }
+
   /* ── Ambient gold dust ─────────────────────────────────── */
   function setupGoldDust() {
     const canvas = document.createElement('canvas');
@@ -2615,6 +2645,16 @@
   line-height: 1;
 }
 .gift-img:hover::after { opacity: 1; }
+
+/* ── Cert seal ── */
+.cert-seal {
+  width:72px;height:72px;border-radius:50%;
+  border:2.5px solid rgba(201,160,48,.7);
+  background:radial-gradient(circle,rgba(201,160,48,.18) 0%,transparent 70%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;margin:0 auto;
+  box-shadow:0 0 24px rgba(201,160,48,.28),inset 0 0 16px rgba(201,160,48,.12);
+}
 
 /* ── Reading stats grid ── */
 .stats-grid {
@@ -3059,6 +3099,41 @@
     if (idx <= 0) return;
     _visitedSlides.add(idx);
     localStorage.setItem(VISITED_KEY, JSON.stringify([..._visitedSlides]));
+    checkCompletionCertificate();
+  }
+
+  const CERT_KEY = 'stella_cert_shown';
+  function checkCompletionCertificate() {
+    if (localStorage.getItem(CERT_KEY)) return;
+    const total = slides.length - 1;
+    if (total <= 0 || _visitedSlides.size < total) return;
+    localStorage.setItem(CERT_KEY, '1');
+    setTimeout(() => { triggerFinalSlideCelebration(); showCompletionCertificate(); }, 1200);
+  }
+
+  function showCompletionCertificate() {
+    if (document.getElementById('cert-modal')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'cert-modal';
+    overlay.className = 'storybook-modal';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:3100;display:flex;align-items:center;justify-content:center;background:rgba(4,1,16,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);animation:modalFadeIn .3s ease both;';
+    overlay.innerHTML = `
+      <div class="modal-content" style="text-align:center;max-width:340px;">
+        <div style="font-size:2.8rem;line-height:1;margin-bottom:.4rem;">✨</div>
+        <div style="font-family:'Marck Script',cursive;font-size:1rem;color:rgba(255,245,180,.55);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.6rem;">Certificate of</div>
+        <div class="modal-title" style="font-size:1.55rem;">Story Complete</div>
+        <div class="modal-subtitle" style="margin:10px 0 18px;">Every page, every word —<br>the whole story was yours. ✦</div>
+        <div class="cert-seal">★</div>
+        <div class="modal-buttons" style="margin-top:1.4rem;">
+          <button class="modal-btn confirm" id="cert-close">Close ✨</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    const close = () => overlay.remove();
+    document.getElementById('cert-close').addEventListener('click', close);
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+    overlay.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   }
 
   /* ── Reading stats modal ─────────────────────────────────── */
@@ -3146,6 +3221,7 @@
     updateHeartButtons();
     checkMilestoneToast();
     checkProgressMilestone();
+    applyChapterMood();
     markVisited(getCurrentSlideIndex());
     const currentIdx = getCurrentSlideIndex();
     if (currentIdx === slides.length - 1 && slides.length > 1) {
