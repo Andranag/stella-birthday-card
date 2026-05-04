@@ -1341,7 +1341,7 @@
           <span>the End</span>
         </div>
         <div class="cover-divider"></div>
-        <img class="cover-storybook-logo" src="assets/images/walt disney logo transparent cropped.png" alt="Walt Disney logo" />
+        <img class="cover-storybook-logo" src="assets/images/walt disney logo.png" alt="Walt Disney logo" />
       </div>
       <div class="cover-castle-wrap" aria-hidden="true">${buildCastleSVG()}</div>
       <div class="cover-open-hint" aria-hidden="true">✦ open the book ✦</div>
@@ -1656,22 +1656,15 @@
       <div class="help-content">
         <h2 id="help-title">⌨️ Keyboard Shortcuts</h2>
         <ul class="help-list">
-          <li><kbd>←</kbd> <kbd>→</kbd> Navigate slides</li>
-          <li><kbd>↑</kbd> <kbd>↓</kbd> Navigate slides</li>
-          <li><kbd>Home</kbd> Go to first slide</li>
-          <li><kbd>End</kbd> Go to last slide</li>
-          <li><kbd>G</kbd> Jump to slide</li>
-          <li><kbd>N</kbd> Toggle navigation panel</li>
-          <li><kbd>Space</kbd> Play/pause audio</li>
-          <li><kbd>M</kbd> Mute/unmute audio</li>
-          <li><kbd>S</kbd> Toggle spoiler</li>
-          <li><kbd>B</kbd> Bookmark page</li>
-          <li><kbd>L</kbd> Copy current page link</li>
-          <li><kbd>+</kbd> <kbd>-</kbd> Adjust text scale</li>
-          <li><kbd>0</kbd> Reset text scale</li>
-          <li><kbd>I</kbd> Toggle story inspector</li>
-          <li><kbd>?</kbd> <kbd>/</kbd> Show this help</li>
-          <li><kbd>Esc</kbd> Close modals</li>
+          <li><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> Navigate slides</li>
+          <li><kbd>Home</kbd> First slide &nbsp;·&nbsp; <kbd>End</kbd> Last slide</li>
+          <li><kbd>Space</kbd> Next page &nbsp;·&nbsp; <kbd>Esc</kbd> Close panels</li>
+          <li><kbd>F</kbd> Heart / unheart page</li>
+          <li><kbd>J</kbd> Jump to next favorite</li>
+          <li><kbd>Z</kbd> Toggle zen mode</li>
+          <li><kbd>B</kbd> Bookmark page &nbsp;·&nbsp; <kbd>G</kbd> Jump to any slide</li>
+          <li><kbd>L</kbd> Copy page link &nbsp;·&nbsp; <kbd>R</kbd> Reset view</li>
+          <li><kbd>+</kbd> <kbd>−</kbd> Scale text &nbsp;·&nbsp; <kbd>?</kbd> This help</li>
         </ul>
         <button id="help-close" class="help-close" aria-label="Close help">✕</button>
       </div>
@@ -2436,6 +2429,12 @@
         case 'l': case 'L':
           if (!modalOpen && !navOpen) copyCurrentPageLink();
           break;
+        case 'j': case 'J':
+          if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
+            e.preventDefault();
+            jumpToNextFavorite();
+          }
+          break;
         case '+': case '=':
           if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
             e.preventDefault();
@@ -2518,9 +2517,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 0;
+  padding: 0.9rem 0;
   color: #FBF4E0;
   font-size: 0.95rem;
+  letter-spacing: 0.025em;
   border-bottom: 1px solid rgba(201,160,48,0.15);
 }
 .help-list li:last-child {
@@ -2814,6 +2814,19 @@
     btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
     btn.addEventListener('click', e => { e.stopPropagation(); toggleFavorite(slideIndex); });
     return btn;
+  }
+
+  function jumpToNextFavorite() {
+    const favs = getFavorites();
+    if (favs.length === 0) {
+      showToast('No favorites yet. Press F to heart a page.', 'info');
+      return;
+    }
+    const cur = getCurrentSlideIndex();
+    let next = favs.find(i => i > cur);
+    if (next === undefined) next = favs[0];
+    goTo(next);
+    showToast('Jumped to favorite ✦ Page ' + (next + 1), 'success');
   }
 
   function updateHeartButtons() {
