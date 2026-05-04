@@ -542,93 +542,6 @@ body::after {
   text-shadow: 0 0 10px rgba(var(--g2-rgb), .38), 0 1px 5px rgba(0,0,0,.9);
 }
 
-/* Story QA Inspector */
-#story-inspector {
-  position: fixed;
-  left: 14px;
-  bottom: max(52px, calc(52px + env(safe-area-inset-bottom, 0px)));
-  z-index: 910;
-  width: min(360px, calc(100vw - 28px));
-  max-height: min(46vh, 360px);
-  overflow: auto;
-  padding: 12px 13px;
-  border: 1px solid rgba(var(--g2-rgb), .42);
-  border-radius: 8px;
-  background: rgba(8, 2, 26, .88);
-  color: rgba(251,244,224,.9);
-  box-shadow: 0 12px 36px rgba(0,0,0,.45), 0 0 18px rgba(var(--g2-rgb), .14);
-  backdrop-filter: blur(12px) saturate(1.35);
-  -webkit-backdrop-filter: blur(12px) saturate(1.35);
-  font-family: 'Nunito', sans-serif;
-  animation: toastSlideIn .22s ease-out both;
-}
-#story-inspector[hidden] { display: none; }
-.si-kicker {
-  color: rgba(var(--g2-rgb), .86);
-  font-size: .67rem;
-  font-weight: 900;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-}
-.si-chapter {
-  margin-top: 3px;
-  font-size: .86rem;
-  font-weight: 900;
-  color: var(--p0);
-}
-#story-inspector ol {
-  list-style: none;
-  display: grid;
-  gap: 8px;
-  margin-top: 10px;
-}
-#story-inspector li {
-  display: grid;
-  gap: 2px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(var(--g2-rgb), .18);
-}
-.si-page,
-.si-meta,
-.si-foot {
-  color: rgba(251,244,224,.56);
-  font-size: .68rem;
-  font-weight: 800;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-}
-.si-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: .82rem;
-  font-weight: 800;
-}
-.si-flags {
-  width: fit-content;
-  margin-top: 2px;
-  padding: 2px 6px;
-  border: 1px solid rgba(255,185,80,.38);
-  border-radius: 999px;
-  color: #FFE4A8;
-  background: rgba(145,86,16,.18);
-  font-size: .64rem;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-.si-foot {
-  margin-top: 10px;
-  text-align: right;
-}
-
-@media (max-width: 520px) {
-  #story-inspector {
-    left: 10px;
-    bottom: max(104px, calc(104px + env(safe-area-inset-bottom, 0px)));
-    max-height: 36vh;
-  }
-}
-
 /* ── Navigation Arrows ───────────────────────────────────────── */
 #prev-page, #next-page {
   position: fixed; top: 50%; transform: translateY(-50%);
@@ -2091,7 +2004,6 @@ body.on-cover #floating-key { display: block; }
   max-width: 22rem;
   font-size: .86rem !important;
   letter-spacing: 1.1px;
-  text-transform: uppercase;
   color: rgba(62, 36, 12, .68) !important;
 }
 

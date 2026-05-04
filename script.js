@@ -219,7 +219,6 @@
     setupCoverKeyTracker();
     setupJumpModal();
     setupHelpModal();
-    setupStoryInspector();
     setupVideoLoading();
     setupVideoWatchdog();
     buildNavPanel();
@@ -361,7 +360,6 @@
     announceSlide();
     updateAriaCurrent();
     manageVideoLoadingWindow();
-    updateStoryInspector();
     saveLastReadPosition();
     updateDeepLink();
 
@@ -1112,73 +1110,6 @@
         el.innerHTML = `<span class="top-count">${count}</span>${chapterHTML}`;
       }
     }
-  }
-
-  function setupStoryInspector() {
-    if (document.getElementById('story-inspector')) return;
-    const panel = mk('aside', {
-      id: 'story-inspector',
-      'aria-hidden': 'true',
-      hidden: '',
-    });
-    document.body.appendChild(panel);
-  }
-
-  function toggleStoryInspector() {
-    const panel = document.getElementById('story-inspector');
-    if (!panel) return;
-    const visible = panel.hidden;
-    panel.hidden = !visible;
-    panel.setAttribute('aria-hidden', visible ? 'false' : 'true');
-    document.body.classList.toggle('inspector-open', visible);
-    updateStoryInspector();
-  }
-
-  function getSlideTextLength(slide) {
-    if (!slide) return 0;
-    const clone = slide.cloneNode(true);
-    clone.querySelectorAll('video, source, img, .storybook-logo').forEach(node => node.remove());
-    return clone.textContent.trim().replace(/\s+/g, ' ').length;
-  }
-
-  function getInspectorSlides() {
-    if (!slides.length) return [];
-    if (isMobile()) return [slides[curSlide]].filter(Boolean);
-    return (spreads[curSpread] || []).filter(Boolean);
-  }
-
-  function updateStoryInspector() {
-    const panel = document.getElementById('story-inspector');
-    if (!panel || panel.hidden) return;
-
-    const activeSlides = getInspectorSlides();
-    const currentChapter = getCurrentChapter();
-    const rows = activeSlides.map(slide => {
-      const index = slides.indexOf(slide);
-      const textLength = getSlideTextLength(slide);
-      const mediaCount = slide.querySelectorAll('video.gift-video, img').length;
-      const audioCount = slide.querySelectorAll('.text-to-sound').length;
-      const spoilerCount = slide.querySelectorAll('.peek-hint').length;
-      const flags = [];
-      if (textLength > 180) flags.push('dense');
-      if (!mediaCount && textLength > 80) flags.push('text-only');
-      if (audioCount > 1) flags.push(`${audioCount} audio`);
-
-      return `
-        <li>
-          <span class="si-page">p. ${index}</span>
-          <span class="si-title">${escapeHTML(getSlideHeading(slide) || 'Untitled')}</span>
-          <span class="si-meta">${textLength} chars · ${mediaCount} media · ${audioCount} audio · ${spoilerCount} spoilers</span>
-          ${flags.length ? `<span class="si-flags">${flags.map(escapeHTML).join(' · ')}</span>` : ''}
-        </li>`;
-    }).join('');
-
-    panel.innerHTML = `
-      <div class="si-kicker">Story Inspector</div>
-      <div class="si-chapter">${escapeHTML(currentChapter?.title || 'Before chapters')}</div>
-      <ol>${rows}</ol>
-      <div class="si-foot">I to hide</div>
-    `;
   }
 
   function setupNavButtons() {
