@@ -1778,11 +1778,11 @@
     return current;
   }
 
-  function saveBookmark(index) {
+  function saveBookmark(index, customName) {
     const bookmarkChapter = getChapterForIndex(index);
     localStorage.setItem(BOOKMARK_KEY, JSON.stringify({
       index,
-      title: getSlideHeading(slides[index]) || `Page ${index}`,
+      title: customName || getSlideHeading(slides[index]) || `Page ${index}`,
       chapter: bookmarkChapter?.title || '',
       savedAt: new Date().toISOString(),
     }));
@@ -1849,10 +1849,48 @@
       updateBookmarkBtn();
       showToast('Bookmark removed', 'info');
     } else {
-      saveBookmark(idx);
-      updateBookmarkBtn();
-      showToast(`Bookmark saved — page ${idx}`, 'success');
+      showBookmarkNameModal(idx);
     }
+  }
+
+  function showBookmarkNameModal(idx) {
+    const existing = document.getElementById('bookmark-name-modal');
+    if (existing) existing.remove();
+    const defaultName = getSlideHeading(slides[idx]) || `Page ${idx}`;
+    const overlay = document.createElement('div');
+    overlay.id = 'bookmark-name-modal';
+    overlay.className = 'storybook-modal';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:3100;display:flex;align-items:center;justify-content:center;background:rgba(4,1,16,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:modalFadeIn .2s ease both;';
+    overlay.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-title">🔖 Name your bookmark</div>
+        <div class="modal-subtitle">Page ${idx}</div>
+        <input class="modal-input" id="bm-name-input" type="text" maxlength="48" placeholder="e.g. Where I cried 😭" />
+        <div class="modal-buttons">
+          <button class="modal-btn cancel" id="bm-name-cancel">Cancel</button>
+          <button class="modal-btn confirm" id="bm-name-confirm">Save 🔖</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    const input = document.getElementById('bm-name-input');
+    input.value = defaultName;
+    requestAnimationFrame(() => { input.focus(); input.select(); });
+    const confirm = () => {
+      const name = input.value.trim() || defaultName;
+      saveBookmark(idx, name);
+      updateBookmarkBtn();
+      showToast(`🔖 Saved — “${name}”`, 'success');
+      overlay.remove();
+    };
+    const cancel = () => overlay.remove();
+    document.getElementById('bm-name-confirm').addEventListener('click', confirm);
+    document.getElementById('bm-name-cancel').addEventListener('click', cancel);
+    overlay.addEventListener('click', e => { if (e.target === overlay) cancel(); });
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); confirm(); }
+      if (e.key === 'Escape') cancel();
+    });
   }
 
   function showBookmarkPrompt(idx) {
