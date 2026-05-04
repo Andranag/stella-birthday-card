@@ -223,6 +223,7 @@
     setupSwipeHints();
     setupBookmark();
     setupHelpFab();
+    setupVideoFullscreen();
 
     if (!hasUnlockedStory()) document.body.classList.add('story-locked');
     else document.body.classList.remove('story-locked');
@@ -1661,6 +1662,7 @@
           <li><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> Navigate slides</li>
           <li><kbd>Home</kbd> First slide &nbsp;·&nbsp; <kbd>End</kbd> Last slide</li>
           <li><kbd>Space</kbd> Next page &nbsp;·&nbsp; <kbd>Esc</kbd> Close panels</li>
+          <li><kbd>Tab</kbd> Next chapter &nbsp;·&nbsp; <kbd>Shift+Tab</kbd> Prev chapter</li>
           <li><kbd>F</kbd> Heart / unheart page</li>
           <li><kbd>J</kbd> Jump to next favorite</li>
           <li><kbd>Z</kbd> Toggle zen mode</li>
@@ -2404,7 +2406,21 @@
           if (!modalOpen) { e.preventDefault(); next(); } break;
         case 'ArrowLeft': case 'ArrowUp':
           if (!modalOpen) { e.preventDefault(); prev(); } break;
+        case 'Tab':
+          if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
+            e.preventDefault();
+            const cur = getCurrentSlideIndex();
+            if (e.shiftKey) {
+              const ch = [...chapters].reverse().find(c => c.index < cur);
+              if (ch) { goTo(ch.index); showToast(`← Chapter ${ch.number} · ${ch.title}`, 'info'); }
+            } else {
+              const ch = chapters.find(c => c.index > cur);
+              if (ch) { goTo(ch.index); showToast(`→ Chapter ${ch.number} · ${ch.title}`, 'info'); }
+            }
+          }
+          break;
         case 'Escape':
+          if (document.fullscreenElement) { document.exitFullscreen(); break; }
           modalOpen ? closeJumpModal() : navOpen ? closeNavPanel() : closeHelpModal(); break;
         case 'g': case 'G': if (!navOpen && !document.body.classList.contains('story-locked')) openJumpModal(); break;
         case 'n': case 'N':
@@ -2523,10 +2539,35 @@
     });
   }
 
+  /* ── Fullscreen video on double-click ─────────────────────── */
+  function setupVideoFullscreen() {
+    document.body.addEventListener('dblclick', e => {
+      const video = e.target.closest('.gift-video');
+      if (!video) return;
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        (video.requestFullscreen?.() || video.webkitRequestFullscreen?.());
+      }
+    });
+  }
+
   /* ── Dynamic styles (injected to avoid extra HTTP request) ─── */
   function injectDynamicStyles() {
     const s = document.createElement('style');
     s.textContent = `
+/* ── Fullscreen video hint ── */
+.gift-img { position: relative; }
+.gift-img::after {
+  content: '⛶';
+  position: absolute; bottom: 7px; right: 9px;
+  font-size: 1rem; color: rgba(255,255,255,.55);
+  pointer-events: none; opacity: 0;
+  transition: opacity .2s ease;
+  line-height: 1;
+}
+.gift-img:hover::after { opacity: 1; }
+
 /* ── Slide entrance stagger ── */
 @keyframes slideEntrance {
   from { opacity: 0; transform: translateY(13px); }
