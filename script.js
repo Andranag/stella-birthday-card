@@ -223,6 +223,7 @@
     setupSwipeHints();
     setupBookmark();
     setupHelpFab();
+    setupEqVisualizer();
     setupVideoFullscreen();
 
     if (!hasUnlockedStory()) document.body.classList.add('story-locked');
@@ -2539,6 +2540,30 @@
     });
   }
 
+  /* ── EQ bars visualizer ─────────────────────────────────── */
+  function setupEqVisualizer() {
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(m => {
+        if (m.attributeName !== 'class') return;
+        const btn = m.target;
+        if (!btn.classList.contains('text-to-sound')) return;
+        const existing = btn.querySelector('.eq-bars');
+        if (btn.classList.contains('playing')) {
+          if (!existing) {
+            const bars = document.createElement('span');
+            bars.className = 'eq-bars';
+            bars.setAttribute('aria-hidden', 'true');
+            bars.innerHTML = '<i></i><i></i><i></i><i></i><i></i>';
+            btn.appendChild(bars);
+          }
+        } else {
+          existing?.remove();
+        }
+      });
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'], subtree: true });
+  }
+
   /* ── Fullscreen video on double-click ─────────────────────── */
   function setupVideoFullscreen() {
     document.body.addEventListener('dblclick', e => {
@@ -2700,15 +2725,7 @@
   border-color: #A07010 !important;
   box-shadow: 0 2px 0 #6A4800, 0 4px 16px rgba(201,160,48,.5), 0 0 20px rgba(255,200,40,.35), inset 0 1px 0 rgba(255,255,255,.9) !important;
 }
-.text-to-sound.playing::after {
-  content: '\u266A';
-  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
-  font-size: 1.15em;
-  color: rgba(106,72,0,.85);
-  animation: noteBounce 0.5s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 2;
-}
+.text-to-sound.playing::after { content: none; }
 .text-to-sound.playing::before {
   content: '';
   position: absolute; inset: 0; border-radius: inherit;

@@ -273,15 +273,33 @@ button:active {
   50% { opacity: 1; }
 }
 
-.text-to-sound.playing::after {
-  content: '♪';
-  margin-left: 8px;
-  animation: noteBounce 0.5s ease-in-out infinite;
-}
+.text-to-sound.playing::after { content: none; }
 
-@keyframes noteBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+/* ── EQ bars (injected by JS when audio plays) ── */
+.eq-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 14px;
+  margin-left: 7px;
+  flex-shrink: 0;
+}
+.eq-bars i {
+  display: block;
+  width: 3px;
+  border-radius: 2px 2px 0 0;
+  background: currentColor;
+  animation: eqBounce 0.55s ease-in-out infinite alternate;
+  transform-origin: bottom;
+}
+.eq-bars i:nth-child(1) { height: 5px;  animation-delay:   0ms; }
+.eq-bars i:nth-child(2) { height: 12px; animation-delay: 160ms; }
+.eq-bars i:nth-child(3) { height: 8px;  animation-delay:  80ms; }
+.eq-bars i:nth-child(4) { height: 14px; animation-delay: 240ms; }
+.eq-bars i:nth-child(5) { height: 6px;  animation-delay: 120ms; }
+@keyframes eqBounce {
+  from { transform: scaleY(0.25); opacity: .7; }
+  to   { transform: scaleY(1);    opacity: 1;  }
 }
 
 /* ── Audio Progress Indicator ─────────────────────────────────── */
@@ -1577,6 +1595,26 @@ body.on-cover #floating-key { display: block; }
   background:
     linear-gradient(315deg, rgba(218,185,130,.45) 0%, transparent 50%),
     radial-gradient(circle at 0% 100%, rgba(0,0,0,.18) 0%, transparent 60%);
+}
+
+/* Bottom-right page corner fold hint */
+.page-right .page-slot::after {
+  content: '';
+  position: absolute; bottom: 0; right: 0;
+  width: 26px; height: 26px;
+  background: linear-gradient(
+    135deg,
+    transparent 45%,
+    rgba(218,185,130,.50) 45%,
+    rgba(245,220,160,.30) 65%,
+    rgba(170,130,50,.22) 65%
+  );
+  border-radius: 0 0 8px 0;
+  pointer-events: none; z-index: 5;
+  transition: width .22s ease, height .22s ease;
+}
+.page-right:hover .page-slot::after {
+  width: 44px; height: 44px;
 }
 
 /* Page crease near spine */
