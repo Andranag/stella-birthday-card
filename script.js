@@ -227,6 +227,7 @@
     setupBookmark();
     setupHelpFab();
     setupCursorTrail();
+    setupGoldDust();
     setupEqVisualizer();
     setupVideoFullscreen();
 
@@ -2500,6 +2501,48 @@
       setTimeout(tick, t.ch === ' ' ? BASE * 0.35 : BASE);
     }
     tick();
+  }
+
+  /* ── Ambient gold dust ─────────────────────────────────── */
+  function setupGoldDust() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'gold-dust';
+    canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50;';
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    const COLS = ['#FFD700','#FFE880','#FFF3C0','#C9A030','#FFFACD'];
+    const COUNT = 40;
+    const pts = Array.from({ length: COUNT }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: 0.6 + Math.random() * 1.4,
+      spd: 0.18 + Math.random() * 0.38,
+      amp: 0.25 + Math.random() * 0.55,
+      phase: Math.random() * Math.PI * 2,
+      op: 0.08 + Math.random() * 0.28,
+      col: COLS[Math.floor(Math.random() * COLS.length)],
+    }));
+    let raf;
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      const t = Date.now() / 1800;
+      pts.forEach(p => {
+        p.y -= p.spd;
+        if (p.y < -4) { p.y = h + 4; p.x = Math.random() * w; }
+        const fade = Math.min(1, (h - p.y) / (h * 0.12)) * Math.min(1, p.y / (h * 0.12));
+        ctx.globalAlpha = p.op * fade;
+        ctx.fillStyle = p.col;
+        ctx.beginPath();
+        ctx.arc(p.x + Math.sin(t + p.phase) * p.amp * 18, p.y, p.r, 0, 6.283);
+        ctx.fill();
+      });
+      raf = requestAnimationFrame(draw);
+    }
+    draw();
+    window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+    document.addEventListener('visibilitychange', () => { document.hidden ? cancelAnimationFrame(raf) : draw(); });
   }
 
   /* ── Magic cursor trail ─────────────────────────────────── */
