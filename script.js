@@ -28,6 +28,7 @@
   };
   let _pageTurnAudio  = null;
   let _ambientStarted = false;
+  let _sfxMuted = localStorage.getItem('stella_sfx_muted') === 'true';
   let recentJumps     = [];   // [{slideIndex, title, chapter?}]
 
   function hasUnlockedStory() {
@@ -881,6 +882,7 @@
   }
 
   function playPageTurnSound() {
+    if (_sfxMuted) return;
     try {
       if (!_pageTurnAudio) {
         _pageTurnAudio = new Audio('assets/music/page-turn-sound-effect.mp3');
@@ -1663,6 +1665,7 @@
           <li><kbd>J</kbd> Jump to next favorite</li>
           <li><kbd>Z</kbd> Toggle zen mode</li>
           <li><kbd>B</kbd> Bookmark page &nbsp;·&nbsp; <kbd>G</kbd> Jump to any slide</li>
+          <li><kbd>M</kbd> Mute / unmute sound effects</li>
           <li><kbd>L</kbd> Copy page link &nbsp;·&nbsp; <kbd>R</kbd> Reset view</li>
           <li><kbd>+</kbd> <kbd>−</kbd> Scale text &nbsp;·&nbsp; <kbd>?</kbd> This help</li>
         </ul>
@@ -2386,13 +2389,16 @@
           }
           break;
         case 'm': case 'M':
-          // M to mute/unmute audio
           if (!modalOpen && !navOpen) {
             e.preventDefault();
-            if (currentAudio) {
-              currentAudio.muted = !currentAudio.muted;
-              showToast(currentAudio.muted ? 'Audio muted' : 'Audio unmuted', 'info');
+            _sfxMuted = !_sfxMuted;
+            localStorage.setItem('stella_sfx_muted', _sfxMuted);
+            if (_sfxMuted) {
+              Object.values(_bgTracks).forEach(t => { if (t.audio) t.audio.volume = 0; });
+            } else {
+              Object.entries(_bgTracks).forEach(([, t]) => { if (t.audio) t.audio.volume = t.vol; });
             }
+            showToast(_sfxMuted ? '🔇 Sound effects muted' : '🔊 Sound effects on', 'info');
           }
           break;
         case 's': case 'S':
@@ -2422,7 +2428,11 @@
                 if (targetIdx >= slides.length) targetIdx = curIdx;
               }
               toggleFavorite(targetIdx);
-              showToast(isFavorited(targetIdx) ? 'Added to favorites' : 'Removed from favorites', 'info');
+              if (isFavorited(targetIdx)) {
+                const heartBtn = document.querySelector(`.slide-heart-btn[data-slide-index="${targetIdx}"]`);
+                if (heartBtn) spawnSparkles(heartBtn);
+              }
+              showToast(isFavorited(targetIdx) ? 'Added to favorites ✦' : 'Removed from favorites', 'info');
             }
           }
           break;
@@ -2471,6 +2481,12 @@
   function injectDynamicStyles() {
     const s = document.createElement('style');
     s.textContent = `
+/* ── Sparkle burst ── */
+@keyframes sparkleFly {
+  0%   { transform: translate(-50%,-50%) scale(1);   opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--sdx)), calc(-50% + var(--sdy))) scale(0); opacity: 0; }
+}
+
 /* ── Shake animation ── */
 @keyframes sbShake {
   0%,100%{ transform: translateX(0); }
@@ -2805,6 +2821,29 @@
   }
   function isFavorited(slideIndex) { return getFavorites().includes(slideIndex); }
 
+  function spawnSparkles(originEl) {
+    const rect = originEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9999;';
+    document.body.appendChild(wrap);
+    const colors = ['#FFD700','#FF6B9D','#C9A030','#FFE4A8','#FF8CC8'];
+    const shapes = ['★','✦','♥','·','✿'];
+    for (let i = 0; i < 12; i++) {
+      const p = document.createElement('span');
+      const angle = (i / 12) * Math.PI * 2 + (Math.random() - 0.5) * 0.6;
+      const dist  = 36 + Math.random() * 52;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+      const size = 9 + Math.random() * 9;
+      p.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+      p.style.cssText = `position:absolute;left:${cx}px;top:${cy}px;font-size:${size}px;color:${colors[i % colors.length]};transform:translate(-50%,-50%);animation:sparkleFly ${450 + Math.random()*250}ms ease-out forwards;--sdx:${dx}px;--sdy:${dy}px;`;
+      wrap.appendChild(p);
+    }
+    setTimeout(() => wrap.remove(), 800);
+  }
+
   function createHeartButton(slideIndex) {
     const btn = document.createElement('button');
     btn.className = 'slide-heart-btn';
@@ -2812,7 +2851,11 @@
     btn.setAttribute('aria-label', 'Toggle favorite');
     btn.dataset.slideIndex = slideIndex;
     btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
-    btn.addEventListener('click', e => { e.stopPropagation(); toggleFavorite(slideIndex); });
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleFavorite(slideIndex);
+      if (isFavorited(slideIndex)) spawnSparkles(btn);
+    });
     return btn;
   }
 
