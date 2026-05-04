@@ -1665,7 +1665,7 @@
           <li><kbd>J</kbd> Jump to next favorite</li>
           <li><kbd>Z</kbd> Toggle zen mode</li>
           <li><kbd>B</kbd> Bookmark page &nbsp;·&nbsp; <kbd>G</kbd> Jump to any slide</li>
-          <li><kbd>M</kbd> Mute / unmute sound effects</li>
+          <li><kbd>X</kbd> Random page &nbsp;·&nbsp; <kbd>M</kbd> Mute / unmute sounds</li>
           <li><kbd>L</kbd> Copy page link &nbsp;·&nbsp; <kbd>R</kbd> Reset view</li>
           <li><kbd>+</kbd> <kbd>−</kbd> Scale text &nbsp;·&nbsp; <kbd>?</kbd> This help</li>
         </ul>
@@ -2452,6 +2452,14 @@
             }
           }
           break;
+        case 'x': case 'X':
+          if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
+            e.preventDefault();
+            const randomIdx = 1 + Math.floor(Math.random() * (slides.length - 1));
+            goTo(randomIdx);
+            showToast('✦ Taking you somewhere random…', 'info');
+          }
+          break;
         case 'b': case 'B':
           if (!modalOpen && !navOpen) toggleBookmark();
           break;
@@ -2519,6 +2527,12 @@
   function injectDynamicStyles() {
     const s = document.createElement('style');
     s.textContent = `
+/* ── Slide entrance stagger ── */
+@keyframes slideEntrance {
+  from { opacity: 0; transform: translateY(13px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* ── Sparkle burst ── */
 @keyframes sparkleFly {
   0%   { transform: translate(-50%,-50%) scale(1);   opacity: 1; }
@@ -2927,6 +2941,41 @@
     showToast(`✦ Chapter ${chapter.number} · ${chapter.title}`, 'info', 3000);
   }
 
+  /* ── Cinematic slide entrance ──────────────────────────── */
+  function animateSlideEntrance(slideEl) {
+    if (!slideEl) return;
+    [...slideEl.children].forEach((child, i) => {
+      if (child.classList.contains('slide-heart-btn')) return;
+      child.style.animation = 'none';
+      void child.offsetHeight;
+      child.style.animation = `slideEntrance 0.5s cubic-bezier(.22,.85,.32,1) ${i * 80}ms both`;
+    });
+  }
+
+  /* ── Progress milestone toasts ──────────────────────────── */
+  const PROGRESS_MILESTONES = [
+    { pct: 25, msg: '\u2726 A quarter through \u2014 you\'re doing wonderfully.' },
+    { pct: 50, msg: '\u2726 Halfway there. Still enjoying yourself? \u2728' },
+    { pct: 75, msg: '\u2726 Nearly at the end \u2014 brace yourself. \ud83c\udf1f' },
+  ];
+  const _shownProgressMilestones = new Set();
+
+  function checkProgressMilestone() {
+    if (!hasUnlockedStory()) return;
+    const idx = getCurrentSlideIndex();
+    const total = slides.length - 2;
+    if (idx <= 0 || total <= 0) return;
+    const pct = (idx / total) * 100;
+    PROGRESS_MILESTONES.forEach(m => {
+      if (pct >= m.pct && !_shownProgressMilestones.has(m.pct)) {
+        _shownProgressMilestones.add(m.pct);
+        setTimeout(() => showToast(m.msg, 'info'), 900);
+      }
+    });
+  }
+
+  let _lastShownSlides = new Set();
+
   /* ── Hook render to add hearts, milestone, celebration ─ */
   const _origRender = render;
   render = function() {
@@ -2940,9 +2989,19 @@
     });
     updateHeartButtons();
     checkMilestoneToast();
+    checkProgressMilestone();
     const currentIdx = getCurrentSlideIndex();
     if (currentIdx === slides.length - 1 && slides.length > 1) {
       triggerFinalSlideCelebration();
     }
+    const currentShown = new Set();
+    document.querySelectorAll('.slide.gift-article.in-page').forEach(slideEl => {
+      const idx = slides.indexOf(slideEl);
+      if (idx >= 0) currentShown.add(idx);
+    });
+    currentShown.forEach(idx => {
+      if (!_lastShownSlides.has(idx)) animateSlideEntrance(slides[idx]);
+    });
+    _lastShownSlides = currentShown;
   };
 })();
