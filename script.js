@@ -1558,6 +1558,20 @@
         recentSection.style.display = 'none';
       }
     }
+    const bookmarkSection = document.getElementById('jump-bookmark-section');
+    const bookmarkList = document.getElementById('jump-bookmark-list');
+    if (bookmarkList && bookmarkSection) {
+      bookmarkList.innerHTML = '';
+      const bm = getBookmarkData();
+      if (bm) {
+        bookmarkSection.style.display = '';
+        const label = bm.chapter ? `${bm.chapter} — ${bm.title}` : bm.title;
+        bookmarkList.appendChild(mkJumpItem(bm.index, label));
+      } else {
+        bookmarkSection.style.display = 'none';
+      }
+    }
+
     const chaptersSection = document.getElementById('jump-chapters-section');
     const chaptersList = document.getElementById('jump-chapters-list');
     if (chaptersList && chaptersSection) {
@@ -2486,7 +2500,8 @@
     const full = el.dataset.twOriginal;
     el.innerHTML = '';
     el.classList.add('typewriter-active');
-    const BASE = 75;
+    const BASE = 95;                     // typing speed (was 120, now faster)
+    const WORD_PAUSE = 180;                // beat after each word
     const gen = (el._twGen = (el._twGen || 0) + 1);
     const tokens = [];
     (full.match(/(<[^>]+>|[^<]+)/g) || []).forEach(seg => {
@@ -2500,7 +2515,12 @@
       const t = tokens[i++];
       if (t.tag) { el.innerHTML += t.tag; tick(); return; }
       el.innerHTML += t.ch;
-      setTimeout(tick, t.ch === ' ' ? BASE * 0.35 : BASE);
+      // Detect word endings (space after a word or punctuation) for a beat
+      const nextToken = tokens[i];
+      const isWordEnd = t.ch && t.ch.match(/[a-zA-Z0-9]/) && nextToken && nextToken.ch === ' ';
+      const isPunctuation = t.ch && t.ch.match(/[.!?,:;]/);
+      const delay = isWordEnd ? WORD_PAUSE : (t.ch === ' ' ? BASE * 0.5 : BASE);
+      setTimeout(tick, isPunctuation ? WORD_PAUSE * 1.2 : delay);
     }
     tick();
   }
