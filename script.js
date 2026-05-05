@@ -214,6 +214,7 @@
     setupAudioStopButton();
     setupSwipe();
     setupReaderScale();
+    setupTextSizeControls();
     setupKeyboard();
     setupNavButtons();
     setupCoverKeyTracker();
@@ -1697,6 +1698,59 @@
     setReaderScale(1, { announce: true });
   }
 
+  /* ── Text Size Controls ─────────────────────────────────────────── */
+  function setupTextSizeControls() {
+    const TEXT_SIZE_KEY = 'stella_text_size';
+    const sizes = ['small', 'normal', 'large', 'xlarge'];
+    const sizeValues = { small: 0.9, normal: 1, large: 1.1, xlarge: 1.2 };
+    
+    // Load saved preference
+    let currentSize = localStorage.getItem(TEXT_SIZE_KEY) || 'normal';
+    if (!sizes.includes(currentSize)) currentSize = 'normal';
+    
+    function applySize(size) {
+      document.body.classList.remove('text-size-small', 'text-size-normal', 'text-size-large', 'text-size-xlarge');
+      document.body.classList.add(`text-size-${size}`);
+      // Update CSS custom property for dynamic scaling
+      const scale = sizeValues[size] || 1;
+      document.documentElement.style.setProperty('--text-scale', scale);
+      localStorage.setItem(TEXT_SIZE_KEY, size);
+    }
+    
+    // Apply on load
+    applySize(currentSize);
+    
+    // Button handlers
+    const smallerBtn = document.getElementById('text-smaller');
+    const largerBtn = document.getElementById('text-larger');
+    
+    if (smallerBtn) {
+      smallerBtn.addEventListener('click', () => {
+        const idx = sizes.indexOf(currentSize);
+        if (idx > 0) {
+          currentSize = sizes[idx - 1];
+          applySize(currentSize);
+          hapticClick('light');
+        } else {
+          hapticClick('error');
+        }
+      });
+    }
+    
+    if (largerBtn) {
+      largerBtn.addEventListener('click', () => {
+        const idx = sizes.indexOf(currentSize);
+        if (idx < sizes.length - 1) {
+          currentSize = sizes[idx + 1];
+          applySize(currentSize);
+          hapticClick('light');
+        } else {
+          hapticClick('error');
+        }
+      });
+    }
+  }
+
   function getBookmark() {
     const data = getBookmarkData();
     return data ? data.index : null;
@@ -2318,6 +2372,20 @@
       : 'Spoiler hidden. Tap to reveal.');
   }
 
+  /* ── Haptic Feedback ─────────────────────────────────────────── */
+  function hapticClick(type = 'light') {
+    if (!navigator.vibrate) return;
+    // Pattern: short pulse for page turn feedback
+    const patterns = {
+      light: [8],
+      medium: [15],
+      heavy: [25],
+      success: [10, 30, 10],
+      error: [20, 50, 20]
+    };
+    navigator.vibrate(patterns[type] || patterns.light);
+  }
+
   /* ── Swipe & Wheel ─────────────────────────────────────────── */
   function setupSwipe() {
     let x0 = 0, y0 = 0, t0 = 0;
@@ -2326,12 +2394,16 @@
       x0 = e.touches[0].clientX;
       y0 = e.touches[0].clientY;
       t0 = Date.now();
+      // Light haptic on touch start (like page edge resistance)
+      hapticClick('light');
     }, { passive: true });
     root.addEventListener('touchend', e => {
       const dx = e.changedTouches[0].clientX - x0;
       const dy = e.changedTouches[0].clientY - y0;
       const dt = Date.now() - t0;
       if (dt < 420 && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+        // Haptic feedback on successful page turn
+        hapticClick('medium');
         dx < 0 ? next() : prev();
       }
     }, { passive: true });

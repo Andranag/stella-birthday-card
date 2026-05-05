@@ -2944,3 +2944,67 @@ p.typewriter,
   font-size: clamp(1.2rem, 3.5vw, 1.8rem) !important;
   line-height: 1.5 !important;
 }
+
+/* ── Text Size Controls ──────────────────────────────────────────── */
+.text-size-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.text-size-btn {
+  min-width: 28px;
+  height: 24px;
+  padding: 0 6px;
+  background: rgba(var(--g2-rgb), .15);
+  border: 1px solid rgba(var(--g2-rgb), .45);
+  border-radius: 4px;
+  color: var(--g2);
+  font-family: 'Nunito', sans-serif;
+  font-size: .72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, transform .12s ease;
+}
+
+.text-size-btn:hover {
+  background: rgba(var(--g2-rgb), .28);
+  border-color: rgba(var(--g2-rgb), .65);
+}
+
+.text-size-btn:active {
+  transform: scale(.92);
+}
+
+/* Dynamic text size classes applied to body */
+body.text-size-small {
+  --reader-base: .88;
+  --text-scale: 0.9;
+}
+
+body.text-size-normal {
+  --text-scale: 1;
+}
+
+body.text-size-large {
+  --reader-base: 1.12;
+  --text-scale: 1.1;
+}
+
+body.text-size-xlarge {
+  --reader-base: 1.28;
+  --text-scale: 1.2;
+}
+
+/* Apply text scale to slide content */
+body[class*="text-size-"] .slide.gift-article h2 {
+  font-size: calc(clamp(1.3rem, 4.2vw, 1.95rem) * var(--text-scale, 1)) !important;
+}
+
+body[class*="text-size-"] .slide.gift-article p {
+  font-size: calc(1rem * var(--text-scale, 1)) !important;
+}
+
+body[class*="text-size-"] .slide.gift-article .text-to-sound {
+  font-size: calc(.95rem * var(--text-scale, 1)) !important;
+}
