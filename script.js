@@ -236,6 +236,9 @@
     allSlides = Array.from(document.querySelectorAll('.slide.gift-article'));
     if (!allSlides.length) return;
 
+    // Set data-index on each slide for heart button identification
+    allSlides.forEach((slide, idx) => { slide.dataset.index = idx; });
+
     refreshSlidesForViewport();
     injectDynamicStyles();
     buildBookDOM();
@@ -3459,12 +3462,15 @@
   const _origRender = render;
   render = function() {
     _origRender();
-    document.querySelectorAll('#left-slot > .slide.in-page, #right-slot > .slide.in-page').forEach(slide => {
+    // Add heart buttons to all visible slides (left, right, and in-page)
+    const allVisibleSlides = Array.from(document.querySelectorAll('.left-slot .slide.gift-article, .right-slot .slide.gift-article, .page-slot .slide.gift-article, .slide.gift-article.in-page'));
+    allVisibleSlides.forEach((slide) => {
       if (slide.querySelector('.slide-heart-btn')) return;
-      const idx = slides.indexOf(slide);
-      if (idx < 0) return;
-      slide.style.position = 'relative';
-      slide.appendChild(createHeartButton(idx));
+      // Get index from data-index attribute (works on cloned slides)
+      const idx = parseInt(slide.dataset.index, 10);
+      if (isNaN(idx)) return; // Skip if no valid index
+      const btn = createHeartButton(idx);
+      slide.appendChild(btn);
     });
     updateHeartButtons();
     checkMilestoneToast();
@@ -3477,8 +3483,8 @@
     }
     const currentShown = new Set();
     document.querySelectorAll('.slide.gift-article.in-page').forEach(slideEl => {
-      const idx = slides.indexOf(slideEl);
-      if (idx >= 0) currentShown.add(idx);
+      const idx = parseInt(slideEl.dataset.index, 10);
+      if (!isNaN(idx)) currentShown.add(idx);
     });
     currentShown.forEach(idx => {
       if (!_lastShownSlides.has(idx)) {

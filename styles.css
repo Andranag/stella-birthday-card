@@ -2145,7 +2145,6 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   z-index: 0;
   width: auto;
   height: clamp(86px, 20vh, 132px);
-  overflow: hidden;
   font-family: 'Marck Script', cursive;
   font-size: 1rem !important;
   line-height: 1 !important;
@@ -2575,14 +2574,19 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   }
 
   .slide.gift-article.in-page .star-field-art {
-    top: 10px;
-    right: 14px;
-    left: 14px;
-    height: 92px;
-    font-size: .92rem !important;
+    top: 6px;
+    right: 8px;
+    left: 8px;
+    height: clamp(100px, 22vh, 160px);
+    font-size: .88rem !important;
     line-height: 1 !important;
     max-height: none !important;
-    opacity: .86;
+    opacity: .9;
+  }
+
+  /* Extra top padding for slides with star field to prevent overlap */
+  .slide.gift-article.in-page:has(> .star-field-art) {
+    padding-top: clamp(90px, 20vh, 140px) !important;
   }
 
   /* Adjust progress bar for mobile */
