@@ -600,7 +600,7 @@ body.on-cover #next-page {
 /* ── Toast Notifications ─────────────────────────────────────── */
 .toast-container {
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 3000;
@@ -642,7 +642,7 @@ body.on-cover #next-page {
 @keyframes toastSlideIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
@@ -3001,10 +3001,36 @@ body[class*="text-size-"] .slide.gift-article h2 {
   font-size: calc(clamp(1.3rem, 4.2vw, 1.95rem) * var(--text-scale, 1)) !important;
 }
 
+body[class*="text-size-"] .slide.gift-article h2.typewriter {
+  font-size: calc(clamp(1.6rem, 5vw, 2.4rem) * var(--text-scale, 1)) !important;
+}
+
 body[class*="text-size-"] .slide.gift-article p {
   font-size: calc(1rem * var(--text-scale, 1)) !important;
 }
 
+body[class*="text-size-"] .slide.gift-article p.typewriter,
+body[class*="text-size-"] .slide.gift-article.in-page p.typewriter {
+  font-size: calc(clamp(1.2rem, 3.5vw, 1.8rem) * var(--text-scale, 1)) !important;
+}
+
 body[class*="text-size-"] .slide.gift-article .text-to-sound {
   font-size: calc(.95rem * var(--text-scale, 1)) !important;
+}
+
+/* Cover page text scaling */
+body[class*="text-size-"] #book-cover .cover-title-main {
+  font-size: calc(clamp(1.8rem, 5vw, 3rem) * var(--text-scale, 1)) !important;
+}
+
+body[class*="text-size-"] #book-cover .cover-name {
+  font-size: calc(clamp(.72rem, 1.9vw, 1.02rem) * var(--text-scale, 1)) !important;
+}
+
+body[class*="text-size-"] #book-cover .cover-open-hint {
+  font-size: calc(.75rem * var(--text-scale, 1)) !important;
+}
+
+body[class*="text-size-"] #book-cover .cover-music-btn {
+  font-size: calc(.78rem * var(--text-scale, 1)) !important;
 }

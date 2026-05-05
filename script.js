@@ -1624,7 +1624,8 @@
           <li><kbd>I</kbd> Reading stats &nbsp;·&nbsp; <kbd>X</kbd> Random page</li>
           <li><kbd>M</kbd> Mute / unmute sounds</li>
           <li><kbd>L</kbd> Copy page link &nbsp;·&nbsp; <kbd>R</kbd> Reset view</li>
-          <li><kbd>+</kbd> <kbd>−</kbd> Scale text &nbsp;·&nbsp; <kbd>?</kbd> This help</li>
+          <li><kbd>A</kbd> or <kbd>+</kbd> <kbd>−</kbd> Text size (90% → 120%)</li>
+          <li><kbd>0</kbd> Reset text size &nbsp;·&nbsp; <kbd>?</kbd> This help</li>
         </ul>
         <button id="help-close" class="help-close" aria-label="Close help">✕</button>
       </div>
@@ -1699,55 +1700,51 @@
   }
 
   /* ── Text Size Controls ─────────────────────────────────────────── */
-  function setupTextSizeControls() {
-    const TEXT_SIZE_KEY = 'stella_text_size';
-    const sizes = ['small', 'normal', 'large', 'xlarge'];
-    const sizeValues = { small: 0.9, normal: 1, large: 1.1, xlarge: 1.2 };
-    
-    // Load saved preference
-    let currentSize = localStorage.getItem(TEXT_SIZE_KEY) || 'normal';
-    if (!sizes.includes(currentSize)) currentSize = 'normal';
-    
-    function applySize(size) {
-      document.body.classList.remove('text-size-small', 'text-size-normal', 'text-size-large', 'text-size-xlarge');
-      document.body.classList.add(`text-size-${size}`);
-      // Update CSS custom property for dynamic scaling
-      const scale = sizeValues[size] || 1;
-      document.documentElement.style.setProperty('--text-scale', scale);
-      localStorage.setItem(TEXT_SIZE_KEY, size);
+  const TEXT_SIZE_KEY = 'stella_text_size';
+  const TEXT_SIZES = ['small', 'normal', 'large', 'xlarge'];
+  const TEXT_SIZE_VALUES = { small: 0.9, normal: 1, large: 1.1, xlarge: 1.2 };
+  let _currentTextSize = 'normal';
+
+  function applyTextSize(size) {
+    document.body.classList.remove('text-size-small', 'text-size-normal', 'text-size-large', 'text-size-xlarge');
+    document.body.classList.add(`text-size-${size}`);
+    const scale = TEXT_SIZE_VALUES[size] || 1;
+    document.documentElement.style.setProperty('--text-scale', scale);
+    localStorage.setItem(TEXT_SIZE_KEY, size);
+    _currentTextSize = size;
+  }
+
+  function bumpTextSize(delta) {
+    const idx = TEXT_SIZES.indexOf(_currentTextSize);
+    const newIdx = idx + delta;
+    if (newIdx >= 0 && newIdx < TEXT_SIZES.length) {
+      applyTextSize(TEXT_SIZES[newIdx]);
+      const scalePercent = Math.round(TEXT_SIZE_VALUES[TEXT_SIZES[newIdx]] * 100);
+      showToast(`Text size ${scalePercent}%`, 'info');
+      hapticClick('light');
+    } else {
+      hapticClick('error');
     }
-    
+  }
+
+  function setupTextSizeControls() {
+    // Load saved preference
+    _currentTextSize = localStorage.getItem(TEXT_SIZE_KEY) || 'normal';
+    if (!TEXT_SIZES.includes(_currentTextSize)) _currentTextSize = 'normal';
+
     // Apply on load
-    applySize(currentSize);
-    
+    applyTextSize(_currentTextSize);
+
     // Button handlers
     const smallerBtn = document.getElementById('text-smaller');
     const largerBtn = document.getElementById('text-larger');
-    
+
     if (smallerBtn) {
-      smallerBtn.addEventListener('click', () => {
-        const idx = sizes.indexOf(currentSize);
-        if (idx > 0) {
-          currentSize = sizes[idx - 1];
-          applySize(currentSize);
-          hapticClick('light');
-        } else {
-          hapticClick('error');
-        }
-      });
+      smallerBtn.addEventListener('click', () => bumpTextSize(-1));
     }
-    
+
     if (largerBtn) {
-      largerBtn.addEventListener('click', () => {
-        const idx = sizes.indexOf(currentSize);
-        if (idx < sizes.length - 1) {
-          currentSize = sizes[idx + 1];
-          applySize(currentSize);
-          hapticClick('light');
-        } else {
-          hapticClick('error');
-        }
-      });
+      largerBtn.addEventListener('click', () => bumpTextSize(1));
     }
   }
 
@@ -2539,19 +2536,20 @@
         case '+': case '=':
           if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
             e.preventDefault();
-            bumpReaderScale(0.04);
+            bumpTextSize(1);
           }
           break;
         case '-': case '_':
           if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
             e.preventDefault();
-            bumpReaderScale(-0.04);
+            bumpTextSize(-1);
           }
           break;
         case '0':
           if (!modalOpen && !navOpen && !document.body.classList.contains('story-locked')) {
             e.preventDefault();
-            resetReaderScale();
+            applyTextSize('normal');
+            showToast('Text size 100%', 'info');
           }
           break;
         case 'z': case 'Z':
@@ -2814,7 +2812,7 @@
   border: 2px solid rgba(201,160,48,0.52);
   border-radius: 12px;
   padding: 2rem;
-  max-width: 400px;
+  max-width: 520px;
   width: 90%;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   position: relative;
