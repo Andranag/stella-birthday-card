@@ -1922,11 +1922,7 @@ body.on-cover #floating-key { display: block; }
 
 /* Scale buttons inside pages */
 .slide.gift-article.in-page .text-to-sound {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 0.3em !important;
-  flex-wrap: wrap !important;
+  display: block !important;
   width: fit-content !important;
   font-size: var(--reader-button-size) !important;
   padding: 10px 18px !important;
@@ -1938,6 +1934,7 @@ body.on-cover #floating-key { display: block; }
   overflow-wrap: break-word !important;
   max-width: 100% !important;
   margin: 2px auto 16px auto !important;
+  text-align: center !important;
 }
 
 .slide.gift-article.in-page h2 .text-to-sound, .slide.gift-article.in-page .h2-font .text-to-sound {
@@ -2976,6 +2973,32 @@ p.typewriter,
   transform: scale(.92);
 }
 
+/* Ambient toggle button in tips bar */
+.ambient-toggle-btn {
+  background: transparent;
+  border: none;
+  font-size: .9rem;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: transform .15s ease, background .15s ease;
+  line-height: 1;
+}
+
+.ambient-toggle-btn:hover {
+  background: rgba(var(--g2-rgb), .2);
+  transform: scale(1.1);
+}
+
+.ambient-toggle-btn:active {
+  transform: scale(.9);
+}
+
+/* Slide fade transition */
+.swiper {
+  transition: opacity .2s ease;
+}
+
 /* Dynamic text size classes applied to body */
 body.text-size-small {
   --reader-base: .88;
@@ -3033,4 +3056,13 @@ body[class*="text-size-"] #book-cover .cover-open-hint {
 
 body[class*="text-size-"] #book-cover .cover-music-btn {
   font-size: calc(.78rem * var(--text-scale, 1)) !important;
+}
+
+/* Contents page text scaling */
+body[class*="text-size-"] .slide.gift-article.contents-page.in-page h2 {
+  font-size: calc(clamp(1.35rem, 3.6vw, 1.7rem) * var(--text-scale, 1)) !important;
+}
+
+body[class*="text-size-"] .contents-list li {
+  font-size: calc(clamp(.88rem, 2.2vw, 1.05rem) * var(--text-scale, 1)) !important;
 }
