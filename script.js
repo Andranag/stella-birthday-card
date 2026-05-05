@@ -2715,6 +2715,12 @@
   }
 
   /* ── Typewriter effect ───────────────────────────────────── */
+  // Decode HTML entities (&amp; → &, etc.) for clean typing display
+  function decodeHtmlEntities(str) {
+    const txt = document.createElement('textarea');
+    txt.innerHTML = str;
+    return txt.value;
+  }
   function runTypewriter(el, onComplete) {
     el.style.opacity = '1';
     if (!el.dataset.twOriginal) el.dataset.twOriginal = el.innerHTML.trim();
@@ -2727,7 +2733,7 @@
     const tokens = [];
     (full.match(/(<[^>]+>|[^<]+)/g) || []).forEach(seg => {
       if (seg.startsWith('<')) { tokens.push({ tag: seg }); }
-      else { Array.from(seg).forEach(ch => tokens.push({ ch })); }
+      else { Array.from(decodeHtmlEntities(seg)).forEach(ch => tokens.push({ ch })); }
     });
     let i = 0;
     function tick() {
@@ -3485,4 +3491,71 @@
     });
     _lastShownSlides = currentShown;
   };
+
+  /* ── Asset Health Check ─────────────────────────────────────── */
+  async function runAssetHealthCheck() {
+    const audioButtons = document.querySelectorAll('.text-to-sound[data-sound]');
+    const videos = document.querySelectorAll('.gift-video source[src]');
+    const assets = new Set();
+
+    // Collect all unique asset paths
+    audioButtons.forEach(btn => assets.add(btn.dataset.sound));
+    videos.forEach(vid => assets.add(vid.getAttribute('src')));
+
+    const results = { ok: [], missing: [], errors: [] };
+    const total = assets.size;
+    let checked = 0;
+
+    showToast(`🔍 Checking ${total} assets...`, 'info');
+
+    const checkPromises = [...assets].map(async (url) => {
+      try {
+        const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+        // no-cors hides actual status, so we rely on timeout/error
+        results.ok.push(url);
+      } catch (e) {
+        // Try again with a GET request to be sure
+        try {
+          const img = new Image();
+          img.src = url;
+          await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = () => reject(new Error('Failed to load'));
+            setTimeout(() => reject(new Error('Timeout')), 3000);
+          });
+          results.ok.push(url);
+        } catch {
+          results.missing.push(url);
+        }
+      }
+      checked++;
+      if (checked % 10 === 0 || checked === total) {
+        showToast(`🔍 Checked ${checked}/${total} assets...`, 'info');
+      }
+    });
+
+    await Promise.allSettled(checkPromises);
+
+    // Log detailed report
+    console.group('🔍 Asset Health Check Report');
+    console.log(`Total assets: ${total}`);
+    console.log(`OK: ${results.ok.length}`);
+    console.log(`Missing/Failed: ${results.missing.length}`);
+
+    if (results.missing.length > 0) {
+      console.group('❌ Missing Assets:');
+      results.missing.forEach(url => console.log(`  • ${url}`));
+      console.groupEnd();
+      showToast(`⚠️ ${results.missing.length} missing assets (see console)`, 'warning', 4000);
+    } else {
+      showToast('✅ All assets found!', 'success', 3000);
+    }
+    console.groupEnd();
+
+    return results;
+  }
+
+  // Expose to console for manual use
+  window.checkAssets = runAssetHealthCheck;
+
 })();
