@@ -28,6 +28,81 @@
   };
   let _pageTurnAudio  = null;
   let _ambientStarted = false;
+
+  /* ── Audio Preloading Cache ─────────────────────────────────── */
+  const _audioCache = new Map();
+  const _preloadedAudio = new Set();
+
+  function preloadAudio(src) {
+    if (!src || _preloadedAudio.has(src)) return;
+    const audio = new Audio();
+    audio.preload = 'metadata';
+    audio.src = src;
+    _audioCache.set(src, audio);
+    _preloadedAudio.add(src);
+  }
+
+  function getCachedAudio(src) {
+    if (_audioCache.has(src)) {
+      const cached = _audioCache.get(src);
+      cached.currentTime = 0;
+      return cached;
+    }
+    return new Audio(src);
+  }
+
+  /* ── Video Alt Text Generation ──────────────────────────────── */
+  function generateVideoAltText() {
+    document.querySelectorAll('.gift-img[aria-label] .gift-video').forEach(video => {
+      const container = video.closest('.gift-img');
+      const label = container?.getAttribute('aria-label');
+      if (label && !video.hasAttribute('title')) {
+        video.setAttribute('title', label);
+      }
+    });
+  }
+
+  /* ── Particle Burst on Transitions ──────────────────────────── */
+  function createParticleBurst(x, y, color = '#FFD700') {
+    const count = 12;
+    const container = document.getElementById('book-frame') || document.body;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('span');
+      const angle = (Math.PI * 2 * i) / count;
+      const dist = 40 + Math.random() * 40;
+      p.className = 'transition-particle';
+      p.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: ${y}px;
+        width: 6px;
+        height: 6px;
+        background: ${color};
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 5000;
+      `;
+      container.appendChild(p);
+      const anim = p.animate([
+        { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+        { transform: `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px)) scale(0)`, opacity: 0 }
+      ], {
+        duration: 600 + Math.random() * 200,
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        fill: 'forwards'
+      });
+      anim.onfinish = () => p.remove();
+    }
+  }
+
+  function triggerSlideTransitionBurst() {
+    const openBook = document.getElementById('open-book');
+    if (!openBook) return;
+    const rect = openBook.getBoundingClientRect();
+    const colors = ['#FFD700', '#FF6B9D', '#0f6b8f', '#946000'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    createParticleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, color);
+  }
   let _sfxMuted = localStorage.getItem('stella_sfx_muted') === 'true';
   let recentJumps     = [];   // [{slideIndex, title, chapter?}]
 
@@ -268,6 +343,7 @@
     setupMoodLighting();
     setupEqVisualizer();
     setupVideoFullscreen();
+    preloadCommonAudio();
 
     if (!hasUnlockedStory()) document.body.classList.add('story-locked');
     else document.body.classList.remove('story-locked');
@@ -377,6 +453,9 @@
         video.setAttribute('loading', 'lazy');
       }
     });
+
+    // Generate alt text for videos from parent aria-labels
+    generateVideoAltText();
   }
 
   function slideIndexToSpread(si) {
@@ -433,14 +512,25 @@
         clone.removeAttribute('id');
         clone.classList.add('page-exit-clone');
         stripCloneMedia(clone);
-        clone.style.position = 'absolute';
-        clone.style.top      = (rect.top  - bookRect.top)  + 'px';
-        clone.style.left     = (rect.left - bookRect.left) + 'px';
-        clone.style.width    = rect.width  + 'px';
-        clone.style.height   = rect.height + 'px';
+        clone.style.cssText = `
+          position: absolute;
+          top: ${rect.top - bookRect.top}px;
+          left: ${rect.left - bookRect.left}px;
+          width: ${rect.width}px;
+          height: ${rect.height}px;
+          will-change: transform, opacity;
+        `;
         openBook.appendChild(clone);
         requestAnimationFrame(() => {
-          clone.classList.add(useFade ? 'exit-fade-out' : (isForward ? 'mobile-exit-forward' : 'mobile-exit-backward'));
+          let exitClass;
+          if (useFade) {
+            exitClass = 'exit-fade-out';
+          } else if (isForward) {
+            exitClass = 'mobile-exit-forward';
+          } else {
+            exitClass = 'mobile-exit-backward';
+          }
+          clone.classList.add(exitClass);
         });
         clone.addEventListener('animationend', () => clone.remove(), { once: true });
       }
@@ -466,6 +556,25 @@
         }, { once: true });
       }
       playVideos(slide);
+      // Trigger particle burst on slide transition (if not cover)
+      if (curSlide > 0 && animate) {
+        setTimeout(() => triggerSlideTransitionBurst(), 150);
+      }
+      // Run typewriter on initial load (when animate is false)
+      if (!animate) {
+        const twEls = slide.querySelectorAll('.typewriter');
+        if (twEls.length) {
+          twEls.forEach(el => {
+            if (!el.dataset.twOriginal) el.dataset.twOriginal = el.innerHTML.trim();
+            el.style.opacity = '0';
+            el.innerHTML = '';
+          });
+          (function chainTW(els, delay) {
+            if (!els.length) return;
+            setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
+          })([...twEls], 200);
+        }
+      }
     }
 
     const numEl = document.querySelector('.right-num');
@@ -502,14 +611,25 @@
         clone.removeAttribute('id');
         clone.classList.add('page-exit-clone');
         stripCloneMedia(clone);
-        clone.style.position = 'absolute';
-        clone.style.top      = (rect.top  - bookRect.top)  + 'px';
-        clone.style.left     = (rect.left - bookRect.left) + 'px';
-        clone.style.width    = rect.width  + 'px';
-        clone.style.height   = rect.height + 'px';
+        clone.style.cssText = `
+          position: absolute;
+          top: ${rect.top - bookRect.top}px;
+          left: ${rect.left - bookRect.left}px;
+          width: ${rect.width}px;
+          height: ${rect.height}px;
+          will-change: transform, opacity;
+        `;
         openBook.appendChild(clone);
         requestAnimationFrame(() => {
-          clone.classList.add(useFade ? 'exit-fade-out' : (isForward ? 'exit-forward' : 'exit-backward'));
+          let exitClass;
+          if (useFade) {
+            exitClass = 'exit-fade-out';
+          } else if (isForward) {
+            exitClass = 'exit-forward';
+          } else {
+            exitClass = 'exit-backward';
+          }
+          clone.classList.add(exitClass);
 
           if (!useFade) {
             // Stationary page flex — mimics spine compression during the turn
@@ -548,6 +668,25 @@
         leftSlot.addEventListener('animationend', () => leftSlot.classList.remove('page-enter-left'), { once: true });
       }
       playVideos(spread[0]);
+      // Trigger particle burst on left slide transition
+      if (animate) {
+        setTimeout(() => triggerSlideTransitionBurst(), 100);
+      }
+      // Run typewriter on initial load (when animate is false)
+      if (!animate && spread[0]) {
+        const twEls = spread[0].querySelectorAll('.typewriter');
+        if (twEls.length) {
+          twEls.forEach(el => {
+            if (!el.dataset.twOriginal) el.dataset.twOriginal = el.innerHTML.trim();
+            el.style.opacity = '0';
+            el.innerHTML = '';
+          });
+          (function chainTW(els, delay) {
+            if (!els.length) return;
+            setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
+          })([...twEls], 200);
+        }
+      }
     }
 
     if (spread[1]) {
@@ -562,6 +701,25 @@
         rightSlot.addEventListener('animationend', () => rightSlot.classList.remove('page-enter-right'), { once: true });
       }
       playVideos(spread[1]);
+      // Trigger particle burst on slide transition
+      if (animate) {
+        setTimeout(() => triggerSlideTransitionBurst(), 150);
+      }
+      // Run typewriter on initial load (when animate is false)
+      if (!animate) {
+        const twEls = spread[1].querySelectorAll('.typewriter');
+        if (twEls.length) {
+          twEls.forEach(el => {
+            if (!el.dataset.twOriginal) el.dataset.twOriginal = el.innerHTML.trim();
+            el.style.opacity = '0';
+            el.innerHTML = '';
+          });
+          (function chainTW(els, delay) {
+            if (!els.length) return;
+            setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
+          })([...twEls], 350);
+        }
+      }
     } else {
       rightSlot.innerHTML = '<div class="empty-page-ornament">✦</div>';
     }
@@ -929,13 +1087,30 @@
   function playPageTurnSound() {
     if (_sfxMuted) return;
     try {
+      const src = 'assets/music/page-turn-sound-effect.mp3';
       if (!_pageTurnAudio) {
-        _pageTurnAudio = new Audio('assets/music/page-turn-sound-effect.mp3');
+        _pageTurnAudio = getCachedAudio(src);
         _pageTurnAudio.volume = 0.35;
       }
       _pageTurnAudio.currentTime = 0;
       _pageTurnAudio.play().catch(() => {});
     } catch (_) {}
+  }
+
+  function preloadCommonAudio() {
+    // Preload frequently used sounds
+    const commonSounds = [
+      'assets/music/page-turn-sound-effect.mp3',
+      'assets/music/unlock-sound.mp3',
+      'assets/music/put your head on my shoulder.mp3'
+    ];
+    // Preload text-to-sound buttons that are visible in first few slides
+    document.querySelectorAll('.text-to-sound[data-sound]').forEach((btn, idx) => {
+      if (idx < 10) { // Only preload first 10 sounds to avoid overwhelming
+        preloadAudio(btn.dataset.sound);
+      }
+    });
+    commonSounds.forEach(preloadAudio);
   }
 
   function startAmbient() {
@@ -2441,7 +2616,7 @@
         }
 
         if (!audio) {
-          audio = new Audio(btn.dataset.sound);
+          audio = getCachedAudio(btn.dataset.sound);
           
           audio.addEventListener('error', () => {
             btn.classList.add('audio-error');
@@ -3482,17 +3657,19 @@
       triggerFinalSlideCelebration();
     }
     const currentShown = new Set();
+    const currentShownEls = new Map();
     document.querySelectorAll('.slide.gift-article.in-page').forEach(slideEl => {
       const idx = parseInt(slideEl.dataset.index, 10);
-      if (!isNaN(idx)) currentShown.add(idx);
+      if (!isNaN(idx)) { currentShown.add(idx); currentShownEls.set(idx, slideEl); }
     });
     currentShown.forEach(idx => {
       if (!_lastShownSlides.has(idx)) {
-        animateSlideEntrance(slides[idx]);
+        const slideEl = currentShownEls.get(idx);
+        animateSlideEntrance(slideEl);
         (function chainTW(els, delay) {
           if (!els.length) return;
           setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
-        })([...slides[idx].querySelectorAll('.typewriter')], 350);
+        })([...slideEl.querySelectorAll('.typewriter')], 350);
       }
     });
     _lastShownSlides = currentShown;

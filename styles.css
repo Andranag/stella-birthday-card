@@ -953,6 +953,33 @@ body.on-cover #audio-stop-btn { opacity: 0; pointer-events: none; }
 }
 .page-fade-in { animation: pageFadeIn 0.9s ease forwards; }
 
+/* Transition particles for slide changes */
+.transition-particle {
+  will-change: transform, opacity;
+  contain: strict;
+}
+
+/* Optimize animated elements with will-change */
+.page-exit-clone,
+#left-slot,
+#right-slot,
+.gift-video,
+.toast {
+  will-change: transform, opacity;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .transition-particle {
+    display: none !important;
+  }
+  .page-exit-clone,
+  #left-slot,
+  #right-slot {
+    will-change: auto;
+  }
+}
+
 /* Hide original story container — JS also sets display:none */
 #story { display: none !important; }
 
@@ -2944,6 +2971,16 @@ p.typewriter,
 .slide.gift-article.in-page p.typewriter {
   font-size: clamp(1.2rem, 3.5vw, 1.8rem) !important;
   line-height: 1.5 !important;
+}
+
+/* Typewriter active state */
+.typewriter.typewriter-active::after {
+  content: none;
+}
+
+@keyframes typewriter-caret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 /* ── Text Size Controls ──────────────────────────────────────────── */
