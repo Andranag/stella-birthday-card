@@ -3666,6 +3666,7 @@
       if (!_lastShownSlides.has(idx)) {
         const slideEl = currentShownEls.get(idx);
         animateSlideEntrance(slideEl);
+        slideEl.querySelectorAll('.typewriter').forEach(el => { el._twGen = (el._twGen || 0) + 1; });
         (function chainTW(els, delay) {
           if (!els.length) return;
           setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);

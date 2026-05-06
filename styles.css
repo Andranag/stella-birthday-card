@@ -2244,7 +2244,7 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   padding: clamp(16px, 3vw, 28px) clamp(12px, 3vw, 24px) !important;
 }
 
-.slide.gift-article.in-page:has(> .star-field-art) > :not(.star-field-art) {
+.slide.gift-article.in-page:has(> .star-field-art) > :not(.star-field-art, .slide-heart-btn) {
   position: relative;
   z-index: 1;
 }
