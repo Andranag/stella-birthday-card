@@ -989,7 +989,7 @@ body.on-cover #audio-stop-btn { opacity: 0; pointer-events: none; }
 #book-frame {
   position: fixed; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  padding: 54px 70px 28px;
+  padding: 54px 70px 68px;
   z-index: 10;
 }
 
@@ -1705,13 +1705,13 @@ body.on-cover #floating-key { display: block; }
   font-size: 1.5rem !important;
 }
 
-.slide.gift-article.tribute-page.in-page .tribute-footnote {
+.slide.gift-article.tribute-page.in-page p.tribute-footnote {
   position: absolute;
   right: clamp(22px, 6vw, 54px);
   bottom: clamp(14px, 3vw, 24px);
   margin: 0 !important;
   font-family: 'Nunito', sans-serif;
-  font-size: clamp(.62rem, 1.18vw, .78rem) !important;
+  font-size: clamp(.55rem, 1vw, .70rem) !important;
   font-weight: 700;
   line-height: 1.2 !important;
   opacity: .58;
@@ -1751,17 +1751,24 @@ body.on-cover #floating-key { display: block; }
 }
 
 .slide.gift-article.title-page.in-page h2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .03em;
   margin: auto 0 !important;
-  max-width: 12rem;
+  max-width: 17rem;
   font-family: 'Marck Script', cursive;
-  font-size: clamp(2.2rem, 7vw, 4.1rem) !important;
+  font-size: clamp(2.05rem, 6.5vw, 3.8rem) !important;
   font-weight: 400;
-  line-height: .95 !important;
+  color: var(--g2);
+  line-height: .9 !important;
   text-align: center;
   transform: rotate(-9deg) skew(-3deg);
   text-shadow:
-    .6px .6px 0 rgba(73, 39, 14, .22),
-    -.5px .7px 0 rgba(255, 255, 255, .55);
+    0 0 18px rgba(255,200,60,.30),
+    .7px .7px 0 rgba(38, 18, 9, .58),
+    -.5px .7px 0 rgba(255, 241, 169, .20),
+    0 3px 8px rgba(0,0,0,.72);
 }
 
 .slide.gift-article.title-page.in-page h2::after {
@@ -2522,6 +2529,73 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
 .modal-btn.confirm:hover { transform:translateY(-3px); box-shadow:0 4px 0 var(--g3), 0 8px 20px rgba(var(--g2-rgb),.55); }
 .modal-btn.confirm:active{ transform:translateY(1px); box-shadow:0 1px 0 var(--g3); }
 
+/* ── Password modal spoiler & shake ─────────────────────────── */
+.pw-label {
+  display: block;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--i1);
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.pw-error {
+  min-height: 1.5em;
+  text-align: center;
+  margin: 0 0 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  color: #a00;
+}
+.pw-spoiler {
+  margin: 4px 0 0;
+  font-family: 'Nunito', sans-serif;
+  font-size: .95rem;
+  color: var(--i1);
+}
+.pw-spoiler summary {
+  cursor: pointer;
+  user-select: none;
+  color: var(--g3);
+  font-weight: 700;
+  list-style: none;
+  text-align: center;
+  padding: 6px 0;
+}
+.pw-spoiler summary::-webkit-details-marker { display: none; }
+.pw-spoiler-label { opacity: .75; font-weight: 600; }
+.pw-hint-text {
+  margin: 10px 0 0;
+  text-align: center;
+  color: var(--i1);
+  font-size: 1rem;
+  font-weight: 600;
+  font-style: italic;
+  background: rgba(201,160,48,.12);
+  border: 1px solid rgba(201,160,48,.3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  line-height: 1.5;
+}
+.pw-buttons { margin-top: 20px; }
+@keyframes pwShake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-7px); }
+  40%      { transform: translateX(7px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(4px); }
+}
+.modal-input.pw-shake { animation: pwShake .4s ease; }
+
+@keyframes pwSuccessPulse {
+  0%   { transform: scale(1); box-shadow: 0 2px 0 var(--g3), 0 4px 12px rgba(var(--g2-rgb),.45); }
+  40%  { transform: scale(1.08); box-shadow: 0 4px 0 var(--g3), 0 8px 28px rgba(var(--g2-rgb),.7); }
+  70%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+.modal-btn.confirm.pw-success-pulse { animation: pwSuccessPulse .5s cubic-bezier(.34,1.56,.64,1) both; }
+
 /* ── Jump Modal Sections (Recent + Chapters) ─────────────────── */
 .jump-section { margin-top:16px; text-align:left; }
 .jump-section-title {
@@ -2568,7 +2642,7 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
 
 /* Mobile: collapse to single-page with left-spine decoration */
 @media (max-width: 639px) {
-  #book-frame { padding: 54px 52px 34px; }
+  #book-frame { padding: 54px 52px 68px; }
 
   #open-book {
     width:  min(342px, 90vw);
@@ -2607,19 +2681,21 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   }
 
   .slide.gift-article.in-page .star-field-art {
-    top: 6px;
-    right: 8px;
-    left: 8px;
-    height: clamp(100px, 22vh, 160px);
-    font-size: .88rem !important;
+    inset: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: auto;
+    width: auto;
+    font-size: .82rem !important;
     line-height: 1 !important;
-    max-height: none !important;
-    opacity: .9;
+    opacity: .7;
   }
 
-  /* Extra top padding for slides with star field to prevent overlap */
+  /* Stars now cover the full slide behind content — normal padding */
   .slide.gift-article.in-page:has(> .star-field-art) {
-    padding-top: clamp(90px, 20vh, 140px) !important;
+    padding-top: clamp(16px, 3vw, 24px) !important;
   }
 
   /* Adjust progress bar for mobile */
@@ -2816,10 +2892,10 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     text-align: right;
   }
 
-  .slide.gift-article.tribute-page.in-page .tribute-footnote {
+  .slide.gift-article.tribute-page.in-page p.tribute-footnote {
     right: clamp(18px, 7vw, 34px);
     max-width: min(74%, 14rem);
-    font-size: .7rem !important;
+    font-size: .62rem !important;
   }
 
   .contents-list {
@@ -3082,6 +3158,10 @@ body[class*="text-size-"] .slide.gift-article p {
 body[class*="text-size-"] .slide.gift-article p.typewriter,
 body[class*="text-size-"] .slide.gift-article.in-page p.typewriter {
   font-size: calc(clamp(1.2rem, 3.5vw, 1.8rem) * var(--text-scale, 1)) !important;
+}
+
+body[class*="text-size-"] .slide.gift-article .tribute-footnote {
+  font-size: clamp(.55rem, 1vw, .72rem) !important;
 }
 
 body[class*="text-size-"] .slide.gift-article .text-to-sound {

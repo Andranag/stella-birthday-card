@@ -36,7 +36,7 @@
   function preloadAudio(src) {
     if (!src || _preloadedAudio.has(src)) return;
     const audio = new Audio();
-    audio.preload = 'metadata';
+    audio.preload = 'auto';
     audio.src = src;
     _audioCache.set(src, audio);
     _preloadedAudio.add(src);
@@ -742,11 +742,13 @@
   function populateWishStarField(art) {
     if (art.querySelector('.wish-star')) return;
     const stars = [
-      [8, 16, 0.72, 0], [15, 34, 0.9, .35], [23, 20, 0.62, .8], [31, 42, 1.08, .15],
-      [39, 14, 0.68, .55], [47, 31, 0.84, 1.05], [55, 19, 0.58, .45], [63, 39, 0.68, .95],
-      [71, 18, 0.92, .2], [80, 33, 0.58, .7], [89, 15, 1.04, 1.2], [95, 43, 0.64, .4],
-      [12, 58, 0.8, .85], [27, 62, 0.64, .65], [43, 55, 0.72, .1], [59, 61, 0.66, 1.1],
-      [75, 54, 0.78, .3], [91, 62, 0.6, .75],
+      // x,  y,   size,  delay  — y spread 5–88 so stars aren't all bunched at top
+      [ 7,  6,  0.72,  0   ], [24,  11, 0.9,  .35], [48,  8,  0.62, .8 ],
+      [72,  14, 1.08,  .15 ], [91,  9,  0.68, .55], [14,  26, 0.84, 1.05],
+      [37,  22, 0.58,  .45 ], [61,  30, 0.68, .95], [85,  24, 0.92, .2 ],
+      [ 5,  46, 0.58,  .7  ], [29,  42, 1.04, 1.2], [54,  50, 0.64, .4 ],
+      [78,  44, 0.80,  .85 ], [95,  38, 0.64, .65], [18,  66, 0.72, .1 ],
+      [44,  72, 0.66,  1.1 ], [68,  60, 0.78, .3 ], [89,  78, 0.60, .75],
     ];
 
     art.textContent = '';
@@ -948,21 +950,41 @@
     slide?.querySelectorAll('video.gift-video').forEach(unloadVideo);
   }
 
+  function preloadSlideAudio(slide) {
+    slide?.querySelectorAll('.text-to-sound[data-sound]').forEach(btn => {
+      preloadAudio(btn.dataset.sound);
+    });
+  }
+
   function manageVideoLoadingWindow() {
     if (!slides.length) return;
 
     const activeIndices = new Set();
+    const preloadIndices = new Set();
     if (isMobile()) {
       activeIndices.add(curSlide);
+      preloadIndices.add(curSlide + 1);
+      preloadIndices.add(curSlide + 2);
+      preloadIndices.add(curSlide - 1);
     } else {
       const first = spreadToFirstSlide(curSpread);
       activeIndices.add(first);
       activeIndices.add(first + 1);
+      preloadIndices.add(first + 2);
+      preloadIndices.add(first + 3);
+      preloadIndices.add(first - 1);
+      preloadIndices.add(first - 2);
     }
 
     slides.forEach((slide, index) => {
       if (activeIndices.has(index)) loadSlideVideos(slide);
+      else if (preloadIndices.has(index)) loadSlideVideos(slide);
       else unloadSlideVideos(slide);
+    });
+
+    // Preload audio for current and nearby slides
+    [...activeIndices, ...preloadIndices].forEach(i => {
+      if (i >= 0 && i < slides.length) preloadSlideAudio(slides[i]);
     });
   }
 
@@ -1101,7 +1123,6 @@
     // Preload frequently used sounds
     const commonSounds = [
       'assets/music/page-turn-sound-effect.mp3',
-      'assets/music/unlock-sound.mp3',
       'assets/music/put your head on my shoulder.mp3'
     ];
     // Preload text-to-sound buttons that are visible in first few slides
@@ -1548,9 +1569,96 @@
       const origKey = lockWrap.querySelector('.cover-key-icon');
       if (origKey) origKey.style.visibility = 'visible';
       lockWrap.classList.add('unlocking');
-      markUnlocked();
-      setTimeout(() => lockWrap?.remove(), 1150);
-      setTimeout(() => next(true), 1050);
+      try {
+        const sfx = new Audio('assets/music/alohomora.mp3');
+        sfx.volume = 0.7;
+        sfx.play().catch(() => {});
+      } catch (_) {}
+      // After animation completes, show password modal before proceeding
+      setTimeout(() => showPasswordModal(lockWrap), 1100);
+    }
+
+    function showPasswordModal(lockWrap) {
+      const existing = document.getElementById('password-modal');
+      if (existing) existing.remove();
+      const overlay = document.createElement('div');
+      overlay.id = 'password-modal';
+      overlay.className = 'storybook-modal';
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:3100;display:flex;align-items:center;justify-content:center;background:rgba(4,1,16,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:modalFadeIn .2s ease both;';
+      overlay.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-title">🔐 One more thing…</div>
+          <label class="pw-label" for="pw-date-input">Enter a special date to open the book</label>
+          <input class="modal-input" id="pw-date-input" type="text" maxlength="10" placeholder="MM/DD/YYYY" autocomplete="off" inputmode="numeric" aria-describedby="pw-error" />
+          <div id="pw-error" class="pw-error" role="alert" aria-live="polite"></div>
+          <details class="pw-spoiler">
+            <summary>💡 Hint <span class="pw-spoiler-label">(spoiler)</span></summary>
+            <p class="pw-hint-text">When was the star of this story born? ✨</p>
+          </details>
+          <div class="modal-buttons pw-buttons">
+            <button class="modal-btn confirm" id="pw-confirm">Open ✨</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      const input = document.getElementById('pw-date-input');
+      requestAnimationFrame(() => input.focus());
+
+      input.addEventListener('input', e => {
+        const deleting = e.inputType?.startsWith('delete');
+        let v = input.value.replace(/\D/g, '');
+        if (v.length > 8) v = v.slice(0, 8);
+        if (!deleting) {
+          if (v.length >= 5) v = v.slice(0, 2) + '/' + v.slice(2, 4) + '/' + v.slice(4);
+          else if (v.length >= 3) v = v.slice(0, 2) + '/' + v.slice(2);
+        }
+        input.value = v;
+        document.getElementById('pw-error').textContent = '';
+      });
+
+      let attempts = 0;
+      const easterEggMessages = [
+        'Still not it… think of a date that\'s special to Stella 🌟',
+        'Somewhere in the world, a star was born on this date… 💫',
+        'The answer has been with you all along ✨',
+        'A little birdie says it\'s a very important day in May 🐦',
+        'You\'re so close. What year did this adventure begin? 🗓️',
+      ];
+
+      const confirm = () => {
+        if (input.value.trim() === '05/03/2001') {
+          const btn = document.getElementById('pw-confirm');
+          const title = overlay.querySelector('.modal-title');
+          btn.disabled = true;
+          btn.textContent = '✨ That\'s the one! ✨';
+          btn.classList.add('pw-success-pulse');
+          title.textContent = '🔓 Here we go!';
+          spawnSparkles(btn);
+          setTimeout(() => spawnSparkles(btn), 220);
+          setTimeout(() => {
+            overlay.remove();
+            lockWrap?.remove();
+            markUnlocked();
+            next(true);
+          }, 750);
+        } else {
+          attempts++;
+          const err = document.getElementById('pw-error');
+          err.textContent = attempts >= 3
+            ? easterEggMessages[(attempts - 3) % easterEggMessages.length]
+            : 'Hmm, that\'s not it. Try again! 🤔';
+          input.classList.add('pw-shake');
+          input.addEventListener('animationend', () => input.classList.remove('pw-shake'), { once: true });
+          input.focus();
+          input.select();
+        }
+      };
+
+      document.getElementById('pw-confirm').addEventListener('click', confirm);
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); confirm(); }
+      });
     }
 
     if (lockWrap && !hasUnlockedStory()) {
@@ -1580,7 +1688,7 @@
 
     // Spine
     const spine = mk('div', { class: 'book-spine' });
-    spine.innerHTML = '<div class="spine-ornament">And then & the End</div>';
+    spine.innerHTML = '<div class="spine-ornament">And now, and then & the End</div>';
 
     // Right page
     const pageRight = mk('div', { id: 'page-right', class: 'book-page page-right' });
@@ -1612,9 +1720,9 @@
         <div class="cover-name">Andreas Anagnostou</div>
         <div class="cover-divider"></div>
         <div class="cover-title-main">
-          <span>And then</span>
-          <span class="cover-title-amp">&amp;</span>
-          <span>the End</span>
+          <span>&amp; now,</span>
+          <span>and then,</span>
+          <span>&amp; the End</span>
         </div>
         <div class="cover-divider"></div>
         <img class="cover-storybook-logo" src="assets/images/walt disney logo.png" alt="Walt Disney logo" />
