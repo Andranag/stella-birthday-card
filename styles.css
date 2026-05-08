@@ -2177,7 +2177,8 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
 .star-field-art {
   position: relative;
   width: 100%;
-  height: clamp(3.8rem, 11vh, 5.5rem);
+  height: clamp(5rem, 15vh, 7.5rem);
+  margin-bottom: 0;
   z-index: 0;
   font-family: 'Marck Script', cursive;
   font-size: 1rem !important;
@@ -2204,6 +2205,10 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   transform: translate(-50%, -50%);
   animation: wishStarTwinkle 3.8s ease-in-out infinite;
   animation-delay: var(--d);
+}
+
+.slide.gift-article.in-page[data-star-slide="wish-upon"] .gift-img {
+  margin-top: clamp(40px, 7vh, 60px) !important;
 }
 
 .wish-star:nth-child(3n + 1) {

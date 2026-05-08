@@ -20,6 +20,7 @@
   let curSlide    = 0;    // mobile:  current slide index (0 = cover)
   let currentAudio = null;
   let playingBtn   = null;
+  let _lastTabVisible = 0;
   let navDirection = 'forward';
   let suppressHashUpdate = false;
   const MOBILE_SEQUENTIAL_SKIP_SLIDES = new Set([2, 3]);
@@ -355,8 +356,24 @@
         document.hidden ? t.audio.pause() : t.audio.play().catch(() => {});
       });
 
-      if (document.hidden) pauseActiveVideos();
-      else resumeActiveVideos();
+      if (document.hidden) {
+        pauseActiveVideos();
+      } else {
+        resumeActiveVideos();
+        _lastTabVisible = Date.now();
+        // Push a silent buffer through the audio pipeline to wake the output device
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          ctx.resume().then(() => {
+            const buf = ctx.createBuffer(1, ctx.sampleRate * 0.1, ctx.sampleRate);
+            const src = ctx.createBufferSource();
+            src.buffer = buf;
+            src.connect(ctx.destination);
+            src.start();
+            src.onended = () => ctx.close();
+          }).catch(() => {});
+        } catch (_) {}
+      }
     });
 
     setupDeepLinks();
@@ -2757,7 +2774,8 @@
         }
 
         if (audio.paused) {
-          audio.play()
+          const warmupDelay = Math.max(0, 250 - (Date.now() - _lastTabVisible));
+          const doPlay = () => audio.play()
             .then(() => {
               btn.classList.add('playing');
               btn.setAttribute('aria-pressed', 'true');
@@ -2765,7 +2783,7 @@
               clearWishStarsActive();
               setWishStarsActive(btn, true);
               updateAudioStopButton();
-              
+
               // Create progress element
               if (!progressEl || !progressEl.isConnected) {
                 progressEl = mk('div', { class: 'audio-progress' });
@@ -2776,6 +2794,7 @@
               btn.classList.add('audio-error');
               shakeEl(btn);
             });
+          if (warmupDelay > 0) setTimeout(doPlay, warmupDelay); else doPlay();
         } else {
           audio.pause();
           audio.currentTime = 0;
