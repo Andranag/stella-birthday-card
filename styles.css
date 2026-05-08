@@ -2175,14 +2175,10 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
 
 /* Decorative star field for the wish slide */
 .star-field-art {
-  position: absolute;
-  top: clamp(12px, 2vh, 20px);
-  right: clamp(18px, 3vw, 34px);
-  left: clamp(18px, 3vw, 34px);
-  bottom: auto;
+  position: relative;
+  width: 100%;
+  height: clamp(3.8rem, 11vh, 5.5rem);
   z-index: 0;
-  width: auto;
-  height: clamp(86px, 20vh, 132px);
   font-family: 'Marck Script', cursive;
   font-size: 1rem !important;
   line-height: 1 !important;
@@ -2190,7 +2186,6 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   margin: 0 auto !important;
   pointer-events: none;
   color: #0f6b8f;
-  border-radius: 8px;
 }
 
 .wish-star {

@@ -742,13 +742,13 @@
   function populateWishStarField(art) {
     if (art.querySelector('.wish-star')) return;
     const stars = [
-      // x,  y,   size,  delay  — y spread 5–88 so stars aren't all bunched at top
-      [ 7,  6,  0.72,  0   ], [24,  11, 0.9,  .35], [48,  8,  0.62, .8 ],
-      [72,  14, 1.08,  .15 ], [91,  9,  0.68, .55], [14,  26, 0.84, 1.05],
-      [37,  22, 0.58,  .45 ], [61,  30, 0.68, .95], [85,  24, 0.92, .2 ],
-      [ 5,  46, 0.58,  .7  ], [29,  42, 1.04, 1.2], [54,  50, 0.64, .4 ],
-      [78,  44, 0.80,  .85 ], [95,  38, 0.64, .65], [18,  66, 0.72, .1 ],
-      [44,  72, 0.66,  1.1 ], [68,  60, 0.78, .3 ], [89,  78, 0.60, .75],
+      // x,  y,   size,  delay  — four bands spread 5–92 for vertical breathing room
+      [ 7,  5,  0.72,  0   ], [24,  9,  0.9,  .35], [48,  7,  0.62, .8 ],
+      [72,  11, 1.08,  .15 ], [91,  8,  0.68, .55], [14,  30, 0.84, 1.05],
+      [37,  28, 0.58,  .45 ], [61,  33, 0.68, .95], [85,  32, 0.92, .2 ],
+      [ 5,  58, 0.58,  .7  ], [29,  56, 1.04, 1.2], [54,  62, 0.64, .4 ],
+      [78,  54, 0.80,  .85 ], [95,  60, 0.64, .65], [18,  84, 0.72, .1 ],
+      [44,  88, 0.66,  1.1 ], [68,  82, 0.78, .3 ], [89,  92, 0.60, .75],
     ];
 
     art.textContent = '';
@@ -1636,6 +1636,11 @@
           title.textContent = '🔓 Here we go!';
           spawnSparkles(btn);
           setTimeout(() => spawnSparkles(btn), 220);
+          try {
+            const fairyDust = new Audio('assets/music/fairy-dust-sound-effect.mp3');
+            fairyDust.volume = 0.75;
+            fairyDust.play().catch(() => {});
+          } catch (_) {}
           setTimeout(() => {
             overlay.remove();
             lockWrap?.remove();
