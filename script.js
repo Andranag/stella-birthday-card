@@ -3492,16 +3492,16 @@
       currentShown.forEach(idx => {
         const slideEl = currentShownEls.get(idx);
         const twEls = [...slideEl.querySelectorAll('.typewriter')];
-        // Run typewriter if: new slide OR any typewriter element hasn't been typed yet
-        const needsTW = twEls.length && (!prevShown.has(idx) || twEls.some(el => !el.innerHTML.trim()));
-        if (needsTW && twEls.length) {
+        if (!prevShown.has(idx)) {
+          // Reset all typewriter elements to blank so every visit starts fresh
+          twEls.forEach(el => { el.innerHTML = ''; el.style.opacity = '0'; });
           animateSlideEntrance(slideEl);
-          (function chainTW(els, delay) {
-            if (!els.length) return;
-            setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
-          })(twEls, 350);
-        } else if (!prevShown.has(idx)) {
-          animateSlideEntrance(slideEl);
+          if (twEls.length) {
+            (function chainTW(els, delay) {
+              if (!els.length) return;
+              setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
+            })(twEls, 350);
+          }
         }
       });
       _lastShownSlides = currentShown;
