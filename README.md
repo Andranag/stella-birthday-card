@@ -1,19 +1,24 @@
-# Getting Started
-Install the dependencies and run the project
+# Stella's Birthday Card
+
+A Disney-themed interactive storybook built as a personal birthday gift. Features an illustrated narrative across multiple chapters, ambient audio, a searchable slide navigator, and offline support via a service worker.
+
+## Development
+
 ```
 npm install
-npm start
+npm run dev
 ```
 
-Head over to https://vitejs.dev/ to learn more about configuring vite
-## About Scrimba
+## Build & Deploy
 
-At Scrimba our goal is to create the best possible coding school at the cost of a gym membership! 💜
-If we succeed with this, it will give anyone who wants to become a software developer a realistic shot at succeeding, regardless of where they live and the size of their wallets 🎉
-The Fullstack Developer Path aims to teach you everything you need to become a Junior Developer, or you could take a deep-dive with one of our advanced courses 🚀
+```
+npm run build
+```
 
-- [Our courses](https://scrimba.com/courses)
-- [The Frontend Career Path](https://scrimba.com/fullstack-path-c0fullstack)
-- [Become a Scrimba Pro member](https://scrimba.com/pricing)
+The `dist/` folder is automatically deployed to GitHub Pages on every push to `main` via the included GitHub Actions workflow. Enable it once under **Settings → Pages → Source → GitHub Actions**.
 
-Happy Coding!
+## Stack
+
+- [Vite](https://vitejs.dev/) — build tool & dev server
+- Vanilla JS / CSS — no framework dependencies
+- Service Worker — cache-first offline support
