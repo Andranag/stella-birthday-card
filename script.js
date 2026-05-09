@@ -149,7 +149,7 @@
   function getSlidesForViewport() {
     const mobile = isMobile();
     return allSlides.filter(slide => {
-      if (mobile) return !slide.classList.contains('desktop-only-slide');
+      if (mobile) return !slide.classList.contains('desktop-only-slide') && !slide.classList.contains('spacer-slide');
       return !slide.classList.contains('mobile-only-slide');
     });
   }
@@ -206,7 +206,6 @@
     chapters.forEach(({ slide, number }) => {
       slide.classList.add('chapter-page');
       slide.dataset.chapter = String(number);
-      slide.dataset.transition = 'fade';
     });
   }
 
@@ -333,13 +332,6 @@
     // Set data-index on each slide for heart button identification
     allSlides.forEach((slide, idx) => { slide.dataset.index = idx; });
 
-    // Pre-cache and blank all typewriter elements so they start hidden
-    document.querySelectorAll('.typewriter').forEach(el => {
-      el.dataset.twOriginal = el.innerHTML.trim();
-      el.innerHTML = '';
-      el.style.opacity = '0';
-    });
-
     // Mark blank spacer slides (used for desktop spread alignment)
     allSlides.forEach(slide => {
       if (slide.id === 'header') return;
@@ -347,6 +339,13 @@
     });
 
     refreshSlidesForViewport();
+
+    // Pre-cache and blank all typewriter elements AFTER chapters are built
+    document.querySelectorAll('.typewriter').forEach(el => {
+      el.dataset.twOriginal = el.innerHTML.trim();
+      el.innerHTML = '';
+      el.style.opacity = '0';
+    });
     buildBookDOM();
     setupAriaLabels();
     setupSpoilers();
@@ -3424,7 +3423,7 @@
     if (!slideEl) return;
     [...slideEl.children].forEach((child, i) => {
       if (child.classList.contains('slide-heart-btn')) return;
-      if (child.classList.contains('typewriter')) return; // runTypewriter handles its own visibility
+      if (child.classList.contains('typewriter')) { child.style.opacity = '0'; return; }
       child.style.animation = 'none';
       void child.offsetHeight;
       child.style.animation = `slideEntrance 0.5s cubic-bezier(.22,.85,.32,1) ${i * 80}ms both`;
@@ -3478,34 +3477,29 @@
     if (currentIdx === slides.length - 1 && slides.length > 1) {
       triggerFinalSlideCelebration();
     }
-    const prevShown = new Set(_lastShownSlides);
-    // Defer so DOM slots are fully populated before we query
-    setTimeout(() => {
-      const currentShown = new Set();
-      const currentShownEls = new Map();
-      document.querySelectorAll(
-        '#left-slot .slide.gift-article, #right-slot .slide.gift-article, #right-slot > .slide, #left-slot > .slide, .slide.gift-article.in-page'
-      ).forEach(slideEl => {
-        const idx = parseInt(slideEl.dataset.index, 10);
-        if (!isNaN(idx)) { currentShown.add(idx); currentShownEls.set(idx, slideEl); }
-      });
-      currentShown.forEach(idx => {
-        const slideEl = currentShownEls.get(idx);
-        const twEls = [...slideEl.querySelectorAll('.typewriter')];
-        if (!prevShown.has(idx)) {
-          // Reset all typewriter elements to blank so every visit starts fresh
-          twEls.forEach(el => { el.innerHTML = ''; el.style.opacity = '0'; });
-          animateSlideEntrance(slideEl);
-          if (twEls.length) {
-            (function chainTW(els, delay) {
-              if (!els.length) return;
-              setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
-            })(twEls, 350);
-          }
-        }
-      });
-      _lastShownSlides = currentShown;
-    }, 50);
+    const currentShown = new Set();
+    const currentShownEls = new Map();
+    document.querySelectorAll('.slide.gift-article.in-page').forEach(slideEl => {
+      const idx = parseInt(slideEl.dataset.index, 10);
+      if (!isNaN(idx)) { currentShown.add(idx); currentShownEls.set(idx, slideEl); }
+    });
+    currentShown.forEach(idx => {
+      const slideEl = currentShownEls.get(idx);
+      const twEls = [...slideEl.querySelectorAll('.typewriter')];
+      const isNew = !_lastShownSlides.has(idx);
+      const needsTW = twEls.length && (isNew || twEls.some(el => !el.innerHTML.trim()));
+      if (needsTW) {
+        twEls.forEach(el => { el._twGen = (el._twGen || 0) + 1; });
+        animateSlideEntrance(slideEl);
+        (function chainTW(els, delay) {
+          if (!els.length) return;
+          setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
+        })(twEls, 350);
+      } else if (isNew) {
+        animateSlideEntrance(slideEl);
+      }
+    });
+    _lastShownSlides = currentShown;
   };
 
   /* ── Asset Health Check ─────────────────────────────────────── */
