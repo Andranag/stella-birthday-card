@@ -953,6 +953,18 @@ body.on-cover #audio-stop-btn { opacity: 0; pointer-events: none; }
 }
 .page-fade-in { animation: pageFadeIn 0.9s ease forwards; }
 
+/* ── Slot entrance animations (forward / backward nav) ── */
+@keyframes slotEnterRight {
+  from { transform: translateX(18px); }
+  to   { transform: translateX(0); }
+}
+@keyframes slotEnterLeft {
+  from { transform: translateX(-18px); }
+  to   { transform: translateX(0); }
+}
+.page-enter-right { animation: slotEnterRight 0.28s cubic-bezier(.22,.85,.32,1) both; }
+.page-enter-left  { animation: slotEnterLeft  0.28s cubic-bezier(.22,.85,.32,1) both; }
+
 /* Transition particles for slide changes */
 .transition-particle {
   will-change: transform, opacity;
@@ -1947,6 +1959,13 @@ body.on-cover #floating-key { display: block; }
     0 12px 40px rgba(0,0,0,.22);
 }
 
+/* Wide-video: cinematic/special slides get full-width, taller container */
+.slide.gift-article.in-page .gift-img.wide-video {
+  max-width: 100% !important;
+  height: clamp(230px, 44vh, 340px) !important;
+  max-height: 48vh !important;
+}
+
 /* Stretch videos to fill container — no black bars, no cropping */
 .slide.gift-article.in-page .gift-video {
   width: 100% !important;
@@ -2040,6 +2059,37 @@ body.on-cover #floating-key { display: block; }
   font-size: .86rem !important;
   letter-spacing: 1.1px;
   color: rgba(62, 36, 12, .68) !important;
+}
+
+/* Spacer slides: blank pages used for desktop spread alignment.
+   Show a centered ornament so they feel like intentional breathing room. */
+.slide.gift-article.spacer-slide.in-page {
+  justify-content: center !important;
+  align-items: center !important;
+}
+.slide.gift-article.spacer-slide.in-page::before {
+  display: block !important;
+  content: '✦' !important;
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.6rem;
+  color: rgba(var(--g2-rgb), .22);
+  pointer-events: none;
+  text-shadow: 0 0 12px rgba(var(--g2-rgb), .30);
+}
+.slide.gift-article.spacer-slide.in-page::after {
+  display: block !important;
+  content: '' !important;
+  position: absolute;
+  left: 24%;
+  right: 24%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--g2-rgb), .28), transparent);
+  top: 50%;
+  margin-top: 22px;
+  pointer-events: none;
 }
 
 /* Storybook progress: faint stacks of unread/read pages at the edges. */
@@ -2678,6 +2728,11 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   .gift-img,
   .slide.gift-article.in-page .gift-img {
     height: clamp(160px, 28svh, 220px) !important;
+  }
+
+  .slide.gift-article.in-page .gift-img.wide-video {
+    max-width: 100% !important;
+    height: clamp(180px, 34svh, 250px) !important;
   }
 
   .slide.gift-article.in-page .star-field-art {

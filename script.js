@@ -333,6 +333,19 @@
     // Set data-index on each slide for heart button identification
     allSlides.forEach((slide, idx) => { slide.dataset.index = idx; });
 
+    // Pre-cache and blank all typewriter elements so they start hidden
+    document.querySelectorAll('.typewriter').forEach(el => {
+      el.dataset.twOriginal = el.innerHTML.trim();
+      el.innerHTML = '';
+      el.style.opacity = '0';
+    });
+
+    // Mark blank spacer slides (used for desktop spread alignment)
+    allSlides.forEach(slide => {
+      if (slide.id === 'header') return;
+      if (slide.children.length === 0) slide.classList.add('spacer-slide');
+    });
+
     refreshSlidesForViewport();
     buildBookDOM();
     setupAriaLabels();
@@ -595,7 +608,6 @@
       if (curSlide > 0 && animate) {
         setTimeout(() => triggerSlideTransitionBurst(), 150);
       }
-      if (!animate) initTypewritersOnSlide(slide);
     }
 
     const numEl = document.querySelector('.right-num');
@@ -693,7 +705,6 @@
       if (animate) {
         setTimeout(() => triggerSlideTransitionBurst(), 100);
       }
-      if (!animate) initTypewritersOnSlide(spread[0]);
     }
 
     if (spread[1]) {
@@ -712,7 +723,6 @@
       if (animate) {
         setTimeout(() => triggerSlideTransitionBurst(), 150);
       }
-      if (!animate) initTypewritersOnSlide(spread[1], 350);
     } else {
       rightSlot.innerHTML = '<div class="empty-page-ornament">✦</div>';
     }
@@ -3414,7 +3424,7 @@
     if (!slideEl) return;
     [...slideEl.children].forEach((child, i) => {
       if (child.classList.contains('slide-heart-btn')) return;
-      if (child.classList.contains('typewriter')) { child.style.opacity = '0'; return; }
+      if (child.classList.contains('typewriter')) return; // runTypewriter handles its own visibility
       child.style.animation = 'none';
       void child.offsetHeight;
       child.style.animation = `slideEntrance 0.5s cubic-bezier(.22,.85,.32,1) ${i * 80}ms both`;
@@ -3447,8 +3457,8 @@
 
   /* ── Hook render to add hearts, milestone, celebration ─ */
   const _origRender = render;
-  render = function() {
-    _origRender();
+  render = function(animate = true) {
+    _origRender(animate);
     // Add heart buttons to all visible slides (left, right, and in-page)
     const allVisibleSlides = Array.from(document.querySelectorAll('.left-slot .slide.gift-article, .right-slot .slide.gift-article, .page-slot .slide.gift-article, .slide.gift-article.in-page'));
     allVisibleSlides.forEach((slide) => {
@@ -3468,24 +3478,34 @@
     if (currentIdx === slides.length - 1 && slides.length > 1) {
       triggerFinalSlideCelebration();
     }
-    const currentShown = new Set();
-    const currentShownEls = new Map();
-    document.querySelectorAll('.slide.gift-article.in-page').forEach(slideEl => {
-      const idx = parseInt(slideEl.dataset.index, 10);
-      if (!isNaN(idx)) { currentShown.add(idx); currentShownEls.set(idx, slideEl); }
-    });
-    currentShown.forEach(idx => {
-      if (!_lastShownSlides.has(idx)) {
+    const prevShown = new Set(_lastShownSlides);
+    // Defer so DOM slots are fully populated before we query
+    setTimeout(() => {
+      const currentShown = new Set();
+      const currentShownEls = new Map();
+      document.querySelectorAll(
+        '#left-slot .slide.gift-article, #right-slot .slide.gift-article, #right-slot > .slide, #left-slot > .slide, .slide.gift-article.in-page'
+      ).forEach(slideEl => {
+        const idx = parseInt(slideEl.dataset.index, 10);
+        if (!isNaN(idx)) { currentShown.add(idx); currentShownEls.set(idx, slideEl); }
+      });
+      currentShown.forEach(idx => {
         const slideEl = currentShownEls.get(idx);
-        animateSlideEntrance(slideEl);
-        slideEl.querySelectorAll('.typewriter').forEach(el => { el._twGen = (el._twGen || 0) + 1; });
-        (function chainTW(els, delay) {
-          if (!els.length) return;
-          setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
-        })([...slideEl.querySelectorAll('.typewriter')], 350);
-      }
-    });
-    _lastShownSlides = currentShown;
+        const twEls = [...slideEl.querySelectorAll('.typewriter')];
+        // Run typewriter if: new slide OR any typewriter element hasn't been typed yet
+        const needsTW = twEls.length && (!prevShown.has(idx) || twEls.some(el => !el.innerHTML.trim()));
+        if (needsTW && twEls.length) {
+          animateSlideEntrance(slideEl);
+          (function chainTW(els, delay) {
+            if (!els.length) return;
+            setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
+          })(twEls, 350);
+        } else if (!prevShown.has(idx)) {
+          animateSlideEntrance(slideEl);
+        }
+      });
+      _lastShownSlides = currentShown;
+    }, 50);
   };
 
   /* ── Asset Health Check ─────────────────────────────────────── */
