@@ -2674,10 +2674,10 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     gap: 8px !important;
   }
 
-  /* Adjust video sizes for mobile */
+  /* Adjust video sizes for mobile — scales with viewport height */
   .gift-img,
   .slide.gift-article.in-page .gift-img {
-    height: 186px !important;
+    height: clamp(160px, 28svh, 220px) !important;
   }
 
   .slide.gift-article.in-page .star-field-art {
@@ -2739,7 +2739,7 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     
     .gift-img,
     .slide.gift-article.in-page .gift-img {
-      height: 140px !important;
+      height: clamp(110px, 30svh, 150px) !important;
     }
     
     /* Adjust progress bar for landscape */

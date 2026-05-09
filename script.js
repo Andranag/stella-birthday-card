@@ -206,6 +206,7 @@
     chapters.forEach(({ slide, number }) => {
       slide.classList.add('chapter-page');
       slide.dataset.chapter = String(number);
+      slide.dataset.transition = 'fade';
     });
   }
 
