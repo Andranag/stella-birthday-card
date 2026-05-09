@@ -28,7 +28,6 @@
     dance: { audio: null, src: 'assets/music/put your head on my shoulder.mp3', vol: 0.35 },
   };
   let _pageTurnAudio  = null;
-  let _ambientStarted = false;
 
   /* ── Audio Preloading Cache ─────────────────────────────────── */
   const _audioCache = new Map();
@@ -116,23 +115,27 @@
   // Map chapter titles (or partial matches) to ambient sound files
   // User should add actual ambient files to assets/music/ambient/
   const CHAPTER_AMBIENT = {
-    'interlude': { src: 'assets/music/ambient/rain-soft.mp3', vol: 0.08, fallback: 'synthetic' }, // sad chapter
-    'safe': { src: 'assets/music/ambient/fireplace-crackle.mp3', vol: 0.06, fallback: 'synthetic' }, // cozy
-    'beginning': { src: 'assets/music/ambient/birds-morning.mp3', vol: 0.05, fallback: 'synthetic' }, // hopeful
-    'spark': { src: 'assets/music/ambient/wind-chimes.mp3', vol: 0.06, fallback: 'synthetic' }, // light
-    'good': { src: 'assets/music/ambient/birds-garden.mp3', vol: 0.05, fallback: 'synthetic' }, // happy
-    'connected': { src: 'assets/music/ambient/cafe-rain.mp3', vol: 0.07, fallback: 'synthetic' }, // melancholy
-    'your': { src: 'assets/music/ambient/night-crickets.mp3', vol: 0.06, fallback: 'synthetic' }, // birthday eve
-    'default': { src: null, vol: 0, fallback: 'synthetic' }
+    'interlude':  { src: 'assets/music/ambient/rain-soft.mp3',        vol: 0.08 },
+    'safe':       { src: 'assets/music/ambient/fireplace-crackle.mp3', vol: 0.06 },
+    'beginning':  { src: 'assets/music/ambient/birds-morning.mp3',     vol: 0.05 },
+    'spark':      { src: 'assets/music/ambient/wind-chimes.mp3',       vol: 0.06 },
+    'good':       { src: 'assets/music/ambient/birds-garden.mp3',      vol: 0.05 },
+    'connected':  { src: 'assets/music/ambient/cafe-rain.mp3',         vol: 0.07 },
+    'your':       { src: 'assets/music/ambient/night-crickets.mp3',    vol: 0.06 },
+    'default':    { src: null, vol: 0 },
   };
 
+  const _UNLOCK_TOKEN = btoa('05/03/2001');
+
   function hasUnlockedStory() {
-    return localStorage.getItem(UNLOCKED_KEY) === '1';
+    const val = localStorage.getItem(UNLOCKED_KEY);
+    if (val === '1') { localStorage.setItem(UNLOCKED_KEY, _UNLOCK_TOKEN); return true; }
+    return val === _UNLOCK_TOKEN;
   }
 
   function markUnlocked() {
     if (hasUnlockedStory()) return;
-    localStorage.setItem(UNLOCKED_KEY, '1');
+    localStorage.setItem(UNLOCKED_KEY, _UNLOCK_TOKEN);
     document.body.classList.remove('story-locked');
     setTimeout(() => {
       triggerFinalSlideCelebration();
@@ -294,6 +297,20 @@
     return chapters.find(chapter => chapter.index > index) || null;
   }
 
+  function initTypewritersOnSlide(slide, delay = 200) {
+    const twEls = slide.querySelectorAll('.typewriter');
+    if (!twEls.length) return;
+    twEls.forEach(el => {
+      if (!el.dataset.twOriginal) el.dataset.twOriginal = el.innerHTML.trim();
+      el.style.opacity = '0';
+      el.innerHTML = '';
+    });
+    (function chainTW(els, d) {
+      if (!els.length) return;
+      setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), d);
+    })([...twEls], delay);
+  }
+
   // Utility: Debounce function for performance
   function debounce(func, wait) {
     let timeout;
@@ -316,7 +333,6 @@
     allSlides.forEach((slide, idx) => { slide.dataset.index = idx; });
 
     refreshSlidesForViewport();
-    injectDynamicStyles();
     buildBookDOM();
     setupAriaLabels();
     setupSpoilers();
@@ -398,7 +414,8 @@
       render(false);
     }, 150));
 
-    if (new URLSearchParams(window.location.search).has('visualAudit')) {
+    const _isDev = ['localhost', '127.0.0.1', ''].includes(location.hostname);
+    if (_isDev && new URLSearchParams(window.location.search).has('visualAudit')) {
       window.__STELLA_VISUAL_AUDIT__ = {
         count: () => slides.length,
         jump: index => {
@@ -438,7 +455,7 @@
       // Add aria-labelledby to associate slide with its heading
       const heading = slide.querySelector('h1, h2');
       if (heading && !heading.id) {
-        const headingId = `slide-heading-${Math.random().toString(36).substr(2, 9)}`;
+        const headingId = `slide-heading-${Math.random().toString(36).slice(2, 11)}`;
         heading.id = headingId;
         slide.setAttribute('aria-labelledby', headingId);
       }
@@ -577,21 +594,7 @@
       if (curSlide > 0 && animate) {
         setTimeout(() => triggerSlideTransitionBurst(), 150);
       }
-      // Run typewriter on initial load (when animate is false)
-      if (!animate) {
-        const twEls = slide.querySelectorAll('.typewriter');
-        if (twEls.length) {
-          twEls.forEach(el => {
-            if (!el.dataset.twOriginal) el.dataset.twOriginal = el.innerHTML.trim();
-            el.style.opacity = '0';
-            el.innerHTML = '';
-          });
-          (function chainTW(els, delay) {
-            if (!els.length) return;
-            setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
-          })([...twEls], 200);
-        }
-      }
+      if (!animate) initTypewritersOnSlide(slide);
     }
 
     const numEl = document.querySelector('.right-num');
@@ -689,21 +692,7 @@
       if (animate) {
         setTimeout(() => triggerSlideTransitionBurst(), 100);
       }
-      // Run typewriter on initial load (when animate is false)
-      if (!animate && spread[0]) {
-        const twEls = spread[0].querySelectorAll('.typewriter');
-        if (twEls.length) {
-          twEls.forEach(el => {
-            if (!el.dataset.twOriginal) el.dataset.twOriginal = el.innerHTML.trim();
-            el.style.opacity = '0';
-            el.innerHTML = '';
-          });
-          (function chainTW(els, delay) {
-            if (!els.length) return;
-            setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
-          })([...twEls], 200);
-        }
-      }
+      if (!animate) initTypewritersOnSlide(spread[0]);
     }
 
     if (spread[1]) {
@@ -722,21 +711,7 @@
       if (animate) {
         setTimeout(() => triggerSlideTransitionBurst(), 150);
       }
-      // Run typewriter on initial load (when animate is false)
-      if (!animate) {
-        const twEls = spread[1].querySelectorAll('.typewriter');
-        if (twEls.length) {
-          twEls.forEach(el => {
-            if (!el.dataset.twOriginal) el.dataset.twOriginal = el.innerHTML.trim();
-            el.style.opacity = '0';
-            el.innerHTML = '';
-          });
-          (function chainTW(els, delay) {
-            if (!els.length) return;
-            setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), delay);
-          })([...twEls], 350);
-        }
-      }
+      if (!animate) initTypewritersOnSlide(spread[1], 350);
     } else {
       rightSlot.innerHTML = '<div class="empty-page-ornament">✦</div>';
     }
@@ -1151,36 +1126,6 @@
     commonSounds.forEach(preloadAudio);
   }
 
-  function startAmbient() {
-    if (_ambientStarted) return;
-    _ambientStarted = true;
-    try {
-      const ctx        = new (window.AudioContext || window.webkitAudioContext)();
-      const seconds    = 30;
-      const buf        = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
-      const data       = buf.getChannelData(0);
-      let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
-      for (let i = 0; i < data.length; i++) {
-        const w = Math.random() * 2 - 1;
-        b0 = 0.99886*b0 + w*0.0555179; b1 = 0.99332*b1 + w*0.0750759;
-        b2 = 0.96900*b2 + w*0.1538520; b3 = 0.86650*b3 + w*0.3104856;
-        b4 = 0.55000*b4 + w*0.5329522; b5 = -0.7616*b5 - w*0.0168980;
-        data[i] = (b0+b1+b2+b3+b4+b5+b6 + w*0.5362) / 9;
-        b6 = w * 0.115926;
-      }
-      const src  = ctx.createBufferSource();
-      src.buffer = buf; src.loop = true;
-      const lpf  = ctx.createBiquadFilter();
-      lpf.type            = 'lowpass';
-      lpf.frequency.value = 160;
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 4);
-      src.connect(lpf); lpf.connect(gain); gain.connect(ctx.destination);
-      src.start();
-    } catch (_) {}
-  }
-
   /* ── Chapter Ambient Sound Functions ─────────────────────────────── */
   function getAmbientForChapter(chapter) {
     if (!chapter || !chapter.title) return CHAPTER_AMBIENT.default;
@@ -1228,10 +1173,6 @@
     });
     _currentAmbient = audio;
     _currentAmbientType = config.src;
-  }
-
-  function stopSyntheticAmbient() {
-    _ambientStarted = false; // Will stop next synthetic start attempt
   }
 
   function updateChapterAmbient() {
@@ -1747,7 +1688,7 @@
           <span>&amp; the End</span>
         </div>
         <div class="cover-divider"></div>
-        <img class="cover-storybook-logo" src="assets/images/walt disney logo.png" alt="Walt Disney logo" />
+        <img class="cover-storybook-logo" src="assets/images/walt-disney-logo.png" alt="Walt Disney logo" />
       </div>
       <div class="cover-castle-wrap" aria-hidden="true">${buildCastleSVG()}</div>
       <div class="cover-open-hint" aria-hidden="true">✦ open the book ✦</div>
@@ -2057,10 +1998,13 @@
     el.type = 'button';
     el.setAttribute('tabindex', '0');
     el.dataset.slideIndex = slideIndex;
-    el.innerHTML = `
-      <span class="jump-item-num">${slideIndex}</span>
-      <span class="jump-item-label">${label}</span>
-    `;
+    const numSpan = document.createElement('span');
+    numSpan.className = 'jump-item-num';
+    numSpan.textContent = String(slideIndex);
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'jump-item-label';
+    labelSpan.textContent = label;
+    el.append(numSpan, labelSpan);
     return el;
   }
 
@@ -2567,29 +2511,95 @@
     searchSec.appendChild(searchInput);
     panel.appendChild(searchSec);
 
-    // All slides
+    // All slides — virtual list: only renders items in the visible scroll window
     const allSec = mk('section', { class: 'np-section np-slides-section' });
     allSec.innerHTML = `<h4 class="np-section-title">📄 All Slides <span class="np-total">${slides.length - 1} pages</span></h4>`;
-    const slideList = mk('ul', { class: 'np-slide-list', id: 'np-slide-list' });
+    const slideList = mk('ul', { class: 'np-slide-list', id: 'np-slide-list', style: 'position:relative;' });
 
-    slides.forEach((slide, i) => {
-      const h    = slide.querySelector('h1, h2');
-      const raw  = h ? h.textContent.trim().replace(/\s+/g, ' ') : '';
-      const lbl  = raw.slice(0, 55) + (raw.length > 55 ? '…' : '');
-      const li   = mk('li', { class: 'np-slide-item' });
-      const btn  = mk('button', { class: 'np-slide-btn', 'data-si': i });
-      btn.innerHTML = `<span class="np-slide-num">${i === 0 ? '🏰' : i}</span><span class="np-slide-label">${lbl || '…'}</span>`;
-      btn.addEventListener('click', () => { goTo(i); closeNavPanel(); });
-      // Collect all searchable text from the slide for forgiving search
+    const NP_ITEM_H = 36; // matches padding:7px*2 + line-height
+    const NP_BUFFER = 10;
+
+    const npData = slides.map((slide, i) => {
+      const h = slide.querySelector('h1, h2');
+      const raw = h ? h.textContent.trim().replace(/\s+/g, ' ') : '';
+      const lbl = raw.slice(0, 55) + (raw.length > 55 ? '…' : '');
       const allText = Array.from(slide.querySelectorAll('h1, h2, p, button, [aria-label]'))
         .map(el => el.getAttribute('aria-label') || el.textContent)
-        .join(' ')
-        .replace(/\s+/g, ' ')
-        .trim()
-        .toLowerCase();
-      li.dataset.search = allText;
-      li.appendChild(btn); slideList.appendChild(li);
+        .join(' ').replace(/\s+/g, ' ').trim().toLowerCase();
+      return { i, lbl, allText };
     });
+
+    let npFiltered = npData;
+    let npVirtual = true;
+    let npStart = -1, npEnd = -1;
+
+    const topSpacer = mk('li', { style: 'height:0;list-style:none;padding:0;margin:0;' });
+    const botSpacer = mk('li', { style: 'height:0;list-style:none;padding:0;margin:0;' });
+    slideList.appendChild(topSpacer);
+    slideList.appendChild(botSpacer);
+
+    function npMakeItem(entry) {
+      const li = mk('li', { class: 'np-slide-item' });
+      const btn = document.createElement('button');
+      btn.className = 'np-slide-btn';
+      btn.dataset.si = entry.i;
+      const numSpan = document.createElement('span');
+      numSpan.className = 'np-slide-num';
+      numSpan.textContent = entry.i === 0 ? '🏰' : String(entry.i);
+      const lblSpan = document.createElement('span');
+      lblSpan.className = 'np-slide-label';
+      lblSpan.textContent = entry.lbl || '…';
+      btn.append(numSpan, lblSpan);
+      btn.addEventListener('click', () => { goTo(entry.i); closeNavPanel(); });
+      li.appendChild(btn);
+      return li;
+    }
+
+    function npSyncActive() {
+      const currentSi = getCurrentSlideIndex();
+      slideList.querySelectorAll('.np-slide-btn').forEach(btn => {
+        const si = parseInt(btn.dataset.si, 10);
+        const active = isMobile() ? si === curSlide
+          : si === currentSi || (spreads[curSpread]?.includes(slides[si]) ?? false);
+        btn.classList.toggle('active', active);
+      });
+    }
+
+    function npRender(force = false) {
+      if (!npVirtual) return;
+      const scrollTop = panel.scrollTop;
+      const viewH = panel.clientHeight || 400;
+      const total = npFiltered.length;
+      const startVi = Math.max(0, Math.floor(scrollTop / NP_ITEM_H) - NP_BUFFER);
+      const endVi = Math.min(total - 1, Math.ceil((scrollTop + viewH) / NP_ITEM_H) + NP_BUFFER);
+      if (!force && startVi === npStart && endVi === npEnd) return;
+      slideList.querySelectorAll('.np-slide-item').forEach(el => el.remove());
+      topSpacer.style.height = `${startVi * NP_ITEM_H}px`;
+      botSpacer.style.height = `${Math.max(0, total - 1 - endVi) * NP_ITEM_H}px`;
+      const frag = document.createDocumentFragment();
+      for (let vi = startVi; vi <= endVi; vi++) frag.appendChild(npMakeItem(npFiltered[vi]));
+      slideList.insertBefore(frag, botSpacer);
+      npStart = startVi; npEnd = endVi;
+      npSyncActive();
+    }
+
+    function npScrollTo(slideIndex) {
+      const vi = npFiltered.findIndex(d => d.i === slideIndex);
+      if (vi < 0) return;
+      if (npVirtual) {
+        panel.scrollTop = Math.max(0, vi * NP_ITEM_H - panel.clientHeight / 2);
+      } else {
+        slideList.querySelector(`.np-slide-btn[data-si="${slideIndex}"]`)
+          ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }
+
+    panel.addEventListener('scroll', debounce(() => npRender(), 30), { passive: true });
+    panel._npRender = () => npRender(true);
+    panel._npScrollTo = npScrollTo;
+    panel._npSyncActive = npSyncActive;
+
+    npRender(true);
 
     allSec.appendChild(slideList);
     panel.appendChild(allSec);
@@ -2604,28 +2614,30 @@
     // Live search with debouncing
     const debouncedSearch = debounce(() => {
       const q = searchInput.value.trim().toLowerCase();
-      let matchCount = 0;
-      
-      slideList.querySelectorAll('.np-slide-item').forEach((li, i) => {
-        const searchText = li.dataset.search || '';
-        const matches = q ? (searchText.includes(q) || String(i).includes(q)) : true;
-        li.hidden = !matches;
-        if (matches && q) matchCount++;
-      });
-
-      // Update result count
-      const resultCount = panel.querySelector('.search-result-count');
-      if (resultCount) {
-        resultCount.textContent = q ? `${matchCount} result${matchCount !== 1 ? 's' : ''}` : '';
+      if (q) {
+        npFiltered = npData.filter(d => d.allText.includes(q) || String(d.i).includes(q));
+        npVirtual = false;
+        slideList.querySelectorAll('.np-slide-item').forEach(el => el.remove());
+        topSpacer.style.height = '0'; botSpacer.style.height = '0';
+        const frag = document.createDocumentFragment();
+        npFiltered.forEach(entry => frag.appendChild(npMakeItem(entry)));
+        slideList.insertBefore(frag, botSpacer);
+        npSyncActive();
+      } else {
+        npFiltered = npData;
+        npVirtual = true;
+        npStart = -1; npEnd = -1;
+        npRender(true);
       }
+      const resultCount = panel.querySelector('.search-result-count');
+      if (resultCount) resultCount.textContent = q ? `${npFiltered.length} result${npFiltered.length !== 1 ? 's' : ''}` : '';
     }, 200);
-    
     searchInput.addEventListener('input', debouncedSearch);
-    
+
     // Add result count display
     const searchSecHeader = searchSec.querySelector('.np-section-title');
     if (searchSecHeader) {
-      const resultCount = mk('span', { class: 'search-result-count' });
+      const resultCount = mk('span', { class: 'search-result-count', 'aria-live': 'polite', 'aria-atomic': 'true' });
       searchSecHeader.appendChild(resultCount);
     }
   }
@@ -2677,8 +2689,13 @@
     }
     const icon = document.querySelector('#nav-toggle .nav-toggle-icon');
     if (icon) icon.textContent = '✕';
-    syncNavPanel();
-    
+    // Re-render virtual list once the panel has a real clientHeight
+    requestAnimationFrame(() => {
+      const p = document.getElementById('nav-panel');
+      p?._npRender?.();
+      syncNavPanel();
+    });
+
     // Focus first interactive element in panel
     if (focusPanel) {
       const firstFocusable = document.querySelector('#nav-panel button, #nav-panel input');
@@ -2701,25 +2718,20 @@
   }
 
   function syncNavPanel() {
-    const currentSi = getCurrentSlideIndex();
+    const panel = document.getElementById('nav-panel');
+    panel?._npSyncActive?.();
     const currentChapter = getCurrentChapter();
-    document.querySelectorAll('.np-slide-btn').forEach(btn => {
-      const si = parseInt(btn.dataset.si, 10);
-      let active = false;
-      if (isMobile()) {
-        active = si === curSlide;
-      } else {
-        const sp = spreads[curSpread];
-        active = si === currentSi || (sp && sp.includes(slides[si]));
-      }
-      btn.classList.toggle('active', active);
-    });
     document.querySelectorAll('.np-chapter-btn').forEach(btn => {
-      const si = parseInt(btn.dataset.si, 10);
-      btn.classList.toggle('active', currentChapter?.index === si);
+      btn.classList.toggle('active', currentChapter?.index === parseInt(btn.dataset.si, 10));
     });
-    if (document.getElementById('nav-panel')?.classList.contains('open')) {
-      document.querySelector('.np-slide-btn.active')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if (panel?.classList.contains('open')) {
+      const activeSi = isMobile() ? curSlide : getCurrentSlideIndex();
+      if (panel._npScrollTo) {
+        panel._npScrollTo(activeSi);
+        setTimeout(() => panel._npRender?.(), 60);
+      } else {
+        document.querySelector('.np-slide-btn.active')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
     }
   }
 
@@ -3188,339 +3200,6 @@
     });
   }
 
-  /* ── Dynamic styles (injected to avoid extra HTTP request) ─── */
-  function injectDynamicStyles() {
-    const s = document.createElement('style');
-    s.textContent = `
-/* ── Fullscreen video hint ── */
-.gift-img { position: relative; }
-.gift-img::after {
-  content: '⛶';
-  position: absolute; bottom: 7px; right: 9px;
-  font-size: 1rem; color: rgba(255,255,255,.55);
-  pointer-events: none; opacity: 0;
-  transition: opacity .2s ease;
-  line-height: 1;
-}
-.gift-img:hover::after { opacity: 1; }
-
-/* ── Cert seal ── */
-.cert-seal {
-  width:72px;height:72px;border-radius:50%;
-  border:2.5px solid rgba(201,160,48,.7);
-  background:radial-gradient(circle,rgba(201,160,48,.18) 0%,transparent 70%);
-  display:flex;align-items:center;justify-content:center;
-  font-size:2rem;margin:0 auto;
-  box-shadow:0 0 24px rgba(201,160,48,.28),inset 0 0 16px rgba(201,160,48,.12);
-}
-
-/* ── Reading stats grid ── */
-.stats-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; margin: 18px 0;
-}
-.stat-item {
-  background: rgba(201,160,48,.10);
-  border: 1px solid rgba(201,160,48,.25);
-  border-radius: 8px; padding: 12px 8px;
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-}
-.stat-num {
-  font-family: 'Pacifico', cursive; font-size: 1.5rem;
-  color: var(--g2); line-height: 1;
-}
-.stat-label {
-  font-size: .68rem; font-weight: 700; letter-spacing: .04em;
-  text-transform: uppercase; color: rgba(255,245,180,.62);
-  text-align: center;
-}
-
-
-/* ── Cursor trail ── */
-@keyframes cursorSparkle {
-  0%   { opacity: .85; transform: translate(-50%,-50%) scale(1); }
-  100% { opacity: 0;   transform: translate(-50%, calc(-50% - 16px)) scale(.15); }
-}
-
-/* ── Slide entrance stagger ── */
-@keyframes slideEntrance {
-  from { opacity: 0; transform: translateY(13px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Sparkle burst ── */
-@keyframes sparkleFly {
-  0%   { transform: translate(-50%,-50%) scale(1);   opacity: 1; }
-  100% { transform: translate(calc(-50% + var(--sdx)), calc(-50% + var(--sdy))) scale(0); opacity: 0; }
-}
-
-/* ── Shake animation ── */
-@keyframes sbShake {
-  0%,100%{ transform: translateX(0); }
-  20%    { transform: translateX(-7px); }
-  40%    { transform: translateX(7px); }
-  60%    { transform: translateX(-5px); }
-  80%    { transform: translateX(5px); }
-}
-
-/* ── Help Modal ── */
-#help-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(8, 2, 26, 0.85);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  backdrop-filter: blur(4px);
-}
-.help-content {
-  background: linear-gradient(165deg, #180640 0%, #100328 50%, #080118 100%);
-  border: 2px solid rgba(201,160,48,0.52);
-  border-radius: 12px;
-  padding: 2rem;
-  max-width: 520px;
-  width: 90%;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  position: relative;
-}
-#help-title {
-  color: #FFE888;
-  font-family: 'Marck Script', cursive;
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-.help-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.help-list li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.9rem 0;
-  color: #FBF4E0;
-  font-size: 0.95rem;
-  letter-spacing: 0.025em;
-  border-bottom: 1px solid rgba(201,160,48,0.15);
-}
-.help-list li:last-child {
-  border-bottom: none;
-}
-.help-list kbd {
-  background: rgba(201,160,48,0.2);
-  border: 1px solid rgba(201,160,48,0.4);
-  border-radius: 4px;
-  padding: 0.2rem 0.5rem;
-  font-family: monospace;
-  font-size: 0.85rem;
-  color: #FFE888;
-  margin-right: 0.25rem;
-}
-.help-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: transparent;
-  border: none;
-  color: rgba(201,160,48,0.7);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.25rem;
-  line-height: 1;
-  transition: color 0.2s;
-}
-.help-close:hover {
-  color: #FFE888;
-}
-.help-close:focus-visible {
-  outline: 2px solid #FFE888;
-  outline-offset: 2px;
-}
-
-/* ── Spoilers ── */
-.peek-hint[data-revealed="false"] {
-  color: transparent !important;
-  text-shadow: 0 0 8px rgba(240,192,80,.85) !important;
-  user-select: none;
-}
-.peek-hint[data-revealed="false"] * {
-  color: transparent !important;
-}
-.peek-hint[data-revealed="false"]::after {
-  content: '✨ spoiler — tap to reveal ✨';
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: .64rem; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 1px;
-  white-space: nowrap;
-  color: #F0C050 !important; text-shadow: none !important;
-  background: linear-gradient(145deg, #2A0E50 0%, #3E1A6A 40%, #2A0E50 100%);
-  border-radius: inherit;
-}
-.peek-hint[data-revealed="true"] {
-  animation: spoilerReveal .3s ease both;
-}
-@keyframes spoilerReveal {
-  from { opacity: .4; transform: scale(.97); }
-  to   { opacity: 1;  transform: scale(1);   }
-}
-
-/* ── Playing audio ── */
-.text-to-sound.playing {
-  background: linear-gradient(180deg,#FFF3D0 0%,#F5D878 40%,#E8B830 100%) !important;
-  border-color: #A07010 !important;
-  box-shadow: 0 2px 0 #6A4800, 0 4px 16px rgba(201,160,48,.5), 0 0 20px rgba(255,200,40,.35), inset 0 1px 0 rgba(255,255,255,.9) !important;
-}
-.text-to-sound.playing::after { content: none; }
-.text-to-sound.playing::before {
-  content: '';
-  position: absolute; inset: 0; border-radius: inherit;
-  background: repeating-linear-gradient(90deg,rgba(255,200,40,0) 0px,rgba(255,200,40,.18) 2px,rgba(255,200,40,0) 4px);
-  background-size: 8px 100%;
-  animation: soundWave .6s linear infinite;
-  pointer-events: none;
-}
-@keyframes soundWave { to { background-position: 8px 0; } }
-
-/* ── Nav overlay ── */
-#nav-overlay {
-  display: none; position: fixed; inset: 0; z-index: 900;
-  background: rgba(4,1,16,.55); backdrop-filter: blur(4px);
-  opacity: 0; transition: opacity .3s ease;
-}
-#nav-overlay.visible { display: block; opacity: 1; }
-
-/* ── Nav toggle button ── */
-#nav-toggle {
-  position: fixed; top: 7px; left: 16px; z-index: 1100;
-  width: 52px; height: 52px; border-radius: 50%;
-  border: 2px solid rgba(201,160,48,.55); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.35rem; line-height: 1;
-  background: linear-gradient(145deg, #1E0848, #2D1060);
-  color: #F0C050;
-  box-shadow: 0 4px 20px rgba(0,0,0,.55), 0 0 16px rgba(201,160,48,.20);
-  transition: transform .22s cubic-bezier(.34,1.56,.64,1), border-color .2s ease, box-shadow .22s ease;
-  backdrop-filter: blur(8px);
-  animation: fabPopIn 0.4s cubic-bezier(.34,1.56,.64,1) 0.3s both;
-}
-#nav-toggle:hover { transform: scale(1.1) rotate(-5deg); border-color: rgba(201,160,48,.85); }
-#nav-toggle:active { transform: scale(.94); transition-duration: .08s !important; }
-
-/* ── Nav toggle first-time attention ring ── */
-#nav-toggle.has-attention {
-  animation: navAttention 2s ease-in-out 3;
-}
-@keyframes navAttention {
-  0%, 100% { box-shadow: 0 4px 20px rgba(0,0,0,.55), 0 0 16px rgba(201,160,48,.20); }
-  50% { box-shadow: 0 4px 24px rgba(0,0,0,.6), 0 0 28px rgba(201,160,48,.45), 0 0 48px rgba(201,160,48,.15); }
-}
-
-/* ── Nav panel ── */
-#nav-panel {
-  position: fixed; top: 0; left: -340px; bottom: 0;
-  width: 320px; max-width: 88vw; z-index: 1000;
-  display: flex; flex-direction: column; overflow: hidden;
-  background:
-    repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(140,95,40,.05) 28px,rgba(140,95,40,.05) 29px),
-    radial-gradient(ellipse at 10% 5%,rgba(200,155,70,.18) 0%,transparent 50%),
-    linear-gradient(165deg,#FAF0D8,#F2E4BC 55%,#EBD5A0);
-  border-right: 4px solid #E5CFA0;
-  outline: 2px solid rgba(201,160,48,.38); outline-offset: -10px;
-  box-shadow: 8px 0 60px rgba(0,0,0,.55);
-  transition: left .38s cubic-bezier(.22,.85,.32,1);
-}
-#nav-panel.open { left: 0; }
-#nav-panel::after {
-  content: '← → keys · G to jump · N for nav';
-  position: sticky; bottom: 0; display: block;
-  padding: 8px 12px;
-  font-family: 'Nunito',sans-serif; font-size: .6rem; font-weight: 700;
-  letter-spacing: .5px; color: rgba(90,48,8,.42); text-align: center;
-  background: linear-gradient(0deg,rgba(245,230,185,.98) 60%,transparent);
-  pointer-events: none;
-}
-
-.np-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 20px 14px;
-  border-bottom: 1.5px solid rgba(201,160,48,.38);
-  background: linear-gradient(180deg,rgba(255,255,255,.25),transparent);
-  flex-shrink: 0;
-}
-.np-title { font-family:'Marck Script',cursive; font-size:1.2rem; color:#5A3008; }
-.np-close {
-  width:30px; height:30px; border-radius:50%;
-  border:1.5px solid rgba(201,160,48,.38);
-  background:rgba(255,255,255,.38); color:#5A3008;
-  font-size:.85rem; cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-  transition:background .18s ease;
-}
-.np-close:hover { background:rgba(255,255,255,.7); }
-
-#nav-panel > section:last-child { flex:1; min-height:0; display:flex; flex-direction:column; }
-
-.np-section { padding:14px 16px; border-bottom:1px dashed rgba(201,160,48,.28); flex-shrink:0; }
-.np-slides-section { flex:1; min-height:0; display:flex; flex-direction:column; border-bottom:none; }
-
-.np-section-title {
-  font-family:'Nunito',sans-serif; font-size:.66rem; font-weight:800;
-  letter-spacing:2.5px; text-transform:uppercase; color:rgba(90,48,8,.62);
-  margin-bottom:10px;
-}
-.np-total { font-weight:600; font-size:.64rem; color:rgba(90,48,8,.42); letter-spacing:1px; text-transform:none; margin-left:6px; }
-
-.np-search {
-  display:block; width:100%; padding:9px 12px;
-  font-family:'Nunito',sans-serif; font-size:.88rem; font-weight:600; color:#3A1F0D;
-  background:rgba(255,255,255,.55);
-  border:1.5px solid rgba(201,160,48,.38); border-radius:8px;
-  outline:none; transition:border-color .2s,box-shadow .2s;
-}
-.np-search:focus { border-color:rgba(201,160,48,.75); box-shadow:0 0 0 3px rgba(201,160,48,.18); }
-.np-search::placeholder { color:rgba(90,48,8,.38); }
-
-.np-slide-list {
-  list-style:none; flex:1; overflow-y:auto; padding:4px 0 80px;
-  scrollbar-width:thin; scrollbar-color:rgba(201,160,48,.55) transparent;
-}
-.np-slide-list::-webkit-scrollbar { width:6px; }
-.np-slide-list::-webkit-scrollbar-track { background:transparent; }
-.np-slide-list::-webkit-scrollbar-thumb { background:rgba(201,160,48,.55); border-radius:6px; }
-.np-slide-list::-webkit-scrollbar-thumb:hover { background:rgba(201,160,48,.85); }
-.np-slide-item[hidden] { display:none; }
-
-.np-slide-btn {
-  width:100%; display:flex; align-items:flex-start; gap:10px;
-  padding:7px 14px 7px 10px; background:transparent; border:none;
-  border-radius:6px; cursor:pointer; text-align:left;
-  transition:background .15s ease;
-}
-.np-slide-btn:hover { background:rgba(201,160,48,.12); }
-.np-slide-btn.active {
-  background:linear-gradient(135deg,rgba(201,160,48,.22),rgba(245,220,150,.25));
-  border-left:3px solid rgba(201,160,48,.72); padding-left:7px;
-}
-.np-slide-num {
-  flex-shrink:0; font-family:'Nunito',sans-serif; font-size:.7rem; font-weight:800;
-  color:rgba(90,48,8,.42); line-height:1.6; min-width:28px; text-align:right;
-}
-.np-slide-btn.active .np-slide-num { color:rgba(90,48,8,.72); }
-.np-slide-label { font-family:'Nunito',sans-serif; font-size:.82rem; font-weight:600; color:#4A2A14; line-height:1.4; }
-.np-slide-btn.active .np-slide-label { font-weight:700; color:#2E1408; }
-
-@media (max-width:480px) {
-  #nav-panel { width:290px; }
-  #nav-toggle { top:7px; left:14px; width:46px; height:46px; font-size:1.2rem; }
-  #prev-page, #next-page { width:32px; height:52px; font-size:1.1rem; }
-}
-    `;
-    document.head.appendChild(s);
-  }
 
   /* ── Celebration on final slide ──────────────────────────────── */
   function triggerFinalSlideCelebration() {
@@ -3875,3 +3554,7 @@
   window.checkAssets = runAssetHealthCheck;
 
 })();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
