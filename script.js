@@ -1661,7 +1661,7 @@
 
     // Spine
     const spine = mk('div', { class: 'book-spine' });
-    spine.innerHTML = '<div class="spine-ornament">And now, and then & the End</div>';
+    spine.innerHTML = '<div class="spine-ornament">& now, and then & the End</div>';
 
     // Right page
     const pageRight = mk('div', { id: 'page-right', class: 'book-page page-right' });
