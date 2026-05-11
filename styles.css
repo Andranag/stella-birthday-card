@@ -833,6 +833,15 @@ body.on-cover #tips-bar { opacity: 0; pointer-events: none; }
 @media (max-width: 340px) {
   .tip-sep { display: none; }
 }
+/* Mobile (touch): hide all keyboard hints, keep only interactive buttons */
+@media (max-width: 639px) {
+  .tip-item:has(.tip-key) { display: none !important; }
+  /* Hide separators that would now sit adjacent to a hidden hint */
+  .tip-item:has(.tip-key) + .tip-sep,
+  .tip-sep:has(+ .tip-item:has(.tip-key)) { display: none !important; }
+  /* Keep only button-containing items visible & spaced cleanly */
+  .tips-content { gap: 14px; justify-content: center; }
+}
 @keyframes tipBarSlideUp {
   from { transform: translateY(100%); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
@@ -2721,13 +2730,30 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   }
 
   .slide.gift-article.active.in-page {
-    gap: 8px !important;
+    gap: 14px !important;
+  }
+
+  /* Slightly looser page-slot padding on mobile for breathing room */
+  .page-slot {
+    padding: 22px 18px 46px;
+    gap: 14px;
+  }
+
+  /* More breathing room around buttons & paragraphs */
+  .slide.gift-article.in-page p {
+    line-height: 1.62 !important;
+    margin: 2px 0 !important;
+  }
+  .slide.gift-article.in-page .text-to-sound,
+  .slide.gift-article.in-page .peek-hint {
+    margin: 6px auto !important;
   }
 
   /* Adjust video sizes for mobile — scales with viewport height */
   .gift-img,
   .slide.gift-article.in-page .gift-img {
     height: clamp(160px, 28svh, 220px) !important;
+    margin: 6px auto !important;
   }
 
   .slide.gift-article.in-page .gift-img.wide-video {
