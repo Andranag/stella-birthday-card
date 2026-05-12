@@ -1,4 +1,4 @@
-const CACHE = 'stella-bday-v1';
+const CACHE = 'stella-bday-v3';
 const SHELL = [
   './',
   './index.html',

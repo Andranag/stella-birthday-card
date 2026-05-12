@@ -835,8 +835,10 @@ body.on-cover #tips-bar { opacity: 0; pointer-events: none; }
 }
 /* Mobile (touch): hide all keyboard hints, keep only interactive buttons */
 @media (max-width: 639px) {
+  .tip-item.kbd,
+  .tip-sep.kbd-sep { display: none !important; }
+  /* Legacy fallback for any unmarked keyboard items */
   .tip-item:has(.tip-key) { display: none !important; }
-  /* Hide separators that would now sit adjacent to a hidden hint */
   .tip-item:has(.tip-key) + .tip-sep,
   .tip-sep:has(+ .tip-item:has(.tip-key)) { display: none !important; }
   /* Keep only button-containing items visible & spaced cleanly */
