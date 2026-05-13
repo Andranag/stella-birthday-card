@@ -1,7 +1,6 @@
 import {defineConfig} from "vite"
 
 export default defineConfig({
-	plugins: [
-		
-	]
+	base: "/stella-birthday-card/",
+	plugins: []
 })
