@@ -693,6 +693,7 @@
       reorderSlideElements(spread[0]);
       spread[0].classList.add('active', 'in-page');
       leftSlot.appendChild(spread[0]);
+      spread[0].scrollTop = 0;
       if (useFade) {
         leftSlot.classList.add('page-fade-in');
         leftSlot.addEventListener('animationend', () => leftSlot.classList.remove('page-fade-in'), { once: true });
@@ -711,6 +712,7 @@
       reorderSlideElements(spread[1]);
       spread[1].classList.add('active', 'in-page');
       rightSlot.appendChild(spread[1]);
+      spread[1].scrollTop = 0;
       if (useFade) {
         rightSlot.classList.add('page-fade-in');
         rightSlot.addEventListener('animationend', () => rightSlot.classList.remove('page-fade-in'), { once: true });
