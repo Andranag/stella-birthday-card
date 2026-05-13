@@ -595,6 +595,11 @@
       slide.classList.add('active', 'in-page');
       rightSlot.appendChild(slide);
       slide.scrollTop = 0;
+      requestAnimationFrame(() => {
+        const pageRight = document.getElementById('page-right');
+        const overflows = pageRight && slide.offsetHeight > pageRight.clientHeight - 50;
+        rightSlot.classList.toggle('overflowing', !!overflows);
+      });
       if (useFade) {
         rightSlot.classList.add('page-fade-in');
         rightSlot.addEventListener('animationend', () => rightSlot.classList.remove('page-fade-in'), { once: true });
@@ -847,9 +852,12 @@
       container.appendChild(s);
       s.querySelectorAll('video').forEach(v => v.pause());
     });
-    // Clear any empty-page ornament
+    // Clear any empty-page ornament and scroll hint
     const rs = document.getElementById('right-slot');
-    if (rs) rs.querySelector('.empty-page-ornament')?.remove();
+    if (rs) {
+      rs.querySelector('.empty-page-ornament')?.remove();
+      rs.classList.remove('overflowing');
+    }
   }
 
   function stripCloneMedia(clone) {

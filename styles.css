@@ -844,6 +844,10 @@ body.on-cover #tips-bar { opacity: 0; pointer-events: none; }
   /* Keep only button-containing items visible & spaced cleanly */
   .tips-content { gap: 14px; justify-content: center; }
 }
+@keyframes scrollHintDrift {
+  0%, 100% { opacity: 0.38; transform: translateX(-50%) translateY(0); }
+  50%       { opacity: 0.65; transform: translateX(-50%) translateY(4px); }
+}
 @keyframes tipBarSlideUp {
   from { transform: translateY(100%); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
@@ -2740,6 +2744,23 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     max-height: none !important;
     min-height: 100% !important;
     justify-content: flex-start !important;
+  }
+
+  /* Scroll-overflow hint — appears when a slide is taller than the visible page */
+  .page-slot.overflowing::after {
+    content: '↓ scroll';
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.60rem;
+    letter-spacing: 0.14em;
+    color: rgba(90, 48, 8, 0.38);
+    animation: scrollHintDrift 2.2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 5;
+    white-space: nowrap;
   }
 
   /* Slightly looser page-slot padding on mobile for breathing room */
