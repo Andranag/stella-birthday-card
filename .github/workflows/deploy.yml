@@ -25,6 +25,7 @@ jobs:
           mkdir deploy
           cp index.html script.js styles.css sw.js deploy/
           cp -r public deploy/
+          sed -i "s/stella-bday-v[0-9]*/stella-bday-$(git rev-parse --short HEAD)/" deploy/sw.js
 
       - uses: actions/configure-pages@v5
 
