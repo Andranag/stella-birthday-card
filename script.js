@@ -106,21 +106,6 @@
   let _sfxMuted = localStorage.getItem('stella_sfx_muted') === 'true';
   let recentJumps     = [];   // [{slideIndex, title, chapter?}]
 
-  /* ── Chapter Ambient Sounds ─────────────────────────────────────── */
-  const AMBIENT_ENABLED_KEY = 'stella_ambient_enabled';
-  let _ambientEnabled = localStorage.getItem(AMBIENT_ENABLED_KEY) !== 'false'; // default on
-  let _currentAmbient = null; // currently playing ambient audio
-  let _currentAmbientType = null;
-
-  const CHAPTER_AMBIENT = {
-    'interlude':  { src: 'assets/music/ambient/rain-soft.mp3',        vol: 0.08 },
-    'safe':       { src: 'assets/music/ambient/fireplace-crackle.mp3', vol: 0.06 },
-    'beginning':  { src: 'assets/music/ambient/birds-morning.mp3',     vol: 0.05 },
-    'spark':      { src: 'assets/music/ambient/wind-chimes.mp3',       vol: 0.06 },
-    'connected':  { src: 'assets/music/ambient/cafe-rain.mp3',         vol: 0.07 },
-    'your':       { src: 'assets/music/ambient/night-crickets.mp3',    vol: 0.06 },
-    'default':    { src: null, vol: 0 },
-  };
 
   const _UNLOCK_TOKEN = btoa('05/03/2001');
 
@@ -523,7 +508,6 @@
     updateCounter();
     updateNavButtons();
     updateBookmarkBtn();
-    updateChapterAmbient();
     syncNavPanel();
     announceSlide();
     updateAriaCurrent();
@@ -1159,76 +1143,14 @@
     commonSounds.forEach(preloadAudio);
   }
 
-  /* ── Chapter Ambient Sound Functions ─────────────────────────────── */
-  function getAmbientForChapter(chapter) {
-    if (!chapter || !chapter.title) return CHAPTER_AMBIENT.default;
-    const title = chapter.title.toLowerCase();
-    // Find matching keyword in chapter title
-    for (const [keyword, config] of Object.entries(CHAPTER_AMBIENT)) {
-      if (keyword === 'default') continue;
-      if (title.includes(keyword)) return config;
-    }
-    return CHAPTER_AMBIENT.default;
-  }
-
-  function stopChapterAmbient() {
-    if (_currentAmbient) {
-      try {
-        _currentAmbient.pause();
-        _currentAmbient.currentTime = 0;
-      } catch (_) {}
-      _currentAmbient = null;
-      _currentAmbientType = null;
-    }
-  }
-
-  function playChapterAmbient(chapter) {
-    if (!_ambientEnabled) return;
-    const config = getAmbientForChapter(chapter);
-    if (!config.src) {
-      // No specific ambient for this chapter, stay silent
-      return;
-    }
-
-    // If same ambient already playing, don't restart
-    if (_currentAmbient && _currentAmbientType === config.src) return;
-
-    stopChapterAmbient();
-
-    const audio = new Audio(config.src);
-    audio.loop = true;
-    audio.volume = config.vol;
-    audio.addEventListener('error', () => {
-      // File missing, stay silent
-    });
-    audio.play().catch(() => {
-      // Autoplay blocked or error, stay silent
-    });
-    _currentAmbient = audio;
-    _currentAmbientType = config.src;
-  }
-
-  function updateChapterAmbient() {
-    const chapter = getChapterForIndex(getCurrentSlideIndex());
-    playChapterAmbient(chapter);
-  }
-
   function toggleAmbient() {
-    // Unified toggle: controls both ambient and SFX
-    const newState = !(_ambientEnabled && !_sfxMuted);
-    _ambientEnabled = newState;
-    _sfxMuted = !newState;
-
-    localStorage.setItem(AMBIENT_ENABLED_KEY, _ambientEnabled ? 'true' : 'false');
+    _sfxMuted = !_sfxMuted;
     localStorage.setItem('stella_sfx_muted', _sfxMuted ? 'true' : 'false');
-
-    if (_ambientEnabled) {
-      showToast('🔊 Sounds on', 'success');
-      updateChapterAmbient();
-    } else {
+    if (_sfxMuted) {
       showToast('🔇 Sounds muted', 'info');
-      stopChapterAmbient();
       Object.values(_bgTracks).forEach(t => { if (t.audio) t.audio.volume = 0; });
+    } else {
+      showToast('🔊 Sounds on', 'success');
     }
     updateAmbientToggleBtn();
   }
@@ -1236,13 +1158,12 @@
   function updateAmbientToggleBtn() {
     const btn = document.getElementById('ambient-toggle');
     if (btn) {
-      btn.textContent = _ambientEnabled ? '🔊' : '🔇';
-      btn.title = _ambientEnabled ? 'Sounds on (M to toggle)' : 'Sounds muted (M to toggle)';
+      btn.textContent = _sfxMuted ? '🔇' : '🔊';
+      btn.title = _sfxMuted ? 'Sounds muted (M to toggle)' : 'Sounds on (M to toggle)';
     }
   }
 
   function setupAmbientToggle() {
-    // Add button to tips bar
     const tipsContent = document.querySelector('.tips-content');
     if (tipsContent) {
       const sep = document.createElement('span');
@@ -1252,7 +1173,7 @@
 
       const btnSpan = document.createElement('span');
       btnSpan.className = 'tip-item';
-      btnSpan.innerHTML = `<button id="ambient-toggle" class="ambient-toggle-btn" aria-label="Toggle ambient sounds">${_ambientEnabled ? '🔊' : '🔇'}</button>`;
+      btnSpan.innerHTML = `<button id="ambient-toggle" class="ambient-toggle-btn" aria-label="Toggle sounds">${_sfxMuted ? '🔇' : '🔊'}</button>`;
 
       tipsContent.appendChild(sep);
       tipsContent.appendChild(btnSpan);
