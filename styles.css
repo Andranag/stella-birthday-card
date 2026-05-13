@@ -1586,7 +1586,7 @@ body.on-cover #floating-key { display: block; }
   width: 100%;
   height: 100%;
   padding: 28px 24px 52px;
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 18px;
   box-sizing: border-box;
 }
@@ -2733,14 +2733,20 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     font-size: 0.95rem;
   }
 
+  /* On mobile, slides grow to content height instead of being fixed — prevents top clipping */
   .slide.gift-article.active.in-page {
     gap: 14px !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100% !important;
+    justify-content: flex-start !important;
   }
 
   /* Slightly looser page-slot padding on mobile for breathing room */
   .page-slot {
     padding: 22px 18px 46px;
     gap: 14px;
+    justify-content: flex-start;
   }
 
   /* More breathing room around buttons & paragraphs */

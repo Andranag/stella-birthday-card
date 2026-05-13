@@ -594,6 +594,7 @@
       reorderSlideElements(slide);
       slide.classList.add('active', 'in-page');
       rightSlot.appendChild(slide);
+      slide.scrollTop = 0;
       if (useFade) {
         rightSlot.classList.add('page-fade-in');
         rightSlot.addEventListener('animationend', () => rightSlot.classList.remove('page-fade-in'), { once: true });
