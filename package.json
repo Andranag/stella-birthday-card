@@ -2,9 +2,7 @@
   "name": "stella-birthday-card",
   "description": "A magical interactive storybook birthday gift for Stella.",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite"
   },
   "dependencies": {
     "vite": "latest"
