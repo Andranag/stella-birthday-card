@@ -10,7 +10,13 @@
       "Bash(cd \"c:/Users/andra/Desktop/dev/stella-birthday-card\" && sed -i 's|assets/videos/|public/assets/videos/|g; s|assets/music/|public/assets/music/|g; s|assets/images/|public/assets/images/|g' index.html && echo \"done\")",
       "Bash(python3 -c ' *)",
       "Bash(sed 's|src=\"||;s|\"$||')",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(sed -i 's|walt%20disney%20logo\\\\.jpg|walt-disney-logo.png|g' /c/Users/andra/Desktop/dev/stella-birthday-card/index.html && echo \"done\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\andra\\Desktop\\dev\\stella-birthday-card"
     ]
   }
 }
