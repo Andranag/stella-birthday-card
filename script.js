@@ -340,9 +340,13 @@
 
     refreshSlidesForViewport();
 
-    // Pre-cache and blank all typewriter elements AFTER chapters are built
+    // Pre-cache and blank all typewriter elements AFTER chapters are built.
+    // Reserve final rendered height first so multi-line content (e.g. <br>) doesn't
+    // reflow surrounding elements as the text types in.
     document.querySelectorAll('.typewriter').forEach(el => {
       el.dataset.twOriginal = el.innerHTML.trim();
+      const h = el.getBoundingClientRect().height;
+      if (h > 0) el.style.minHeight = h + 'px';
       el.innerHTML = '';
       el.style.opacity = '0';
     });
@@ -360,6 +364,7 @@
     setupCoverKeyTracker();
     setupJumpModal();
     setupHelpModal();
+    setupVideoAutoSize();
     setupVideoLoading();
     setupVideoWatchdog();
     buildNavPanel();
@@ -901,6 +906,27 @@
       video.dataset.lastTime = String(video.currentTime || 0);
       video.dataset.lastMovingAt = String(Date.now());
     }, { once: true });
+  }
+
+  function setupVideoAutoSize() {
+    // AR thresholds mirror the CSS modifier classes.
+    // Runs on every video so any clip added to the HTML in the future
+    // gets the right container size automatically — no manual tagging needed.
+    function autoSize(video) {
+      const container = video.closest('.gift-img');
+      if (!container) return;
+      const already = ['wide-video', 'tall-video', 'flexible'].some(c => container.classList.contains(c));
+      if (already) return;
+      const ar = video.videoWidth / video.videoHeight;
+      if (!ar || !isFinite(ar)) return;
+      if      (ar < 0.90) container.classList.add('tall-video');
+      else if (ar <= 1.60) container.classList.add('flexible');
+      else if (ar > 2.20)  container.classList.add('wide-video');
+    }
+    document.querySelectorAll('video.gift-video').forEach(video => {
+      if (video.readyState >= 1) autoSize(video);
+      else video.addEventListener('loadedmetadata', () => autoSize(video), { once: true });
+    });
   }
 
   function setupVideoLoading() {

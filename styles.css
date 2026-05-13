@@ -1952,12 +1952,12 @@ body.on-cover #floating-key { display: block; }
   align-items: center !important;
   justify-content: center !important;
   width: 100% !important;
-  max-width: 340px !important;
-  height: 255px !important;
-  min-height: 130px !important;
-  max-height: 40vh !important;
+  max-width: 100% !important;
+  height: clamp(200px, 40vh, 340px) !important;
+  min-height: 140px !important;
+  max-height: 48vh !important;
   padding: 0 !important;
-  background: #000 !important;
+  background: radial-gradient(ellipse at 50% 40%, rgba(30,10,60,.85), rgba(8,2,26,1)) !important;
   position: relative !important;
   overflow: hidden !important;
   border-radius: 8px !important;
@@ -1970,14 +1970,7 @@ body.on-cover #floating-key { display: block; }
     0 12px 40px rgba(0,0,0,.22);
 }
 
-/* Wide-video: cinematic/special slides get full-width, taller container */
-.slide.gift-article.in-page .gift-img.wide-video {
-  max-width: 100% !important;
-  height: clamp(230px, 44vh, 340px) !important;
-  max-height: 48vh !important;
-}
-
-/* Stretch videos to fill container — no black bars, no cropping */
+/* Cinematic crop — all videos fill the full-width container */
 .slide.gift-article.in-page .gift-video {
   width: 100% !important;
   height: 100% !important;
@@ -2338,7 +2331,7 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   width: 100%; max-width: 370px;
   margin: 10px auto;
   position: relative; border-radius: 8px;
-  overflow: hidden; background: #000;
+  overflow: hidden; background: radial-gradient(ellipse at 50% 40%, rgba(30,10,60,.85), rgba(8,2,26,1));
   box-shadow:
     0 0 0 4px var(--p0),
     0 0 0 6px var(--g2),
@@ -2363,10 +2356,10 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
 }
 .gift-img {
   width: 100%; max-width: 340px;
-  height: 255px;
+  height: 191px;
   margin: 10px auto;
   position: relative; border-radius: 8px;
-  overflow: hidden; background: #000;
+  overflow: hidden; background: radial-gradient(ellipse at 50% 40%, rgba(30,10,60,.85), rgba(8,2,26,1));
   box-shadow:
     0 0 0 4px var(--p0),
     0 0 0 6px var(--g2),
@@ -2751,16 +2744,12 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     margin: 6px auto !important;
   }
 
-  /* Adjust video sizes for mobile — scales with viewport height */
+  /* Adjust video sizes for mobile — cinematic, full-width */
   .gift-img,
   .slide.gift-article.in-page .gift-img {
-    height: clamp(160px, 28svh, 220px) !important;
-    margin: 6px auto !important;
-  }
-
-  .slide.gift-article.in-page .gift-img.wide-video {
     max-width: 100% !important;
-    height: clamp(180px, 34svh, 250px) !important;
+    height: clamp(160px, 32svh, 240px) !important;
+    margin: 6px auto !important;
   }
 
   .slide.gift-article.in-page .star-field-art {
