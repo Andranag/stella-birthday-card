@@ -112,17 +112,8 @@
   let _currentAmbient = null; // currently playing ambient audio
   let _currentAmbientType = null;
 
-  // Map chapter titles (or partial matches) to ambient sound files
-  // User should add actual ambient files to assets/music/ambient/
   const CHAPTER_AMBIENT = {
-    'interlude':  { src: 'assets/music/ambient/rain-soft.mp3',        vol: 0.08 },
-    'safe':       { src: 'assets/music/ambient/fireplace-crackle.mp3', vol: 0.06 },
-    'beginning':  { src: 'assets/music/ambient/birds-morning.mp3',     vol: 0.05 },
-    'spark':      { src: 'assets/music/ambient/wind-chimes.mp3',       vol: 0.06 },
-    'good':       { src: 'assets/music/ambient/birds-garden.mp3',      vol: 0.05 },
-    'connected':  { src: 'assets/music/ambient/cafe-rain.mp3',         vol: 0.07 },
-    'your':       { src: 'assets/music/ambient/night-crickets.mp3',    vol: 0.06 },
-    'default':    { src: null, vol: 0 },
+    'default': { src: null, vol: 0 },
   };
 
   const _UNLOCK_TOKEN = btoa('05/03/2001');
