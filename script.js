@@ -314,10 +314,25 @@
     // Set data-index on each slide for heart button identification
     allSlides.forEach((slide, idx) => { slide.dataset.index = idx; });
 
-    // Mark blank spacer slides (used for desktop spread alignment)
-    allSlides.forEach(slide => {
+    // Mark blank spacer slides (used for desktop spread alignment).
+    // Rule: title-page blanks and blanks that follow another blank → spacer (desktop only).
+    // First blank in a non-title-page pair → chapter-break-slide (visible on mobile as a
+    // single breathing page, matching the two-page spread pause seen on desktop).
+    // Isolated single blanks → spacer.
+    allSlides.forEach((slide, idx) => {
       if (slide.id === 'header') return;
-      if (slide.children.length === 0) slide.classList.add('spacer-slide');
+      if (slide.children.length > 0) return;
+      const prev = idx > 0 ? allSlides[idx - 1] : null;
+      const next = allSlides[idx + 1];
+      const prevIsBlank = prev && prev.id !== 'header' && prev.children.length === 0;
+      const nextIsBlank = next && next.children.length === 0;
+      if (slide.classList.contains('title-page') || prevIsBlank) {
+        slide.classList.add('spacer-slide');
+      } else if (nextIsBlank) {
+        slide.classList.add('chapter-break-slide');
+      } else {
+        slide.classList.add('spacer-slide');
+      }
     });
 
     refreshSlidesForViewport();

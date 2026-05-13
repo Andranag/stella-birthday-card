@@ -833,8 +833,8 @@ body.on-cover #tips-bar { opacity: 0; pointer-events: none; }
 @media (max-width: 340px) {
   .tip-sep { display: none; }
 }
-/* Mobile (touch): hide all keyboard hints, keep only interactive buttons */
-@media (max-width: 639px) {
+/* Touch devices (any size/orientation): hide keyboard hints, keep interactive buttons */
+@media (pointer: coarse), (max-width: 639px) {
   .tip-item.kbd,
   .tip-sep.kbd-sep { display: none !important; }
   /* Legacy fallback for any unmarked keyboard items */
@@ -2066,12 +2066,16 @@ body.on-cover #floating-key { display: block; }
 }
 
 /* Spacer slides: blank pages used for desktop spread alignment.
-   Show a centered ornament so they feel like intentional breathing room. */
-.slide.gift-article.spacer-slide.in-page {
+   Chapter-break slides: first of each blank pair — shown on mobile as a single breathing
+   page, both sides of a two-page spread on desktop.
+   Both show a centered ornament so they feel like intentional breathing room. */
+.slide.gift-article.spacer-slide.in-page,
+.slide.gift-article.chapter-break-slide.in-page {
   justify-content: center !important;
   align-items: center !important;
 }
-.slide.gift-article.spacer-slide.in-page::before {
+.slide.gift-article.spacer-slide.in-page::before,
+.slide.gift-article.chapter-break-slide.in-page::before {
   display: block !important;
   content: '✦' !important;
   position: absolute !important;
@@ -2083,7 +2087,8 @@ body.on-cover #floating-key { display: block; }
   pointer-events: none;
   text-shadow: 0 0 12px rgba(var(--g2-rgb), .30);
 }
-.slide.gift-article.spacer-slide.in-page::after {
+.slide.gift-article.spacer-slide.in-page::after,
+.slide.gift-article.chapter-break-slide.in-page::after {
   display: block !important;
   content: '' !important;
   position: absolute;
