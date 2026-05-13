@@ -25,7 +25,7 @@
   let suppressHashUpdate = false;
   const MOBILE_SEQUENTIAL_SKIP_SLIDES = new Set([2, 3]);
   const _bgTracks = {
-    dance: { audio: null, src: 'assets/music/put your head on my shoulder.mp3', vol: 0.35 },
+    dance: { audio: null, src: 'public/assets/music/put your head on my shoulder.mp3', vol: 0.35 },
   };
   let _pageTurnAudio  = null;
 
@@ -1118,7 +1118,7 @@
   function playPageTurnSound() {
     if (_sfxMuted) return;
     try {
-      const src = 'assets/music/page-turn-sound-effect.mp3';
+      const src = 'public/assets/music/page-turn-sound-effect.mp3';
       if (!_pageTurnAudio) {
         _pageTurnAudio = getCachedAudio(src);
         _pageTurnAudio.volume = 0.35;
@@ -1131,8 +1131,8 @@
   function preloadCommonAudio() {
     // Preload frequently used sounds
     const commonSounds = [
-      'assets/music/page-turn-sound-effect.mp3',
-      'assets/music/put your head on my shoulder.mp3'
+      'public/assets/music/page-turn-sound-effect.mp3',
+      'public/assets/music/put your head on my shoulder.mp3'
     ];
     // Preload text-to-sound buttons that are visible in first few slides
     document.querySelectorAll('.text-to-sound[data-sound]').forEach((btn, idx) => {
@@ -1482,7 +1482,7 @@
       if (origKey) origKey.style.visibility = 'visible';
       lockWrap.classList.add('unlocking');
       try {
-        const sfx = new Audio('assets/music/alohomora.mp3');
+        const sfx = new Audio('public/assets/music/alohomora.mp3');
         sfx.volume = 0.7;
         sfx.play().catch(() => {});
       } catch (_) {}
@@ -1549,7 +1549,7 @@
           spawnSparkles(btn);
           setTimeout(() => spawnSparkles(btn), 220);
           try {
-            const fairyDust = new Audio('assets/music/fairy-dust-sound-effect.mp3');
+            const fairyDust = new Audio('public/assets/music/fairy-dust-sound-effect.mp3');
             fairyDust.volume = 0.75;
             fairyDust.play().catch(() => {});
           } catch (_) {}
@@ -1642,7 +1642,7 @@
           <span>&amp; the End</span>
         </div>
         <div class="cover-divider"></div>
-        <img class="cover-storybook-logo" src="assets/images/walt-disney-logo.png" alt="Walt Disney logo" />
+        <img class="cover-storybook-logo" src="public/assets/images/walt-disney-logo.png" alt="Walt Disney logo" />
       </div>
       <div class="cover-castle-wrap" aria-hidden="true">${buildCastleSVG()}</div>
       <div class="cover-open-hint" aria-hidden="true">✦ open the book ✦</div>

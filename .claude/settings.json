@@ -4,7 +4,13 @@
       "Bash(grep -E \"\\(<strong>.*\\){3,}\")",
       "Bash(grep -E \"\\(<strong>.*\\){2,}\")",
       "Bash(awk '/<article class=\"slide gift-article\">/{flag=1; line=NR} flag{print} /<\\\\/article>/{if\\(flag\\) print \"===END_AT_LINE_\" NR \"===\"; flag=0}' \"c:\\\\Users\\\\andra\\\\Desktop\\\\dev\\\\stella-birthday-card\\\\index.html\")",
-      "Bash(perl -ne ' *)"
+      "Bash(perl -ne ' *)",
+      "Bash(sed -i 's|src=\"assets/videos/woody sad face\\\\.mp4\"|src=\"assets/videos/woody sad.mp4\"|g' index.html)",
+      "Bash(sed -i 's|data-sound=\"assets/music/i solemnly swear that I'\\\\''m up to no good\\\\.mp3\"|data-sound=\"assets/music/harry potter - I solemnly swear that I'\\\\''m up to no good.mp3\"|g' index.html)",
+      "Bash(cd \"c:/Users/andra/Desktop/dev/stella-birthday-card\" && sed -i 's|assets/videos/|public/assets/videos/|g; s|assets/music/|public/assets/music/|g; s|assets/images/|public/assets/images/|g' index.html && echo \"done\")",
+      "Bash(python3 -c ' *)",
+      "Bash(sed 's|src=\"||;s|\"$||')",
+      "Bash(node -e ' *)"
     ]
   }
 }

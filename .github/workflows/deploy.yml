@@ -20,20 +20,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - run: npm ci
-
-      - run: npm run build
+      - name: Prepare deployment files
+        run: |
+          mkdir deploy
+          cp index.html script.js styles.css sw.js deploy/
+          cp -r public deploy/
 
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: deploy
 
   deploy:
     needs: build

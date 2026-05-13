@@ -1,10 +1,10 @@
-const CACHE = 'stella-bday-v5';
+const CACHE = 'stella-bday-v6';
 const SHELL = [
   './',
   './index.html',
   './styles.css',
   './script.js',
-  './assets/images/walt-disney-logo.png',
+  './public/assets/images/walt-disney-logo.png',
 ];
 
 self.addEventListener('install', e => {
