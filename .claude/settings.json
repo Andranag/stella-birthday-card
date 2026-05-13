@@ -14,7 +14,13 @@
       "Bash(sed -i 's|walt%20disney%20logo\\\\.jpg|walt-disney-logo.png|g' /c/Users/andra/Desktop/dev/stella-birthday-card/index.html && echo \"done\")",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(awk 'NR>=440 && NR<=448' /c/Users/andra/Desktop/dev/stella-birthday-card/index.html)"
+      "Bash(awk 'NR>=440 && NR<=448' /c/Users/andra/Desktop/dev/stella-birthday-card/index.html)",
+      "Bash(git remote *)",
+      "Bash(gh workflow *)",
+      "Bash(git ls-remote *)",
+      "Bash(git fetch *)",
+      "Bash(git ls-tree *)",
+      "Bash(xxd /c/Users/andra/Desktop/dev/stella-birthday-card/.github/workflows/deploy.yml)"
     ],
     "additionalDirectories": [
       "C:\\Users\\andra\\Desktop\\dev\\stella-birthday-card"
