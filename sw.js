@@ -4,6 +4,7 @@ const SHELL = [
   './index.html',
   './styles.css',
   './script.js',
+  './manifest.json',
   './public/assets/images/walt-disney-logo.png',
 ];
 
