@@ -834,7 +834,7 @@ body.on-cover #tips-bar { opacity: 0; pointer-events: none; }
   .tip-sep { display: none; }
 }
 /* Touch devices (any size/orientation): hide keyboard hints, keep interactive buttons */
-@media (pointer: coarse), (max-width: 639px) {
+@media (pointer: coarse), (hover: none), (max-width: 639px) {
   .tip-item.kbd,
   .tip-sep.kbd-sep { display: none !important; }
   /* Legacy fallback for any unmarked keyboard items */
@@ -1128,6 +1128,7 @@ body.on-cover #audio-stop-btn { opacity: 0; pointer-events: none; }
   gap: clamp(18px, 3vh, 30px);
   padding: clamp(30px, 6vh, 52px) 14px clamp(118px, 20vh, 150px);
   overflow: hidden;
+  z-index: 1;
 }
 .cover-divider {
   width: 58%; height: 1px; flex-shrink: 0;
@@ -1182,14 +1183,13 @@ body.on-cover #audio-stop-btn { opacity: 0; pointer-events: none; }
   height: auto;
   margin: 0;
   object-fit: contain;
-  opacity: .84;
+  opacity: .88;
   transform: translateX(-50%);
   filter:
-    brightness(.62)
-    saturate(.78)
-    sepia(.10)
-    drop-shadow(0 2px 5px rgba(0,0,0,.62))
-    drop-shadow(0 0 10px rgba(255,210,90,.10));
+    brightness(1.6)
+    sepia(.25)
+    drop-shadow(0 2px 6px rgba(0,0,0,.80))
+    drop-shadow(0 0 18px rgba(255,200,80,.70));
 }
 /* Audio button area on cover */
 .cover-music-area {
@@ -1682,7 +1682,10 @@ body.on-cover #floating-key { display: block; }
   width:        100%       !important;
   height:       100%       !important;
   max-height:   100%       !important;
-  overflow:     hidden     !important;
+  overflow-x:   hidden     !important;
+  overflow-y:   auto       !important;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   background:   transparent !important;
   border:       none       !important;
   box-shadow:   none       !important;
@@ -1692,11 +1695,12 @@ body.on-cover #floating-key { display: block; }
   display:      flex       !important;
   flex-direction: column   !important;
   align-items:  center     !important;
-  justify-content: center  !important;
+  justify-content: flex-start !important;
   gap:          14px       !important;
   animation:    none       !important;
   margin:       0          !important;
 }
+.slide.gift-article.active.in-page::-webkit-scrollbar { display: none; }
 
 /* Responsive typography for slides */
 .slide.gift-article h1 {
