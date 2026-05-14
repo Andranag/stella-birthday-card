@@ -2516,8 +2516,11 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   right: 0 !important;
   height: 100% !important;
   display: flex !important;
-  align-items: center !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
   justify-content: center !important;
+  text-align: center !important;
+  padding: 0 8px !important;
   color: #F0C050 !important;
   font-size: .62rem !important;
   letter-spacing: 1.4px !important;
@@ -3439,9 +3442,10 @@ body[class*="text-size-"] .contents-list li {
 .peek-hint[data-revealed="false"]::after {
   content: '✨ spoiler — tap to reveal ✨';
   position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction: column; align-items: stretch; justify-content: center;
+  text-align: center; padding: 0 8px;
   font-size: .64rem; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;
+  text-transform: uppercase; letter-spacing: 1px;
   color: #F0C050 !important; text-shadow: none !important;
   background: linear-gradient(145deg, #2A0E50 0%, #3E1A6A 40%, #2A0E50 100%);
   border-radius: inherit;
