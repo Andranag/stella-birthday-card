@@ -2444,6 +2444,61 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   transform: translateY(0.08em);
 }
 
+/* ── mystery question mark button ── */
+.mystery-question {
+  background: linear-gradient(145deg, #2e1a60 0%, #4c2a85 45%, #6c3eaa 100%) !important;
+  border-color: #9068d8 !important;
+  box-shadow:
+    0 2px 0 #1c1040,
+    0 4px 18px rgba(100, 50, 200, .45),
+    inset 0 1px 0 rgba(255,255,255,.15),
+    inset 0 -1px 0 rgba(0,0,0,.25),
+    0 0 22px rgba(140, 80, 255, .22) !important;
+  animation: mysteryFloat 3.5s ease-in-out infinite;
+}
+.mystery-question::before {
+  background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,.2) 50%, transparent 100%) !important;
+}
+.mystery-question:hover {
+  animation-play-state: paused;
+  filter: brightness(1.12) !important;
+  box-shadow:
+    0 5px 0 #1c1040,
+    0 8px 28px rgba(100, 50, 200, .6),
+    inset 0 1px 0 rgba(255,255,255,.2),
+    0 0 38px rgba(160, 100, 255, .55) !important;
+}
+.mystery-question strong span {
+  display: inline-block;
+  font-size: 1.9em;
+  color: #ecdcff;
+  text-shadow:
+    0 0 8px rgba(220, 170, 255, .9),
+    0 0 22px rgba(160, 90, 255, .55);
+  animation: questionWobble 3s ease-in-out infinite;
+}
+.mystery-question:hover strong span {
+  animation: questionShake 0.5s ease-in-out forwards;
+}
+
+@keyframes mysteryFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+@keyframes questionWobble {
+  0%, 100% { transform: rotate(-8deg) scale(1); }
+  50%       { transform: rotate(8deg) scale(1.06); }
+}
+@keyframes questionShake {
+  0%   { transform: rotate(0deg)   scale(1); }
+  15%  { transform: rotate(-20deg) scale(1.2); }
+  30%  { transform: rotate(20deg)  scale(1.25); }
+  45%  { transform: rotate(-12deg) scale(1.15); }
+  60%  { transform: rotate(12deg)  scale(1.08); }
+  80%  { transform: rotate(-5deg)  scale(1.04); }
+  100% { transform: rotate(0deg)   scale(1); }
+}
+
 /* Larger emojis for better visibility on wide screens */
 @media (min-width: 1200px) {
   .slide {
