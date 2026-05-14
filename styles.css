@@ -1700,6 +1700,7 @@ body.on-cover #floating-key { display: block; }
   outline:      none       !important;
   border-radius: 0         !important;
   padding:      0          !important;
+  padding-top:  48px       !important;
   display:      flex       !important;
   flex-direction: column   !important;
   align-items:  center     !important;
@@ -2046,6 +2047,7 @@ body.on-cover #floating-key { display: block; }
 .slide.gift-article.chapter-page.in-page {
   justify-content: center !important;
   gap: 14px !important;
+  padding-top: 0 !important;
 }
 .slide.gift-article.chapter-page.in-page::before,
 .slide.gift-article.chapter-page.in-page::after {
@@ -2085,6 +2087,7 @@ body.on-cover #floating-key { display: block; }
 .slide.gift-article.chapter-break-slide.in-page {
   justify-content: center !important;
   align-items: center !important;
+  padding-top: 0 !important;
 }
 .slide.gift-article.spacer-slide.in-page::before,
 .slide.gift-article.chapter-break-slide.in-page::before {
@@ -2748,6 +2751,15 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     max-height: none !important;
     min-height: 100% !important;
     justify-content: flex-start !important;
+  }
+
+  /* Exception: chapter title, spacer, and chapter-break slides stay centered and fill the page */
+  .slide.gift-article.chapter-page.active.in-page,
+  .slide.gift-article.spacer-slide.active.in-page,
+  .slide.gift-article.chapter-break-slide.active.in-page {
+    height: 100% !important;
+    max-height: 100% !important;
+    justify-content: center !important;
   }
 
   /* Scroll-overflow hint — appears when a slide is taller than the visible page */
