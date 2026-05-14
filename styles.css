@@ -2744,13 +2744,15 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     font-size: 0.95rem;
   }
 
-  /* On mobile, slides grow to content height instead of being fixed — prevents top clipping */
+  /* On mobile, slides grow to content height instead of being fixed — prevents top clipping.
+     padding-top clears the absolute-positioned heart button (top:8px + height:32px + gap). */
   .slide.gift-article.active.in-page {
     gap: 14px !important;
     height: auto !important;
     max-height: none !important;
     min-height: 100% !important;
     justify-content: flex-start !important;
+    padding-top: 48px !important;
   }
 
   /* Exception: chapter title, spacer, and chapter-break slides stay centered and fill the page */
@@ -2817,9 +2819,9 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     opacity: .7;
   }
 
-  /* Stars now cover the full slide behind content — normal padding */
+  /* Stars are position:absolute so they cover the slide regardless of padding-top */
   .slide.gift-article.in-page:has(> .star-field-art) {
-    padding-top: clamp(16px, 3vw, 24px) !important;
+    padding-top: 48px !important;
   }
 
   /* Adjust progress bar for mobile */
