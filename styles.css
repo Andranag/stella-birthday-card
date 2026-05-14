@@ -2011,9 +2011,12 @@ body.on-cover #floating-key { display: block; }
   text-align: center !important;
 }
 
-.slide.gift-article.in-page h2 .text-to-sound, .slide.gift-article.in-page .h2-font .text-to-sound {
+.slide.gift-article.in-page h2 .text-to-sound,
+.slide.gift-article.in-page .h2-font .text-to-sound,
+.slide.gift-article.in-page p .text-to-sound {
   display: inline-block !important;
-  margin: 0.12em auto !important;
+  width: auto !important;
+  margin: 0.12em 0.16em !important;
   vertical-align: middle;
 }
 
