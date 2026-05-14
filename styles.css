@@ -2506,6 +2506,7 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   border-color: rgba(var(--g2-rgb), .68) !important;
   background:
     linear-gradient(145deg, #210844 0%, #35126B 44%, #210844 100%) !important;
+  min-width: 270px !important;
 }
 .slide.gift-article.in-page .peek-hint[data-revealed="false"]::after {
   content: '✨ spoiler — tap to reveal ✨' !important;
