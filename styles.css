@@ -275,7 +275,7 @@ button:active {
 
 .text-to-sound.playing::after { content: none; }
 
-/* ── EQ bars (injected by JS when audio plays) ── */
+/* ── EQ bars (pre-injected by JS; hidden until .playing) ── */
 .eq-bars {
   display: inline-flex;
   align-items: flex-end;
@@ -283,6 +283,7 @@ button:active {
   height: 14px;
   margin-left: 7px;
   flex-shrink: 0;
+  opacity: 0;
 }
 .eq-bars i {
   display: block;
@@ -290,6 +291,7 @@ button:active {
   border-radius: 2px 2px 0 0;
   background: currentColor;
   animation: eqBounce 0.55s ease-in-out infinite alternate;
+  animation-play-state: paused;
   transform-origin: bottom;
 }
 .eq-bars i:nth-child(1) { height: 5px;  animation-delay:   0ms; }
@@ -301,6 +303,8 @@ button:active {
   from { transform: scaleY(0.25); opacity: .7; }
   to   { transform: scaleY(1);    opacity: 1;  }
 }
+.text-to-sound.playing .eq-bars { opacity: 1; }
+.text-to-sound.playing .eq-bars i { animation-play-state: running; }
 
 /* ── Audio Progress Indicator ─────────────────────────────────── */
 .audio-progress {

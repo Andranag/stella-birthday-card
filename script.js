@@ -3145,23 +3145,22 @@
 
   /* ── EQ bars visualizer ─────────────────────────────────── */
   function setupEqVisualizer() {
+    function injectBars(btn) {
+      if (btn.querySelector('.eq-bars')) return;
+      const bars = document.createElement('span');
+      bars.className = 'eq-bars';
+      bars.setAttribute('aria-hidden', 'true');
+      bars.innerHTML = '<i></i><i></i><i></i><i></i><i></i>';
+      btn.appendChild(bars);
+    }
+    // Pre-inject into all existing buttons so width never shifts on first play
+    document.querySelectorAll('.text-to-sound').forEach(injectBars);
+    // Keep observer only to handle any edge-case buttons added later
     const observer = new MutationObserver(mutations => {
       mutations.forEach(m => {
         if (m.attributeName !== 'class') return;
         const btn = m.target;
-        if (!btn.classList.contains('text-to-sound')) return;
-        const existing = btn.querySelector('.eq-bars');
-        if (btn.classList.contains('playing')) {
-          if (!existing) {
-            const bars = document.createElement('span');
-            bars.className = 'eq-bars';
-            bars.setAttribute('aria-hidden', 'true');
-            bars.innerHTML = '<i></i><i></i><i></i><i></i><i></i>';
-            btn.appendChild(bars);
-          }
-        } else {
-          existing?.remove();
-        }
+        if (btn.classList.contains('text-to-sound')) injectBars(btn);
       });
     });
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'], subtree: true });
