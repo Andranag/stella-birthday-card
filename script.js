@@ -288,7 +288,10 @@
       el.innerHTML = '';
     });
     (function chainTW(els, d) {
-      if (!els.length) return;
+      if (!els.length) {
+        setupEmojiVisibility(slide);
+        return;
+      }
       setTimeout(() => runTypewriter(els[0], () => chainTW(els.slice(1), 0)), d);
     })([...twEls], delay);
   }
@@ -347,11 +350,11 @@
       el.innerHTML = '';
       el.style.opacity = '0';
     });
+    setupEmojiVisibility();
     buildBookDOM();
     setupAriaLabels();
     setupSpoilers();
     setupAudio();
-    setupButtonEmojiAlignment();
     setupAudioStopButton();
     setupSwipe();
     setupReaderScale();
@@ -373,7 +376,6 @@
     setupCursorTrail();
     setupGoldDust();
     setupMoodLighting();
-    setupEqVisualizer();
     setupVideoFullscreen();
     preloadCommonAudio();
 
@@ -1098,23 +1100,43 @@
     btn.classList.toggle('visible', active);
   }
 
-  function setupButtonEmojiAlignment() {
+  function setupEmojiVisibility(root = document) {
     const emojiPattern = /([\u{2600}-\u{27BF}\u{1F000}-\u{1FAFF}][\u{FE0E}\u{FE0F}]?[\u{1F3FB}-\u{1F3FF}]?(?:\u{200D}[\u{2600}-\u{27BF}\u{1F000}-\u{1FAFF}][\u{FE0E}\u{FE0F}]?[\u{1F3FB}-\u{1F3FF}]?)*)/gu;
+    const slideRoots = root.matches?.('.slide.gift-article')
+      ? [root]
+      : Array.from(root.querySelectorAll('.slide.gift-article'));
 
-    document.querySelectorAll('.text-to-sound, .peek-hint').forEach(button => {
-      const walker = document.createTreeWalker(button, NodeFilter.SHOW_TEXT);
+    slideRoots.forEach(slide => {
+      const walker = document.createTreeWalker(slide, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          if (!node.nodeValue?.trim()) return NodeFilter.FILTER_REJECT;
+          if (node.parentElement?.closest('script, style, svg, .story-emoji, .eq-bars')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          emojiPattern.lastIndex = 0;
+          return emojiPattern.test(node.nodeValue)
+            ? NodeFilter.FILTER_ACCEPT
+            : NodeFilter.FILTER_REJECT;
+        },
+      });
       const textNodes = [];
-      while (walker.nextNode()) textNodes.push(walker.currentNode);
+      while (walker.nextNode()) {
+        emojiPattern.lastIndex = 0;
+        textNodes.push(walker.currentNode);
+      }
 
       textNodes.forEach(node => {
-        if (!emojiPattern.test(node.nodeValue)) return;
         emojiPattern.lastIndex = 0;
 
         const fragment = document.createDocumentFragment();
         let lastIndex = 0;
         node.nodeValue.replace(emojiPattern, (match, _emoji, offset) => {
           if (offset > lastIndex) fragment.append(document.createTextNode(node.nodeValue.slice(lastIndex, offset)));
-          const span = mk('span', { class: 'button-emoji', 'aria-hidden': 'true' });
+          const inControl = node.parentElement?.closest('.text-to-sound, .peek-hint');
+          const span = mk('span', {
+            class: inControl ? 'story-emoji button-emoji' : 'story-emoji',
+          });
+          if (inControl) span.setAttribute('aria-hidden', 'true');
           span.textContent = match;
           fragment.append(span);
           lastIndex = offset + match.length;
@@ -3141,29 +3163,6 @@
       document.body.appendChild(p);
       p.addEventListener('animationend', () => p.remove(), { once: true });
     });
-  }
-
-  /* ── EQ bars visualizer ─────────────────────────────────── */
-  function setupEqVisualizer() {
-    function injectBars(btn) {
-      if (btn.querySelector('.eq-bars')) return;
-      const bars = document.createElement('span');
-      bars.className = 'eq-bars';
-      bars.setAttribute('aria-hidden', 'true');
-      bars.innerHTML = '<i></i><i></i><i></i><i></i><i></i>';
-      btn.appendChild(bars);
-    }
-    // Pre-inject into all existing buttons so width never shifts on first play
-    document.querySelectorAll('.text-to-sound').forEach(injectBars);
-    // Keep observer only to handle any edge-case buttons added later
-    const observer = new MutationObserver(mutations => {
-      mutations.forEach(m => {
-        if (m.attributeName !== 'class') return;
-        const btn = m.target;
-        if (btn.classList.contains('text-to-sound')) injectBars(btn);
-      });
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'], subtree: true });
   }
 
   /* ── Fullscreen video on double-click ─────────────────────── */

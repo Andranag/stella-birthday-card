@@ -275,46 +275,18 @@ button:active {
 
 .text-to-sound.playing::after { content: none; }
 
-/* ── EQ bars (pre-injected by JS; hidden until .playing) ── */
-.eq-bars {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 2.5px;
-  height: 14px;
-  margin-left: 7px;
-  flex-shrink: 0;
-  opacity: 0;
-}
-.eq-bars i {
-  display: block;
-  width: 3px;
-  border-radius: 2px 2px 0 0;
-  background: currentColor;
-  animation: eqBounce 0.55s ease-in-out infinite alternate;
-  animation-play-state: paused;
-  transform-origin: bottom;
-}
-.eq-bars i:nth-child(1) { height: 5px;  animation-delay:   0ms; }
-.eq-bars i:nth-child(2) { height: 12px; animation-delay: 160ms; }
-.eq-bars i:nth-child(3) { height: 8px;  animation-delay:  80ms; }
-.eq-bars i:nth-child(4) { height: 14px; animation-delay: 240ms; }
-.eq-bars i:nth-child(5) { height: 6px;  animation-delay: 120ms; }
-@keyframes eqBounce {
-  from { transform: scaleY(0.25); opacity: .7; }
-  to   { transform: scaleY(1);    opacity: 1;  }
-}
-.text-to-sound.playing .eq-bars { opacity: 1; }
-.text-to-sound.playing .eq-bars i { animation-play-state: running; }
-
 /* ── Audio Progress Indicator ─────────────────────────────────── */
 .audio-progress {
   position: absolute;
-  bottom: 0;
-  left: 0;
+  bottom: 4px;
+  left: 14px;
   height: 3px;
+  max-width: calc(100% - 28px);
   background: linear-gradient(to right, var(--g1), var(--g2));
   transition: width 0.1s linear;
-  border-radius: 0 0 4px 4px;
+  border-radius: 999px;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .text-to-sound.playing {
@@ -2439,12 +2411,21 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   box-shadow: 0 1px 0 var(--g3), 0 1px 4px rgba(0,0,0,.12);
 }
 .text-to-sound > em:first-of-type { font-size:1.15em; }
+.story-emoji {
+  display: inline-block;
+  font-size: 1.18em;
+  line-height: 1;
+  vertical-align: -0.1em;
+}
+
 .text-to-sound .button-emoji,
 .peek-hint .button-emoji {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
-  vertical-align: -0.08em;
-  transform: translateY(0.08em);
+  vertical-align: -0.06em;
+  transform: none;
 }
 
 /* ── mystery question mark button ── */
@@ -3518,15 +3499,53 @@ body[class*="text-size-"] .contents-list li {
 .text-to-sound.playing {
   background: linear-gradient(180deg,#FFF3D0 0%,#F5D878 40%,#E8B830 100%) !important;
   border-color: #A07010 !important;
-  box-shadow: 0 2px 0 #6A4800, 0 4px 16px rgba(201,160,48,.5), 0 0 20px rgba(255,200,40,.35), inset 0 1px 0 rgba(255,255,255,.9) !important;
+  overflow: visible;
+  box-shadow: none !important;
+  animation: none;
 }
-.text-to-sound.playing::after { content: none; }
 .text-to-sound.playing::before {
-  content: ''; position: absolute; inset: 0; border-radius: inherit;
-  background: repeating-linear-gradient(90deg,rgba(255,200,40,0) 0px,rgba(255,200,40,.18) 2px,rgba(255,200,40,0) 4px);
-  background-size: 8px 100%; animation: soundWave .6s linear infinite; pointer-events: none;
+  content: '';
+  position: absolute;
+  inset: -7px;
+  width: auto;
+  height: auto;
+  border: 2px solid rgba(255,232,136,.78);
+  border-radius: inherit;
+  background: transparent;
+  box-shadow: none;
+  opacity: .55;
+  animation: audioPlayingRing 2s ease-out infinite;
+  pointer-events: none;
 }
-@keyframes soundWave { to { background-position: 8px 0; } }
+.text-to-sound.playing::after {
+  content: '♪';
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #FFF3D0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #FFF7D8 0%, #F0C050 100%);
+  color: #6B1205;
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: none;
+  animation: audioNoteBadge 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes audioPlayingRing {
+  0% { opacity: .78; transform: scale(.985); }
+  70%, 100% { opacity: 0; transform: scale(1.08); }
+}
+@keyframes audioNoteBadge {
+  0%, 100% { transform: scale(1) rotate(-4deg); }
+  50% { transform: scale(1.1) rotate(7deg); }
+}
 
 /* ── Nav overlay ── */
 #nav-overlay {
