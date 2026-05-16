@@ -1694,6 +1694,10 @@ body.on-cover #floating-key { display: block; }
   overflow-wrap: break-word;
 }
 
+.slide.gift-article h2.audio-button-row {
+  text-wrap: normal;
+}
+
 .slide.gift-article p {
   font-size: clamp(0.9rem, 1.3vw, 1.1rem);
   line-height: 1.6;
