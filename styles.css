@@ -277,20 +277,11 @@ button:active {
 
 /* ── Audio Progress Indicator ─────────────────────────────────── */
 .audio-progress {
-  position: absolute;
-  bottom: 4px;
-  left: 14px;
-  height: 3px;
-  max-width: calc(100% - 28px);
-  background: linear-gradient(to right, var(--g1), var(--g2));
-  transition: width 0.1s linear;
-  border-radius: 999px;
-  z-index: 1;
-  pointer-events: none;
+  display: none;
 }
 
 .text-to-sound.playing {
-  padding-bottom: 3px;
+  padding-bottom: 11px;
 }
 
 /* ── Video Error State ───────────────────────────────────────── */
@@ -2402,6 +2393,7 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
    ================================================================ */
 /* ── text-to-sound ── */
 .text-to-sound {
+  --audio-fill: 0%;
   display: inline-block;
   vertical-align: middle;
   text-align: center;
@@ -3549,7 +3541,9 @@ body[class*="text-size-"] .contents-list li {
 
 /* ── Playing audio ── */
 .text-to-sound.playing {
-  background: linear-gradient(180deg,#FFF3D0 0%,#F5D878 40%,#E8B830 100%) !important;
+  background:
+    linear-gradient(90deg, rgba(160,112,16,.32) 0 var(--audio-fill), transparent var(--audio-fill) 100%),
+    linear-gradient(180deg,#FFF3D0 0%,#F5D878 40%,#E8B830 100%) !important;
   border-color: #A07010 !important;
   overflow: visible;
   box-shadow: none !important;

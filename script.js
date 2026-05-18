@@ -28,6 +28,8 @@
     dance: { audio: null, src: 'public/assets/music/put your head on my shoulder.mp3', vol: 0.35 },
   };
   let _pageTurnAudio  = null;
+  const AUDIO_PROGRESS_TAIL_MS = 1400;
+  const AUDIO_PROGRESS_WAITING_CAP = 92;
 
   /* ── Audio Preloading Cache ─────────────────────────────────── */
   const _audioCache = new Map();
@@ -1067,7 +1069,7 @@
       currentAudio.currentTime = 0;
       playingBtn?.classList.remove('playing');
       playingBtn?.setAttribute('aria-pressed', 'false');
-      playingBtn?.querySelector('.audio-progress')?.remove();
+      playingBtn?.style.removeProperty('--audio-fill');
       setWishStarsActive(playingBtn, false);
       currentAudio = null;
       playingBtn = null;
@@ -2751,7 +2753,26 @@
     document.querySelectorAll('.text-to-sound[data-sound]').forEach(btn => {
       btn.setAttribute('aria-pressed', 'false');
       let audio = null;
-      let progressEl = null;
+      let progressFrame = 0;
+
+      const stopProgress = () => {
+        if (progressFrame) cancelAnimationFrame(progressFrame);
+        progressFrame = 0;
+      };
+
+      const updateProgress = () => {
+        if (!audio || audio.paused || currentAudio !== audio) {
+          stopProgress();
+          return;
+        }
+        const duration = Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0;
+        if (duration) {
+          const visualDuration = duration + (AUDIO_PROGRESS_TAIL_MS / 1000);
+          const percent = Math.min((audio.currentTime / visualDuration) * 100, AUDIO_PROGRESS_WAITING_CAP);
+          btn.style.setProperty('--audio-fill', `${percent}%`);
+        }
+        progressFrame = requestAnimationFrame(updateProgress);
+      };
       
       btn.addEventListener('click', e => {
         e.stopPropagation(); // prevent cover's click-to-open
@@ -2761,8 +2782,7 @@
           currentAudio.pause(); currentAudio.currentTime = 0;
           playingBtn?.classList.remove('playing');
           playingBtn?.setAttribute('aria-pressed', 'false');
-          const oldProgress = playingBtn?.querySelector('.audio-progress');
-          if (oldProgress) oldProgress.remove();
+          playingBtn?.style.removeProperty('--audio-fill');
           setWishStarsActive(playingBtn, false);
           currentAudio = null; playingBtn = null;
           updateAudioStopButton();
@@ -2777,19 +2797,11 @@
             shakeEl(btn);
           });
           
-          // Update progress bar
-          audio.addEventListener('timeupdate', () => {
-            if (progressEl && audio.duration) {
-              const percent = (audio.currentTime / audio.duration) * 100;
-              progressEl.style.width = `${percent}%`;
-            }
-          });
-          
           audio.addEventListener('ended', () => {
+            stopProgress();
             btn.classList.remove('playing');
             btn.setAttribute('aria-pressed', 'false');
-            if (progressEl) progressEl.remove();
-            progressEl = null;
+            btn.style.removeProperty('--audio-fill');
             setWishStarsActive(btn, false);
             if (currentAudio === audio) { currentAudio = null; playingBtn = null; }
             updateAudioStopButton();
@@ -2807,11 +2819,9 @@
               setWishStarsActive(btn, true);
               updateAudioStopButton();
 
-              // Create progress element
-              if (!progressEl || !progressEl.isConnected) {
-                progressEl = mk('div', { class: 'audio-progress' });
-                btn.appendChild(progressEl);
-              }
+              btn.style.setProperty('--audio-fill', '0%');
+              stopProgress();
+              progressFrame = requestAnimationFrame(updateProgress);
             })
             .catch(() => {
               btn.classList.add('audio-error');
@@ -2819,12 +2829,12 @@
             });
           if (warmupDelay > 0) setTimeout(doPlay, warmupDelay); else doPlay();
         } else {
+          stopProgress();
           audio.pause();
           audio.currentTime = 0;
           btn.classList.remove('playing');
           btn.setAttribute('aria-pressed', 'false');
-          if (progressEl) progressEl.remove();
-          progressEl = null;
+          btn.style.removeProperty('--audio-fill');
           setWishStarsActive(btn, false);
           if (currentAudio === audio) { currentAudio = null; playingBtn = null; }
           updateAudioStopButton();
