@@ -1993,7 +1993,7 @@ body.on-cover #floating-key { display: block; }
 .slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) {
   display: block !important;
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .slide.gift-article h2.button-only-heading > button,
@@ -2002,8 +2002,10 @@ body.on-cover #floating-key { display: block; }
 .slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) > button {
   display: inline-block !important;
   width: auto !important;
+  max-width: 100% !important;
   margin: 0.12em 0.16em !important;
-  white-space: nowrap !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
   vertical-align: middle;
 }
 
@@ -3074,7 +3076,7 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   .slide.gift-article.in-page h2.button-only-heading,
   .slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) {
     display: block !important;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .slide.gift-article h2.button-only-heading > button,
@@ -3083,8 +3085,10 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
   .slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) > button {
     display: inline-block !important;
     width: auto !important;
+    max-width: 100% !important;
     margin: 0.12em 0.16em !important;
-    white-space: nowrap !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
     vertical-align: middle;
   }
 
@@ -3713,7 +3717,7 @@ body[class*="text-size-"] .contents-list li {
 .slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) {
   display: block !important;
   text-align: center !important;
-  white-space: nowrap !important;
+  white-space: normal !important;
 }
 
 .slide.gift-article h2.button-only-heading > .text-to-sound,
@@ -3722,7 +3726,9 @@ body[class*="text-size-"] .contents-list li {
 .slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) > .text-to-sound {
   display: inline-block !important;
   width: auto !important;
+  max-width: 100% !important;
   margin: 0.12em 0.16em !important;
-  white-space: nowrap !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
   vertical-align: middle !important;
 }

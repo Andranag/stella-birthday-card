@@ -28,12 +28,11 @@
     dance: { audio: null, src: 'public/assets/music/put your head on my shoulder.mp3', vol: 0.35 },
   };
   let _pageTurnAudio  = null;
-  const AUDIO_PROGRESS_TAIL_MS = 1400;
-  const AUDIO_PROGRESS_WAITING_CAP = 92;
 
   /* ── Audio Preloading Cache ─────────────────────────────────── */
   const _audioCache = new Map();
   const _preloadedAudio = new Set();
+  const _audioDurationCache = new Map();
 
   function preloadAudio(src) {
     if (!src || _preloadedAudio.has(src)) return;
@@ -51,6 +50,28 @@
       return cached;
     }
     return new Audio(src);
+  }
+
+  function getAudioProgressDuration(src, fallbackAudio) {
+    if (!src) return Promise.resolve(0);
+    if (_audioDurationCache.has(src)) return _audioDurationCache.get(src);
+
+    const promise = (async () => {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return fallbackAudio?.duration || 0;
+      const response = await fetch(src);
+      const data = await response.arrayBuffer();
+      const ctx = new AudioCtx();
+      try {
+        const buffer = await ctx.decodeAudioData(data);
+        return buffer.duration || fallbackAudio?.duration || 0;
+      } finally {
+        ctx.close?.();
+      }
+    })().catch(() => fallbackAudio?.duration || 0);
+
+    _audioDurationCache.set(src, promise);
+    return promise;
   }
 
   /* ── Video Alt Text Generation ──────────────────────────────── */
@@ -2754,6 +2775,7 @@
       btn.setAttribute('aria-pressed', 'false');
       let audio = null;
       let progressFrame = 0;
+      let progressDuration = 0;
 
       const stopProgress = () => {
         if (progressFrame) cancelAnimationFrame(progressFrame);
@@ -2765,10 +2787,9 @@
           stopProgress();
           return;
         }
-        const duration = Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0;
+        const duration = progressDuration || (Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0);
         if (duration) {
-          const visualDuration = duration + (AUDIO_PROGRESS_TAIL_MS / 1000);
-          const percent = Math.min((audio.currentTime / visualDuration) * 100, AUDIO_PROGRESS_WAITING_CAP);
+          const percent = Math.min((audio.currentTime / duration) * 100, 100);
           btn.style.setProperty('--audio-fill', `${percent}%`);
         }
         progressFrame = requestAnimationFrame(updateProgress);
@@ -2790,6 +2811,7 @@
 
         if (!audio) {
           audio = getCachedAudio(btn.dataset.sound);
+          progressDuration = Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0;
           
           audio.addEventListener('error', () => {
             btn.classList.add('audio-error');
@@ -2820,6 +2842,9 @@
               updateAudioStopButton();
 
               btn.style.setProperty('--audio-fill', '0%');
+              getAudioProgressDuration(btn.dataset.sound, audio).then(duration => {
+                if (duration > 0) progressDuration = duration;
+              });
               stopProgress();
               progressFrame = requestAnimationFrame(updateProgress);
             })
