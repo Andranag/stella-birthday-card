@@ -1996,6 +1996,34 @@ body.on-cover #floating-key { display: block; }
   vertical-align: middle;
 }
 
+.slide.gift-article h2.button-only-heading,
+.slide.gift-article h2:has(> button):not(:has(> :not(button))),
+.slide.gift-article.in-page h2.button-only-heading,
+.slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) {
+  display: block !important;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.slide.gift-article h2.button-only-heading > button,
+.slide.gift-article h2:has(> button):not(:has(> :not(button))) > button,
+.slide.gift-article.in-page h2.button-only-heading > button,
+.slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) > button {
+  display: inline-block !important;
+  width: auto !important;
+  margin: 0.12em 0.16em !important;
+  white-space: nowrap !important;
+  vertical-align: middle;
+}
+
+.slide.gift-article h2.button-only-heading::after,
+.slide.gift-article h2:has(> button):not(:has(> :not(button)))::after,
+.slide.gift-article.in-page h2.button-only-heading::after,
+.slide.gift-article.in-page h2:has(> button):not(:has(> :not(button)))::after {
+  display: block;
+  margin-top: 8px !important;
+}
+
 .slide.gift-article.in-page .peek-hint {
   display: block !important;
   width: fit-content !important;
@@ -3049,6 +3077,25 @@ strong { font-weight: 800; color: #6B1205; letter-spacing: 0.02em; }
     margin-bottom: 14px !important;
   }
 
+  .slide.gift-article h2.button-only-heading,
+  .slide.gift-article h2:has(> button):not(:has(> :not(button))),
+  .slide.gift-article.in-page h2.button-only-heading,
+  .slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) {
+    display: block !important;
+    white-space: nowrap;
+  }
+
+  .slide.gift-article h2.button-only-heading > button,
+  .slide.gift-article h2:has(> button):not(:has(> :not(button))) > button,
+  .slide.gift-article.in-page h2.button-only-heading > button,
+  .slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) > button {
+    display: inline-block !important;
+    width: auto !important;
+    margin: 0.12em 0.16em !important;
+    white-space: nowrap !important;
+    vertical-align: middle;
+  }
+
   /* Reduce headings on mobile so they don't push buttons off */
   .slide.gift-article.in-page h2, .slide.gift-article.in-page .h2-font { font-size: var(--reader-mobile-h2-size) !important; }
   .slide.gift-article.in-page p  { font-size: var(--reader-mobile-p-size) !important; }
@@ -3663,4 +3710,25 @@ body[class*="text-size-"] .contents-list li {
   #nav-panel { width:290px; }
   #nav-toggle { top:7px; left:14px; width:46px; height:46px; font-size:1.2rem; }
   #prev-page, #next-page { width:32px; height:52px; font-size:1.1rem; }
+}
+
+/* Final override: h2s made only of buttons should read like one inline phrase. */
+.slide.gift-article h2.button-only-heading,
+.slide.gift-article h2:has(> button):not(:has(> :not(button))),
+.slide.gift-article.in-page h2.button-only-heading,
+.slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) {
+  display: block !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+.slide.gift-article h2.button-only-heading > .text-to-sound,
+.slide.gift-article h2:has(> button):not(:has(> :not(button))) > .text-to-sound,
+.slide.gift-article.in-page h2.button-only-heading > .text-to-sound,
+.slide.gift-article.in-page h2:has(> button):not(:has(> :not(button))) > .text-to-sound {
+  display: inline-block !important;
+  width: auto !important;
+  margin: 0.12em 0.16em !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
 }

@@ -310,9 +310,24 @@
   }
 
   /* ── Init ──────────────────────────────────────────────────── */
+  function markButtonOnlyHeadings() {
+    document.querySelectorAll('h2').forEach(heading => {
+      const meaningfulNodes = Array.from(heading.childNodes).filter(node => {
+        if (node.nodeType === Node.TEXT_NODE) return node.textContent.trim() !== '';
+        return node.nodeType === Node.ELEMENT_NODE;
+      });
+      const onlyButtons = meaningfulNodes.length > 0 && meaningfulNodes.every(node => (
+        node.nodeType === Node.ELEMENT_NODE && node.matches('button')
+      ));
+      heading.classList.toggle('button-only-heading', onlyButtons);
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     allSlides = Array.from(document.querySelectorAll('.slide.gift-article'));
     if (!allSlides.length) return;
+
+    markButtonOnlyHeadings();
 
     // Set data-index on each slide for heart button identification
     allSlides.forEach((slide, idx) => { slide.dataset.index = idx; });
@@ -799,17 +814,11 @@
 
   function normalizeButtonOnlyHeading(slide, heading) {
     if (!isButtonOnlyHeading(heading)) return heading;
-    const buttons = Array.from(heading.querySelectorAll('.text-to-sound'));
-    const headingText = buttons.map(btn => btn.textContent.trim()).filter(Boolean).join(' ');
-    buttons.forEach(btn => {
+    heading.classList.add('button-only-heading');
+    heading.querySelectorAll('.text-to-sound').forEach(btn => {
       btn.classList.add('audio-title-control');
-      slide.insertBefore(btn, heading);
     });
-    const label = mk('div', { class: 'audio-heading-label' });
-    if (heading.id) label.id = heading.id;
-    label.textContent = headingText;
-    heading.replaceWith(label);
-    return label;
+    return heading;
   }
 
   /* Reorder elements within a slide: decorative art → h2 → video → p/list → audio → spoiler */
@@ -817,7 +826,7 @@
     if (slide.classList.contains('title-page')) return;
     ensureDecorativeArt(slide);
 
-    // Button-only headings are labels, not visual layout containers.
+    // Button-only headings stay intact so their controls can flow as inline title text.
     const decorativeArt = Array.from(slide.querySelectorAll(':scope > .star-field-art'));
     const titleLabel = normalizeButtonOnlyHeading(slide, getSlideTitleLabel(slide));
     const video = slide.querySelector('.gift-img');
