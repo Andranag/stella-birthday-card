@@ -3583,5 +3583,28 @@
 })();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+  const isLocalDev = ['localhost', '127.0.0.1', ''].includes(location.hostname);
+
+  if (isLocalDev) {
+    const unregisterWorkers = navigator.serviceWorker.getRegistrations?.()
+      .then(registrations => Promise.all(registrations.map(registration => registration.unregister())))
+      .catch(() => {});
+    const clearCaches = 'caches' in window
+      ? caches.keys()
+        .then(keys => Promise.all(keys.map(key => caches.delete(key))))
+        .catch(() => {})
+      : Promise.resolve();
+
+    Promise.all([unregisterWorkers, clearCaches]).finally(() => {
+      const reloadKey = 'stella_local_sw_cleanup_reload';
+      if (navigator.serviceWorker.controller && sessionStorage.getItem(reloadKey) !== '1') {
+        sessionStorage.setItem(reloadKey, '1');
+        location.reload();
+      } else {
+        sessionStorage.removeItem(reloadKey);
+      }
+    });
+  } else {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
 }

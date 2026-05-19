@@ -1,4 +1,4 @@
-const CACHE = 'stella-bday-v20';
+const CACHE = 'stella-bday-v21';
 const SHELL = [
   './',
   './index.html',
@@ -37,9 +37,9 @@ self.addEventListener('fetch', e => {
   // Only handle same-origin requests from here on
   if (url.origin !== self.location.origin) return;
 
-  // Videos and audio — cache on first play, serve from cache thereafter
+  // Videos and audio — prefer fresh files, fall back to cache when offline
   if (/\.(mp4|mp3|webm|ogg)$/i.test(url.pathname)) {
-    e.respondWith(cacheFirst(request));
+    e.respondWith(networkFirst(request));
     return;
   }
 
